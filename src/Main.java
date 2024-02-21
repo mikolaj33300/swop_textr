@@ -6,7 +6,6 @@ public class Main {
 
     /**
      * A beautiful start for a beautiful project
-     * @param args
      */
     public static void main(String[] args) {
 
