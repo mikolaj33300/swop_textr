@@ -3,9 +3,13 @@ digraph {
 	subgraph cluster_0 {
 		style=filled;
 		label=program;
-		file
-		ui
-		file -> ui -> file
+		ui[label = 
+		<<table>
+		<tr><td>ui</td></tr>
+		<tr><td>termios</td></tr>
+		</table>>, shape=none]
+		file[shape=box]
+		ui -> file -> ui
 	}
 	user -> ui
 }
