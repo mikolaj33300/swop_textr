@@ -1,0 +1,27 @@
+/*
+    screen bevat activeview met coordinaten om enkel view te updaten die actief is bij het schrijven van tekst
+*/
+digraph {
+    node[shape=box]
+    // front end
+    screen
+    layout
+    view
+    scrollbar[shape=oval]
+    statusbar[shape=oval]
+    cursor[shape=oval]
+    filebuffer
+    activewindow[shape=oval]
+    file
+    view -> filebuffer[label=n]
+    filebuffer -> view[label=1]
+    filebuffer -> file[label=1]
+    filebuffer -> cursor
+    file -> filebuffer[label=1]
+    view -> {scrollbar, statusbar}
+    screen -> layout[label=1]
+    layout -> screen[label=1]
+    layout -> view[label=1]
+    layout -> layout[label="0..n"]
+    screen->activewindow
+}

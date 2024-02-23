@@ -8,7 +8,6 @@ options:
 	@echo $(DIAGS)
 
 uml/%.$(OFORMAT): uml/%.dot
-	echo $^
 	dot -T$(OFORMAT) $< -o $@
 diag: uml $(DIAGS)
 
