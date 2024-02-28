@@ -7,6 +7,7 @@ options:
 
 uml/%.$(OFORMAT): uml/%.dot
 	dot -T$(OFORMAT) $< -o $@
+docs: uml $(DIAGS)
 
 clean:
 	rm -r \

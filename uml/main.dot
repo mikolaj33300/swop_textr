@@ -6,7 +6,7 @@ digraph {
 		ui[label = 
 		<<table>
 		<tr><td>ui</td></tr>
-		<tr><td>termios</td></tr>
+		<tr><td>termios<br/>layout</td></tr>
 		</table>>, shape=none]
 		file[shape=box]
 		ui -> file -> ui

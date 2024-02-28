@@ -5,27 +5,35 @@ digraph{
     node[shape=none]
 
     screen [label=<<table><tr><td>screen</td></tr>
-	<tr><td>-RootLayout</td></tr>
-	<tr><td>+Render()</td></tr>
+	<tr><td>-RootLayout: layout</td></tr>
+	<tr><td>+Render()<br/>
+		+createScreen(root: layout)<br/>
+		+saveBuffer()<br/>
+		+enterText()</td></tr>
 	</table>>]
 
     controller [label=<<table>
 	<tr><td>controller</td></tr>
-	<tr><td>+keyboardListener()</td></tr>
+	<tr><td>+keyboardListener()<br/>
+		+main()</td></tr>
 	</table>>]
 
     lay [label=<<table>
 	<tr><td>layout</td></tr>
 	<tr><td>-parent: layout</td></tr>
+	<tr><td>+moveFocus()<br/>
+		+applyToActive()</td></tr>
 	</table>>]
 
     leaf [label=<<table>
 	<tr><td>leaf</td></tr>
 	<tr><td>-focussed: boolean<br/>
 		-scrollbar: int<br/>
-		-statusbar: string</td></tr>
+		-statusbar: string<br/>
+		-size: int</td></tr>
 	<tr><td>+getLeftMost()<br/>
-		+getRightMost()</td></tr>
+		+getRightMost()<br/>
+		+createLeaf()</td></tr>
 	</table>>]
 
     /*
@@ -34,19 +42,36 @@ digraph{
     nd [label=<<table>
 	<tr><td>node</td></tr>
 	<tr><td>-type: enum<br/>
-		-children: layout
-		</td></tr>
+		-children: layout</td></tr>
+	<tr><td>+createNode(type: enum)</td></tr>
 	</table>>]
 
     fbview [label=<<table>
-	<tr><td>fileBufferView</td></tr>
+	<tr><td>fileBuffer</td></tr>
 	<tr><td>-dirty: boolean<br/>
+		-file: file<br/>
+		-content: string</td></tr>
+	<tr><td>+update()<br/>
+		+saveBuffer()<br/>
+		+close()<br/>
+		+createFileBuffer(file: file)</td></tr>
+	</table>>]
+	
+    /*
+    view [label=<<table>
+	<tr><td>view</td></tr>
+	<tr><td>+updateView()
 		</td></tr>
 	</table>>]
+	*/
+
 
     file [label=<<table>
 	<tr><td>file</td></tr>
 	<tr><td>-path: string</td></tr>
+	<tr><td>+createFile(path: string)<br/>
+		+save()<br/>
+		+close()</td></tr>
 	</table>>]
 
     controller -> screen -> lay[label="1..1"]
