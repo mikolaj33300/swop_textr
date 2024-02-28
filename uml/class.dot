@@ -1,0 +1,56 @@
+/*
+    u-> init -> c -> init -> s -> layout met eerste filebuffer (loop over filenames)
+*/
+digraph{
+    node[shape=none]
+
+    screen [label=<<table><tr><td>screen</td></tr>
+	<tr><td>-RootLayout</td></tr>
+	<tr><td>+Render()</td></tr>
+	</table>>]
+
+    controller [label=<<table>
+	<tr><td>controller</td></tr>
+	<tr><td>+keyboardListener()</td></tr>
+	</table>>]
+
+    lay [label=<<table>
+	<tr><td>layout</td></tr>
+	<tr><td>-parent: layout</td></tr>
+	</table>>]
+
+    leaf [label=<<table>
+	<tr><td>leaf</td></tr>
+	<tr><td>-focussed: boolean<br/>
+		-scrollbar: int<br/>
+		-statusbar: string</td></tr>
+	<tr><td>+getLeftMost()<br/>
+		+getRightMost()</td></tr>
+	</table>>]
+
+    /*
+	no polymorphism since all other properties are the same
+    */
+    nd [label=<<table>
+	<tr><td>node</td></tr>
+	<tr><td>-type: enum<br/>
+		-children: layout
+		</td></tr>
+	</table>>]
+
+    fbview [label=<<table>
+	<tr><td>fileBufferView</td></tr>
+	<tr><td>-dirty: boolean<br/>
+		</td></tr>
+	</table>>]
+
+    file [label=<<table>
+	<tr><td>file</td></tr>
+	<tr><td>-path: string</td></tr>
+	</table>>]
+
+    controller -> screen -> lay[label="1..1"]
+    lay -> {leaf, nd}
+    leaf->fbview->file
+    nd->lay[label="1..N"]
+}
