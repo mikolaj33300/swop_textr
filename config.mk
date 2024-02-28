@@ -6,3 +6,4 @@
 OFORMAT = pdf
 DOT := $(wildcard ./uml/*.dot)
 DIAGS=$(patsubst %.dot,%.$(OFORMAT),$(DOT))
+termios = termios/_build/main/io.github.btj.termios.jar

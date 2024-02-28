@@ -1,18 +1,16 @@
 include config.mk
 
-all: options diag termios
+all: options uml $(DIAGS) $(termios)
 
 options:
-	@echo dotfiles: $(DOT)
-	@echo outformat: $(OFORMAT)
-	@echo $(DIAGS)
+	@echo OFORMAT: $(OFORMAT)
 
 uml/%.$(OFORMAT): uml/%.dot
 	dot -T$(OFORMAT) $< -o $@
-diag: uml $(DIAGS)
 
 clean:
-	rum -v \
-		$(DIAGS)
-termios:
-	$(MAKE) -C ./termios
+	rm -r \
+		$(DIAGS) \
+		termios/_build/
+$(termios):
+	$(MAKE) -C termios -B jar
