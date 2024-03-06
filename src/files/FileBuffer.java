@@ -1,48 +1,91 @@
 package files;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+/**
+ * Suggestie om File en FileBuffer samen te voegen.
+ *
+ * Onze File klasse zou een java IO File bevatten...
+ *
+ * Dit is enkel een suggestie je kan dit makkelijk verwijderen.
+ * Voor de zekerheid heb ik de andere klassen geïmplementeerd volgens het schema
+ * Ook dat is maar een suggestie en mogen volledig herschreven worden naar eigen
+ * wil.
+ */
 public class FileBuffer {
-    private boolean dirty;
-    private FileHolder file;
+
+    private File file;
+    private boolean dirty = false;
     private String content;
+    private final String path;
 
-    public FileBuffer(String path) {
-        this.file = new FileHolder(path);
-        this.content = file.getContent();
-    }
-
-    /*
-     * this needs to get a bit more complex since the content will probably be a single char that needs to be written to a single place
+    /**
+     * Creates FileBuffer object with given path;
+     * @param path
      */
-    public void update(String content) {
-        this.dirty = true;
-        this.content = content;
+    public FileBuffer(String path) {
+        Path checkPath = Paths.get(path);
+        if(!Files.exists(checkPath)) {}
+        this.file = new File(path);
+        this.content = getContent();
+        this.path = path;
     }
 
-    public void saveBuffer()
-    {
-        this.file.save(this.content);
+    /**
+     * Returns the content of the file
+     * @return
+     */
+    public final String getContent() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(this.file));
+            String contents = "";
+            String line;
+
+            while((line = reader.readLine()) != null)
+                contents += line;
+
+            return contents;
+
+        } catch(IOException e) {
+
+            e.printStackTrace();
+            System.out.println("[FileBuffer] Exception while trying to read contents of file.");
+
+        }
+        return "";
     }
 
-    public void close() {
-        this.file.close();
+    /**
+     * Updates the content of the FileBuffer
+     */
+    public final void update(String updatedContents) {
+        this.content = updatedContents;
+        dirty = true;
     }
 
-    private void setContents(String contents) {
-        this.content = contents;
+    /**
+     * Saves the buffer contents to disk
+     */
+    public final void save() {
+        if(!dirty) return;
+        try {
+            FileWriter writer = new FileWriter(this.file);
+            writer.write(this.content);
+            writer.close();
+            this.dirty = false;
+        } catch(IOException e) {
+            System.out.println("[FileBuffer] Exception while trying to save file contents");
+        }
     }
 
     public FileBuffer clone() {
-        // Note: path is cloned. Let's clone it again to be sure of rEpReSenTaTioN eXpoSure
-        String path = new String(this.file.getPath());
-        // Clone of clone of clone to avoid rEpreSenTAtiOn ExpOSure
-        FileBuffer copy = new FileBuffer(new String(path));
-
-        // Hier zitten we met een probleem, want contents wordt niet gekopieerd. We kunnen een
-        // PRIVATE methode aanmaken voor rEpREsEntATion ExpOsuRE te vermijden.
-        copy.setContents(this.content);
-
+        FileBuffer copy = new FileBuffer(this.path);
+        copy.dirty = this.dirty;
+        copy.content = new String(this.content);
         return copy;
-
     }
 
 }
