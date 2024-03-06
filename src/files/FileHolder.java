@@ -18,6 +18,13 @@ public class FileHolder {
 		this.file = new File(path);
 	}
 
+	/**
+	 * Clones the String path and returns it to avoid rePrEsEntAtion eXpoSuRe
+	 */
+	public String getPath() {
+		return new String(this.path);
+	}
+
 	/* CreateFile kan niet aangeroepen worden tenzij File al bestaat...
 	   lijkt onnodig...?
 	public String createFile(String path) {

@@ -1,10 +1,12 @@
 package layouttree;
 
+import files.FileBuffer;
+
 public class LayoutLeaf extends Layout {
     private boolean isActive;
-    private fileBuffer containedFileBuffer;
+    private FileBuffer containedFileBuffer;
 
-    public LayoutLeaf(fileBuffer fb, boolean active){
+    public LayoutLeaf(FileBuffer fb, boolean active){
         this.containedFileBuffer = fb.clone();
         this.isActive = active;
     }

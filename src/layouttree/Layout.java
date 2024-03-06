@@ -1,19 +1,19 @@
 package layouttree;
 
 public abstract class Layout implements Cloneable {
-    public enum STATUS_MOVE{
+    public enum STATUS_MOVE {
         SUCCESS,
         CANNOT_FIND,
         FOUND
     }
 
-    public enum STATUS_ROTATE{
+    public enum STATUS_ROTATE {
         SUCCESS,
         CANNOT_FIND,
         FOUND
     }
 
-    public enum DIRECTION{
+    public enum DIRECTION {
         LEFT,
         RIGHT
     }

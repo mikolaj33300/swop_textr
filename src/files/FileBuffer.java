@@ -26,4 +26,23 @@ public class FileBuffer {
     public void close() {
         this.file.close();
     }
+
+    private void setContents(String contents) {
+        this.content = contents;
+    }
+
+    public FileBuffer clone() {
+        // Note: path is cloned. Let's clone it again to be sure of rEpReSenTaTioN eXpoSure
+        String path = new String(this.file.getPath());
+        // Clone of clone of clone to avoid rEpreSenTAtiOn ExpOSure
+        FileBuffer copy = new FileBuffer(new String(path));
+
+        // Hier zitten we met een probleem, want contents wordt niet gekopieerd. We kunnen een
+        // PRIVATE methode aanmaken voor rEpREsEntATion ExpOsuRE te vermijden.
+        copy.setContents(this.content);
+
+        return copy;
+
+    }
+
 }
