@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import static layouttree.Layout.STATUS_MOVE.*;
 import static layouttree.Layout.STATUS_ROTATE.FOUND;
 
-public class LayoutNode extends Layout{
+public class LayoutNode extends Layout {
     private ArrayList<Layout> children;
 
     public LayoutNode(ArrayList<Layout> listLayouts){
@@ -52,7 +52,7 @@ public class LayoutNode extends Layout{
 
                 int index = children.indexOf(l);
                 if (index < children.size()-1) {
-                    this.mergeRotateActive(children.get(index + 1).getLeftLeaf(), dir);
+                   // this.mergeRotateActive(children.get(index + 1).getLeftLeaf(), dir);
                     return STATUS_ROTATE.SUCCESS;
                 }
             }

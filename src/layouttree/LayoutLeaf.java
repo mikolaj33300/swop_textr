@@ -44,7 +44,7 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    protected LayoutLeaf clone() throws CloneNotSupportedException{
+    protected LayoutLeaf clone() {
         return new LayoutLeaf(containedFileBuffer.clone(), true);
     }
 }
