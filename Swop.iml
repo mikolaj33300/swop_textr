@@ -19,4 +19,7 @@
     </orderEntry>
     <orderEntry type="library" name="io.github.btj.termios-0.5" level="project" />
   </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="5d166960-fdf5-4428-b385-e21018571a17" />
+  </component>
 </module>

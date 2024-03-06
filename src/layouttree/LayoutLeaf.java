@@ -2,6 +2,8 @@ package layouttree;
 
 import files.FileBuffer;
 
+import java.util.*;
+
 public class LayoutLeaf extends Layout {
 
     private LayoutNode parent;
@@ -22,20 +24,34 @@ public class LayoutLeaf extends Layout {
     }
 
     // Hier nog ergens een enum zetten van wanneer we de actieve hebben gevonden???
-    public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
-        return STATUS_MOVE.FOUND_ACTIVE;
+    public void moveFocus(DIRECTION dir) throws RuntimeException {
+
     }
 
-    protected STATUS_MOVE moveFocusRight() throws RuntimeException {
-        return null;
+    protected void moveFocusRight() throws RuntimeException {
+        this.isActive = false;
+        parent.makeRightNeighbourActive(this);
     }
 
     public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
         return STATUS_ROTATE.FOUND_ACTIVE;
     }
 
-    protected STATUS_ROTATE rotateRelationshipNeighborRight() {
-        return null;
+    protected void rotateRelationshipNeighborClockwise() {
+        Orientation newOrientation;
+        if(parent.getOrientation() == HORIZONTAL){
+            newOrientation = VERTICAL;
+        } else {
+            newOrientation = HORIZONTAL;
+        }
+
+        LayoutLeaf newSibling = parent.getRightNeighbor(this);
+        parent.deleteRightNeighbor(this);
+        parent.replace(this, new LayoutNode(newOrientation, (new ArrayList<Layout>(Arrays.asList(this, newSibling)))));
+    }
+
+    protected boolean containsActive() {
+        return isActive;
     }
 
     public void render() {

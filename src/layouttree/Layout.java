@@ -25,16 +25,13 @@ public abstract class Layout implements Cloneable {
     private int height;
     private int width;
 
-    protected boolean containsActive;
-    public abstract STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException;
-    protected abstract STATUS_MOVE moveFocusRight() throws RuntimeException;
+    public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
+    protected abstract void moveFocusRight() throws RuntimeException;
     public abstract STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException;
-    protected abstract STATUS_ROTATE rotateRelationshipNeighborRight();
+    protected abstract void rotateRelationshipNeighborRight();
 
 
-    protected boolean containsActive() {
-        return containsActive;
-    }
+    protected abstract boolean containsActive();
 
     public abstract void render();
     protected abstract void makeLeftmostLeafActive();

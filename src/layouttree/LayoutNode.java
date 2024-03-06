@@ -2,10 +2,10 @@ package layouttree;
 
 import java.util.ArrayList;
 
-import static layouttree.Layout.STATUS_MOVE.*;
-
 public class LayoutNode extends Layout{
+    private LayoutNode parent;
     private ArrayList<Layout> children;
+    private boolean containsActive;
 
     public LayoutNode(ArrayList<Layout> listLayouts){
         children = new ArrayList<>();
@@ -26,35 +26,20 @@ public class LayoutNode extends Layout{
 
     }
 
-    public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
-        return null;
+    public void moveFocus(DIRECTION dir) throws RuntimeException {
     }
 
     /**
      * Moves focus of leaf to another.
      * Called on root layout
-     *
+     * <p>
      * Wanneer zien we dat we de actieve leaf hebben gevonden?
      */
-    public STATUS_MOVE moveFocusRight() throws RuntimeException {
+    public void moveFocusRight() throws RuntimeException {
         // Loop over all children until active found
         for (Layout l : children) {
             if(l.containsActive()){
-                STATUS_MOVE statusMove = l.moveFocusRight();
-                if (statusMove == FOUND_ACTIVE) {
-                    int index = children.indexOf(l);
-                    if (index < children.size() - 1) {
-                        children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
-                        return SUCCESS;
-                    } else {
-                        this.containsActive = false; //called when we need to backtrack one level up
-                        return FOUND_ACTIVE;
-                    }
-                }
-                // Upon success, we stop the calls.
-                else if (statusMove == SUCCESS){
-                    return STATUS_MOVE.SUCCESS;
-                }
+                l.moveFocusRight();
             }
         }
         throw new RuntimeException("No node contains active!");
@@ -65,10 +50,11 @@ public class LayoutNode extends Layout{
     }
 
     //direction needs to be analysed and further improved
-    public STATUS_ROTATE rotateRelationshipNeighborRight() throws RuntimeException {
+    public void rotateRelationshipNeighborRight() throws RuntimeException {
         for (Layout l : children) {
             if(l.containsActive()){
-                STATUS_ROTATE statusRotate = l.rotateRelationshipNeighborRight();
+                l.rotateRelationshipNeighborRight();
+/*                STATUS_ROTATE statusRotate = l.rotateRelationshipNeighborRight();
                 if (statusRotate == STATUS_ROTATE.FOUND_ACTIVE) {
                     int index = children.indexOf(l);
                     if (index < children.size() - 1) {
@@ -83,10 +69,15 @@ public class LayoutNode extends Layout{
                 // Upon success, we stop the calls.
                 else if (statusRotate == STATUS_ROTATE.SUCCESS){
                     return STATUS_ROTATE.SUCCESS;
-                }
+                }*/
             }
         }
         return null;
+    }
+
+
+    protected boolean containsActive() {
+        return containsActive;
     }
 
     public void render() {
@@ -102,7 +93,7 @@ public class LayoutNode extends Layout{
     }
 
     protected void setInactive() {
-
+        this.containsActive = false;
     }
 
     protected LayoutLeaf getLeftLeaf(){
@@ -115,5 +106,15 @@ public class LayoutNode extends Layout{
             deepCopyList.add(l.clone());
         }
         return new LayoutNode(deepCopyList);
+    }
+
+    //add check for valid subtree child
+    protected void makeRightNeighbourActive(Layout layout) {
+        int index = children.indexOf(layout);
+        if (index < children.size() - 1) {
+            children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
+        } else {
+            parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
+        }
     }
 }
