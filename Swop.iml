@@ -17,6 +17,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="io.github.btj.termios-0.5" level="project" />
+    <orderEntry type="library" name="io.github.btj.termios-0.7" level="project" />
   </component>
 </module>

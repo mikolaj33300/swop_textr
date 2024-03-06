@@ -2,7 +2,7 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-.idea/libraries/io_github_btj_termios_0_5.xml
+.idea/libraries/io_github_btj_termios_0_7.xml
 
 ### Eclipse ###
 .apt_generated
