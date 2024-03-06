@@ -1,4 +1,4 @@
-package LayoutTree;
+package layouttree;
 
 public class LayoutLeaf extends Layout {
     private boolean isActive;

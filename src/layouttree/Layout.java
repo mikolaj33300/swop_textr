@@ -1,4 +1,4 @@
-package LayoutTree;
+package layouttree;
 
 public abstract class Layout implements Cloneable {
     public enum STATUS_MOVE{

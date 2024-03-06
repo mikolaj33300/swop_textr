@@ -1,8 +1,8 @@
-package LayoutTree;
+package layouttree;
 
 import java.util.ArrayList;
 
-import static LayoutTree.Layout.STATUS_MOVE.*;
+import static layouttree.Layout.STATUS_MOVE.*;
 
 public class LayoutNode extends Layout{
     private ArrayList<Layout> children;
