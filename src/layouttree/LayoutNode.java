@@ -96,6 +96,11 @@ public class LayoutNode extends Layout{
         this.containsActive = false;
     }
 
+    @Override
+    protected void mergeActiveAndRotate(DIRECTION dir) {
+
+    }
+
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
     }

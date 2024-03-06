@@ -15,7 +15,7 @@ public class Controller {
     private Layout rootLayout;
 
     public Controller(String[] args) {
-
+        this.rootLayout = getRootLayout(args);
     }
 
     /**
@@ -33,20 +33,18 @@ public class Controller {
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException {
-        Controller controller = new Controller(args);
-        run();
+        Terminal.enterRawInputMode();
+        //Controller btj = new Controller(args);
+        //btj.loop();
     }
 
-    public static void run() throws IOException {
+    public void loop() {
 
         Terminal.enterRawInputMode();
 
-        for (; ; ) {
+        for ( ; ; ) {
 
-            int c = Terminal.readByte();
 
-            if (c == '\033')
-                System.out.println("Pressed");
 
         }
 
@@ -71,7 +69,5 @@ public class Controller {
     public void rotateRelationshipNeighbour() {
 
     }
-
-
 
 }
