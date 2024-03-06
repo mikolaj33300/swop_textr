@@ -15,7 +15,9 @@ import java.nio.file.Paths;
  * Ook dat is maar een suggestie en mogen volledig herschreven worden naar eigen
  * wil.
  */
-public class FileBuffer {
+public class 
+FileBuffer 
+{
 
     private File file;
     private boolean dirty = false;
@@ -26,7 +28,9 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * @param path
      */
-    public FileBuffer(String path) {
+    public 
+    FileBuffer(String path) 
+    {
         Path checkPath = Paths.get(path);
         if(!Files.exists(checkPath)) {}
         this.file = new File(path);
@@ -38,7 +42,9 @@ public class FileBuffer {
      * Returns the content of the file
      * @return
      */
-    public final String getContent() {
+    public final String 
+    getContent () 
+    {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(this.file));
             String contents = "";
@@ -61,7 +67,9 @@ public class FileBuffer {
     /**
      * Updates the content of the FileBuffer
      */
-    public final void update(String updatedContents) {
+    public final void 
+    update (String updatedContents) 
+    {
         this.content = updatedContents;
         dirty = true;
     }
@@ -69,7 +77,9 @@ public class FileBuffer {
     /**
      * Saves the buffer contents to disk
      */
-    public final void save() {
+    public final void 
+    save () 
+    {
         if(!dirty) return;
         try {
             FileWriter writer = new FileWriter(this.file);
@@ -81,7 +91,9 @@ public class FileBuffer {
         }
     }
 
-    public FileBuffer clone() {
+    public FileBuffer 
+    clone () 
+    {
         FileBuffer copy = new FileBuffer(this.path);
         copy.dirty = this.dirty;
         copy.content = new String(this.content);
