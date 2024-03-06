@@ -105,6 +105,11 @@ public class LayoutNode extends Layout{
 
     }
 
+    @Override
+    protected void mergeActiveAndRotate(DIRECTION dir) {
+
+    }
+
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
     }

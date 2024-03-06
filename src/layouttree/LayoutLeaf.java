@@ -57,6 +57,11 @@ public class LayoutLeaf extends Layout {
         isActive = false;
     }
 
+    @Override
+    protected void mergeActiveAndRotate(DIRECTION dir) {
+
+    }
+
     protected LayoutLeaf getLeftLeaf() {
         return this.clone();
     }
