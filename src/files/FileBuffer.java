@@ -5,9 +5,9 @@ public class FileBuffer {
     private FileHolder file;
     private String content;
 
-    public void createFileBuffer(String path) {
+    public FileBuffer(String path) {
         this.file = new FileHolder(path);
-        this.content = this.file.getContent(path);
+        this.content = file.getContent();
     }
 
     /*
@@ -23,8 +23,7 @@ public class FileBuffer {
         this.file.save(this.content);
     }
 
-    public void close()
-    {
+    public void close() {
         this.file.close();
     }
 }

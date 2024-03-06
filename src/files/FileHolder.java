@@ -41,7 +41,7 @@ public class FileHolder {
 
 	}
 
-	public String getContent(String path) {
+	public String getContent() {
 		try {
 			FileReader reader = new FileReader(this.file);
 
