@@ -1,10 +1,11 @@
 package layouttree;
 
 public abstract class Layout implements Cloneable {
+
     public enum STATUS_MOVE {
-        SUCCESS,
-        CANNOT_FIND,
-        FOUND
+
+        FOUND_ACTIVE,
+        SUCCESS
     }
 
     public enum STATUS_ROTATE {
@@ -21,8 +22,14 @@ public abstract class Layout implements Cloneable {
     private int height;
     private int width;
 
+    protected boolean containsActive;
     public abstract STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException;
+    protected abstract STATUS_MOVE moveFocusRight() throws RuntimeException;
     public abstract STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException;
+
+    protected boolean containsActive() {
+        return containsActive;
+    }
 
     public abstract void render();
     protected abstract void makeLeftmostLeafActive();

@@ -3,6 +3,7 @@ package layouttree;
 import java.util.ArrayList;
 
 import static layouttree.Layout.STATUS_MOVE.*;
+import static layouttree.Layout.STATUS_ROTATE.FOUND;
 
 public class LayoutNode extends Layout{
     private ArrayList<Layout> children;
@@ -11,7 +12,6 @@ public class LayoutNode extends Layout{
         children = new ArrayList<>();
         for(Layout l : listLayouts){
             children.add(l.clone());
-
         }
     }
 
@@ -21,40 +21,35 @@ public class LayoutNode extends Layout{
      *
      * Wanneer zien we dat we de actieve leaf hebben gevonden?
      */
-    public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
-        // Loop over all children --
+    public STATUS_MOVE moveFocusRight() throws RuntimeException {
+        // Loop over all children until active found
         for (Layout l : children) {
-            // Called method again
-            STATUS_MOVE statusMove = l.moveFocus(dir);
-            // FOUND is only when l was a leaf.
-            if (statusMove == FOUND) {
-                int index = children.indexOf(l);
-                if (index < children.size()-1) {
-                    children.get(index+1).makeLeftmostLeafActive();
-                    return SUCCESS; // Called when this l is not the last child.
-                } else {
-                    return FOUND; // If this is the last child, we move to another child.
+            if(l.containsActive()){
+                STATUS_MOVE statusMove = l.moveFocusRight();
+                if (statusMove == FOUND_ACTIVE) {
+                    int index = children.indexOf(l);
+                    if (index < children.size() - 1) {
+                        children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
+                        return SUCCESS;
+                    } else {
+                        this.containsActive = false; //called when we need to backtrack one level up
+                        return FOUND_ACTIVE;
+                    }
                 }
                 // Upon success, we stop the calls.
-            } else if (statusMove == SUCCESS){
-                return SUCCESS;
-            } else if (statusMove == CANNOT_FIND){
-                int indexChild = children.indexOf(l);
-                if(indexChild == children.size()-1){
-                    throw new RuntimeException("Layout contains no active leaf");
+                else if (statusMove == SUCCESS){
+                    return STATUS_MOVE.SUCCESS;
                 }
-                return CANNOT_FIND;
             }
         }
-        // Wanneer we verderzoeken in node
-        throw new RuntimeException("Children empty!");
+        throw new RuntimeException("No node contains active!");
     }
 
     //direction needs to be analysed and further improved
     public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
         for (Layout l : children) {
-            STATUS_ROTATE statusMove = l.rotateRelationshipNeighbor(dir);
-            if(statusMove == STATUS_ROTATE.FOUND){
+            if(l.containsActive()){
+
                 int index = children.indexOf(l);
                 if (index < children.size()-1) {
                     this.mergeRotateActive(children.get(index + 1).getLeftLeaf(), dir);
@@ -70,25 +65,18 @@ public class LayoutNode extends Layout{
         return;
     }
 
-    @Override
     protected void makeLeftmostLeafActive() {
         children.get(0).makeLeftmostLeafActive();
     }
 
-    @Override
     protected void makeRightmostLeafActive() {
         children.get(children.size()-1).makeRightmostLeafActive();
-    }
-
-    @Override
-    protected void setInactive() {
     }
 
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
     }
 
-    @Override
     protected Layout clone(){
         ArrayList<Layout> deepCopyList = new ArrayList<>();
         for(Layout l : children){
