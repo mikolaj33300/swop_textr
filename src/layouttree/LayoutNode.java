@@ -3,7 +3,6 @@ package layouttree;
 import java.util.ArrayList;
 
 import static layouttree.Layout.STATUS_MOVE.*;
-import static layouttree.Layout.STATUS_ROTATE.FOUND;
 
 public class LayoutNode extends Layout{
     private ArrayList<Layout> children;
@@ -13,6 +12,22 @@ public class LayoutNode extends Layout{
         for(Layout l : listLayouts){
             children.add(l.clone());
         }
+    }
+
+    protected void deleteLeftLeaf() {
+        children.get(0).deleteLeftLeaf();
+    }
+
+    protected boolean delete(Layout l){
+        return children.remove(l);
+    }
+
+    protected void mergeActiveWith(Layout toMergeLayout) {
+
+    }
+
+    public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
+        return null;
     }
 
     /**
@@ -45,20 +60,33 @@ public class LayoutNode extends Layout{
         throw new RuntimeException("No node contains active!");
     }
 
-    //direction needs to be analysed and further improved
     public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
+        return null;
+    }
+
+    //direction needs to be analysed and further improved
+    public STATUS_ROTATE rotateRelationshipNeighborRight() throws RuntimeException {
         for (Layout l : children) {
             if(l.containsActive()){
-
-                int index = children.indexOf(l);
-                if (index < children.size()-1) {
-                    this.mergeRotateActive(children.get(index + 1).getLeftLeaf(), dir);
+                STATUS_ROTATE statusRotate = l.rotateRelationshipNeighborRight();
+                if (statusRotate == STATUS_ROTATE.FOUND_ACTIVE) {
+                    int index = children.indexOf(l);
+                    if (index < children.size() - 1) {
+                        Layout toMergeLayout = children.get(index + 1).getLeftLeaf(); // Called when a child of current node contains the to merge leaf.
+                        children.get(index + 1).deleteLeftLeaf();
+                        this.mergeActiveWith(toMergeLayout);
+                        return STATUS_ROTATE.SUCCESS;
+                    } else {
+                        return STATUS_ROTATE.FOUND_ACTIVE;
+                    }
+                }
+                // Upon success, we stop the calls.
+                else if (statusRotate == STATUS_ROTATE.SUCCESS){
                     return STATUS_ROTATE.SUCCESS;
                 }
             }
         }
-        // This method was wrong by syntax so this PLACEHOLDER was put here
-        return STATUS_ROTATE.CANNOT_FIND;
+        return null;
     }
 
     public void render() {
@@ -71,6 +99,10 @@ public class LayoutNode extends Layout{
 
     protected void makeRightmostLeafActive() {
         children.get(children.size()-1).makeRightmostLeafActive();
+    }
+
+    protected void setInactive() {
+
     }
 
     protected LayoutLeaf getLeftLeaf(){

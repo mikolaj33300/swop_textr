@@ -2,6 +2,10 @@ package layouttree;
 
 public abstract class Layout implements Cloneable {
 
+    protected abstract void deleteLeftLeaf();
+
+    protected abstract void mergeActiveWith(Layout toMergeLayout);
+
     public enum STATUS_MOVE {
 
         FOUND_ACTIVE,
@@ -9,9 +13,8 @@ public abstract class Layout implements Cloneable {
     }
 
     public enum STATUS_ROTATE {
-        SUCCESS,
-        CANNOT_FIND,
-        FOUND
+        FOUND_ACTIVE,
+        SUCCESS
     }
 
     public enum DIRECTION {
@@ -26,6 +29,8 @@ public abstract class Layout implements Cloneable {
     public abstract STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException;
     protected abstract STATUS_MOVE moveFocusRight() throws RuntimeException;
     public abstract STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException;
+    protected abstract STATUS_ROTATE rotateRelationshipNeighborRight();
+
 
     protected boolean containsActive() {
         return containsActive;
@@ -36,9 +41,7 @@ public abstract class Layout implements Cloneable {
     protected abstract void makeRightmostLeafActive();
     protected abstract void setInactive();
 
-    protected void mergeActiveAndRotate(LayoutLeaf leftLeaf, DIRECTION dir) {
-        applyToFocused(...);
-    }
+    protected abstract void mergeActiveAndRotate(DIRECTION dir);
 
     protected abstract LayoutLeaf getLeftLeaf();
 

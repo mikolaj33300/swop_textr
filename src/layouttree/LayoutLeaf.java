@@ -3,6 +3,8 @@ package layouttree;
 import files.FileBuffer;
 
 public class LayoutLeaf extends Layout {
+
+    private LayoutNode parent;
     private boolean isActive;
     private FileBuffer containedFileBuffer;
 
@@ -11,13 +13,29 @@ public class LayoutLeaf extends Layout {
         this.isActive = active;
     }
 
+    protected void deleteLeftLeaf() {
+        parent.delete(this);
+    }
+
+    protected void mergeActiveWith(Layout toMergeLayout) {
+
+    }
+
     // Hier nog ergens een enum zetten van wanneer we de actieve hebben gevonden???
     public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
-        return STATUS_MOVE.FOUND;
+        return STATUS_MOVE.FOUND_ACTIVE;
+    }
+
+    protected STATUS_MOVE moveFocusRight() throws RuntimeException {
+        return null;
     }
 
     public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
-        return STATUS_ROTATE.FOUND;
+        return STATUS_ROTATE.FOUND_ACTIVE;
+    }
+
+    protected STATUS_ROTATE rotateRelationshipNeighborRight() {
+        return null;
     }
 
     public void render() {
@@ -44,7 +62,7 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    protected LayoutLeaf clone() throws CloneNotSupportedException{
+    protected LayoutLeaf clone() {
         return new LayoutLeaf(containedFileBuffer.clone(), true);
     }
 }
