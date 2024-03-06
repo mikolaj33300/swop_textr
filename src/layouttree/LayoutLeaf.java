@@ -11,6 +11,7 @@ public class LayoutLeaf extends Layout {
         this.isActive = active;
     }
 
+    // Hier nog ergens een enum zetten van wanneer we de actieve hebben gevonden???
     public STATUS_MOVE moveFocus(DIRECTION dir) throws RuntimeException {
         return STATUS_MOVE.FOUND;
     }
@@ -23,12 +24,19 @@ public class LayoutLeaf extends Layout {
         return;
     }
 
+    @Override
     protected void makeLeftmostLeafActive() {
         isActive = true;
     }
 
+    @Override
     protected void makeRightmostLeafActive() {
         isActive = true;
+    }
+
+    @Override
+    protected void setInactive() {
+        isActive = false;
     }
 
     protected LayoutLeaf getLeftLeaf() {

@@ -27,10 +27,11 @@ public abstract class Layout implements Cloneable {
     public abstract void render();
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
+    protected abstract void setInactive();
 
-    protected void mergeActiveAndRotate(LayoutLeaf leftLeaf, DIRECTION dir){
+    protected void mergeActiveAndRotate(LayoutLeaf leftLeaf, DIRECTION dir) {
         applyToFocused(...);
-    };
+    }
 
     protected abstract LayoutLeaf getLeftLeaf();
 
