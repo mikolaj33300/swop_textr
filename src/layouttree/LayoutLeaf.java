@@ -4,6 +4,9 @@ import files.FileBuffer;
 
 import java.util.*;
 
+import static layouttree.Layout.Orientation.HORIZONTAL;
+import static layouttree.Layout.Orientation.VERTICAL;
+
 public class LayoutLeaf extends Layout {
 
     private LayoutNode parent;
@@ -37,13 +40,9 @@ public class LayoutLeaf extends Layout {
         return STATUS_ROTATE.FOUND_ACTIVE;
     }
 
-    @Override
-    protected void rotateRelationshipNeighborRight() {
-        // todo
-    }
 
     protected void rotateRelationshipNeighborClockwise() {
-        /*Orientation newOrientation;
+        Orientation newOrientation;
         if(parent.getOrientation() == HORIZONTAL){
             newOrientation = VERTICAL;
         } else {
@@ -52,7 +51,7 @@ public class LayoutLeaf extends Layout {
 
         LayoutLeaf newSibling = parent.getRightNeighbor(this);
         parent.deleteRightNeighbor(this);
-        parent.replace(this, new LayoutNode(newOrientation, (new ArrayList<Layout>(Arrays.asList(this, newSibling)))));*/
+        parent.mergeAndRotateClockwise(this, newSibling);
     }
 
     protected boolean containsActive() {

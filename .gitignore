@@ -3,7 +3,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea/libraries/io_github_btj_termios_0_7.xml
-
+.idea/*
 ### Eclipse ###
 .apt_generated
 .classpath

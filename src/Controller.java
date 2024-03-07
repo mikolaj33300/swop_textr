@@ -6,14 +6,17 @@ import layouttree.LayoutNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Controller {
 
+    /**
+     * The beginning layout when the application is started with paths.
+     */
     private Layout rootLayout;
 
+    /**
+     * Creates a controller object.
+     */
     public Controller(String[] args) {
         this.rootLayout = getRootLayout(args);
     }
@@ -26,7 +29,7 @@ public class Controller {
         for(String s : args) {
             leaves.add(new LayoutLeaf(new FileBuffer(s), false));
         }
-        return new LayoutNode(leaves);
+        return new LayoutNode(newOrientation, leaves);
     }
 
     /**
@@ -42,23 +45,44 @@ public class Controller {
         System.out.println("Project runs succesfully");
         Terminal.enterRawInputMode();
 
-
         for ( ; ; ) {
 
             int c = Terminal.readByte();
 
-            if(c == 'Q') System.out.println("Hello!");
+            switch(c) {
+                    // Control + S
+                case 19:
 
-            break;
+                    break;
+                    // Control + P
+                case 16:
+
+                    break;
+
+                    // Control + N
+                case 14:
+                    break;
+
+                default:
+
+                    render();
+
+            }
 
         }
 
     }
 
-    public void render(int heigh, int width) {
-
+    /**
+     * Renders the layout
+     */
+    public void render() {
+        this.rootLayout.render();
     }
 
+    /**
+     * After entering this combination
+     */
     public void saveBuffer() {
 
     }

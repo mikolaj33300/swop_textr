@@ -10,11 +10,24 @@ package files;
  * Ook dat is maar een suggestie en mogen volledig herschreven worden naar eigen
  * wil.
  */
+
 public class 
 FileBuffer 
 {
+
+    /**
+     * file reference
+     */
   private FileHolder file;
+  /**
+   * check if buffer modified
+   */
   private boolean dirty = false;
+    /**
+     * Holds the 'in memory' model from the file.
+     *
+     * @representationObject
+     */
   private String content;
 
   /**
@@ -49,6 +62,10 @@ FileBuffer
       this.dirty = false;
   }
 
+  /**
+   * Clones this object
+   * @return
+   */
   public FileBuffer 
   clone () 
   {
