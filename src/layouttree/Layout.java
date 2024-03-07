@@ -21,6 +21,12 @@ public abstract class Layout implements Cloneable {
         LEFT,
         RIGHT
     }
+
+    public enum Orientation {
+        HORIZONTAL,
+        VERTICAL
+    }
+
     private Layout parent;
     private int height;
     private int width;
@@ -28,7 +34,7 @@ public abstract class Layout implements Cloneable {
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
     protected abstract void moveFocusRight() throws RuntimeException;
     public abstract STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException;
-    protected abstract void rotateRelationshipNeighborRight();
+    protected abstract void rotateRelationshipNeighborClockwise();
 
 
     protected abstract boolean containsActive();

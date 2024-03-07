@@ -4,6 +4,9 @@ import files.FileBuffer;
 
 import java.util.*;
 
+import static layouttree.Layout.Orientation.HORIZONTAL;
+import static layouttree.Layout.Orientation.VERTICAL;
+
 public class LayoutLeaf extends Layout {
 
     private LayoutNode parent;

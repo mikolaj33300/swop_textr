@@ -6,7 +6,6 @@ import layouttree.LayoutNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -26,7 +25,7 @@ public class Controller {
         for(String s : args) {
             leaves.add(new LayoutLeaf(new FileBuffer(s), false));
         }
-        return new LayoutNode(leaves);
+        return new LayoutNode(newOrientation, leaves);
     }
 
     /**
