@@ -21,8 +21,9 @@ public class LayoutNode extends Layout{
         children.get(0).deleteLeftLeaf();
     }
 
-    protected boolean delete(Layout l){
-        return children.remove(l);
+    protected void delete(Layout l){
+        children.remove(l);
+        this.clean();
     }
 
     protected void mergeActiveWith(Layout toMergeLayout) {
@@ -48,15 +49,11 @@ public class LayoutNode extends Layout{
         throw new RuntimeException("No node contains active!");
     }
 
-    public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
-        return null;
-    }
-
     //direction needs to be analysed and further improved
-    public void rotateRelationshipNeighborClockwise() throws RuntimeException {
+    public void rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
         for (Layout l : children) {
             if(l.containsActive()){
-                l.rotateRelationshipNeighborClockwise();
+                l.rotateRelationshipNeighbor(rot_dir);
             }
         }
     }
@@ -82,11 +79,6 @@ public class LayoutNode extends Layout{
         this.containsActive = false;
     }
 
-    @Override
-    protected void mergeActiveAndRotate(DIRECTION dir) {
-
-    }
-
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
     }
@@ -96,7 +88,7 @@ public class LayoutNode extends Layout{
         for(Layout l : children){
             deepCopyList.add(l.clone());
         }
-        return new LayoutNode(newOrientation, deepCopyList);
+        return new LayoutNode(this.orientation, deepCopyList);
     }
 
     //add check for valid subtree child
@@ -107,10 +99,6 @@ public class LayoutNode extends Layout{
         } else {
             parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
         }
-    }
-
-    protected void replace(Layout toReplace, LayoutNode replacedWith) {
-        if(replacedWith.)
     }
 
     public Orientation getOrientation() {
@@ -136,7 +124,7 @@ public class LayoutNode extends Layout{
     }
 
     protected void mergeAndRotateClockwise(Layout child, Layout newSibling) {
-        int index = children.indexOf(child);
+
         Orientation nextOrientation;
         ArrayList<Layout> nextChildren;
         if(this.orientation == Orientation.HORIZONTAL){
@@ -145,6 +133,43 @@ public class LayoutNode extends Layout{
         } else {
             nextOrientation = Orientation.HORIZONTAL;
             nextChildren = new ArrayList<Layout>(Arrays.asList(newSibling, child));
+        }
+
+        Layout newChild = new LayoutNode(nextOrientation, nextChildren);
+        parent.replace(this, newChild);
+    }
+
+    protected void replace(Layout toReplace, Layout newLayout){
+        int index = children.indexOf(toReplace);
+        children.set(index, newLayout);
+        this.clean();
+    }
+    protected void absorbChildren(LayoutNode toAbsorb){
+        int index = children.indexOf(toAbsorb);
+        this.children.addAll(index, toAbsorb.children);
+    }
+    protected void clean(){
+        if(children.size()==1){
+            parent.replace(this, this.children.get(0));
+        } else {
+            parent.delete(this);
+        }
+        if(this.orientation == parent.getOrientation()){
+            parent.absorbChildren(this);
+        }
+        this.parent.clean();
+    }
+
+    public void mergeAndRotateCounterclockwise(Layout child, LayoutLeaf newSibling) {
+        int index = children.indexOf(child);
+        Orientation nextOrientation;
+        ArrayList<Layout> nextChildren;
+        if(this.orientation == Orientation.HORIZONTAL){
+            nextOrientation = Orientation.VERTICAL;
+            nextChildren = new ArrayList<Layout>(Arrays.asList(newSibling, child));
+        } else {
+            nextOrientation = Orientation.HORIZONTAL;
+            nextChildren = new ArrayList<Layout>(Arrays.asList(child, newSibling));
         }
         Layout newChild = new LayoutNode(nextOrientation, nextChildren);
         children.set(index, newChild);

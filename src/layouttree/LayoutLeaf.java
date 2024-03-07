@@ -41,17 +41,15 @@ public class LayoutLeaf extends Layout {
     }
 
 
-    protected void rotateRelationshipNeighborClockwise() {
-        Orientation newOrientation;
-        if(parent.getOrientation() == HORIZONTAL){
-            newOrientation = VERTICAL;
-        } else {
-            newOrientation = HORIZONTAL;
-        }
-
+    public void rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         LayoutLeaf newSibling = parent.getRightNeighbor(this);
         parent.deleteRightNeighbor(this);
-        parent.mergeAndRotateClockwise(this, newSibling);
+        if(rot_dir==ROT_DIRECTION.CLOCKWISE){
+            parent.mergeAndRotateClockwise(this, newSibling);
+        } else {
+            parent.mergeAndRotateCounterclockwise(this, newSibling);
+        }
+
     }
 
     protected boolean containsActive() {
@@ -75,11 +73,6 @@ public class LayoutLeaf extends Layout {
     @Override
     protected void setInactive() {
         isActive = false;
-    }
-
-    @Override
-    protected void mergeActiveAndRotate(DIRECTION dir) {
-
     }
 
     protected LayoutLeaf getLeftLeaf() {

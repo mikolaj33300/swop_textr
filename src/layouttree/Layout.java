@@ -4,8 +4,6 @@ public abstract class Layout implements Cloneable {
 
     protected abstract void deleteLeftLeaf();
 
-    protected abstract void mergeActiveWith(Layout toMergeLayout);
-
     public enum STATUS_MOVE {
 
         FOUND_ACTIVE,
@@ -22,6 +20,11 @@ public abstract class Layout implements Cloneable {
         RIGHT
     }
 
+    public enum ROT_DIRECTION {
+        CLOCKWISE,
+        COUNTERCLOCKWISE
+    }
+
     public enum Orientation {
         HORIZONTAL,
         VERTICAL
@@ -33,9 +36,6 @@ public abstract class Layout implements Cloneable {
 
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
     protected abstract void moveFocusRight() throws RuntimeException;
-    public abstract STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException;
-    protected abstract void rotateRelationshipNeighborClockwise();
-
 
     protected abstract boolean containsActive();
 
@@ -44,7 +44,7 @@ public abstract class Layout implements Cloneable {
     protected abstract void makeRightmostLeafActive();
     protected abstract void setInactive();
 
-    protected abstract void mergeActiveAndRotate(DIRECTION dir);
+    public abstract void rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
 
     protected abstract LayoutLeaf getLeftLeaf();
 
