@@ -1,6 +1,7 @@
 package layouttree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LayoutNode extends Layout{
     private LayoutNode parent;
@@ -132,5 +133,20 @@ public class LayoutNode extends Layout{
         } else {
             parent.deleteRightNeighbor(this); //called when we need to backtrack one level up
         }
+    }
+
+    protected void mergeAndRotateClockwise(Layout child, Layout newSibling) {
+        int index = children.indexOf(child);
+        Orientation nextOrientation;
+        ArrayList<Layout> nextChildren;
+        if(this.orientation == Orientation.HORIZONTAL){
+            nextOrientation = Orientation.VERTICAL;
+            nextChildren = new ArrayList<Layout>(Arrays.asList(child, newSibling));
+        } else {
+            nextOrientation = Orientation.HORIZONTAL;
+            nextChildren = new ArrayList<Layout>(Arrays.asList(newSibling, child));
+        }
+        Layout newChild = new LayoutNode(nextOrientation, nextChildren);
+        children.set(index, newChild);
     }
 }
