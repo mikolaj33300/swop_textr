@@ -32,3 +32,4 @@ bin/
 *.pdf
 *.class
 *.jar
+*.so
