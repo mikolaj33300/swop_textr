@@ -15,24 +15,31 @@ import java.nio.file.Paths;
  * Ook dat is maar een suggestie en mogen volledig herschreven worden naar eigen
  * wil.
  */
-public class 
-FileBuffer 
-{
+public class FileBuffer {
 
+    /**
+     * The java IO file object reference.
+     */
     private File file;
+    /**
+     * Determines if the buffer has been modified.
+     */
     private boolean dirty = false;
+    /**
+     * Holds the 'in memory' model from the file.
+     *
+     * @representationObject
+     */
     private String content;
+    /**
+     * Determines the path of this FileBuffer
+     */
     private final String path;
 
     /**
      * Creates FileBuffer object with given path;
-     * @param path
      */
-    public 
-    FileBuffer(String path) 
-    {
-        Path checkPath = Paths.get(path);
-        if(!Files.exists(checkPath)) {}
+    public FileBuffer(String path) {
         this.file = new File(path);
         this.content = getContent();
         this.path = path;
@@ -40,11 +47,8 @@ FileBuffer
 
     /**
      * Returns the content of the file
-     * @return
      */
-    public final String 
-    getContent () 
-    {
+    public final String getContent () {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(this.file));
             String contents = "";
@@ -67,9 +71,7 @@ FileBuffer
     /**
      * Updates the content of the FileBuffer
      */
-    public final void 
-    update (String updatedContents) 
-    {
+    public final void update (String updatedContents) {
         this.content = updatedContents;
         dirty = true;
     }
@@ -77,9 +79,7 @@ FileBuffer
     /**
      * Saves the buffer contents to disk
      */
-    public final void 
-    save () 
-    {
+    public final void save () {
         if(!dirty) return;
         try {
             FileWriter writer = new FileWriter(this.file);
@@ -91,9 +91,11 @@ FileBuffer
         }
     }
 
-    public FileBuffer 
-    clone () 
-    {
+    /**
+     * Clones this object
+     * @return
+     */
+    public FileBuffer clone () {
         FileBuffer copy = new FileBuffer(this.path);
         copy.dirty = this.dirty;
         copy.content = new String(this.content);
