@@ -45,5 +45,9 @@ Update: vroeger had deze klasse een referentie naar een 'File' klasse. Deze klas
         Voorlopig is er geen meerwaarde (IN DIT PROJECT VOOR TXT BESTANDEN) om save() en close(), of zelfs read()
         apart te zetten in aparte klassen.
 
+        Om een clone aan te maken zouden we ook enorm meer overhead hebben. Waar houden we path bij? Als path wordt
+        bijgehouden in FileHolder, moeten we al een getter schrijven voor die Path, zodat we een nieuwe filebuffer
+        kunnen aanmaken... Enorm veel extra lagen complexiteit terwijl de afscheiding van de twee geen meerwaarde
+        geeft voor cohesie of GRASP ideeën.
 
 #
