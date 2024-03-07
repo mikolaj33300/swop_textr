@@ -33,18 +33,19 @@ public class Controller {
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException {
-        Terminal.enterRawInputMode();
-        //Controller btj = new Controller(args);
-        //btj.loop();
+        Controller btj = new Controller(args);
+        btj.loop();
     }
 
-    public void loop() {
+    public void loop() throws IOException {
 
         Terminal.enterRawInputMode();
 
         for ( ; ; ) {
 
+            int c = Terminal.readByte();
 
+            if(c == 'Q') System.out.println("Hello!");
 
         }
 

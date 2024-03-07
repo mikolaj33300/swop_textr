@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="build">
+    <output-path>$PROJECT_DIR$/out/production/Swop</output-path>
+    <root id="archive" name="build.jar">
+      <element id="module-output" name="Swop" />
+      <element id="library" level="project" name="io.github.btj.termios-0.7" />
+      <element id="library" level="module" name="JUnit4" module-name="Swop" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

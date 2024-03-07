@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: Controller
+Class-Path: io.github.btj.termios-0.7.jar
+
