@@ -4,8 +4,12 @@ import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Controller {
 
@@ -13,6 +17,7 @@ public class Controller {
      * The beginning layout when the application is started with paths.
      */
     private Layout rootLayout;
+    private int width, height;
 
     /**
      * Creates a controller object.
@@ -29,7 +34,7 @@ public class Controller {
         for(String s : args) {
             leaves.add(new LayoutLeaf(new FileBuffer(s), false));
         }
-        return new LayoutNode(newOrientation, leaves);
+        return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
     }
 
     /**
@@ -40,11 +45,38 @@ public class Controller {
         btj.loop();
     }
 
+    private void check() {
+
+
+    }
+
+    /**
+     * Contains the main input loop
+     */
     public void loop() throws IOException {
 
-        System.out.println("Project runs succesfully");
+        // Start program.
+        Terminal.clearScreen();
         Terminal.enterRawInputMode();
 
+        // Get terminal size.
+        Terminal.reportTextAreaSize();
+
+        // \033
+        Terminal.readByte();
+        // [
+        Terminal.readByte();
+        // 8
+        Terminal.readByte();
+        // ;
+        Terminal.readByte();
+        this.height = Terminal.readByte() / 2 - 1;
+        Terminal.readByte();
+        this.width = Terminal.readByte() / 2 - 1;
+
+        System.out.println("lines: " + height + " - width:" + width);
+
+        // Main loop
         for ( ; ; ) {
 
             int c = Terminal.readByte();
@@ -64,7 +96,7 @@ public class Controller {
                     break;
 
                 default:
-
+                    //this.rootLayout.getActive();
                     render();
 
             }
@@ -97,6 +129,12 @@ public class Controller {
 
     public void rotateRelationshipNeighbour() {
 
+    }
+
+    private void print(String... s) {
+        for(String si : s) {
+            System.out.println(si);
+        }
     }
 
 }
