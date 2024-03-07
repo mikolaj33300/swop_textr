@@ -19,9 +19,23 @@ public class
 FileBuffer 
 {
 
+    /**
+     * The java IO file object reference.
+     */
     private File file;
+    /**
+     * Determines if the buffer has been modified.
+     */
     private boolean dirty = false;
+    /**
+     * Holds the 'in memory' model from the file.
+     *
+     * @representationObject
+     */
     private String content;
+    /**
+     * Determines the path of this FileBuffer
+     */
     private final String path;
 
     /**

@@ -1,0 +1,49 @@
+# FileBuffer
+FileBuffer behoudt het 'in memory' representatie van een .txt bestand. Dit bestand wordt geladen
+via de io library van java zelf.
+
+Update: vroeger had deze klasse een referentie naar een 'File' klasse. Deze klasse zou dan een
+        referentie hebben naar een io File object van Java.
+        Hiermee waren een paar bedenkingen
+            -> De klasse 'File' kon geen 'File' (java io) referentie hebben
+            -> File had geen extra nuttigheden VOOR DIT PROJECT!
+
+        Motivatie:
+
+        // Hernoemde File klasse
+        public FileHolder {
+            private File file;
+            public FileHolder(String path) {}
+            public void save() {}
+            public void close() {}
+            public String getContent() { read()... }
+        }
+
+        public FileBuffer {
+            private FileHolder holder;
+            private String content;
+            public FileBuffer(String path) {
+                this.holder = new FileHolder(path);
+                this.content = getContent();
+            }
+            public String getContent() { this.holder.getContent(); }
+            public void save() { this.holder.save(); }
+            public void close() { this.holder.close(); }
+        }
+
+        We zien dat save() en close() op de FileBuffer doorgevoerd worden naar de FileHolder.
+        Heel veel extra werk terwijl FileHolder en FileBuffer eigenlijk dezelfde functie hebben...
+        'Dezelfde functie hebben': natuurlijk is dit niet letterlijk...
+                                   hiermee bedoelt de schrijver dat het samenvoegen van de functie niet
+                                   een onlogische samenstelling maakt van de functies.
+        Verdere motivatie voor de minder gelovigen:
+        FileBuffer wordt eerst aangemaakt door de Layout klasse. De FileBuffer moet dan een pad doorgeven aan
+        FileHolder, die dan een File aanmaakt. De enige manier om iets op te slaan via Layout is dan:
+        Layout -> FileBuffer -> FileHolder
+        Waarom zou File geheim in FileHolder moeten steken? Om dat save() langs FileBuffer te laten gaan naar
+        een andere klasse?
+        Voorlopig is er geen meerwaarde (IN DIT PROJECT VOOR TXT BESTANDEN) om save() en close(), of zelfs read()
+        apart te zetten in aparte klassen.
+
+
+#

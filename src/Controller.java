@@ -42,7 +42,6 @@ public class Controller {
         System.out.println("Project runs succesfully");
         Terminal.enterRawInputMode();
 
-
         for ( ; ; ) {
 
             int c = Terminal.readByte();
