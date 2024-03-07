@@ -39,13 +39,17 @@ public class Controller {
 
     public void loop() throws IOException {
 
+        System.out.println("Project runs succesfully");
         Terminal.enterRawInputMode();
+
 
         for ( ; ; ) {
 
             int c = Terminal.readByte();
 
             if(c == 'Q') System.out.println("Hello!");
+
+            break;
 
         }
 
