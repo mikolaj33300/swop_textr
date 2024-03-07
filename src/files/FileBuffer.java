@@ -1,10 +1,5 @@
 package files;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * Suggestie om File en FileBuffer samen te voegen.
  *
@@ -18,86 +13,53 @@ import java.nio.file.Paths;
 public class 
 FileBuffer 
 {
+  private FileHolder file;
+  private boolean dirty = false;
+  private String content;
 
-    private File file;
-    private boolean dirty = false;
-    private String content;
-    private final String path;
+  /**
+   * Creates FileBuffer object with given path;
+   * @param path
+   */
+  public 
+  FileBuffer(String path) 
+  {
+    this.file = new FileHolder(path);
+    this.content = this.file.getContent();
+  }
 
-    /**
-     * Creates FileBuffer object with given path;
-     * @param path
-     */
-    public 
-    FileBuffer(String path) 
-    {
-        Path checkPath = Paths.get(path);
-        if(!Files.exists(checkPath)) {}
-        this.file = new File(path);
-        this.content = getContent();
-        this.path = path;
-    }
+  /**
+   * Updates the content of the FileBuffer
+   */
+  public final void 
+  update (String updatedContents) 
+  {
+      this.content = updatedContents;
+      dirty = true;
+  }
 
-    /**
-     * Returns the content of the file
-     * @return
-     */
-    public final String 
-    getContent () 
-    {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(this.file));
-            String contents = "";
-            String line;
+  /**
+   * Saves the buffer contents to disk
+   */
+  public final void 
+  save () 
+  {
+      if(!dirty) return;
+      this.file.save(this.content);
+      this.dirty = false;
+  }
 
-            while((line = reader.readLine()) != null)
-                contents += line;
-
-            return contents;
-
-        } catch(IOException e) {
-
-            e.printStackTrace();
-            System.out.println("[FileBuffer] Exception while trying to read contents of file.");
-
-        }
-        return "";
-    }
-
-    /**
-     * Updates the content of the FileBuffer
-     */
-    public final void 
-    update (String updatedContents) 
-    {
-        this.content = updatedContents;
-        dirty = true;
-    }
-
-    /**
-     * Saves the buffer contents to disk
-     */
-    public final void 
-    save () 
-    {
-        if(!dirty) return;
-        try {
-            FileWriter writer = new FileWriter(this.file);
-            writer.write(this.content);
-            writer.close();
-            this.dirty = false;
-        } catch(IOException e) {
-            System.out.println("[FileBuffer] Exception while trying to save file contents");
-        }
-    }
-
-    public FileBuffer 
-    clone () 
-    {
-        FileBuffer copy = new FileBuffer(this.path);
-        copy.dirty = this.dirty;
-        copy.content = new String(this.content);
-        return copy;
-    }
-
+  public FileBuffer 
+  clone () 
+  {
+      FileBuffer copy = new FileBuffer(this.file.getPath());
+      copy.dirty = this.dirty;
+      copy.content = new String(this.content);
+      return copy;
+  }
+  public final String
+  getContent ()
+  {
+    return this.file.getContent();
+  }
 }
