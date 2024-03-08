@@ -1,3 +1,5 @@
+package core;
+
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
 import layouttree.Layout;
@@ -5,6 +7,9 @@ import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class Controller {
@@ -29,23 +34,34 @@ public class Controller {
     }
 
     /**
+     * A beautiful start for a beautiful project
+     */
+    public static void main(String[] args) throws IOException {
+        Controller btj = new Controller(args);
+        btj.loop();
+    }
+
+    /**
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
     private Layout getRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(String s : args) {
+            Path checkPath = Paths.get(s);
+            if (!Files.exists(checkPath)) {
+                //TODO throw error for unknown path
+            }
             leaves.add(new LayoutLeaf(new FileBuffer(s), false));
         }
         return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
     }
 
     /**
-     * A beautiful start for a beautiful project
+     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
-    public static void main(String[] args) throws IOException {
-        Controller btj = new Controller(args);
-        btj.loop();
+    Layout getRootLayout() {
+        return rootLayout;
     }
 
     /**
@@ -64,7 +80,6 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
 
-            print("loopstart");
             int c = Terminal.readByte();
 
             switch(c) {
@@ -88,9 +103,6 @@ public class Controller {
 
             }
 
-
-            print("loop");
-
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -104,41 +116,45 @@ public class Controller {
      */
     public void render() {
         // TODO root layout has to render its children on itself.
-        //this.rootLayout.render(this.terminalReader.getWidth(), this.terminalReader.getHeight());
+        //this.rootLayout.render(this.width, this.height);
     }
 
     /**
      * Saves the {@link FileBuffer#getContent()} to its file.
      */
     public void saveBuffer() {
+        //TODO
         //this.rootLayout.getActive().save();
     }
 
     /**
-     *
+     * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
     public void enterText(int c) {
+        // TODO getActive layout
         //this.rootLayout.getActive().enterText(c);
     }
 
     /**
-     *
+     * Changes the focused {@link LayoutLeaf} to another.
      */
     public void moveFocus(Layout.DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
 
     /**
-     *
+     * TODO !!!!!!!!!! wat is dit???
      */
-    public void rotateRelationshipNeighbour() {
-
-    }
+    public void rotateRelationshipNeighbour() {}
 
     /**
      * Calculates the dimensions of the terminal
+     * Credits to BTJ. This looks very clean and intuïtive.
+     * Sets the fields {@link Controller#width} and {@link Controller#height}.
+     *
+     * Method set to default for unit test access.
      */
-    private void retrieveDimensions() throws IOException {
+    void retrieveDimensions() throws IOException {
 
         Terminal.reportTextAreaSize();
         int tempByte = 0;
@@ -171,8 +187,6 @@ public class Controller {
             width = width * 10 + (tempByte - '0');
             tempByte = Terminal.readByte();
         }
-
-        System.out.println("sdfsHeight: " + height + ", width:" + width);
 
     }
 

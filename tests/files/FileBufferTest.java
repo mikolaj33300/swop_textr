@@ -1,4 +1,4 @@
-package tests.classtests;
+package files;
 
 class FileBufferTest {
 }

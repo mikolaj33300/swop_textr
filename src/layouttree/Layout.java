@@ -50,4 +50,6 @@ public abstract class Layout implements Cloneable {
 
     @Override
     protected abstract Layout clone();
+
+    public abstract boolean equals(Layout layout);
 }

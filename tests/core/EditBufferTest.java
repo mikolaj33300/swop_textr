@@ -1,4 +1,4 @@
-package tests.usecasetests;
+package core;
 
 public class EditBufferTest {
 }

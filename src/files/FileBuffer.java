@@ -43,12 +43,16 @@ public class FileBuffer {
     }
 
     /**
-     * Clones this object
-     *
-     * @return
+     * Returns copy of this buffers' content.
      */
-    public FileBuffer
-    clone() {
+    public String getContent() {
+        return new String(this.file.getContent());
+    }
+
+    /**
+     * Clones this object
+     */
+    public FileBuffer clone() {
         FileBuffer copy = new FileBuffer(this.file.getPath());
         copy.dirty = this.dirty;
         copy.content = new String(this.content);
@@ -56,10 +60,11 @@ public class FileBuffer {
     }
 
     /**
-     *
+     * Checks if the given {@link FileBuffer} references the same {@link FileHolder}
+     * and temporarily, if the content, and dirty boolean match.
      */
-    public final String
-    getContent() {
-        return this.file.getContent();
+    public boolean equals(FileBuffer buffer) {
+        return this.dirty == buffer.dirty && this.content.equals(buffer.content) && this.file.getPath().equals(buffer.file.getPath());
     }
+
 }
