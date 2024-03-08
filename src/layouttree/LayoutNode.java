@@ -3,7 +3,7 @@ package layouttree;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class LayoutNode extends Layout{
+public class LayoutNode extends Layout {
     private LayoutNode parent;
 
     private Orientation orientation;
@@ -81,14 +81,6 @@ public class LayoutNode extends Layout{
 
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
-    }
-
-    protected Layout clone(){
-        ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : children){
-            deepCopyList.add(l.clone());
-        }
-        return new LayoutNode(this.orientation, deepCopyList);
     }
 
     //add check for valid subtree child
@@ -174,4 +166,44 @@ public class LayoutNode extends Layout{
         Layout newChild = new LayoutNode(nextOrientation, nextChildren);
         children.set(index, newChild);
     }
+
+    @Override
+    protected Layout clone(){
+        ArrayList<Layout> deepCopyList = new ArrayList<>();
+        for(Layout l : children){
+            deepCopyList.add(l.clone());
+        }
+        return new LayoutNode(this.orientation, deepCopyList);
+    }
+
+    /**
+     * Checks if parameter layout is of type {@link LayoutNode}, and if the children match
+     * the layout of this node. All leaves must have a FileBuffer containing the same path.
+     * ! Assumes the children are always put in the same sequence upon creation of layout
+     */
+    @Override
+    public boolean equals(Layout node) {
+
+        if(node instanceof LayoutNode layoutNode) {
+
+            // Return early when the amount of children don't match.
+            if(layoutNode.children.size() != this.children.size()) return false;
+
+            // Loop over the children of both
+            for(int i = 0; i < layoutNode.children.size(); i++) {
+
+                // We keep checking if they are equal, if not we return early.
+                if(!layoutNode.children.get(i).equals(this.children.get(i))) return false;
+
+            }
+
+            // If the process didn't find disparities, the layouts are equal.
+            return true;
+
+        }
+
+        return false;
+
+    }
+
 }

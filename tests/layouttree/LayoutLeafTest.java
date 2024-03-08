@@ -1,4 +1,4 @@
-package tests.classtests;
+package layouttree;
 
 class LayoutLeafTest {
 }

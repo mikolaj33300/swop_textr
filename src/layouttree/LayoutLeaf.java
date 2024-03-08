@@ -83,4 +83,15 @@ public class LayoutLeaf extends Layout {
     protected LayoutLeaf clone() {
         return new LayoutLeaf(containedFileBuffer.clone(), true);
     }
+
+    /**
+     * Determines if the given layout is a {@link LayoutLeaf} and their {@link FileBuffer}'s are also equal
+     */
+    @Override
+    public boolean equals(Layout layout) {
+        if(layout instanceof LayoutLeaf leaf)
+            return leaf.containedFileBuffer.equals(this.containedFileBuffer);
+        else return false;
+    }
+
 }
