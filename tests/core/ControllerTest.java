@@ -13,6 +13,9 @@ import java.util.List;
 
 public class ControllerTest {
 
+    /**
+     * Tests the constructor. Will it create the layout correctly?
+     */
     @Test
     public void testArguments() {
         String path1 = "testresources/test.txt";

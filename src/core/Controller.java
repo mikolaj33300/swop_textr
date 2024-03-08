@@ -58,13 +58,6 @@ public class Controller {
     }
 
     /**
-     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
-     */
-    Layout getRootLayout() {
-        return rootLayout;
-    }
-
-    /**
      * Contains the main input loop
      */
     public void loop() throws IOException {
@@ -120,7 +113,7 @@ public class Controller {
     }
 
     /**
-     * Saves the {@link FileBuffer#getContent()} to its file.
+     * Saves the FileBuffer's content to its file.
      */
     public void saveBuffer() {
         //TODO
@@ -146,6 +139,15 @@ public class Controller {
      * TODO !!!!!!!!!! wat is dit???
      */
     public void rotateRelationshipNeighbour() {}
+
+    // Test functions
+
+    /**
+     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
+     */
+    Layout getRootLayout() {
+        return rootLayout;
+    }
 
     /**
      * Calculates the dimensions of the terminal

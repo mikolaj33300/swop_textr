@@ -1,10 +1,12 @@
 package files;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBufferTest {
 
@@ -17,14 +19,14 @@ public class FileBufferTest {
 
         FileBuffer buffer = new FileBuffer(path);
 
-        assert buffer.getFileHolder().equals(holder);
+        assertTrue(buffer.getFileHolder().equals(holder));
 
         // Test if the content is correctly retrieved
         String content = "abc";
         write(path, content);
         buffer = new FileBuffer(path);
 
-        assert buffer.getContent().equals(content);
+        assertEquals(buffer.getContent(), content);
 
     }
 
@@ -33,7 +35,7 @@ public class FileBufferTest {
         String path = "testresources/test.txt";
         FileBuffer buffer = new FileBuffer(path);
 
-        assert buffer.equals(buffer.clone());
+        assertTrue(buffer.equals(buffer.clone()));
     }
 
     @Test
@@ -44,19 +46,18 @@ public class FileBufferTest {
         write(path, text);
         FileBuffer buffer = new FileBuffer(path);
 
-        assert buffer.getContent().equals(text);
+        assertEquals(buffer.getContent(), text);
 
         String add = " ; i love using termios library ";
         String result = "i love termios ; long live btj ; i love using termios library ";
         buffer.write(add);
 
-        assert buffer.isDirty();
+        assertTrue(buffer.isDirty());
         buffer.save();
 
-        assert !buffer.isDirty();
-        assert buffer.getContent().equals(result);
-        assert buffer.getFileHolder().getContent().equals(result);
-
+        assertFalse(buffer.isDirty());
+        assertEquals(buffer.getContent(), result);
+        assertEquals(buffer.getFileHolder().getContent(), result);
 
     }
 
