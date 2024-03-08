@@ -17,13 +17,23 @@ public class FileHolderTest {
 
     @Test
     void testSave(){
-        String teststring = "string to test with";
-        f1.save(teststring);
-        assertEquals(f1.getContent(),teststring);
+        String teststring1 = "string to test with";
+        String teststring2 = "string to test with in another file";
+
+        f1.save(teststring1);
+        assertEquals(f1.getContent(),teststring1);
+        assertEquals(f1_.getContent(),teststring1);
+
+        f1_.save(teststring2);
+        assertEquals(f1_.getContent(),teststring2);
+        assertEquals(f1.getContent(),teststring2);
     }
     @Test
     void testGetContent(){
+        String teststring = "string to test with";
 
+        f1.save(teststring);
+        assertEquals(f1.getContent(),teststring);
     }
 
     @Test
@@ -46,86 +56,3 @@ public class FileHolderTest {
     }
 }
 
-/*
-   public final String getContent() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(this.fd));
-            String contents = "";
-            String line;
-
-            while ((line = reader.readLine()) != null)
-                contents += line;
-
-            return contents;
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            System.out.println("[FileBuffer] Exception while trying to read contents of file.");
-
-        }
-        return "";
-    }
-
-    private final String path;
-    private File fd;
-     * Creates File object with given path
-
-    public FileHolder(String path) {
-        this.fd = new File(path);
-        this.path = path;
-    }
-
-
-
-     * saves file
-
-    public void save(String fileContent) {
-
-        try {
-            FileWriter writer = new FileWriter(this.fd);
-            writer.write(fileContent);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println("[FileHolder] Exception while trying to save file content");
-        }
-    }
-
-
-     * Returns the content of the file
-     *
-     * @return
-
-    public final String getContent() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(this.fd));
-            String contents = "";
-            String line;
-
-            while ((line = reader.readLine()) != null)
-                contents += line;
-
-            return contents;
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            System.out.println("[FileBuffer] Exception while trying to read contents of file.");
-
-        }
-        return "";
-    }
-
-    public FileHolder clone() {
-        return new FileHolder(new String(this.path));
-    }
-
-
-     * Returns true if the {@link FileHolder#path}'s of both objects match.
-
-    public boolean equals(FileHolder holder) {
-        return this.path.equals(holder.path);
-    }
-
-}
-*/
