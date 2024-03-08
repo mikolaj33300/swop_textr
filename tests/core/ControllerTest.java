@@ -28,10 +28,7 @@ public class ControllerTest {
         leaves.add(new LayoutLeaf(buffer2, false));
         LayoutNode node = new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
 
-        if(controller.getRootLayout().equals(node)) System.out.println("ok");
-
         assert controller.getRootLayout().equals(node);
-
     }
 
 }

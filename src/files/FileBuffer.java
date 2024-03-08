@@ -19,17 +19,21 @@ public class FileBuffer {
 
     /**
      * Creates FileBuffer object with given path;
+     * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
     public FileBuffer(String path) {
         this.file = new FileHolder(path);
         this.content = this.file.getContent();
     }
 
+    // Implementation
+
     /**
      * Updates the content of the FileBuffer
      */
-    public final void update(String updatedContents) {
-        this.content = updatedContents;
+    public void write(String updatedContents) {
+        this.content += updatedContents;
+        System.out.println("Content: " + content);
         dirty = true;
     }
 
@@ -42,12 +46,30 @@ public class FileBuffer {
         this.dirty = false;
     }
 
+    // Test Methods
+
+    /**
+     * Returns the FileHolder object
+     */
+    FileHolder getFileHolder() {
+        return this.file;
+    }
+
     /**
      * Returns copy of this buffers' content.
      */
-    public String getContent() {
-        return new String(this.file.getContent());
+    String getContent() {
+        return new String(this.content);
     }
+
+    /**
+     * Determines if the buffer is empty
+     */
+    boolean isDirty() {
+        return this.dirty;
+    }
+
+    // Base methods
 
     /**
      * Clones this object
