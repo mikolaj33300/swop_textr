@@ -18,11 +18,15 @@ public class Controller {
      * The beginning layout when the application is started with paths.
      */
     private Layout rootLayout;
+    /**
+     * Instance which calculates terminal size.
+     */
     private TerminalReader terminalReader;
-    private int width, height;
 
     /**
      * Creates a controller object.
+     * 1) Creates a {@link Layout} object which represents the root layout.
+     *    its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
         this.rootLayout = getRootLayout(args);
@@ -58,6 +62,7 @@ public class Controller {
         Terminal.clearScreen();
         Terminal.enterRawInputMode();
 
+        // Reading terminal dimensions for correct rendering
         this.terminalReader.recalculateDimensions();
 
         // Main loop
@@ -69,14 +74,11 @@ public class Controller {
                     // Control + S
                 case 19:
                     saveBuffer();
-
                     break;
                     // Control + P
                 case 16:
                     moveFocus(Layout.DIRECTION.LEFT);
-
                     break;
-
                     // Control + N
                 case 14:
                     moveFocus(Layout.DIRECTION.RIGHT);
@@ -89,29 +91,31 @@ public class Controller {
 
             }
 
-            // Checking if user changed size of window
-
+            // Restricting user input & recalculating terminal dimensions
+            Terminal.leaveRawInputMode();
+            terminalReader.recalculateDimensions();
+            Terminal.enterRawInputMode();
 
         }
 
     }
 
     /**
-     * Renders the layout
+     * Renders the layout with the terminal current height & width
      */
     public void render() {
-        this.rootLayout.render(/*this.terminalReader.getWidth(), this.terminalReader.getHeight()*/);
+        //this.rootLayout.render(this.terminalReader.getWidth(), this.terminalReader.getHeight());
     }
 
     /**
      * After entering this combination
      */
     public void saveBuffer() {
-
+        //this.rootLayout.getActive().save();
     }
 
     public void enterText(int c) {
-
+        //this.rootLayout.getActive().enterText(c);
     }
 
     public void moveFocus(Layout.DIRECTION dir) {
@@ -122,6 +126,9 @@ public class Controller {
 
     }
 
+    /**
+     * Temporary helper
+     */
     private void print(String... s) {
         for(String si : s) {
             System.out.println(si);

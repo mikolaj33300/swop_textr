@@ -21,18 +21,25 @@ public class TerminalReader {
 
     public TerminalReader() {
         try {
-            this.width = recalculateDimensions()[0];
-            this.height = recalculateDimensions()[1];
+            this.recalculateDimensions();
         } catch(IOException e) {
             System.out.println("[TerminalReader] Error occured whilst calculating dimensions of terminal.");
             e.printStackTrace();
         }
     }
 
+    /**
+     * Returns the width of the terminal
+     * Note: rerun for {@link TerminalReader#recalculateDimensions()} for accurate size
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Returns the height of the terminal
+     * Note: rerun for {@link TerminalReader#recalculateDimensions()} for accurate size
+     */
     public int getHeight() {
         return height;
     }
@@ -40,7 +47,7 @@ public class TerminalReader {
     /**
      * Returns the width and height in array form.
      */
-    public int[] recalculateDimensions() throws IOException {
+    public void recalculateDimensions() throws IOException {
         Terminal.reportTextAreaSize();
         //Terminal.clearScreen();
 
@@ -60,8 +67,6 @@ public class TerminalReader {
         peekByte();
         eatByte();
         this.width = getNumber();
-
-        return new int[] {width, height};
     }
 
     private int peekByte() throws IOException {
