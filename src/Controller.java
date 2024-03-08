@@ -18,6 +18,7 @@ public class Controller {
      * The beginning layout when the application is started with paths.
      */
     private Layout rootLayout;
+
     /**
      * Instance which calculates terminal size.
      */
@@ -27,6 +28,9 @@ public class Controller {
      * Creates a controller object.
      * 1) Creates a {@link Layout} object which represents the root layout.
      *    its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
+     * 2) Temporarily, a helper class {@link TerminalReader} will be created which primary use is reading the terminal size
+     *    from standard input. Motivation: it requires saving bytes. Controller has no use for them. Useful because we will
+     *    probably continuously try to read the dimensions.
      */
     public Controller(String[] args) {
         this.rootLayout = getRootLayout(args);
@@ -34,7 +38,8 @@ public class Controller {
     }
 
     /**
-     * Computes the root layout
+     * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
+     * main input arguments.
      */
     private Layout getRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
@@ -52,7 +57,6 @@ public class Controller {
         btj.loop();
     }
 
-
     /**
      * Contains the main input loop
      */
@@ -60,10 +64,13 @@ public class Controller {
 
         // Start program.
         Terminal.clearScreen();
+        // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
 
         // Reading terminal dimensions for correct rendering
-        this.terminalReader.recalculateDimensions();
+        this.terminalReader.getD();
+        print("----------------------------------");
+        this.terminalReader.getDimensions();
 
         // Main loop
         for ( ; ; ) {
@@ -92,9 +99,6 @@ public class Controller {
             }
 
             // Restricting user input & recalculating terminal dimensions
-            Terminal.leaveRawInputMode();
-            terminalReader.recalculateDimensions();
-            Terminal.enterRawInputMode();
 
         }
 
@@ -104,24 +108,34 @@ public class Controller {
      * Renders the layout with the terminal current height & width
      */
     public void render() {
+        // TODO root layout has to render its children on itself.
         //this.rootLayout.render(this.terminalReader.getWidth(), this.terminalReader.getHeight());
     }
 
     /**
-     * After entering this combination
+     * Saves the {@link FileBuffer#getContent()} to its file.
      */
     public void saveBuffer() {
         //this.rootLayout.getActive().save();
     }
 
+    /**
+     *
+     */
     public void enterText(int c) {
         //this.rootLayout.getActive().enterText(c);
     }
 
+    /**
+     *
+     */
     public void moveFocus(Layout.DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
 
+    /**
+     *
+     */
     public void rotateRelationshipNeighbour() {
 
     }
