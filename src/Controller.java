@@ -3,6 +3,7 @@ import io.github.btj.termios.Terminal;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
+import util.TerminalReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class Controller {
      * The beginning layout when the application is started with paths.
      */
     private Layout rootLayout;
+    private TerminalReader terminalReader;
     private int width, height;
 
     /**
@@ -24,6 +26,7 @@ public class Controller {
      */
     public Controller(String[] args) {
         this.rootLayout = getRootLayout(args);
+        this.terminalReader = new TerminalReader();
     }
 
     /**
@@ -45,10 +48,6 @@ public class Controller {
         btj.loop();
     }
 
-    private void check() {
-
-
-    }
 
     /**
      * Contains the main input loop
@@ -59,22 +58,7 @@ public class Controller {
         Terminal.clearScreen();
         Terminal.enterRawInputMode();
 
-        // Get terminal size.
-        Terminal.reportTextAreaSize();
-
-        // \033
-        Terminal.readByte();
-        // [
-        Terminal.readByte();
-        // 8
-        Terminal.readByte();
-        // ;
-        Terminal.readByte();
-        this.height = Terminal.readByte() / 2 - 1;
-        Terminal.readByte();
-        this.width = Terminal.readByte() / 2 - 1;
-
-        System.out.println("lines: " + height + " - width:" + width);
+        this.terminalReader.recalculateDimensions();
 
         // Main loop
         for ( ; ; ) {
@@ -84,22 +68,29 @@ public class Controller {
             switch(c) {
                     // Control + S
                 case 19:
+                    saveBuffer();
 
                     break;
                     // Control + P
                 case 16:
+                    moveFocus(Layout.DIRECTION.LEFT);
 
                     break;
 
                     // Control + N
                 case 14:
+                    moveFocus(Layout.DIRECTION.RIGHT);
                     break;
 
                 default:
                     //this.rootLayout.getActive();
+                    enterText(Terminal.readByte());
                     render();
 
             }
+
+            // Checking if user changed size of window
+
 
         }
 
@@ -109,7 +100,7 @@ public class Controller {
      * Renders the layout
      */
     public void render() {
-        this.rootLayout.render();
+        this.rootLayout.render(/*this.terminalReader.getWidth(), this.terminalReader.getHeight()*/);
     }
 
     /**
@@ -119,12 +110,12 @@ public class Controller {
 
     }
 
-    public void enterText(char c) {
+    public void enterText(int c) {
 
     }
 
-    public void moveFocus() {
-
+    public void moveFocus(Layout.DIRECTION dir) {
+        this.rootLayout.moveFocus(dir);
     }
 
     public void rotateRelationshipNeighbour() {
