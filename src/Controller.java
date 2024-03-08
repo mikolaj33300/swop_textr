@@ -3,14 +3,9 @@ import io.github.btj.termios.Terminal;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
-import util.TerminalReader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Controller {
 
@@ -22,19 +17,15 @@ public class Controller {
     /**
      * Instance which calculates terminal size.
      */
-    private TerminalReader terminalReader;
+    private int width, height;
 
     /**
      * Creates a controller object.
-     * 1) Creates a {@link Layout} object which represents the root layout.
-     *    its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
-     * 2) Temporarily, a helper class {@link TerminalReader} will be created which primary use is reading the terminal size
-     *    from standard input. Motivation: it requires saving bytes. Controller has no use for them. Useful because we will
-     *    probably continuously try to read the dimensions.
+     * Creates a {@link Layout} object which represents the root layout.
+     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
         this.rootLayout = getRootLayout(args);
-        this.terminalReader = new TerminalReader();
     }
 
     /**
@@ -68,13 +59,12 @@ public class Controller {
         Terminal.enterRawInputMode();
 
         // Reading terminal dimensions for correct rendering
-        this.terminalReader.getD();
-        print("----------------------------------");
-        this.terminalReader.getDimensions();
+        retrieveDimensions();
 
         // Main loop
         for ( ; ; ) {
 
+            print("loopstart");
             int c = Terminal.readByte();
 
             switch(c) {
@@ -98,7 +88,12 @@ public class Controller {
 
             }
 
-            // Restricting user input & recalculating terminal dimensions
+
+            print("loop");
+
+            // Flush stdIn & Recalculate dimensions
+            System.in.skipNBytes(System.in.available());
+            retrieveDimensions();
 
         }
 
@@ -137,6 +132,47 @@ public class Controller {
      *
      */
     public void rotateRelationshipNeighbour() {
+
+    }
+
+    /**
+     * Calculates the dimensions of the terminal
+     */
+    private void retrieveDimensions() throws IOException {
+
+        Terminal.reportTextAreaSize();
+        int tempByte = 0;
+        for(int i = 0; i < 4; i++)
+            Terminal.readByte();
+
+        int c = Terminal.readByte();
+        int height = c - '0';
+        tempByte = Terminal.readByte();
+
+        for(;;) {
+            if(tempByte < '0' || '9' < tempByte)
+                break;
+            if (height > (Integer.MAX_VALUE - (c - '0')) / 10)
+                break;
+            height = height * 10 + (tempByte - '0');
+            tempByte = Terminal.readByte();
+
+        }
+
+        c = Terminal.readByte();
+        int width = c - '0';
+        tempByte = Terminal.readByte();
+
+        for(;;) {
+            if(tempByte < '0' || '9' < tempByte)
+                break;
+            if (width > (Integer.MAX_VALUE - (c - '0')) / 10)
+                break;
+            width = width * 10 + (tempByte - '0');
+            tempByte = Terminal.readByte();
+        }
+
+        System.out.println("sdfsHeight: " + height + ", width:" + width);
 
     }
 
