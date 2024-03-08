@@ -34,3 +34,4 @@ bin/
 *.jar
 *.so
 testresources/test.txt
+testresources/test2.txt

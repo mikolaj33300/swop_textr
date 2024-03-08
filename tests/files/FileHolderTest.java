@@ -23,7 +23,13 @@ public class FileHolderTest {
     }
     @Test
     void testGetContent(){
+        String teststring = "string to test with";
+        f1.save(teststring);
+        assertEquals(f1.getContent(),teststring);
 
+        String teststring = "string to test with";
+        f1.save(teststring);
+        assertEquals(f1.getContent(),teststring);
     }
 
     @Test
