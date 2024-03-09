@@ -3,12 +3,11 @@ package layouttree;
 import files.FileBuffer;
 
 public class LayoutLeaf extends Layout {
-    private boolean isActive;
     private FileBuffer containedFileBuffer;
 
     public LayoutLeaf(FileBuffer fb, boolean active){
         this.containedFileBuffer = fb.clone();
-        this.isActive = active;
+        this.setContainsActive(active);
     }
     protected void deleteLeftLeaf() {
         super.parent.delete(this);
@@ -19,12 +18,11 @@ public class LayoutLeaf extends Layout {
 
     protected void moveFocusRight() throws RuntimeException {
         if(parent != null){
-            this.isActive = false;
+            this.setContainsActive(false);
             parent.makeRightNeighbourActive(this);
         } else {
             throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }
-
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
@@ -43,38 +41,28 @@ public class LayoutLeaf extends Layout {
      * Determines if the given layout is a {@link LayoutLeaf} and their {@link FileBuffer}'s are also equal
      */
     @Override
-    public boolean equals(Layout layout) {
-        if(layout instanceof LayoutLeaf leaf)
+    public boolean equals(Object obj) {
+        if(obj instanceof LayoutLeaf leaf)
             return leaf.containedFileBuffer.equals(this.containedFileBuffer);
         else return false;
     }
 
-    protected boolean containsActive() {
-        return isActive;
-    }
-
     public void render() {
-        return;
     }
 
     @Override
     protected LayoutLeaf clone() {
-        return new LayoutLeaf(containedFileBuffer.clone(), isActive);
+        return new LayoutLeaf(containedFileBuffer.clone(), getContainsActive());
     }
 
     @Override
     protected void makeLeftmostLeafActive() {
-        isActive = true;
+        setContainsActive(true);
     }
 
     @Override
     protected void makeRightmostLeafActive() {
-        isActive = true;
-    }
-
-    @Override
-    protected void setInactive() {
-        isActive = false;
+        setContainsActive(true);
     }
 
     protected LayoutLeaf getLeftLeaf() {
@@ -83,12 +71,8 @@ public class LayoutLeaf extends Layout {
 
     @Override
     protected void sanitizeInputChild(LayoutNode futureParent) {
-        if(containsActive() && futureParent.containsActive()){
+        if(getContainsActive() && futureParent.containsActive()){
             throw new RuntimeException("Invalid child: more than two active");
         }
-    }
-
-    protected void setParent(LayoutNode layoutNode) {
-        this.parent = layoutNode;
     }
 }

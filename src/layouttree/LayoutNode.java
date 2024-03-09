@@ -30,7 +30,7 @@ public class LayoutNode extends Layout {
 
     public void moveFocus(DIRECTION dir) throws RuntimeException {
         for (Layout l : children) {
-            if(l.containsActive()){
+            if(l.getContainsActive()){
                 l.moveFocus(dir);
             }
         }
@@ -40,15 +40,16 @@ public class LayoutNode extends Layout {
     public void insertDirectChild(Layout toInsert){
         toInsert.sanitizeInputChild(this.clone());
         Layout cloneOfInsert = toInsert.clone();
+        cloneOfInsert.setParent(this);
         this.children.add(cloneOfInsert);
-        if(cloneOfInsert.containsActive()){
+        if(cloneOfInsert.getContainsActive()){
             this.containsActive = true;
         }
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
         for (Layout l : children) {
-            if(l.containsActive()){
+            if(l.getContainsActive()){
                 return l.rotateRelationshipNeighbor(rot_dir);
             }
         }
@@ -86,7 +87,7 @@ public class LayoutNode extends Layout {
      * ! Assumes the children are always put in the same sequence upon creation of layout
      */
     @Override
-    public boolean equals(Layout node) {
+    public boolean equals(Object node) {
         if(node instanceof LayoutNode layoutNode) {
             // Return early when the amount of children don't match.
             if(layoutNode.children.size() != this.children.size()) return false;
@@ -109,11 +110,6 @@ public class LayoutNode extends Layout {
         children.get(0).deleteLeftLeaf();
     }
 
-    @Override
-    protected void setParent(LayoutNode layoutNode) {
-        this.parent = layoutNode;
-    }
-
     protected void delete(Layout l){
         children.remove(l);
         this.clean();
@@ -127,14 +123,12 @@ public class LayoutNode extends Layout {
         children.get(children.size()-1).makeRightmostLeafActive();
     }
 
-    protected void setInactive() {
-        this.containsActive = false;
-    }
-
     protected LayoutLeaf getLeftLeaf(){
         return children.get(0).getLeftLeaf();
     }
 
+    //makes the leftmost leaf that is to the right of the given subtree active
+    //Requires passed layout to be a child of this.
     protected void makeRightNeighbourActive(Layout layout) {
         int index = children.indexOf(layout);
         if (index < children.size() - 1) {
@@ -145,6 +139,7 @@ public class LayoutNode extends Layout {
         }
     }
 
+    //see makeRightNeighbourActive
     protected void makeLeftNeighbourActive(Layout layout) {
         int index = children.indexOf(layout);
         if (index > 0) {
@@ -155,25 +150,31 @@ public class LayoutNode extends Layout {
         }
     }
 
+    //replaces the given child with a new layoutnode with the child and its sibling rotated
     protected void mergeAndRotate(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
-        int index = children.indexOf(child);
         Layout newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
-        children.set(index, newChild);
-        this.clean();
+        this.replace(child, newChild);
     }
 
+    //replaces the given child with the new child
     protected void replace(Layout toReplace, Layout newLayout){
-        Layout clonedReplacementInput = newLayout.clone();
         int index = children.indexOf(toReplace);
-        children.set(index, clonedReplacementInput);
+        newLayout.setParent(this);
+        children.set(index, newLayout);
         this.clean();
     }
 
-    protected void clean(){
+    private void clean(){
         if(children.size()==1){
-            parent.replace(this, this.children.get(0));
+            if(parent != null){
+                parent.replace(this, this.children.get(0));
+            } else {
+                this.children.get(0).setParent(null);
+            }
         } else if (children.isEmpty()){
-            parent.delete(this);
+            if(parent != null){
+                parent.delete(this);
+            }
         }
         if(this.orientation == parent.getOrientation()){
             parent.absorbChildren(this);
@@ -204,7 +205,8 @@ public class LayoutNode extends Layout {
         return new LayoutNode(this.orientation, deepCopyList);
     }
 
-    private Layout getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
+    //returns a LayoutNode that contains a child of the current node and its new sibling rotated along the specified direction
+    private LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
         Orientation nextOrientation;
         ArrayList<Layout> nextChildren;
         if(rotdir == ROT_DIRECTION.CLOCKWISE){
