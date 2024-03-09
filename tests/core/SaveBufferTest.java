@@ -10,7 +10,7 @@ public class SaveBufferTest {
     public void testMoveFocus(){
         String[] paths = new String[]{"testresources/test.txt","testresources/test2.txt"};
         Controller testController = new Controller(paths);
-        
+
 
 
     }
