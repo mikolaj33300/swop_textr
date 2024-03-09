@@ -2,11 +2,6 @@ package layouttree;
 
 import files.FileBuffer;
 
-import java.util.*;
-
-import static layouttree.Layout.Orientation.HORIZONTAL;
-import static layouttree.Layout.Orientation.VERTICAL;
-
 public class LayoutLeaf extends Layout {
     private boolean isActive;
     private FileBuffer containedFileBuffer;
@@ -23,19 +18,25 @@ public class LayoutLeaf extends Layout {
     }
 
     protected void moveFocusRight() throws RuntimeException {
-        this.isActive = false;
-        parent.makeRightNeighbourActive(this);
+        if(parent != null){
+            this.isActive = false;
+            parent.makeRightNeighbourActive(this);
+        } else {
+            throw new RuntimeException("Not implemented yet: child has no more neighbors");
+        }
+
     }
 
-    public STATUS_ROTATE rotateRelationshipNeighbor(DIRECTION dir) throws RuntimeException {
-        return STATUS_ROTATE.FOUND_ACTIVE;
-    }
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
+        if(parent != null){
+            LayoutLeaf newSibling = parent.getRightNeighbor(this);
+            parent.deleteRightNeighbor(this);
+            parent.mergeAndRotate(rot_dir, this, newSibling);
+            return super.getRootLayoutUncloned();
+        } else {
+            throw new RuntimeException("Not implemented yet: child has no more neighbors");
+        }
 
-
-    public void rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        LayoutLeaf newSibling = parent.getRightNeighbor(this);
-        parent.deleteRightNeighbor(this);
-        parent.mergeAndRotate(rot_dir, this, newSibling);
     }
 
     /**
@@ -78,6 +79,13 @@ public class LayoutLeaf extends Layout {
 
     protected LayoutLeaf getLeftLeaf() {
         return this.clone();
+    }
+
+    @Override
+    protected void sanitizeInputChild(LayoutNode futureParent) {
+        if(containsActive() && futureParent.containsActive()){
+            throw new RuntimeException("Invalid child: more than two active");
+        }
     }
 
     protected void setParent(LayoutNode layoutNode) {

@@ -1,6 +1,14 @@
 package layouttree;
 
 public abstract class Layout implements Cloneable {
+    protected Layout getRootLayoutUncloned() {
+        if(this.parent != null){
+            return parent.getRootLayoutUncloned();
+        } else {
+            return this;
+        }
+    }
+
     public enum STATUS_MOVE {
 
         FOUND_ACTIVE,
@@ -37,8 +45,10 @@ public abstract class Layout implements Cloneable {
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
     protected abstract void setInactive();
-    public abstract void rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
+    public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
     protected abstract LayoutLeaf getLeftLeaf();
+    protected abstract void sanitizeInputChild(LayoutNode futureParent);
+
     protected abstract Layout clone();
     public abstract boolean equals(Layout layout);
 }

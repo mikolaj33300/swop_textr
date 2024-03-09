@@ -2,7 +2,6 @@ package layouttree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LayoutNode extends Layout {
     private Orientation orientation;
@@ -16,6 +15,7 @@ public class LayoutNode extends Layout {
         this.orientation = newOrientation;
         this.children = new ArrayList<>();
         for(Layout l : newChildren){
+            sanitizeInputChild(this.clone());
             this.insertDirectChild(l.clone());
         }
     }
@@ -38,23 +38,21 @@ public class LayoutNode extends Layout {
     }
 
     public void insertDirectChild(Layout toInsert){
-        if(toInsert.containsActive() && this.containsActive){
-            throw new RuntimeException("Already contains one active!");
-        }
+        toInsert.sanitizeInputChild(this.clone());
         Layout cloneOfInsert = toInsert.clone();
-        cloneOfInsert.setParent(this);
+        this.children.add(cloneOfInsert);
         if(cloneOfInsert.containsActive()){
             this.containsActive = true;
         }
-        this.children.add(cloneOfInsert);
     }
 
-    public void rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
         for (Layout l : children) {
             if(l.containsActive()){
-                l.rotateRelationshipNeighbor(rot_dir);
+                return l.rotateRelationshipNeighbor(rot_dir);
             }
         }
+        throw new RuntimeException("Contains no active leaf!");
     }
     public void render() {
         return;
@@ -149,8 +147,8 @@ public class LayoutNode extends Layout {
 
     protected void makeLeftNeighbourActive(Layout layout) {
         int index = children.indexOf(layout);
-        if (index < children.size() - 1) {
-            children.get(index + 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
+        if (index > 0) {
+            children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
             containsActive = false;
             parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
@@ -160,24 +158,36 @@ public class LayoutNode extends Layout {
     protected void mergeAndRotate(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
         int index = children.indexOf(child);
         Layout newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
-        parent.replace(this, newChild);
+        children.set(index, newChild);
+        this.clean();
     }
 
     protected void replace(Layout toReplace, Layout newLayout){
+        Layout clonedReplacementInput = newLayout.clone();
         int index = children.indexOf(toReplace);
-        children.set(index, newLayout);
+        children.set(index, clonedReplacementInput);
         this.clean();
     }
+
     protected void clean(){
         if(children.size()==1){
             parent.replace(this, this.children.get(0));
-        } else {
+        } else if (children.isEmpty()){
             parent.delete(this);
         }
         if(this.orientation == parent.getOrientation()){
             parent.absorbChildren(this);
         }
-        this.parent.clean();
+    }
+
+    protected void sanitizeInputChild(LayoutNode futureParent){
+        if(children.size()<2){
+            throw new RuntimeException("Invalid child layout, contains too little children");
+        } else if((this.containsActive && futureParent.containsActive())){
+            throw new RuntimeException("Parent already contains an active child");
+        } else if(this.orientation == futureParent.getOrientation()){
+            throw new RuntimeException("Orientation of child equals orientation of parent");
+        }
     }
 
     private void absorbChildren(LayoutNode toAbsorb){
