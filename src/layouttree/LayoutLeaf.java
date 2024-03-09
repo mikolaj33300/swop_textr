@@ -17,16 +17,9 @@ public class LayoutLeaf extends Layout {
         this.containedFileBuffer = fb.clone();
         this.isActive = active;
     }
-
     protected void deleteLeftLeaf() {
         parent.delete(this);
     }
-
-    protected void mergeActiveWith(Layout toMergeLayout) {
-
-    }
-
-    // Hier nog ergens een enum zetten van wanneer we de actieve hebben gevonden???
     public void moveFocus(DIRECTION dir) throws RuntimeException {
 
     }
@@ -50,6 +43,20 @@ public class LayoutLeaf extends Layout {
             parent.mergeAndRotateCounterclockwise(this, newSibling);
         }
 
+    }
+
+    /**
+     * Determines if the given layout is a {@link LayoutLeaf} and their {@link FileBuffer}'s are also equal
+     */
+    @Override
+    public boolean equals(Layout layout) {
+        if(layout instanceof LayoutLeaf leaf)
+            return leaf.containedFileBuffer.equals(this.containedFileBuffer);
+        else return false;
+    }
+
+    public LayoutLeaf clone() {
+        return new LayoutLeaf(containedFileBuffer.clone(), isActive);
     }
 
     protected boolean containsActive() {
@@ -79,19 +86,7 @@ public class LayoutLeaf extends Layout {
         return this.clone();
     }
 
-    @Override
-    protected LayoutLeaf clone() {
-        return new LayoutLeaf(containedFileBuffer.clone(), true);
+    protected void setParent(LayoutNode layoutNode) {
+        this.parent = layoutNode;
     }
-
-    /**
-     * Determines if the given layout is a {@link LayoutLeaf} and their {@link FileBuffer}'s are also equal
-     */
-    @Override
-    public boolean equals(Layout layout) {
-        if(layout instanceof LayoutLeaf leaf)
-            return leaf.containedFileBuffer.equals(this.containedFileBuffer);
-        else return false;
-    }
-
 }

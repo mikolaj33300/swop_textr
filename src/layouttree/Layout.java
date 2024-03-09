@@ -1,9 +1,6 @@
 package layouttree;
 
 public abstract class Layout implements Cloneable {
-
-    protected abstract void deleteLeftLeaf();
-
     public enum STATUS_MOVE {
 
         FOUND_ACTIVE,
@@ -34,22 +31,17 @@ public abstract class Layout implements Cloneable {
     private int height;
     private int width;
 
+    public abstract void render();
+    protected abstract void deleteLeftLeaf();
+    protected abstract void setParent(LayoutNode layoutNode);
+    protected abstract boolean containsActive();
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
     protected abstract void moveFocusRight() throws RuntimeException;
-
-    protected abstract boolean containsActive();
-
-    public abstract void render();
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
     protected abstract void setInactive();
-
     public abstract void rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
-
     protected abstract LayoutLeaf getLeftLeaf();
-
-    @Override
     protected abstract Layout clone();
-
     public abstract boolean equals(Layout layout);
 }

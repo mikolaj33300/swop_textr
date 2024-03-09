@@ -5,32 +5,44 @@ import java.util.Arrays;
 
 public class LayoutNode extends Layout {
     private LayoutNode parent;
-
     private Orientation orientation;
     private ArrayList<Layout> children;
     private boolean containsActive;
 
-    public LayoutNode(Orientation newOrientation, ArrayList<Layout> listLayouts){
-        children = new ArrayList<>();
-        for(Layout l : listLayouts){
-            children.add(l.clone());
+    public LayoutNode(Orientation newOrientation){
+        this.orientation = newOrientation;
+    }
+
+    public LayoutNode(Orientation newOrientation, ArrayList<Layout> newChildren){
+        this.orientation = newOrientation;
+        for(Layout l : children){
+            this.insertDirectChild(l.clone());
         }
     }
 
-    protected void deleteLeftLeaf() {
-        children.get(0).deleteLeftLeaf();
+    public ArrayList<Layout> getDirectChildren(){
+        ArrayList<Layout> deepCopyList = new ArrayList<>();
+        for(Layout l : children){
+            deepCopyList.add(l.clone());
+        }
+        return deepCopyList;
     }
 
-    protected void delete(Layout l){
-        children.remove(l);
-        this.clean();
-    }
 
-    protected void mergeActiveWith(Layout toMergeLayout) {
-
-    }
 
     public void moveFocus(DIRECTION dir) throws RuntimeException {
+    }
+
+    public void insertDirectChild(Layout toInsert){
+        if(toInsert.containsActive() && this.containsActive){
+            throw new RuntimeException("Already contains one active!");
+        }
+        Layout cloneOfInsert = toInsert.clone();
+        cloneOfInsert.setParent(this);
+        if(cloneOfInsert.containsActive()){
+            this.containsActive = true;
+        }
+        this.children.add(cloneOfInsert);
     }
 
     /**
@@ -57,14 +69,26 @@ public class LayoutNode extends Layout {
             }
         }
     }
-
+    public void render() {
+        return;
+    }
 
     protected boolean containsActive() {
         return containsActive;
     }
 
-    public void render() {
-        return;
+    protected void deleteLeftLeaf() {
+        children.get(0).deleteLeftLeaf();
+    }
+
+    @Override
+    protected void setParent(LayoutNode layoutNode) {
+        this.parent = layoutNode;
+    }
+
+    protected void delete(Layout l){
+        children.remove(l);
+        this.clean();
     }
 
     protected void makeLeftmostLeafActive() {
@@ -89,6 +113,7 @@ public class LayoutNode extends Layout {
         if (index < children.size() - 1) {
             children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
+            containsActive = false;
             parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
         }
     }
@@ -131,27 +156,6 @@ public class LayoutNode extends Layout {
         parent.replace(this, newChild);
     }
 
-    protected void replace(Layout toReplace, Layout newLayout){
-        int index = children.indexOf(toReplace);
-        children.set(index, newLayout);
-        this.clean();
-    }
-    protected void absorbChildren(LayoutNode toAbsorb){
-        int index = children.indexOf(toAbsorb);
-        this.children.addAll(index, toAbsorb.children);
-    }
-    protected void clean(){
-        if(children.size()==1){
-            parent.replace(this, this.children.get(0));
-        } else {
-            parent.delete(this);
-        }
-        if(this.orientation == parent.getOrientation()){
-            parent.absorbChildren(this);
-        }
-        this.parent.clean();
-    }
-
     public void mergeAndRotateCounterclockwise(Layout child, LayoutLeaf newSibling) {
         int index = children.indexOf(child);
         Orientation nextOrientation;
@@ -167,8 +171,30 @@ public class LayoutNode extends Layout {
         children.set(index, newChild);
     }
 
+    protected void replace(Layout toReplace, Layout newLayout){
+        int index = children.indexOf(toReplace);
+        children.set(index, newLayout);
+        this.clean();
+    }
+    protected void clean(){
+        if(children.size()==1){
+            parent.replace(this, this.children.get(0));
+        } else {
+            parent.delete(this);
+        }
+        if(this.orientation == parent.getOrientation()){
+            parent.absorbChildren(this);
+        }
+        this.parent.clean();
+    }
+
+    private void absorbChildren(LayoutNode toAbsorb){
+        int index = children.indexOf(toAbsorb);
+        this.children.addAll(index, toAbsorb.children);
+    }
+
     @Override
-    protected Layout clone(){
+    protected LayoutNode clone(){
         ArrayList<Layout> deepCopyList = new ArrayList<>();
         for(Layout l : children){
             deepCopyList.add(l.clone());
@@ -183,27 +209,17 @@ public class LayoutNode extends Layout {
      */
     @Override
     public boolean equals(Layout node) {
-
         if(node instanceof LayoutNode layoutNode) {
-
             // Return early when the amount of children don't match.
             if(layoutNode.children.size() != this.children.size()) return false;
-
             // Loop over the children of both
             for(int i = 0; i < layoutNode.children.size(); i++) {
-
                 // We keep checking if they are equal, if not we return early.
                 if(!layoutNode.children.get(i).equals(this.children.get(i))) return false;
-
             }
-
             // If the process didn't find disparities, the layouts are equal.
             return true;
-
         }
-
         return false;
-
     }
-
 }
