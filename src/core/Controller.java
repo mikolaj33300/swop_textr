@@ -47,12 +47,12 @@ public class Controller {
      */
     private Layout getRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
-        for(String s : args) {
-            Path checkPath = Paths.get(s);
+        for(int i = 0; i < args.length; i++) {
+            Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
                 //TODO throw error for unknown path
             }
-            leaves.add(new LayoutLeaf(new FileBuffer(s), false));
+            leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
         return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
     }
