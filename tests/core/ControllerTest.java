@@ -13,6 +13,9 @@ import java.util.List;
 
 public class ControllerTest {
 
+    /**
+     * Tests the constructor. Will it create the layout correctly?
+     */
     @Test
     public void testArguments() {
         String path1 = "testresources/test.txt";
@@ -28,10 +31,7 @@ public class ControllerTest {
         leaves.add(new LayoutLeaf(buffer2, false));
         LayoutNode node = new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
 
-        if(controller.getRootLayout().equals(node)) System.out.println("ok");
-
         assert controller.getRootLayout().equals(node);
-
     }
 
 }

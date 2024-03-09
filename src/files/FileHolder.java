@@ -29,7 +29,6 @@ public class FileHolder {
      * saves file
      */
     public void save(String fileContent) {
-
         try {
             FileWriter writer = new FileWriter(this.fd);
             writer.write(fileContent);

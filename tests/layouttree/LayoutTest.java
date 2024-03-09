@@ -1,4 +1,0 @@
-package layouttree;
-
-class LayoutTest {
-}
