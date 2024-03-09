@@ -27,16 +27,13 @@ public abstract class Layout implements Cloneable {
         VERTICAL
     }
 
-    private Layout parent;
-    private int height;
-    private int width;
+    protected LayoutNode parent = null;
 
     public abstract void render();
     protected abstract void deleteLeftLeaf();
     protected abstract void setParent(LayoutNode layoutNode);
     protected abstract boolean containsActive();
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
-    protected abstract void moveFocusRight() throws RuntimeException;
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
     protected abstract void setInactive();

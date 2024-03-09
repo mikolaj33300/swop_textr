@@ -8,8 +8,6 @@ import static layouttree.Layout.Orientation.HORIZONTAL;
 import static layouttree.Layout.Orientation.VERTICAL;
 
 public class LayoutLeaf extends Layout {
-
-    private LayoutNode parent;
     private boolean isActive;
     private FileBuffer containedFileBuffer;
 
@@ -18,7 +16,7 @@ public class LayoutLeaf extends Layout {
         this.isActive = active;
     }
     protected void deleteLeftLeaf() {
-        parent.delete(this);
+        super.parent.delete(this);
     }
     public void moveFocus(DIRECTION dir) throws RuntimeException {
 
@@ -37,12 +35,7 @@ public class LayoutLeaf extends Layout {
     public void rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         LayoutLeaf newSibling = parent.getRightNeighbor(this);
         parent.deleteRightNeighbor(this);
-        if(rot_dir==ROT_DIRECTION.CLOCKWISE){
-            parent.mergeAndRotateClockwise(this, newSibling);
-        } else {
-            parent.mergeAndRotateCounterclockwise(this, newSibling);
-        }
-
+        parent.mergeAndRotate(rot_dir, this, newSibling);
     }
 
     /**
@@ -55,16 +48,17 @@ public class LayoutLeaf extends Layout {
         else return false;
     }
 
-    public LayoutLeaf clone() {
-        return new LayoutLeaf(containedFileBuffer.clone(), isActive);
-    }
-
     protected boolean containsActive() {
         return isActive;
     }
 
     public void render() {
         return;
+    }
+
+    @Override
+    protected LayoutLeaf clone() {
+        return new LayoutLeaf(containedFileBuffer.clone(), isActive);
     }
 
     @Override
