@@ -33,7 +33,6 @@ public class LayoutNode extends Layout {
                 l.moveFocus(dir);
             }
         }
-        throw new RuntimeException("No node contains active!");
     }
 
     public void insertDirectChild(Layout toInsert){
