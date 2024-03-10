@@ -198,8 +198,10 @@ public class LayoutNode extends Layout {
                 parent.delete(this);
             }
         }
-        if(this.orientation == parent.getOrientation()){
-            parent.absorbChildren(this);
+        if(parent != null){
+            if(this.orientation == parent.getOrientation()){
+                parent.absorbChildren(this);
+            }
         }
     }
 
