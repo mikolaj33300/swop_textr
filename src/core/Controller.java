@@ -38,8 +38,8 @@ public class Controller {
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException {
-        if(args.length == 0) {
-            System.out.println("TextR needs parameters to run.");
+        if(args.length == 0 || (args[0].substring(0,2).equals("--") && args.length == 1)) {
+            System.out.println("TextR needs at least one specified file");
             return;
         }
 

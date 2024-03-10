@@ -88,7 +88,7 @@ public class LayoutNode extends Layout {
     public boolean equals(Object node) {
         if(node instanceof LayoutNode layoutNode) {
             //Check objects for same activity-status
-            if(this.containsActive() != ((LayoutNode) node).getContainsActive()){
+            if(this.containsActive() != layoutNode.getContainsActive()){
                 return false;
             }
             // Return early when the amount of children don't match.

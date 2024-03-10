@@ -27,7 +27,7 @@ public class ControllerTest {
         Controller controller = new Controller(args);
         assertEquals(controller.getLineSeparator(args), "0a");
 
-        args = new String[] {"--crlf"};
+        args = new String[] {"--crlf", path1, path2};
         controller = new Controller(args);
         assertEquals(controller.getLineSeparator(args), "0d0a");
 
@@ -39,8 +39,9 @@ public class ControllerTest {
         FileBuffer buffer1 = new FileBuffer(path1, null);
         FileBuffer buffer2 = new FileBuffer(path2, null);
         ArrayList<Layout> leaves = new ArrayList<>();
-        leaves.add(new LayoutLeaf(buffer1, false));
+        leaves.add(new LayoutLeaf(buffer1, true));
         leaves.add(new LayoutLeaf(buffer2, false));
+
         LayoutNode node = new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
 
         assertTrue(controller.getRootLayout().equals(node));

@@ -33,7 +33,6 @@ public class FileBuffer {
      */
     public void write(String updatedContents) {
         this.content += updatedContents;
-        System.out.println("Content: " + content);
         dirty = true;
     }
 
