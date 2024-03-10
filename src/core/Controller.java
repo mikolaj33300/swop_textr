@@ -60,7 +60,8 @@ public class Controller {
             }
             leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
         }
-        return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
+        if(leaves.size() == 1) return leaves.get(0);
+        else return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
     }
 
     /**
