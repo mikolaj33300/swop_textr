@@ -38,7 +38,7 @@ public class LayoutNode extends Layout {
     }
 
     public void insertDirectChild(Layout toInsert){
-        toInsert.sanitizeAsChildOfParent(this.clone());
+        toInsert.sanitizeAsChildOfParent(this);
         Layout cloneOfInsert = toInsert.clone();
         cloneOfInsert.setParent(this);
         this.children.add(cloneOfInsert);
@@ -89,6 +89,10 @@ public class LayoutNode extends Layout {
     @Override
     public boolean equals(Object node) {
         if(node instanceof LayoutNode layoutNode) {
+            //Check objects for same activity-status
+            if(this.containsActive() != ((LayoutNode) node).getContainsActive()){
+                return false;
+            }
             // Return early when the amount of children don't match.
             if(layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both

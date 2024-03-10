@@ -43,7 +43,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof LayoutLeaf leaf)
-            return leaf.containedFileBuffer.equals(this.containedFileBuffer);
+            return leaf.containedFileBuffer.equals(this.containedFileBuffer) && (this.getContainsActive() == leaf.getContainsActive());
         else return false;
     }
 
@@ -76,3 +76,4 @@ public class LayoutLeaf extends Layout {
         }
     }
 }
+
