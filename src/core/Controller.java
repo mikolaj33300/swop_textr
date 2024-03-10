@@ -5,12 +5,15 @@ import io.github.btj.termios.Terminal;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 public class Controller {
@@ -80,29 +83,42 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
 
+            System.out.println("\nAsking for byte: ");
             int c = Terminal.readByte();
 
             switch(c) {
-                    // Control + S
+                // Control + S
                 case 19:
                     saveBuffer();
                     break;
-                    // Control + P
+                // Control + P
                 case 16:
                     moveFocus(Layout.DIRECTION.LEFT);
                     break;
-                    // Control + N
+                // Control + N
                 case 14:
                     moveFocus(Layout.DIRECTION.RIGHT);
                     break;
-
+                // Arrow keys
+                case 27:
+                    Terminal.readByte();
+                    moveCursor((char) Terminal.readByte());
+                    break;
+                // Line separator
+                //case 13:
+                    //System.line
+                    //break;
+                // Character input
                 default:
+                    System.out.println("'" + c + "'dd");
                     //this.rootLayout.getActive();
-                    enterText(Terminal.readByte());
-                    render();
+                    enterText((char) c);
+                    //render();
+                    break;
 
             }
 
+            System.out.println("Flushing & Dimension");
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -127,10 +143,29 @@ public class Controller {
     }
 
     /**
+     * Moves insertion point in a file buffer
+     */
+    public void moveCursor(char code) {
+        //this.rootLayout.getActive();
+    }
+
+    /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
-    public void enterText(int c) {
+    public void enterText(char str) {
+        System.out.println("Hello??");
+        /*if(str.equals(System.lineSeparator())) {
 
+        }*/
+        if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
+            System.out.println("True");
+            /*Formatter f = new Formatter();
+            for(byte b : str.getBytes()) f.format("%02x", b);
+            System.out.println(f.toString());*/
+
+            System.out.print("Printing: " + str);
+        } else System.out.println("Invalid?");
+        System.out.println("\n\n\nFalse");
     }
 
     /**

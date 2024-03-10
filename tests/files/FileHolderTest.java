@@ -21,19 +21,19 @@ public class FileHolderTest {
         String teststring2 = "string to test with in another file";
 
         f1.save(teststring1);
-        assertEquals(f1.getContent(),teststring1);
-        assertEquals(f1_.getContent(),teststring1);
+        assertEquals(new String(f1.getContent()),teststring1);
+        assertEquals(new String(f1_.getContent()),teststring1);
 
         f1_.save(teststring2);
-        assertEquals(f1_.getContent(),teststring2);
-        assertEquals(f1.getContent(),teststring2);
+        assertEquals(new String(f1_.getContent()),teststring2);
+        assertEquals(new String(f1.getContent()),teststring2);
     }
     @Test
     void testGetContent(){
         String teststring = "string to test with";
 
         f1.save(teststring);
-        assertEquals(f1.getContent(),teststring);
+        assertEquals(new String(f1.getContent()),teststring);
     }
 
     @Test

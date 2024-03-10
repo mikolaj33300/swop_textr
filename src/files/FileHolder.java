@@ -35,11 +35,17 @@ public class FileHolder {
     /**
      * saves file
      */
-    public void save(String fileContent) {
+    public void save(byte[] fileContent) {
         try {
-            FileWriter writer = new FileWriter(this.fd);
-            writer.write(fileContent);
-            writer.close();
+            Files.write(Path.of(this.path), fileContent);
+        } catch (IOException e) {
+            System.out.println("[FileHolder] Exception while trying to save file content");
+        }
+    }
+
+    public void save(String content) {
+        try {
+            Files.write(Path.of(this.path), content.getBytes());
         } catch (IOException e) {
             System.out.println("[FileHolder] Exception while trying to save file content");
         }
@@ -48,14 +54,14 @@ public class FileHolder {
     /**
      * Returns the content of the file
      */
-    public final String getContent() {
+    public final byte[] getContent() {
         try {
             // Check for invalid bytes
             // 1. Non ASCII characters
             byte[] fileContent = Files.readAllBytes(this.fd.toPath());
             for(byte b : fileContent)
                 if(b < 32 && b != 10 && b != 13 || 127 <= b)
-                    return "Error: Invalid file contents - Invalid bytes";
+                    return "Error: Invalid file contents - Invalid bytes".getBytes();
             // 2. Non platform specific line seperators
             byte[] lineSeperatorBytes = System.lineSeparator().getBytes();
             Formatter formatterLine = new Formatter();
@@ -68,22 +74,15 @@ public class FileHolder {
             String fileContentFormatted = formatterContent.toString();
 
             // We zullen enkel voor windows ("0d0a") kijken voor een match.
+            // Contains 0d0a, code is 0a
             if((fileContentFormatted.contains("0d0a") && lineSeperatorCode.equals("0a"))
-               // Contains 0a, not 0d0a
-            || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
+                    // Contains 0a, not 0d0a, code is 0d0a
+                    || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
-                return "Error: Invalid file contents - Wrong line separator";
+                return "Error: Invalid file contents - Wrong line separator".getBytes();
 
 
-            // Read file
-            BufferedReader reader = new BufferedReader(new FileReader(this.fd));
-            String contents = "";
-            String line;
-
-            while ((line = reader.readLine()) != null)
-                contents += line;
-
-            return contents;
+            return fileContent;
 
         } catch (IOException e) {
 
@@ -91,7 +90,7 @@ public class FileHolder {
             System.out.println("[FileBuffer] Exception while trying to read contents of file.");
 
         }
-        return "";
+        return "".getBytes();
     }
 
     public FileHolder clone() {
