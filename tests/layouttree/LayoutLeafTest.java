@@ -45,24 +45,36 @@ class LayoutLeafTest {
     }
 
     @Test
-    void testMoveFocusRight(){
-        int k = 5;
+    void testMoveFocus(){
+
         assertTrue(ln.getContainsActive());
         assertTrue(l1.getContainsActive());
         assertFalse(l2.getContainsActive());
         assertFalse(l4.getContainsActive());
 
-        l1.moveFocusRight();
+        ln.moveFocus(Layout.DIRECTION.RIGHT);
         assertTrue(ln.getContainsActive());
         assertFalse(l1.getContainsActive());
         assertTrue(l2.getContainsActive());
         assertFalse(l4.getContainsActive());
 
-        l2.moveFocusRight();
+        ln.moveFocus(Layout.DIRECTION.LEFT);
+        assertTrue(ln.getContainsActive());
+        assertTrue(l1.getContainsActive());
+        assertFalse(l2.getContainsActive());
+        assertFalse(l4.getContainsActive());
+
+        ln.moveFocus(Layout.DIRECTION.LEFT);
         assertTrue(ln.getContainsActive());
         assertFalse(l1.getContainsActive());
         assertFalse(l2.getContainsActive());
         assertTrue(l4.getContainsActive());
+
+        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        assertTrue(ln.getContainsActive());
+        assertTrue(l1.getContainsActive());
+        assertTrue(l2.getContainsActive());
+        assertFalse(l4.getContainsActive());
 
     }
     @Test
