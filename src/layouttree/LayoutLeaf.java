@@ -13,13 +13,26 @@ public class LayoutLeaf extends Layout {
         super.parent.delete(this);
     }
     public void moveFocus(DIRECTION dir) throws RuntimeException {
-
+        if(dir == DIRECTION.RIGHT){
+            moveFocusRight();
+        } else {
+            moveFocusLeft();
+        }
     }
 
-    protected void moveFocusRight() throws RuntimeException {
+    private void moveFocusRight() throws RuntimeException {
         if(parent != null){
             this.setContainsActive(false);
             parent.makeRightNeighbourActive(this);
+        } else {
+            throw new RuntimeException("Not implemented yet: child has no more neighbors");
+        }
+    }
+
+    private void moveFocusLeft() throws RuntimeException {
+        if(parent != null){
+            this.setContainsActive(false);
+            parent.makeLeftNeighbourActive(this);
         } else {
             throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }

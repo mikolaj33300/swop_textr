@@ -9,17 +9,6 @@ public abstract class Layout implements Cloneable {
         }
     }
 
-    public enum STATUS_MOVE {
-
-        FOUND_ACTIVE,
-        SUCCESS
-    }
-
-    public enum STATUS_ROTATE {
-        FOUND_ACTIVE,
-        SUCCESS
-    }
-
     public enum DIRECTION {
         LEFT,
         RIGHT
