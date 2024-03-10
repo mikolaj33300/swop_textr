@@ -70,7 +70,7 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    protected void sanitizeInputChild(LayoutNode futureParent) {
+    protected void sanitizeAsChildOfParent(LayoutNode futureParent) {
         if(getContainsActive() && futureParent.containsActive()){
             throw new RuntimeException("Invalid child: more than two active");
         }

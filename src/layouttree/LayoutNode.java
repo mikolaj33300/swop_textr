@@ -15,7 +15,7 @@ public class LayoutNode extends Layout {
         this.orientation = newOrientation;
         this.children = new ArrayList<>();
         for(Layout l : newChildren){
-            sanitizeInputChild(this.clone());
+            l.sanitizeAsChildOfParent(this);
             this.insertDirectChild(l.clone());
         }
     }
@@ -38,7 +38,7 @@ public class LayoutNode extends Layout {
     }
 
     public void insertDirectChild(Layout toInsert){
-        toInsert.sanitizeInputChild(this.clone());
+        toInsert.sanitizeAsChildOfParent(this.clone());
         Layout cloneOfInsert = toInsert.clone();
         cloneOfInsert.setParent(this);
         this.children.add(cloneOfInsert);
@@ -100,6 +100,16 @@ public class LayoutNode extends Layout {
             return true;
         }
         return false;
+    }
+
+    protected void sanitizeAsChildOfParent(LayoutNode futureParent){
+        if(children.size()<2){
+            throw new RuntimeException("Invalid child layout, contains too little children");
+        } else if((this.containsActive && futureParent.containsActive())){
+            throw new RuntimeException("Parent already contains an active child");
+        } else if(this.orientation == futureParent.getOrientation()){
+            throw new RuntimeException("Orientation of child equals orientation of parent");
+        }
     }
 
     protected boolean containsActive() {
@@ -178,16 +188,6 @@ public class LayoutNode extends Layout {
         }
         if(this.orientation == parent.getOrientation()){
             parent.absorbChildren(this);
-        }
-    }
-
-    protected void sanitizeInputChild(LayoutNode futureParent){
-        if(children.size()<2){
-            throw new RuntimeException("Invalid child layout, contains too little children");
-        } else if((this.containsActive && futureParent.containsActive())){
-            throw new RuntimeException("Parent already contains an active child");
-        } else if(this.orientation == futureParent.getOrientation()){
-            throw new RuntimeException("Orientation of child equals orientation of parent");
         }
     }
 
