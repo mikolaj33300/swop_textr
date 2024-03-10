@@ -147,8 +147,13 @@ public class LayoutNode extends Layout {
         if (index < children.size() - 1) {
             children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
-            containsActive = false;
-            parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
+            if(parent != null){
+                containsActive = false;
+                parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
+            } else {
+                makeRightmostLeafActive();
+            }
+
         }
     }
 
@@ -158,9 +163,13 @@ public class LayoutNode extends Layout {
         if (index > 0) {
             children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
-            containsActive = false;
-            parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
-        }
+            if(parent != null){
+                containsActive = false;
+                parent.makeLeftNeighbourActive(this); //called when we need to backtrack one level up
+            } else {
+                makeLeftmostLeafActive();
+            }
+       }
     }
 
     //replaces the given child with a new layoutnode with the child and its sibling rotated
