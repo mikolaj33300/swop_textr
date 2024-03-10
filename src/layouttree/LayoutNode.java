@@ -6,7 +6,6 @@ import java.util.Arrays;
 public class LayoutNode extends Layout {
     private Orientation orientation;
     private ArrayList<Layout> children;
-    private boolean containsActive;
 
     public LayoutNode(Orientation newOrientation, ArrayList<Layout> newChildren){
         if(newChildren.size()<2){

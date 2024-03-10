@@ -37,7 +37,7 @@ public abstract class Layout implements Cloneable {
 
     protected LayoutNode parent = null;
 
-    private boolean containsActive;
+    protected boolean containsActive;
 
     public abstract void render();
 
