@@ -47,35 +47,54 @@ class LayoutLeafTest {
     @Test
     void testMoveFocus(){
 
+
+        ArrayList<Layout> children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
-        assertTrue(l1.getContainsActive());
-        assertFalse(l2.getContainsActive());
-        assertFalse(l4.getContainsActive());
+        assertTrue(children.get(0).getContainsActive());
+        assertFalse(children.get(1).getContainsActive());
+        assertFalse(children.get(2).getContainsActive());
 
         ln.moveFocus(Layout.DIRECTION.RIGHT);
+        children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
-        assertFalse(l1.getContainsActive());
-        assertTrue(l2.getContainsActive());
-        assertFalse(l4.getContainsActive());
+        assertFalse(children.get(0).getContainsActive());
+        assertTrue(children.get(1).getContainsActive());
+        assertFalse(children.get(2).getContainsActive());
 
         ln.moveFocus(Layout.DIRECTION.LEFT);
+        children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
-        assertTrue(l1.getContainsActive());
-        assertFalse(l2.getContainsActive());
-        assertFalse(l4.getContainsActive());
+        assertTrue(children.get(0).getContainsActive());
+        assertFalse(children.get(1).getContainsActive());
+        assertFalse(children.get(2).getContainsActive());
 
         ln.moveFocus(Layout.DIRECTION.LEFT);
+        children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
-        assertFalse(l1.getContainsActive());
-        assertFalse(l2.getContainsActive());
-        assertTrue(l4.getContainsActive());
+        assertTrue(children.get(0).getContainsActive());
+        assertFalse(children.get(1).getContainsActive());
+        assertFalse(children.get(2).getContainsActive());
 
         ln.moveFocus(Layout.DIRECTION.RIGHT);
+        children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
-        assertTrue(l1.getContainsActive());
-        assertTrue(l2.getContainsActive());
-        assertFalse(l4.getContainsActive());
+        assertFalse(children.get(0).getContainsActive());
+        assertTrue(children.get(1).getContainsActive());
+        assertFalse(children.get(2).getContainsActive());
 
+        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        children = ln.getDirectChildren();
+        assertTrue(ln.getContainsActive());
+        assertFalse(children.get(0).getContainsActive());
+        assertFalse(children.get(1).getContainsActive());
+        assertTrue(children.get(2).getContainsActive());
+
+        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        children = ln.getDirectChildren();
+        assertTrue(ln.getContainsActive());
+        assertFalse(children.get(0).getContainsActive());
+        assertFalse(children.get(1).getContainsActive());
+        assertTrue(children.get(2).getContainsActive());
     }
     @Test
     void testEquals(){

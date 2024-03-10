@@ -31,6 +31,7 @@ public class LayoutNode extends Layout {
         for (Layout l : children) {
             if(l.getContainsActive()){
                 l.moveFocus(dir);
+                return;
             }
         }
     }
