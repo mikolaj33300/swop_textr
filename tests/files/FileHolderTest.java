@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 
 public class FileHolderTest {
-    FileHolder f1 = new FileHolder("testresources/test.txt");
-    FileHolder f1_ = new FileHolder("testresources/test.txt");
-    FileHolder f2 = new FileHolder("testresources/test2.txt");
+    FileHolder f1 = new FileHolder("testresources/test.txt", null);
+    FileHolder f1_ = new FileHolder("testresources/test.txt", null);
+    FileHolder f2 = new FileHolder("testresources/test2.txt", null);
 
     @Test
     void testGetPath(){

@@ -15,16 +15,16 @@ public class FileBufferTest {
 
         // Test if the FileHolder is equal == Paths are equal
         String path = "testresources/test.txt";
-        FileHolder holder = new FileHolder(path);
+        FileHolder holder = new FileHolder(path, null);
 
-        FileBuffer buffer = new FileBuffer(path);
+        FileBuffer buffer = new FileBuffer(path, null);
 
         assertTrue(buffer.getFileHolder().equals(holder));
 
         // Test if the content is correctly retrieved
         String content = "abc";
         write(path, content);
-        buffer = new FileBuffer(path);
+        buffer = new FileBuffer(path, null);
 
         assertEquals(buffer.getContent(), content);
 
@@ -33,7 +33,7 @@ public class FileBufferTest {
     @Test
     public void testClone() {
         String path = "testresources/test.txt";
-        FileBuffer buffer = new FileBuffer(path);
+        FileBuffer buffer = new FileBuffer(path, null);
 
         assertTrue(buffer.equals(buffer.clone()));
     }
@@ -44,7 +44,7 @@ public class FileBufferTest {
         String text = "i love termios ; long live btj";
         String path = "testresources/test.txt";
         write(path, text);
-        FileBuffer buffer = new FileBuffer(path);
+        FileBuffer buffer = new FileBuffer(path, null);
 
         assertEquals(buffer.getContent(), text);
 

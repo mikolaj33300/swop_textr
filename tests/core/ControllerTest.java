@@ -11,6 +11,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class ControllerTest {
 
     /**
@@ -20,18 +22,28 @@ public class ControllerTest {
     public void testArguments() {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test.txt";
+        String[] args = new String[]{"--lf", path1, path2};
 
-        Controller controller = new Controller(new String[]{path1, path2});
+        Controller controller = new Controller(args);
+        assertEquals(controller.getLineSeparator(args), "0a");
+
+        args = new String[] {"--crlf"};
+        controller = new Controller(args);
+        assertEquals(controller.getLineSeparator(args), "0d0a");
+
+        args = new String[]{path1, path2};
+        controller = new Controller(args);
+        assertNull(controller.getLineSeparator(args));
 
         // Na constructor zou volgende root layout moeten bestaan:
-        FileBuffer buffer1 = new FileBuffer(path1);
-        FileBuffer buffer2 = new FileBuffer(path2);
+        FileBuffer buffer1 = new FileBuffer(path1, null);
+        FileBuffer buffer2 = new FileBuffer(path2, null);
         ArrayList<Layout> leaves = new ArrayList<>();
         leaves.add(new LayoutLeaf(buffer1, false));
         leaves.add(new LayoutLeaf(buffer2, false));
         LayoutNode node = new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
 
-        assert controller.getRootLayout().equals(node);
+        assertTrue(controller.getRootLayout().equals(node));
     }
 
 }

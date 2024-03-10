@@ -11,16 +11,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
     /**
-     * The beginning layout when the application is started with paths.
+     * Root layout
      */
     private Layout rootLayout;
 
     /**
-     * Instance which calculates terminal size.
+     * Size of the terminal
      */
     private int width, height;
 
@@ -30,13 +31,18 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        this.rootLayout = getRootLayout(args);
+        this.rootLayout = getRootLayout(args, getLineSeparator(args));
     }
 
     /**
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException {
+        if(args.length == 0) {
+            System.out.println("TextR needs parameters to run.");
+            return;
+        }
+
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -45,14 +51,14 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout getRootLayout(String[] args) {
+    private Layout getRootLayout(String[] args, String lineSeparator) {
         ArrayList<Layout> leaves = new ArrayList<>();
-        for(int i = 0; i < args.length; i++) {
+        for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
                 //TODO throw error for unknown path
             }
-            leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
+            leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
         }
         return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
     }
@@ -116,16 +122,14 @@ public class Controller {
      * Saves the FileBuffer's content to its file.
      */
     public void saveBuffer() {
-        //TODO
-        //this.rootLayout.getActive().save();
+
     }
 
     /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
     public void enterText(int c) {
-        // TODO getActive layout
-        //this.rootLayout.getActive().enterText(c);
+
     }
 
     /**
@@ -134,11 +138,6 @@ public class Controller {
     public void moveFocus(Layout.DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
-
-    /**
-     * TODO !!!!!!!!!! wat is dit???
-     */
-    public void rotateRelationshipNeighbour() {}
 
     // Test functions
 
@@ -150,11 +149,10 @@ public class Controller {
     }
 
     /**
-     * Calculates the dimensions of the terminal
+     * <p>Calculates the dimensions of the terminal
      * Credits to BTJ. This looks very clean and intuïtive.
-     * Sets the fields {@link Controller#width} and {@link Controller#height}.
-     *
-     * Method set to default for unit test access.
+     * Sets the fields {@link Controller#width} and {@link Controller#height}.</p>
+     * <p>Method set to default for unit test access.</p>
      */
     void retrieveDimensions() throws IOException {
 
@@ -192,6 +190,14 @@ public class Controller {
 
     }
 
+    String getLineSeparator(String[] args) {
+        if(args[0].equals("--lf"))
+            return "0a";
+        else if(args[0].equals("--crlf"))
+            return "0d0a";
+        else return null;
+    }
+
     /**
      * Temporary helper
      */
@@ -199,6 +205,12 @@ public class Controller {
         for(String si : s) {
             System.out.println(si);
         }
+    }
+
+    private static String getPrint(String[] s) {
+        String out = "";
+        for(String l : s) out += l + ", ";
+        return out;
     }
 
 }

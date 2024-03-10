@@ -4,25 +4,32 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Formatter;
 
 /*
  * file aparte klasse omdat eventueel andere io gebruikt moet worden +
  *  andere functie dan buffer
  */
 public class FileHolder {
+    private final String lineSeparator;
     private final String path;
     private File fd;
 
     /**
      * Creates File object with given path
      */
-    public FileHolder(String path) {
+    public FileHolder(String path, String lineSeparator) {
         this.fd = new File(path);
+        this.lineSeparator = lineSeparator;
         this.path = path;
     }
 
-    public String getPath() {
+    String getPath() {
         return new String(this.path);
+    }
+
+    String getLineSeparator() {
+        return this.lineSeparator == null ? null : new String(this.lineSeparator);
     }
 
     /**
@@ -40,11 +47,35 @@ public class FileHolder {
 
     /**
      * Returns the content of the file
-     *
-     * @return
      */
     public final String getContent() {
         try {
+            // Check for invalid bytes
+            // 1. Non ASCII characters
+            byte[] fileContent = Files.readAllBytes(this.fd.toPath());
+            for(byte b : fileContent)
+                if(b < 32 && b != 10 && b != 13 || 127 <= b)
+                    return "Error: Invalid file contents - Invalid bytes";
+            // 2. Non platform specific line seperators
+            byte[] lineSeperatorBytes = System.lineSeparator().getBytes();
+            Formatter formatterLine = new Formatter();
+            for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
+            // If line separator was specified, use specified otherwise use System.lineSeparator()
+            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : lineSeparator;
+
+            Formatter formatterContent = new Formatter();
+            for(byte b : fileContent) formatterContent.format("%02x",b);
+            String fileContentFormatted = formatterContent.toString();
+
+            // We zullen enkel voor windows ("0d0a") kijken voor een match.
+            if((fileContentFormatted.contains("0d0a") && lineSeperatorCode.equals("0a"))
+               // Contains 0a, not 0d0a
+            || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
+                    lineSeperatorCode.equals("0d0a")))
+                return "Error: Invalid file contents - Wrong line separator";
+
+
+            // Read file
             BufferedReader reader = new BufferedReader(new FileReader(this.fd));
             String contents = "";
             String line;
@@ -64,7 +95,7 @@ public class FileHolder {
     }
 
     public FileHolder clone() {
-        return new FileHolder(new String(this.path));
+        return new FileHolder(new String(this.path), lineSeparator == null ? null : new String(this.lineSeparator));
     }
 
     /**

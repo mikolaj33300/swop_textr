@@ -21,8 +21,8 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path) {
-        this.file = new FileHolder(path);
+    public FileBuffer(String path, String lineSeparator) {
+        this.file = new FileHolder(path, lineSeparator);
         this.content = this.file.getContent();
     }
 
@@ -75,7 +75,7 @@ public class FileBuffer {
      * Clones this object
      */
     public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath());
+        FileBuffer copy = new FileBuffer(this.file.getPath(), this.file.getLineSeparator());
         copy.dirty = this.dirty;
         copy.content = new String(this.content);
         return copy;
