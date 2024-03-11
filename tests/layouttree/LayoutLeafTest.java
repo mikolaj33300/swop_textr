@@ -41,7 +41,7 @@ class LayoutLeafTest {
         children.add(l1);
         children.add(l2);
         children.add(l4);
-        ln = new LayoutNode(Layout.Orientation.VERTICAL,children);
+        ln = new VerticalLayoutNode(children);
     }
 
     @Test
@@ -117,7 +117,7 @@ class LayoutLeafTest {
     void render(){}
     @Test
     void testClone(){
-        LayoutLeaf l1_clone = l1.clone();
+        Layout l1_clone = l1.clone();
 
         assertEquals(l1,l1_clone);
         assertNotSame(l1,l1_clone);
@@ -144,8 +144,7 @@ class LayoutLeafTest {
     }
     @Test
     void testGetLeftLeaf(){
-        LayoutLeaf left_l1 = l1.getLeftLeaf();
-
+        LayoutLeaf left_l1 = (LayoutLeaf) l1.getLeftLeaf();
         assertNotSame(left_l1, l1);
         assertEquals(left_l1,l1);
     }

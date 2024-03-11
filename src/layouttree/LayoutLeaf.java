@@ -40,9 +40,8 @@ public class LayoutLeaf extends Layout {
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if(parent != null){
-            LayoutLeaf newSibling = parent.getRightNeighbor(this);
+            parent.mergeAndRotate(rot_dir, this);
             parent.deleteRightNeighbor(this);
-            parent.mergeAndRotate(rot_dir, this, newSibling);
             return super.getRootLayoutUncloned();
         } else {
             throw new RuntimeException("Not implemented yet: child has no more neighbors");
@@ -58,6 +57,15 @@ public class LayoutLeaf extends Layout {
         if(obj instanceof LayoutLeaf leaf)
             return leaf.containedFileBuffer.equals(this.containedFileBuffer) && (this.getContainsActive() == leaf.getContainsActive());
         else return false;
+    }
+
+    @Override
+    protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
+        if(getContainsActive() && futureParent.containsActive()){
+            throw new RuntimeException("Invalid child: more than two active");
+        } else {
+            return true;
+        }
     }
 
     public void render() {
@@ -82,11 +90,11 @@ public class LayoutLeaf extends Layout {
         return this.clone();
     }
 
-    @Override
+/*    @Override
     protected void sanitizeAsChildOfParent(LayoutNode futureParent) {
         if(getContainsActive() && futureParent.containsActive()){
             throw new RuntimeException("Invalid child: more than two active");
         }
-    }
+    }*/
 }
 

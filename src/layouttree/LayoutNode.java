@@ -1,20 +1,23 @@
 package layouttree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-public class LayoutNode extends Layout {
-    private Orientation orientation;
-    private ArrayList<Layout> children;
+public abstract class LayoutNode extends Layout {
 
-    public LayoutNode(Orientation newOrientation, ArrayList<Layout> newChildren){
+    public enum Orientation {
+        HORIZONTAL,
+        VERTICAL
+    }
+    public abstract Orientation getOrientation();
+    protected ArrayList<Layout> children;
+
+    public LayoutNode(ArrayList<Layout> newChildren){
         if(newChildren.size()<2){
             throw new RuntimeException("newChildren too short");
         }
-        this.orientation = newOrientation;
         this.children = new ArrayList<>();
         for(Layout l : newChildren){
-            l.sanitizeAsChildOfParent(this);
+            if(l.isAllowedToBeChildOf(this))
             this.insertDirectChild(l.clone());
         }
     }
@@ -37,12 +40,13 @@ public class LayoutNode extends Layout {
     }
 
     public void insertDirectChild(Layout toInsert){
-        toInsert.sanitizeAsChildOfParent(this);
-        Layout cloneOfInsert = toInsert.clone();
-        cloneOfInsert.setParent(this);
-        this.children.add(cloneOfInsert);
-        if(cloneOfInsert.getContainsActive()){
-            this.containsActive = true;
+        if(toInsert.isAllowedToBeChildOf(this)){
+            Layout cloneOfInsert = toInsert.clone();
+            cloneOfInsert.setParent(this);
+            this.children.add(cloneOfInsert);
+            if(cloneOfInsert.getContainsActive()){
+                this.containsActive = true;
+            }
         }
     }
 
@@ -56,10 +60,6 @@ public class LayoutNode extends Layout {
     }
     public void render() {
         return;
-    }
-
-    public Orientation getOrientation() {
-        return this.orientation;
     }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
@@ -105,7 +105,7 @@ public class LayoutNode extends Layout {
         return false;
     }
 
-    protected void sanitizeAsChildOfParent(LayoutNode futureParent){
+/*    protected void sanitizeAsChildOfParent(LayoutNode futureParent){
         if(children.size()<2){
             throw new RuntimeException("Invalid child layout, contains too little children");
         } else if((this.containsActive && futureParent.containsActive())){
@@ -113,7 +113,7 @@ public class LayoutNode extends Layout {
         } else if(this.orientation == futureParent.getOrientation()){
             throw new RuntimeException("Orientation of child equals orientation of parent");
         }
-    }
+    }*/
 
     protected boolean containsActive() {
         return containsActive;
@@ -125,7 +125,9 @@ public class LayoutNode extends Layout {
 
     protected void delete(Layout l){
         children.remove(l);
-        this.clean();
+        if(children.size() == 1){
+            parent.absorbChildrenAndReplace(this);
+        }
     }
 
     protected void makeLeftmostLeafActive() {
@@ -153,7 +155,6 @@ public class LayoutNode extends Layout {
             } else {
                 makeRightmostLeafActive();
             }
-
         }
     }
 
@@ -173,74 +174,58 @@ public class LayoutNode extends Layout {
     }
 
     //replaces the given child with a new layoutnode with the child and its sibling rotated
-    protected void mergeAndRotate(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
-        Layout newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
-        this.replace(child, newChild);
+    protected void mergeWithSiblingAndRotate(ROT_DIRECTION rotdir, Layout child) {
+        LayoutNode newChild = getNewMergedRotatedChild(rotdir, child);
+        this.replaceWithNewLayout(child, newChild);
     }
 
-    //replaces the given child with the new child
-    protected void replace(Layout toReplace, Layout newLayout){
+    //Returns a layoutnode containing a child and a new specified sibling
+    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
+
+    private void replaceWithNewLayout(Layout toReplace, Layout newLayout) {
         int index = children.indexOf(toReplace);
         newLayout.setParent(this);
         children.set(index, newLayout);
-        this.clean();
+        newLayout.setParent(this);
+        this.fixInvarsOfChangedTree();
     }
 
-    private void clean(){
+    //Given that the children Layouts are in a consistent state with this
+    //(= could exist as root on its own and are oriented differently)
+    //make the current node and its parent (may be null) consistent with each other.
+    //Rules: A parent's child LayoutNodes aren't empty, don't contain just 1 element
+    // and are oriented differently.
+    private void fixInvarsOfChangedTree(){
+        if(parent != null){
+            if(this.getOrientation() == parent.getOrientation()){
+                parent.absorbChildrenAndReplace(this);
+                parent.fixInvarsOfChangedTree();
+                return;
+            }
+        }
         if(children.size()==1){
             if(parent != null){
-                parent.replace(this, this.children.get(0));
+                parent.absorbChildrenAndReplace(this);
+                parent.fixInvarsOfChangedTree();
             } else {
                 this.children.get(0).setParent(null);
             }
         } else if (children.isEmpty()){
             if(parent != null){
                 parent.delete(this);
-            }
-        }
-        if(parent != null){
-            if(this.orientation == parent.getOrientation()){
-                parent.absorbChildren(this);
+                parent.fixInvarsOfChangedTree();
             }
         }
     }
 
-    private void absorbChildren(LayoutNode toAbsorb){
+    protected void absorbChildrenAndReplace(LayoutNode toAbsorb){
         int index = children.indexOf(toAbsorb);
+        for(Layout child : toAbsorb.children){
+            child.setParent(this);
+        }
         this.children.addAll(index, toAbsorb.children);
     }
 
     @Override
-    protected LayoutNode clone(){
-        ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : children){
-            deepCopyList.add(l.clone());
-        }
-        LayoutNode clonedNode = new LayoutNode(this.orientation, deepCopyList);
-        return clonedNode;
-    }
-
-    //returns a LayoutNode that contains a child of the current node and its new sibling rotated along the specified direction
-    private LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, Layout newSibling) {
-        Orientation nextOrientation;
-        ArrayList<Layout> nextChildren;
-        if(rotdir == ROT_DIRECTION.CLOCKWISE){
-            if (this.orientation == Orientation.HORIZONTAL) {
-                nextOrientation = Orientation.VERTICAL;
-                nextChildren = new ArrayList<>(Arrays.asList(child, newSibling));
-            } else {
-                nextOrientation = Orientation.HORIZONTAL;
-                nextChildren = new ArrayList<>(Arrays.asList(newSibling, child));
-            }
-        } else {
-            if (this.orientation == Orientation.HORIZONTAL) {
-                nextOrientation = Orientation.VERTICAL;
-                nextChildren = new ArrayList<>(Arrays.asList(newSibling, child));
-            } else {
-                nextOrientation = Orientation.HORIZONTAL;
-                nextChildren = new ArrayList<>(Arrays.asList(child, newSibling));
-            }
-        }
-        return new LayoutNode(nextOrientation, nextChildren);
-    }
+    protected abstract LayoutNode clone();
 }

@@ -2,6 +2,7 @@ package core;
 
 import core.Controller;
 import files.FileBuffer;
+import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
@@ -45,7 +46,7 @@ public class ControllerTest {
         leaves.add(new LayoutLeaf(buffer1, true));
         leaves.add(new LayoutLeaf(buffer2, false));
 
-        LayoutNode node = new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
+        HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
         assertTrue(controller.getRootLayout().equals(node));
     }
