@@ -35,10 +35,7 @@ bin/
 *.so
 testresources/test.txt
 testresources/test2.txt
-<<<<<<< Updated upstream
 .idea/misc.xml
 .idea/misc.xml
-=======
 Swop.iml
-Swop.iml
->>>>>>> Stashed changes
+META-INF
