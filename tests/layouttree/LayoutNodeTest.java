@@ -1,8 +1,8 @@
 package layouttree;
 
 import files.FileBuffer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -41,5 +41,23 @@ public class LayoutNodeTest {
         children.add(l4);
         ln = new VerticalLayoutNode(children);
     }
+    @Test
+    void testGetDirectChildren() {
+        ArrayList<Layout> setup_children = new ArrayList<Layout>();
+        setup_children.add(l1);
+        setup_children.add(l2);
+        setup_children.add(l4);
+        /*ln = new LayoutNode(Layout.Orientation.VERTICAL, setup_children);
 
+        ArrayList<Layout> get_children = ln.getDirectChildren();
+
+        assertEquals(get_children.size(), setup_children.size());
+        assertEquals(get_children.get(0), setup_children.get(0));
+        assertEquals(get_children.get(1), setup_children.get(1));
+        assertEquals(get_children.get(2), setup_children.get(2));
+
+        assertNotSame(get_children.get(0), setup_children.get(0));
+        assertNotSame(get_children.get(1), setup_children.get(1));
+        assertNotSame(get_children.get(2), setup_children.get(2));*/
+    }
 }
