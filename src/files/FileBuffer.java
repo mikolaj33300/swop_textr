@@ -79,7 +79,7 @@ public class FileBuffer {
     }
 
     // Prints the content of the file relative to the coordinates
-    // maybe this needs to be in LeafLayout?
+    // maybe this needs to be in LeafLayout?  but the render logic is only relevant here...
     /**
      * Renders this buffers content between the width & height relative to start coordinates.
      */
@@ -119,6 +119,7 @@ public class FileBuffer {
                 yAdd++;
                 // Update character to print first i already.
                 character = s.substring(i, i+1);
+                xAdd = 0;
                 Terminal.printText(startY + yAdd, startX, character);
                 xAdd++;
 

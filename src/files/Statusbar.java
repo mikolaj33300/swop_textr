@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Statusbar {
 
-    private FileBuffer buffer;
+    private final FileBuffer buffer;
     private int column, lines, insertionPoint, scroll;
 
     public Statusbar(FileBuffer buffer) {
@@ -45,9 +45,9 @@ public class Statusbar {
             // Up
             case 'A':
                 calculateMove(1);
-                // Down
+            // Down
             case 'B':
-                //insertionPoint += width;
+                calculateMove(-1);
         }
 
         shouldScroll();
@@ -75,6 +75,7 @@ public class Statusbar {
         // abcd_efgh_ijkl -> 0: 4 ; 1: 8
         // If we are on line 2 == efgh. Then our current line has 8 characters.
         int currentLineIndex = separators.get(this.lines-1);
+        int indexOffsetLine = 0;
 
         // We can already update our line height. This will always change +a or -a
         this.lines = Math.max(this.lines + heightOffset, 1);
@@ -83,8 +84,7 @@ public class Statusbar {
         if(this.lines == 1) {
 
             // Length of the string on line 1
-            int indexFirstSep = separators.get(0);
-            this.column = Math.min(this.column, indexFirstSep);
+            indexOffsetLine = separators.get(0);
 
         // Case 2: We are trying to go over the max amount of lines
         } else if(this.lines >= separators.size() + 1) {
@@ -93,16 +93,18 @@ public class Statusbar {
             this.lines = separators.size() + 1;
 
             // Get the length of the line where we jump to
-            int indexOffsetLine = new String(this.buffer.getContent()).length();
-            this.column = Math.min(this.column, indexOffsetLine);
+            indexOffsetLine = new String(this.buffer.getContent()).length() - currentLineIndex;
 
         // Generic case: we switch between two lines
         } else {
 
             // We find the offset of the next line
-            //int indexOffsetLine =
+            indexOffsetLine = separators.get(this.lines-1) - currentLineIndex;
 
         }
+
+        this.column = Math.min(this.column, indexOffsetLine);
+
     }
 
     /**
