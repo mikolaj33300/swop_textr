@@ -29,7 +29,7 @@ public class FileHolder {
     }
 
     String getLineSeparator() {
-        return this.lineSeparator == null ? null : new String(this.lineSeparator);
+        return this.lineSeparator == null ? FileAnalyser.formatBytes(System.lineSeparator().getBytes()) : this.lineSeparator;
     }
 
     /**
