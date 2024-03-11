@@ -18,6 +18,9 @@ public class TestHorizontalLayoutNode {
     LayoutLeaf l8;
     LayoutLeaf l9;
     LayoutLeaf l10;
+    HorizontalLayoutNode hn1;
+    HorizontalLayoutNode hn2;
+    VerticalLayoutNode vn1;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +56,22 @@ public class TestHorizontalLayoutNode {
         l8 = new LayoutLeaf(fb8,false);
         l9 = new LayoutLeaf(fb9,false);
         l10 = new LayoutLeaf(fb10,false);
+
+        ArrayList<Layout> children1 = new ArrayList<Layout>();
+        children1.add(l1);
+        children1.add(l2);
+        hn1 = new HorizontalLayoutNode(children1);
+
+        ArrayList<Layout> children2 = new ArrayList<Layout>();
+        children2.add(l3);
+        children2.add(l4);
+        hn2 = new HorizontalLayoutNode(children2);
+
+        ArrayList<Layout> children3 = new ArrayList<Layout>();
+        children3.add(l5);
+        children3.add(l6);
+        vn1 = new VerticalLayoutNode(children3);
+
     }
     @Test
     void testGetOrientation(){
@@ -63,7 +82,22 @@ public class TestHorizontalLayoutNode {
         assertEquals(hn.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
         assertNotEquals(hn.getOrientation(), LayoutNode.Orientation.VERTICAL);
     }
+    @Test
+    void testGetNewMergedRotatedChild(){
 
+    }
+    @Test
+    void testIsAllowedToBeChildOf(){
+        assertFalse(hn1.isAllowedToBeChildOf(hn2));
+        assertTrue(hn1.isAllowedToBeChildOf(vn1));
+    }
+
+    @Test
+    void testClone(){
+        HorizontalLayoutNode hn1_clone = hn1.clone();
+        assertEquals(hn1,hn1_clone);
+        assertNotSame(hn1,hn1_clone);
+    }
 }
 
 

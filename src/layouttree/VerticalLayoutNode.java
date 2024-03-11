@@ -51,7 +51,7 @@ public class VerticalLayoutNode extends LayoutNode{
     @Override
     protected VerticalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : super.children){
+        for(Layout l : children){
             deepCopyList.add(l.clone());
         }
         return new VerticalLayoutNode(deepCopyList);
