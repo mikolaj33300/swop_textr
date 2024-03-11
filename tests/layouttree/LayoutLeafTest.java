@@ -43,11 +43,18 @@ class LayoutLeafTest {
         children.add(l4);
         ln = new LayoutNode(Layout.Orientation.VERTICAL,children);
     }
-
+    @Test
+    void testDeleteLeftLeaf(){
+        assertEquals(ln.getDirectChildren().size(),3);
+        ln.deleteLeftLeaf();
+        assertEquals(ln.getDirectChildren().size(),2);
+        ln.deleteLeftLeaf();
+        //assertEquals(ln.getDirectChildren().size(),1);
+        //ln.deleteLeftLeaf();
+    }
+    //Dit zijn eigenlijk testen op ln -> testen op een object is niet mogelijk zonder representation exposure
     @Test
     void testMoveFocus(){
-
-
         ArrayList<Layout> children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertTrue(children.get(0).getContainsActive());
@@ -95,6 +102,23 @@ class LayoutLeafTest {
         assertFalse(children.get(0).getContainsActive());
         assertFalse(children.get(1).getContainsActive());
         assertTrue(children.get(2).getContainsActive());
+
+        assertTrue(l3.getContainsActive());
+        l3.moveFocus(Layout.DIRECTION.RIGHT);
+        assertTrue(l3.getContainsActive());
+        l3.moveFocus(Layout.DIRECTION.LEFT);
+        assertTrue(l3.getContainsActive());
+
+        assertFalse(l4.getContainsActive());
+        l4.moveFocus(Layout.DIRECTION.RIGHT);
+        assertFalse(l4.getContainsActive());
+        l4.moveFocus(Layout.DIRECTION.LEFT);
+        assertFalse(l4.getContainsActive());
+    }
+    @Test
+    void testRotateRelationshipNeighbor(){
+        //Layout.ROT_DIRECTION.CLOCKWISE
+        //Layout.ROT_DIRECTION.COUNTERCLOCKWISE
     }
     @Test
     void testEquals(){
@@ -111,8 +135,6 @@ class LayoutLeafTest {
         assertEquals(l2,l2p);
         assertNotEquals(l2,l2a);
     }
-
-    //TODO
     @Test
     void render(){}
     @Test

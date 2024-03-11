@@ -20,21 +20,17 @@ public class LayoutLeaf extends Layout {
         }
     }
 
-    private void moveFocusRight() throws RuntimeException {
+    private void moveFocusRight(){
         if(parent != null){
             this.setContainsActive(false);
             parent.makeRightNeighbourActive(this);
-        } else {
-            throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }
     }
 
-    private void moveFocusLeft() throws RuntimeException {
+    private void moveFocusLeft(){
         if(parent != null){
             this.setContainsActive(false);
             parent.makeLeftNeighbourActive(this);
-        } else {
-            throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }
     }
 
