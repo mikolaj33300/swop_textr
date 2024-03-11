@@ -10,7 +10,7 @@ public class LayoutLeaf extends Layout {
     private FileBuffer containedFileBuffer;
 
     /**
-       Constructor for LayoutLeaf, clones its arguments to prevent representation  exposure
+       Constructor for LayoutLeaf, clones its arguments to prevent representation exposure
      */
     public LayoutLeaf(FileBuffer fb, boolean active){
         this.containedFileBuffer = fb.clone();

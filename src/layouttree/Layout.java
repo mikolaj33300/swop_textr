@@ -34,10 +34,10 @@ public abstract class Layout implements Cloneable {
     protected abstract void deleteLeftLeaf();
     protected void setParent(LayoutNode layoutNode){
         this.parent = layoutNode;
-    };
+    }
     protected boolean getContainsActive(){
         return containsActive;
-    };
+    }
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
@@ -45,7 +45,7 @@ public abstract class Layout implements Cloneable {
     protected abstract LayoutLeaf getLeftLeaf();
     protected void setContainsActive(boolean active){
         this.containsActive = active;
-    };
+    }
     public abstract boolean equals(Object obj);
     protected abstract Layout clone();
 }

@@ -5,41 +5,49 @@ import java.util.Arrays;
 
 public class HorizontalLayoutNode extends LayoutNode {
 
+    /**
+     * Constructor for HorizontalLayoutNode, clones its arguments to prevent representation exposure
+     */
     public HorizontalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
     }
 
+    /**
+     * Returns the orientation of the HorizontalLayoutNode
+     */
     @Override
     public Orientation getOrientation() {
         return Orientation.HORIZONTAL;
     }
 
-    @Override
-    protected void delete(Layout childToDelete) {
-
-    }
-
+    /**
+     * Rotates the HorizontalLayoutNode's child and its neighbour on the right
+     */
     @Override
     protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child) {
         LayoutLeaf newSibling = this.getRightNeighbor(child);
-        ArrayList<Layout> nextChildren;
+        ArrayList<Layout> newChildren;
         if(rotdir == ROT_DIRECTION.CLOCKWISE){
-            nextChildren = new ArrayList<>(Arrays.asList(child, newSibling));
+            newChildren = new ArrayList<>(Arrays.asList(child, newSibling));
         } else {
-            nextChildren = new ArrayList<>(Arrays.asList(newSibling, child));
+            newChildren = new ArrayList<>(Arrays.asList(newSibling, child));
         }
-        return new VerticalLayoutNode(children);
+        return new VerticalLayoutNode(newChildren);
     }
 
+    /**
+     * Checks a given LayoutNode can be a child of this HorizontalLayoutNode
+     * A child should have a different orientation than its parent
+     */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode layoutNode) {
-        if(parent.getOrientation()==Orientation.HORIZONTAL){
-            return false;
-        } else {
-            return true;
-        }
+        return layoutNode.getOrientation() != Orientation.HORIZONTAL;
     }
 
+    /**
+     Makes a deepcopy of HorizontalLayoutNode
+     The references to this object and its contents will be removed
+     */
     @Override
     protected HorizontalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();

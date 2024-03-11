@@ -25,7 +25,7 @@ public class TestHorizontalLayoutNode {
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";
         String path4 = "testresources/test4.txt";
-        String path5 = "testresources/test(.txt";
+        String path5 = "testresources/test5.txt";
         String path6 = "testresources/test6.txt";
         String path7 = "testresources/test7.txt";
         String path8 = "testresources/test8.txt";
