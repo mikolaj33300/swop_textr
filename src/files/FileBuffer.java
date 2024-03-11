@@ -44,12 +44,16 @@ public class FileBuffer {
 
     // deletes the line the cursor is on
     public void deleteLine(){
-      int i = 0;
-      while (this.bytecontent[i++] != '\n');
-      byte[] newContent = new byte[byteContent.length - i + j];
-      for (int j = this.insertionPoint; j < this.byteContent.length; j++)
-        newContent[j]=this.byteContent[j+i];
-      this.byteContent
+      int i, k = this.insertionPoint;
+      while (i < this.byteContent.length && this.bytecontent[i++] != 10);// find next \n
+      while (k && this.byteContent[k--] != 10);// find previous \n
+      byte[] newContent = new byte[byteContent.length - i + k];
+
+      for (int j = 0; j < k; j++)
+	      newContent[j] = this.byteContent[j];
+      for (int j = k; j < newContent.length; j++)
+        newContent[j]=this.byteContent[j + i - k];
+      this.byteContent = newContent;
     }
 
     // Prints the content of the file relative to the coordinates
