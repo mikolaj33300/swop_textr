@@ -25,7 +25,10 @@ public class FileBuffer {
      */
     private byte[] byteContent;
 
-    private int insertionPoint;
+    /**
+     * Keeps track of the insertion point
+     */
+    private Statusbar status;
 
     /**
      * Creates FileBuffer object with given path;
@@ -34,14 +37,16 @@ public class FileBuffer {
     public FileBuffer(String path, String lineSeparator) {
         this.file = new FileHolder(path, lineSeparator);
         this.byteContent = this.file.getContent();
-        this.insertionPoint = 0;
+        this.status = new Statusbar(this);
     }
 
     // Implementation
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
+        //status.moveCursor();
     }
 
+<<<<<<< Updated upstream
     // deletes the line the cursor is on
     public void deleteLine(){
       int i, k = insertionPoint;
@@ -75,10 +80,13 @@ public class FileBuffer {
 
     // Prints the content of the file relative to the coordinates
     // maybe this needs to be in LeafLayout?
+=======
+    /**
+     * Renders this buffers content between the width & height relative to start coordinates.
+     */
+>>>>>>> Stashed changes
     public void render(int startX, int startY, int width, int height) {
-        String log = "";
-        Terminal.leaveRawInputMode();
-
+        // Get string from bytes & information about line separations
         String s = new String(byteContent);
         List<Integer> newLines = analyseContents(width, height);
 
@@ -101,7 +109,6 @@ public class FileBuffer {
                 xAdd = 0;
                 yAdd += 1;
                 i += lineAdd; // Possibly skip 1 more byte incase of 0d0a
-                log += " > Found line sep before max width at " + (i-1) + "\n";
 
                 // When max width is reached, we find the next MANUAL line separator and starting printing from there.
             } else if(xAdd >= width) {
@@ -109,34 +116,33 @@ public class FileBuffer {
                 // We search the newLines Map for the next line separator
                 for(int separatorIndex : newLines)
                     if(separatorIndex >= i)
-                        i = separatorIndex+1;
-
-                log += " > new Line separator found at index " + i + "\n";
+                        i = separatorIndex+1; // +1 because: our current separation starts at separatorIndex. We need next one
 
                 yAdd++;
-                xAdd = 0;
-
-                log += " > Printing at: [" + (startX + xAdd) + ", " + (startY + yAdd) + "]\n";
-                Terminal.printText(startY + yAdd, startX + xAdd, character);
+                // Update character to print first i already.
+                character = s.substring(i, i+1);
+                Terminal.printText(startY + yAdd, startX, character);
                 xAdd++;
 
                 // No line separator found, we print text normally
             } else {
 
-                log += "Printing at: [" + (startX + xAdd) + ", " + (startY + yAdd) + "]\n";
                 Terminal.printText(startY + yAdd, startX + xAdd, character);
                 xAdd++;
 
             }
 
+<<<<<<< Updated upstream
         }
         // print Statusline add end
         Terminal.printText(startX, startY + height, this.renderStatus());
         for (int i = 0; i < height; i++){
           Terminal.printText(startX+width, startY+i, getScrollbar(height, i));
         }
+=======
+>>>>>>> Stashed changes
 
-        System.out.println("\n" + log);
+        }
 
     }
 
@@ -161,6 +167,7 @@ public class FileBuffer {
      * Inserts the byte values.
      */
     private void insert(byte[] data) {
+        int insertionPoint = status.getInsertionPoint();
         byte[] newContent = new byte[byteContent.length + data.length];
         for(int i = 0; i < byteContent.length + data.length; i++) {
             if(i < insertionPoint)
@@ -175,27 +182,8 @@ public class FileBuffer {
     /**
      * Called from somewhere that knows the dimensions of a Leaf Layout.
      */
-    public int moveInsertionPoint(int height, int width, char code) {
+    public void moveInsertionPoint(int windowHeight, int windowWidth, char code) {
 
-        switch(code) {
-            // Right
-            case 'C':
-                insertionPoint++;
-                break;
-            // Left
-            case 'D':
-                insertionPoint--;
-                break;
-            // Up
-            case 'A':
-                // Case 1: text fits on one line in buffer
-
-
-                // Down
-            case 'B':
-                insertionPoint += width;
-        }
-        return 0;
     }
 
     /**
