@@ -48,7 +48,8 @@ public class FileBuffer {
 
     // deletes the line the cursor is on
     public void deleteLine(){
-      int i,k = status.getInsertionPoint();
+      int k = status.getInsertionPoint();
+      int i = k;
       while (i < byteContent.length && (byteContent[i++] != 10));// find next \n
       while (k!=0 && byteContent[k--] != 10);// find previous \n
 
