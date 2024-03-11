@@ -58,7 +58,22 @@ public class FileBuffer {
       byteContent = newContent;
     }
 
+    public String renderStatus() {
+      String statusLine = FileHolder.getPath();
+      statusLine += " ";
+      statusLine += String.valueOf(insertionPoint/byteContent.length);
+      return statusLine;
+    }
+
+    public String getScrollbar(int height, int index){
+      if (index == height*insertionPoint/byteContent.length)
+        return "+";
+      else
+        return "|";
+    }
+
     // Prints the content of the file relative to the coordinates
+    // maybe this needs to be in LeafLayout?
     public void render(int startX, int startY, int width, int height) {
         String log = "";
         Terminal.leaveRawInputMode();
@@ -113,6 +128,11 @@ public class FileBuffer {
 
             }
 
+        }
+        // print Statusline add end
+        Terminal.printText(startX, startY + height, this.renderStatus());
+        for (int i = 0; i < height; i++){
+          Terminal.printText(startX+width; startY+i; getScrollbar(height, i));
         }
 
         System.out.println("\n" + log);
