@@ -39,4 +39,17 @@ public class VerticalLayoutNode extends LayoutNode{
     protected VerticalLayoutNode clone() {
         return null;
     }
+
+    @Override
+    public void render(int startX, int startY, int width, int height){
+        int xChild = startX;
+        int yChild = startY;
+        int widthChild = width;
+        int heightChild = height/children.size(); //rounds down
+
+        for(Layout child : children){
+            child.render(xChild, yChild, widthChild, heightChild);
+            yChild = yChild + heightChild;
+        }
+    }
 }

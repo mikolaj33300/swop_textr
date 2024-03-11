@@ -48,4 +48,17 @@ public class HorizontalLayoutNode extends LayoutNode {
         }
         return new HorizontalLayoutNode(deepCopyList);
     }
+
+    @Override
+    public void render(int startX, int startY, int width, int height){
+        int xChild = startX;
+        int yChild = startY;
+        int widthChild = width/children.size();
+        int heightChild = height; //rounds down
+
+        for(Layout child : children){
+            child.render(xChild, yChild, widthChild, heightChild);
+            xChild = xChild + widthChild;
+        }
+    }
 }

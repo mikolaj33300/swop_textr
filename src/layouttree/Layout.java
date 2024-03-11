@@ -25,7 +25,7 @@ public abstract class Layout implements Cloneable {
 
     protected boolean containsActive;
 
-    public abstract void render();
+    public abstract void render(int startX, int startY, int width, int height);
 
 /*    public abstract void closeActiveFile();
     public abstract void writeActiveFile();

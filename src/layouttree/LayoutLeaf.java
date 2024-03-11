@@ -100,7 +100,8 @@ public class LayoutLeaf extends Layout {
         }
     }
 
-    public void render() {
+    public void render(int startX, int startY, int width, int height) {
+        containedFileBuffer.render(startX, startY, width, height);
     }
 
     /**
