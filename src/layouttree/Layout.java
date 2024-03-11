@@ -9,6 +9,8 @@ public abstract class Layout implements Cloneable {
         }
     }
 
+    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
+
     public enum DIRECTION {
         LEFT,
         RIGHT
@@ -17,11 +19,6 @@ public abstract class Layout implements Cloneable {
     public enum ROT_DIRECTION {
         CLOCKWISE,
         COUNTERCLOCKWISE
-    }
-
-    public enum Orientation {
-        HORIZONTAL,
-        VERTICAL
     }
 
     protected LayoutNode parent = null;
@@ -46,11 +43,9 @@ public abstract class Layout implements Cloneable {
     protected abstract void makeRightmostLeafActive();
     public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
     protected abstract LayoutLeaf getLeftLeaf();
-    protected abstract void sanitizeAsChildOfParent(LayoutNode futureParent);
     protected void setContainsActive(boolean active){
         this.containsActive = active;
     };
-
-    protected abstract Layout clone();
     public abstract boolean equals(Object obj);
+    protected abstract Layout clone();
 }
