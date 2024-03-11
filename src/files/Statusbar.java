@@ -6,22 +6,107 @@ import java.util.List;
 
 public class Statusbar {
 
-    private int column, lines, insertionPoint;
+    private FileBuffer buffer;
+    private int column, lines, insertionPoint, scroll;
 
-    public Statusbar(byte[] fileContent) {
-        analyseContents(fileContent);
+    public Statusbar(FileBuffer buffer) {
+        this.buffer = buffer;
+        analyseContents(buffer.getContent());
+        this.insertionPoint = 0;
+        this.scroll = 0;
     }
 
-    public void moveCursor(int newLocation) {
-        this.insertionPoint = newLocation;
+    int getScroll() {
+        return this.scroll;
     }
 
-    public void update(byte[] fileContent) {
-        calculateDimensionsStatus(fileContent);
+    int getColumn() {
+        return this.column;
+    }
+
+    int getLines() {
+        return this.lines;
+    }
+
+    int getInsertionPoint() {
+        return this.insertionPoint;
+    }
+
+    public void moveCursor(char direction) {
+        switch(direction) {
+            // Right
+            case 'C':
+                insertionPoint++;
+                break;
+            // Left
+            case 'D':
+                insertionPoint--;
+                break;
+            // Up
+            case 'A':
+                calculateMove(1);
+                // Down
+            case 'B':
+                //insertionPoint += width;
+        }
+
+        shouldScroll();
+    }
+
+    public void scroll(int offset) {
+        this.scroll += offset;
     }
 
     /**
-     * Calculates values of the statusbar
+     * Called when cursor is moved.
+     */
+    private void shouldScroll() {
+
+    }
+
+    private void calculateMove(int heightOffset) {
+        // First calculate on which col we should be after move
+        // --> calculate length of line above / below
+        List<Integer> separators = analyseContents(this.buffer.getContent());
+
+        // Get current amount of characters until the next line separator.
+        // -1 because lines go from [1,a]. Separator list from [0,a-1]
+        // Remember: separator list holds indices for the whole string:
+        // abcd_efgh_ijkl -> 0: 4 ; 1: 8
+        // If we are on line 2 == efgh. Then our current line has 8 characters.
+        int currentLineIndex = separators.get(this.lines-1);
+
+        // We can already update our line height. This will always change +a or -a
+        this.lines = Math.max(this.lines + heightOffset, 1);
+
+        // Case 1: We are at minimum line index.
+        if(this.lines == 1) {
+
+            // Length of the string on line 1
+            int indexFirstSep = separators.get(0);
+            this.column = Math.min(this.column, indexFirstSep);
+
+        // Case 2: We are trying to go over the max amount of lines
+        } else if(this.lines >= separators.size() + 1) {
+
+            // There can be maximally separators.size() + 1 lines.
+            this.lines = separators.size() + 1;
+
+            // Get the length of the line where we jump to
+            int indexOffsetLine = new String(this.buffer.getContent()).length();
+            this.column = Math.min(this.column, indexOffsetLine);
+
+        // Generic case: we switch between two lines
+        } else {
+
+            // We find the offset of the next line
+            //int indexOffsetLine =
+
+        }
+    }
+
+    /**
+     * Calculates values of the statusbar: {@link Statusbar#column} and {@link Statusbar#lines}.
      */
     private void calculateDimensionsStatus(byte[] fileContent) {
         List<Integer> list = analyseContents(fileContent);
