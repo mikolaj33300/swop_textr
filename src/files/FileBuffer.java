@@ -62,6 +62,7 @@ public class FileBuffer {
       String statusLine = file.getPath();
       statusLine += " ";
       statusLine += String.valueOf(insertionPoint/byteContent.length);
+      statusLine += "%";
       return statusLine;
     }
 
