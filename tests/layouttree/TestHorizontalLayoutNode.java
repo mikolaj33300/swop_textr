@@ -4,6 +4,7 @@ import files.FileBuffer;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,12 +76,8 @@ public class TestHorizontalLayoutNode {
     }
     @Test
     void testGetOrientation(){
-        ArrayList<Layout> children = new ArrayList<Layout>();
-        children.add(l1);
-        children.add(l2);
-        HorizontalLayoutNode hn = new HorizontalLayoutNode(children);
-        assertEquals(hn.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
-        assertNotEquals(hn.getOrientation(), LayoutNode.Orientation.VERTICAL);
+        assertEquals(hn1.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
+        assertNotEquals(hn1.getOrientation(), LayoutNode.Orientation.VERTICAL);
     }
     @Test
     void testGetNewMergedRotatedChild(){
@@ -94,9 +91,20 @@ public class TestHorizontalLayoutNode {
 
     @Test
     void testClone(){
-        HorizontalLayoutNode hn1_clone = hn1.clone();
+        LayoutNode hn1_clone = hn1.clone();
         assertEquals(hn1,hn1_clone);
         assertNotSame(hn1,hn1_clone);
+
+        HorizontalLayoutNode hn14 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l6,l7)));
+        HorizontalLayoutNode hn13 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l4,l5)));
+        HorizontalLayoutNode hn12 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l2,l3)));
+        VerticalLayoutNode vn11 = new VerticalLayoutNode(new ArrayList<Layout>(Arrays.asList(l1,hn12)));
+        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<Layout>(Arrays.asList(hn13,hn14)));
+        HorizontalLayoutNode hn11 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(vn11,vn12)));
+
+        LayoutNode hn11_clone = hn11.clone();
+        assertEquals(hn11,hn11_clone);
+        assertNotSame(hn11,hn11_clone);
     }
 }
 

@@ -41,7 +41,7 @@ public class VerticalLayoutNode extends LayoutNode{
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode layoutNode) {
-        return parent.getOrientation() != Orientation.VERTICAL;
+        return layoutNode.getOrientation() != Orientation.VERTICAL;
     }
 
     /**
