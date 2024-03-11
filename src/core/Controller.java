@@ -2,6 +2,7 @@ package core;
 
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
+import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
@@ -71,7 +72,7 @@ public class Controller {
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
         }
         if(leaves.size() == 1) return leaves.get(0);
-        else return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
+        else return new HorizontalLayoutNode(leaves);
     }
 
     /**

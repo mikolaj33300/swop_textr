@@ -35,6 +35,11 @@ public class LayoutNodeTest {
         l2p = new LayoutLeaf(fb2, false);
         l3 = new LayoutLeaf(fb3, true);
         l4 = new LayoutLeaf(fb4, false);
+        ArrayList<Layout> children = new ArrayList<Layout>();
+        children.add(l1);
+        children.add(l2);
+        children.add(l4);
+        ln = new VerticalLayoutNode(children);
     }
     @Test
     void testGetDirectChildren(){
@@ -54,33 +59,5 @@ public class LayoutNodeTest {
         assertNotSame(get_children.get(0), setup_children.get(0));
         assertNotSame(get_children.get(1), setup_children.get(1));
         assertNotSame(get_children.get(2), setup_children.get(2));
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

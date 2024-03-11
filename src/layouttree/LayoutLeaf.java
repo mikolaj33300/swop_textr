@@ -60,15 +60,14 @@ public class LayoutLeaf extends Layout {
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        if(parent != null) {
-            LayoutLeaf newSibling = parent.getRightNeighbor(this);
+        if(parent != null){
+            parent.mergeWithSiblingAndRotate(rot_dir, this);
             parent.deleteRightNeighbor(this);
-            parent.mergeAndRotate(rot_dir, this, newSibling);
             return super.getRootLayoutUncloned();
+        } else {
+            throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }
-        else{
-            return super.getRootLayoutUncloned();
-        }
+
     }
 
     /**
@@ -92,6 +91,15 @@ public class LayoutLeaf extends Layout {
       Two scrollbars per file (one horizontal and one vertical)
      The insertionPoint in the current active LayoutLeaf
      */
+    @Override
+    protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
+        if(getContainsActive() && futureParent.containsActive()){
+            throw new RuntimeException("Invalid child: more than two active");
+        } else {
+            return true;
+        }
+    }
+
     public void render() {
     }
 
@@ -129,17 +137,6 @@ public class LayoutLeaf extends Layout {
      */
     protected LayoutLeaf getLeftLeaf() {
         return this.clone();
-    }
-
-    /**
-     Checks whether the current layout-structure (parent and children) is valid
-     Checks if there are multiple active children in the closeby layout-structure
-     */
-    @Override
-    protected void sanitizeAsChildOfParent(LayoutNode futureParent) {
-        if(getContainsActive() && futureParent.containsActive()){
-            throw new RuntimeException("Invalid child: more than two active");
-        }
     }
 }
 
