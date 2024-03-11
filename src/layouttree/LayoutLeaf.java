@@ -60,15 +60,15 @@ public class LayoutLeaf extends Layout {
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        if(parent != null){
+        if(parent != null) {
             LayoutLeaf newSibling = parent.getRightNeighbor(this);
             parent.deleteRightNeighbor(this);
             parent.mergeAndRotate(rot_dir, this, newSibling);
             return super.getRootLayoutUncloned();
-        } else {
-            throw new RuntimeException("Not implemented yet: child has no more neighbors");
         }
-
+        else{
+            return super.getRootLayoutUncloned();
+        }
     }
 
     /**
