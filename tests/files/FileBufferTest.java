@@ -26,7 +26,7 @@ public class FileBufferTest {
         write(path, content);
         buffer = new FileBuffer(path, null);
 
-        assertEquals(new String(buffer.getContent()), content);
+        assertTrue(buffer.contentsEqual(content.getBytes()));
 
     }
 
@@ -56,8 +56,8 @@ public class FileBufferTest {
         buffer.save();
 
         assertFalse(buffer.isDirty());
-        assertEquals(new String(buffer.getContent()), new String(result.getBytes()));
-        assertEquals(new String(buffer.getFileHolder().getContent()), new String(result.getBytes()));
+        assertTrue(buffer.contentsEqual(result.getBytes()));
+        assertTrue(FileHolder.areContentsEqual(buffer.getFileHolder().getContent(), result.getBytes()));
 
     }
 

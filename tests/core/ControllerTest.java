@@ -24,13 +24,16 @@ public class ControllerTest {
         String path2 = "testresources/test.txt";
         String[] args = new String[]{"--lf", path1, path2};
 
+        // Testing opening with --lf + paths
         Controller controller = new Controller(args);
         assertEquals(controller.getLineSeparator(args), "0a");
 
+        // Testing opening with --crlf + paths
         args = new String[] {"--crlf", path1, path2};
         controller = new Controller(args);
         assertEquals(controller.getLineSeparator(args), "0d0a");
 
+        // Testing only paths
         args = new String[]{path1, path2};
         controller = new Controller(args);
         assertNull(controller.getLineSeparator(args));

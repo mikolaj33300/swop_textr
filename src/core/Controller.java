@@ -40,10 +40,17 @@ public class Controller {
     /**
      * A beautiful start for a beautiful project
      */
-    public static void main(String[] args) throws IOException {
-        if(args.length == 0 || (args[0].substring(0,2).equals("--") && args.length == 1)) {
-            System.out.println("TextR needs at least one specified file");
-            return;
+    public static void main(String[] args) throws IOException, RuntimeException {
+        // If no arguments given
+        if(args.length == 0 ||
+                (
+                        // Or --lf || --crlf is given
+                        (args[0].equals("--lf") || (args[0].equals("--crlf")))
+                        // But amount of args is 1
+                        && args.length == 1
+                )
+        ) { // Then no path is specified, and we cannot open
+            throw new RuntimeException("TextR needs at least one specified file");
         }
 
         Controller btj = new Controller(args);
@@ -60,8 +67,8 @@ public class Controller {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
                 //TODO throw error for unknown path
-            }
-            leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
+            } else
+                leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
         }
         if(leaves.size() == 1) return leaves.get(0);
         else return new LayoutNode(Layout.Orientation.HORIZONTAL, leaves);
@@ -105,20 +112,17 @@ public class Controller {
                     moveCursor((char) Terminal.readByte());
                     break;
                 // Line separator
-                //case 13:
-                    //System.line
-                    //break;
+                case 13:
+                    enterLineSeparator();
+                    break;
                 // Character input
                 default:
-                    System.out.println("'" + c + "'dd");
-                    //this.rootLayout.getActive();
                     enterText((char) c);
                     //render();
                     break;
 
             }
 
-            System.out.println("Flushing & Dimension");
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -130,7 +134,7 @@ public class Controller {
     /**
      * Renders the layout with the terminal current height & width
      */
-    public void render() {
+    void render() {
         // TODO root layout has to render its children on itself.
         //this.rootLayout.render(this.width, this.height);
     }
@@ -138,40 +142,34 @@ public class Controller {
     /**
      * Saves the FileBuffer's content to its file.
      */
-    public void saveBuffer() {
-
+    void saveBuffer() {
     }
 
     /**
      * Moves insertion point in a file buffer
      */
-    public void moveCursor(char code) {
-        //this.rootLayout.getActive();
+    void moveCursor(char code) {
     }
 
     /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
-    public void enterText(char str) {
-        System.out.println("Hello??");
-        /*if(str.equals(System.lineSeparator())) {
-
-        }*/
+    void enterText(char str) {
+        // Silently ignore non-ASCII characters.
         if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
-            System.out.println("True");
-            /*Formatter f = new Formatter();
-            for(byte b : str.getBytes()) f.format("%02x", b);
-            System.out.println(f.toString());*/
+        }
+    }
 
-            System.out.print("Printing: " + str);
-        } else System.out.println("Invalid?");
-        System.out.println("\n\n\nFalse");
+    /**
+     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(char)}
+     */
+    void enterLineSeparator() {
     }
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
      */
-    public void moveFocus(Layout.DIRECTION dir) {
+    void moveFocus(Layout.DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
 
@@ -232,21 +230,6 @@ public class Controller {
         else if(args[0].equals("--crlf"))
             return "0d0a";
         else return null;
-    }
-
-    /**
-     * Temporary helper
-     */
-    private void print(String... s) {
-        for(String si : s) {
-            System.out.println(si);
-        }
-    }
-
-    private static String getPrint(String[] s) {
-        String out = "";
-        for(String l : s) out += l + ", ";
-        return out;
     }
 
 }
