@@ -46,10 +46,9 @@ public class FileBuffer {
         //status.moveCursor();
     }
 
-<<<<<<< Updated upstream
     // deletes the line the cursor is on
     public void deleteLine(){
-      int i, k = insertionPoint;
+      int i,k = status.getInsertionPoint();
       while (i < byteContent.length && (byteContent[i++] != 10));// find next \n
       while (k!=0 && byteContent[k--] != 10);// find previous \n
 
@@ -66,13 +65,13 @@ public class FileBuffer {
     public String renderStatus() {
       String statusLine = file.getPath();
       statusLine += " ";
-      statusLine += String.valueOf(insertionPoint/byteContent.length);
+      statusLine += String.valueOf(status.getInsertionPoint()/byteContent.length);
       statusLine += "%";
       return statusLine;
     }
 
     public String getScrollbar(int height, int index){
-      if (index == height*((float) insertionPoint/byteContent.length))
+      if (index == height*((float) status.getInsertionPoint()/byteContent.length))
         return "+";
       else
         return "|";
@@ -80,11 +79,9 @@ public class FileBuffer {
 
     // Prints the content of the file relative to the coordinates
     // maybe this needs to be in LeafLayout?
-=======
     /**
      * Renders this buffers content between the width & height relative to start coordinates.
      */
->>>>>>> Stashed changes
     public void render(int startX, int startY, int width, int height) {
         // Get string from bytes & information about line separations
         String s = new String(byteContent);
@@ -132,16 +129,12 @@ public class FileBuffer {
 
             }
 
-<<<<<<< Updated upstream
         }
+
         // print Statusline add end
         Terminal.printText(startX, startY + height, this.renderStatus());
         for (int i = 0; i < height; i++){
           Terminal.printText(startX+width, startY+i, getScrollbar(height, i));
-        }
-=======
->>>>>>> Stashed changes
-
         }
 
     }
