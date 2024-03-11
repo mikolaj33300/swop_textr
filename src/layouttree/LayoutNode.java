@@ -62,7 +62,7 @@ public class LayoutNode extends Layout {
         return this.orientation;
     }
 
-    public LayoutLeaf getRightNeighbor(Layout subtree) {
+    protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
         if (index < children.size() - 1) {
             return children.get(index + 1).getLeftLeaf(); // Called when we can make child of current node the active one.
@@ -71,7 +71,7 @@ public class LayoutNode extends Layout {
         }
     }
 
-    public void deleteRightNeighbor(Layout subtree) {
+    protected void deleteRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
         if (index < children.size() - 1) {
             children.get(index + 1).deleteLeftLeaf(); // Called when we can make child of current node the active one.
@@ -216,7 +216,8 @@ public class LayoutNode extends Layout {
         for(Layout l : children){
             deepCopyList.add(l.clone());
         }
-        return new LayoutNode(this.orientation, deepCopyList);
+        LayoutNode clonedNode = new LayoutNode(this.orientation, deepCopyList);
+        return clonedNode;
     }
 
     //returns a LayoutNode that contains a child of the current node and its new sibling rotated along the specified direction
