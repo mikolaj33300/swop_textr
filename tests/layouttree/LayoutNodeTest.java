@@ -39,7 +39,7 @@ public class LayoutNodeTest {
         children.add(l1);
         children.add(l2);
         children.add(l4);
-        ln = new LayoutNode(Layout.Orientation.VERTICAL,children);
+        ln = new VerticalLayoutNode(children);
     }
 
 }
