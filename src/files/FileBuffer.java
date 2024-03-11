@@ -59,14 +59,14 @@ public class FileBuffer {
     }
 
     public String renderStatus() {
-      String statusLine = FileHolder.getPath();
+      String statusLine = file.getPath();
       statusLine += " ";
       statusLine += String.valueOf(insertionPoint/byteContent.length);
       return statusLine;
     }
 
     public String getScrollbar(int height, int index){
-      if (index == height*insertionPoint/byteContent.length)
+      if (index == height*((float) insertionPoint/byteContent.length))
         return "+";
       else
         return "|";
@@ -132,7 +132,7 @@ public class FileBuffer {
         // print Statusline add end
         Terminal.printText(startX, startY + height, this.renderStatus());
         for (int i = 0; i < height; i++){
-          Terminal.printText(startX+width; startY+i; getScrollbar(height, i));
+          Terminal.printText(startX+width, startY+i, getScrollbar(height, i));
         }
 
         System.out.println("\n" + log);
