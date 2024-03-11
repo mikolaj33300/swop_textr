@@ -105,16 +105,6 @@ public abstract class LayoutNode extends Layout {
         return false;
     }
 
-/*    protected void sanitizeAsChildOfParent(LayoutNode futureParent){
-        if(children.size()<2){
-            throw new RuntimeException("Invalid child layout, contains too little children");
-        } else if((this.containsActive && futureParent.containsActive())){
-            throw new RuntimeException("Parent already contains an active child");
-        } else if(this.orientation == futureParent.getOrientation()){
-            throw new RuntimeException("Orientation of child equals orientation of parent");
-        }
-    }*/
-
     protected boolean containsActive() {
         return containsActive;
     }
@@ -190,6 +180,7 @@ public abstract class LayoutNode extends Layout {
         this.fixInvarsOfChangedTree();
     }
 
+    //Bottom up fixing of tree structure with unary and binary constraints.
     //Given that the children Layouts are in a consistent state with this
     //(= could exist as root on its own and are oriented differently)
     //make the current node and its parent (may be null) consistent with each other.

@@ -40,7 +40,7 @@ public class LayoutLeaf extends Layout {
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if(parent != null){
-            parent.mergeAndRotate(rot_dir, this);
+            parent.mergeWithSiblingAndRotate(rot_dir, this);
             parent.deleteRightNeighbor(this);
             return super.getRootLayoutUncloned();
         } else {
