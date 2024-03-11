@@ -42,6 +42,16 @@ public class FileBuffer {
         insert(System.lineSeparator().getBytes());
     }
 
+    // deletes the line the cursor is on
+    public void deleteLine(){
+      int i = 0;
+      while (this.bytecontent[i++] != '\n');
+      byte[] newContent = new byte[byteContent.length - i + j];
+      for (int j = this.insertionPoint; j < this.byteContent.length; j++)
+        newContent[j]=this.byteContent[j+i];
+      this.byteContent
+    }
+
     // Prints the content of the file relative to the coordinates
     public void render(int startX, int startY, int width, int height) {
         String log = "";
