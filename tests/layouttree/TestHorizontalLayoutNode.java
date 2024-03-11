@@ -16,12 +16,11 @@ public class TestHorizontalLayoutNode {
     LayoutLeaf l5;
     LayoutLeaf l6;
     LayoutLeaf l7;
-    LayoutLeaf l8;
-    LayoutLeaf l9;
-    LayoutLeaf l10;
     HorizontalLayoutNode hn1;
     HorizontalLayoutNode hn2;
     VerticalLayoutNode vn1;
+    HorizontalLayoutNode hn11;
+
 
     @BeforeEach
     void setUp() {
@@ -32,9 +31,6 @@ public class TestHorizontalLayoutNode {
         String path5 = "testresources/test5.txt";
         String path6 = "testresources/test6.txt";
         String path7 = "testresources/test7.txt";
-        String path8 = "testresources/test8.txt";
-        String path9 = "testresources/test9.txt";
-        String path10 = "testresources/test10.txt";
 
         FileBuffer fb1 = new FileBuffer(path1, null);
         FileBuffer fb2 = new FileBuffer(path2, null);
@@ -43,9 +39,6 @@ public class TestHorizontalLayoutNode {
         FileBuffer fb5 = new FileBuffer(path5, null);
         FileBuffer fb6 = new FileBuffer(path6, null);
         FileBuffer fb7 = new FileBuffer(path7, null);
-        FileBuffer fb8 = new FileBuffer(path8, null);
-        FileBuffer fb9 = new FileBuffer(path9, null);
-        FileBuffer fb10 = new FileBuffer(path10, null);
 
         l1 = new LayoutLeaf(fb1,false);
         l2 = new LayoutLeaf(fb2, false);
@@ -54,34 +47,33 @@ public class TestHorizontalLayoutNode {
         l5 = new LayoutLeaf(fb5,false);
         l6 = new LayoutLeaf(fb6,false);
         l7 = new LayoutLeaf(fb7,false);
-        l8 = new LayoutLeaf(fb8,false);
-        l9 = new LayoutLeaf(fb9,false);
-        l10 = new LayoutLeaf(fb10,false);
 
-        ArrayList<Layout> children1 = new ArrayList<Layout>();
+        ArrayList<Layout> children1 = new ArrayList<>();
         children1.add(l1);
         children1.add(l2);
         hn1 = new HorizontalLayoutNode(children1);
 
-        ArrayList<Layout> children2 = new ArrayList<Layout>();
+        ArrayList<Layout> children2 = new ArrayList<>();
         children2.add(l3);
         children2.add(l4);
         hn2 = new HorizontalLayoutNode(children2);
 
-        ArrayList<Layout> children3 = new ArrayList<Layout>();
+        ArrayList<Layout> children3 = new ArrayList<>();
         children3.add(l5);
         children3.add(l6);
         vn1 = new VerticalLayoutNode(children3);
 
+        HorizontalLayoutNode hn14 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l6,l7)));
+        HorizontalLayoutNode hn13 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l4,l5)));
+        HorizontalLayoutNode hn12 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
+        VerticalLayoutNode vn11 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hn12)));
+        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn13,hn14)));
+        hn11 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(vn11,vn12)));
     }
     @Test
     void testGetOrientation(){
         assertEquals(hn1.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
         assertNotEquals(hn1.getOrientation(), LayoutNode.Orientation.VERTICAL);
-    }
-    @Test
-    void testGetNewMergedRotatedChild(){
-
     }
     @Test
     void testIsAllowedToBeChildOf(){
@@ -94,13 +86,6 @@ public class TestHorizontalLayoutNode {
         LayoutNode hn1_clone = hn1.clone();
         assertEquals(hn1,hn1_clone);
         assertNotSame(hn1,hn1_clone);
-
-        HorizontalLayoutNode hn14 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l6,l7)));
-        HorizontalLayoutNode hn13 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l4,l5)));
-        HorizontalLayoutNode hn12 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(l2,l3)));
-        VerticalLayoutNode vn11 = new VerticalLayoutNode(new ArrayList<Layout>(Arrays.asList(l1,hn12)));
-        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<Layout>(Arrays.asList(hn13,hn14)));
-        HorizontalLayoutNode hn11 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(vn11,vn12)));
 
         LayoutNode hn11_clone = hn11.clone();
         assertEquals(hn11,hn11_clone);
