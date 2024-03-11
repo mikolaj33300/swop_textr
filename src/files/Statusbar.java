@@ -142,11 +142,20 @@ public class Statusbar {
             // abcI_ I is between c and _. I is still on line 1.
             if(insertionPoint <= list.get(i)) lineIndex = i+1;
         }
-        if(insertionPoint > list.get(list.size()-1)) lineIndex = list.size() + 1;
+        // Insertion point is after the last line separator
+        if(list.size() > 0 && insertionPoint > list.get(list.size()-1)) lineIndex = list.size() + 1;
+        // There are no line separators
+        if(list.size() == 0) {
+            this.lines = 1;
+            this.column = insertionPoint;
+            return;
+        }
 
         // lineIndex = i+1 --> vorige i = lineIndex - 2 = i - 1
-        int previousEnterIndex = lineIndex - 2 == 0 ? 0 : list.get(lineIndex-2);
-        int lineLength = list.get(lineIndex-1) - previousEnterIndex;
+        int previousEnterIndex = lineIndex - 2 < 0 ? 0 : list.get(lineIndex-2);
+        previousEnterIndex += buffer.getFileHolder().getLineSeparator().length() / 2;
+
+        int lineLength = insertionPoint - previousEnterIndex;
 
         this.lines = lineIndex;
         this.column = lineLength;
