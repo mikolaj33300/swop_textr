@@ -238,36 +238,56 @@ public class LayoutNodeTest {
     void testInsertDirectChild(){}
 
     @Test
-    void testRotateRelationshipNeighbor(){
-        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        LayoutNode correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(current_layout,correct_layout);
+    void testRotateRelationshipNeighbor() {
+        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
 
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
-        assertEquals(current_layout,correct_layout);
+        Layout correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        assertEquals(current_layout, correct_layout);
 
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
+        assertEquals(current_layout, correct_layout);
 
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
+        assertEquals(current_layout, correct_layout);
 
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        assertEquals(current_layout, correct_layout);
 
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
+        assertEquals(current_layout, correct_layout);
 
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
+        assertEquals(current_layout, correct_layout);
+
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        assertEquals(current_layout, correct_layout);
+
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        assertEquals(current_layout, correct_layout);
     }
 
+
     @Test
+    void testEquals() {
+    }
     void testClone(){
         LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10))))));
         LayoutNode complex_clone = complex_tree.clone();
         assertEquals(complex_clone, complex_tree);
         assertNotSame(complex_clone, complex_tree);
-
-
     }
-
     @Test
-    void testEquals(){
-    }
+    void testtest(){}
 }
+
 
 
 
