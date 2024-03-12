@@ -54,7 +54,9 @@ public class HorizontalLayoutNode extends LayoutNode {
         for(Layout l : children){
             deepCopyList.add(l.clone());
         }
-        return new HorizontalLayoutNode(deepCopyList);
+        HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
+        cloned.setContainsActive(this.getContainsActive());
+        return cloned;
     }
 
     @Override

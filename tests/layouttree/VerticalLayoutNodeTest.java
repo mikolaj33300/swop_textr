@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestVerticalLayoutNode {
+public class VerticalLayoutNodeTest {
     LayoutLeaf l1;
     LayoutLeaf l2;
     LayoutLeaf l3;

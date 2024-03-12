@@ -3,14 +3,24 @@ package layouttree;
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
-
+    /**
+     * Enumerator that represents whether the Layouts inside this Layout
+     * will be stacked (VERTICAL) or side-by-side (HORIZONTAL)
+     */
     public enum Orientation {
         HORIZONTAL,
         VERTICAL
     }
-    public abstract Orientation getOrientation();
+
+    /**
+     * The children of this LayoutNode in the layout-tree
+     */
     protected ArrayList<Layout> children;
 
+    /**
+     * Constructor for LayoutNode, clones its arguments to prevent representation exposure
+     * LayoutNodes need atleast 2 children ub uts children-array
+     */
     public LayoutNode(ArrayList<Layout> newChildren){
         if(newChildren.size()<2){
             throw new RuntimeException("newChildren too short");
@@ -22,6 +32,14 @@ public abstract class LayoutNode extends Layout {
         }
     }
 
+    /**
+     * Returns the orientation of the LayoutNode
+     */
+    public abstract Orientation getOrientation();
+
+    /**
+     * Returns a deepcopy of the children of this LayoutNode
+     */
     public ArrayList<Layout> getDirectChildren(){
         ArrayList<Layout> deepCopyList = new ArrayList<>();
         for(Layout l : children){
@@ -30,6 +48,11 @@ public abstract class LayoutNode extends Layout {
         return deepCopyList;
     }
 
+    /**
+     * Moves focus from the currently active Layout, to the neigbouring layout
+     * Which neighbour is decided by the dir argument
+     * If no neighbours left, the active Layout stays active
+     */
     public void moveFocus(DIRECTION dir) throws RuntimeException {
         for (Layout l : children) {
             if(l.getContainsActive()){
@@ -57,6 +80,9 @@ public abstract class LayoutNode extends Layout {
             }
         }
         throw new RuntimeException("Contains no active leaf!");
+    }
+    public void render() {
+        return;
     }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
@@ -86,7 +112,7 @@ public abstract class LayoutNode extends Layout {
     public boolean equals(Object node) {
         if(node instanceof LayoutNode layoutNode) {
             //Check objects for same activity-status
-            if(this.containsActive() != layoutNode.getContainsActive()){
+            if(this.getContainsActive() != layoutNode.getContainsActive()){
                 return false;
             }
             // Return early when the amount of children don't match.
@@ -107,7 +133,8 @@ public abstract class LayoutNode extends Layout {
     }
 
     protected Layout deleteLeftLeaf() {
-        return children.get(0).deleteLeftLeaf();
+        children.get(0).deleteLeftLeaf();
+        return getRootLayoutUncloned();
     }
 
     protected void delete(Layout l){
