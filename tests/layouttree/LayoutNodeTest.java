@@ -159,7 +159,7 @@ public class LayoutNodeTest {
     void moveFocusComplex(){
         //Test with a complex tree
         HorizontalLayoutNode hn10 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l9, vn2,l10)));
-        VerticalLayoutNode currentlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1, l8,hn10)));
+        VerticalLayoutNode currentlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1, l8, hn10)));
 
         VerticalLayoutNode correctlayout = currentlayout.clone();
         correctlayout.moveFocus(Layout.DIRECTION.LEFT);
