@@ -71,7 +71,7 @@ public class LayoutNodeTest {
         l5a = new LayoutLeaf(fb5, true);
         l6 = new LayoutLeaf(fb6, false);
         l6a = new LayoutLeaf(fb6, true);
-        l7 = new LayoutLeaf(fb6, false);
+        l7 = new LayoutLeaf(fb7, false);
         l7a = new LayoutLeaf(fb7, true);
         l8 = new LayoutLeaf(fb8, false);
         l8a = new LayoutLeaf(fb8, true);
@@ -213,7 +213,7 @@ public class LayoutNodeTest {
         currentlayout.moveFocus(Layout.DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
-        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2a,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5a, vn2,l10))))));
+        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5a, vn2,l10))))));
         currentlayout.moveFocus(Layout.DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
@@ -225,11 +225,11 @@ public class LayoutNodeTest {
         currentlayout.moveFocus(Layout.DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
-        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3))),l4,hn10)));
+        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2a,l3))),l4,hn10)));
         currentlayout.moveFocus(Layout.DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
-        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2a,l3))),l4,hn10)));
+        correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3))),l4,hn10)));
         currentlayout.moveFocus(Layout.DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
     }
@@ -238,7 +238,9 @@ public class LayoutNodeTest {
     void testInsertDirectChild(){}
 
     @Test
-    void testRotateRelationshipNeighbor(){}
+    void testRotateRelationshipNeighbor(){
+
+    }
 
     @Test
     void testEquals(){
@@ -246,9 +248,7 @@ public class LayoutNodeTest {
 
     @Test
     void testtest(){
-        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hn2)));
-        vn12.moveFocus(Layout.DIRECTION.RIGHT);
-        int k = 5;
+
     }
 }
 
