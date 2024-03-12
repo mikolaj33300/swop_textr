@@ -238,7 +238,18 @@ public class LayoutNodeTest {
     void testInsertDirectChild(){}
 
     @Test
-    void testRotateRelationshipNeighbor(){}
+    void testRotateRelationshipNeighbor(){
+        LayoutNode current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+
+        VerticalLayoutNode vn3 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
+        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+
+
+
+
+
+    }
 
     @Test
     void testEquals(){
@@ -246,9 +257,7 @@ public class LayoutNodeTest {
 
     @Test
     void testtest(){
-        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hn2)));
-        vn12.moveFocus(Layout.DIRECTION.RIGHT);
-        int k = 5;
+
     }
 }
 

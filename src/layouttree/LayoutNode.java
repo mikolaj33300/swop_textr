@@ -10,7 +10,7 @@ public abstract class LayoutNode extends Layout {
 
     /**
      * Constructor for LayoutNode, clones its arguments to prevent representation exposure
-     * LayoutNodes need atleast 2 children ub uts children-array
+     * LayoutNodes need atleast 2 children in its children-array
      */
     public LayoutNode(ArrayList<Layout> newChildren){
         if(newChildren.size()<2){
@@ -19,7 +19,7 @@ public abstract class LayoutNode extends Layout {
         this.children = new ArrayList<>();
         for(Layout l : newChildren){
             if(l.isAllowedToBeChildOf(this))
-            this.insertDirectChild(l.clone());
+                this.insertDirectChild(l.clone());
         }
     }
 
