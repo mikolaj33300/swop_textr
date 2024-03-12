@@ -9,6 +9,11 @@ import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
+    private int startX;
+    private int startY;
+    private int width;
+    private int height;
+
     /**
      * File reference
      */
@@ -77,16 +82,27 @@ public class FileBuffer {
      * Renders this buffers content between the width & height relative to start coordinates.
      */
     public void render(int startX, int startY, int width, int height) {
+        this.startX = startX;
+        this.startY = startY;
+        this.width = width;
+        this.height = height;
+
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
-            String lineString = new String(byteArrListToPrimArray(linesArrayList.get(i)));
+            String lineString = new String(byteWrapArrListToPrimArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex;
             //endindex -1 to make space for vertical bar
             Terminal.printText(startY, startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex-1, lineString.length())));
             currentTerminalRow++;
         }
+
+        int cursorXoffset = insertionPointLine % height;
+        int cursorYoffset = insertionPointCol % width;
+        Terminal.moveCursor(startY+cursorYoffset, startX+cursorXoffset);
+
+
     }
 
     /**
@@ -102,7 +118,7 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(byteArrListToPrimArray(this.byteContent));
+        this.file.save(byteWrapArrListToPrimArray(this.byteContent));
         this.dirty = false;
     }
 
@@ -125,7 +141,7 @@ public class FileBuffer {
      * Returns copy of this buffers' content.
      */
     byte[] getBytes() {
-        return byteArrListToPrimArray(byteContent);
+        return byteWrapArrListToPrimArray(byteContent);
     }
 
     /**
@@ -192,9 +208,10 @@ public class FileBuffer {
             case 'B':
                 moveCursorDown();
         }
+        this.render(startX, startY, width, height);
     }
 
-    private byte[] byteArrListToPrimArray(ArrayList<Byte> arrList){
+    private byte[] byteWrapArrListToPrimArray(ArrayList<Byte> arrList){
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
             resultArray[i] = arrList.get(i).byteValue();

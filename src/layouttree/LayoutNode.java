@@ -58,9 +58,6 @@ public abstract class LayoutNode extends Layout {
         }
         throw new RuntimeException("Contains no active leaf!");
     }
-    public void render() {
-        return;
-    }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
@@ -119,10 +116,12 @@ public abstract class LayoutNode extends Layout {
     }
 
     protected void makeLeftmostLeafActive() {
+        this.containsActive=true;
         children.get(0).makeLeftmostLeafActive();
     }
 
     protected void makeRightmostLeafActive() {
+        this.containsActive=true;
         children.get(children.size()-1).makeRightmostLeafActive();
     }
 
