@@ -3,8 +3,9 @@ package files;
 import io.github.btj.termios.Terminal;
 
 
-import java.io.File;
 import java.util.*;
+
+import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
@@ -22,9 +23,9 @@ public class FileBuffer {
      * Holds the 'in memory' byte data of the file.
      * The amount of bytes equals the amount of characters in ASCII
      */
-    private ArrayList<byte> byteContent;
+    private ArrayList<Byte> byteContent;
 
-    private ArrayList<ArrayList<byte>> linesArrayList;
+    private ArrayList<ArrayList<Byte>> linesArrayList;
 
     /**
      * Keeps track of the insertion point
@@ -42,7 +43,7 @@ public class FileBuffer {
      */
     public FileBuffer(String path) {
         this.file = new FileHolder(path);
-        this.byteContent = new ArrayList<byte>(Arrays.<byte>asList(this.file.getContent()));
+        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
         this.insertionPointCol = 0;
         this.insertionPointLine = 0;
@@ -50,11 +51,11 @@ public class FileBuffer {
         this.status = new Statusbar(this);
     }
 
-    public ArrayList<ArrayList<byte>> getLines(){
+    public ArrayList<ArrayList<Byte>> getLines(){
         int i = 0;
-        ArrayList<ArrayList<byte>> linesCloneArrayList = new ArrayList<ArrayList<byte>>();
-        for(ArrayList<byte> line : linesArrayList){
-            linesCloneArrayList.add((ArrayList<byte>) line.clone());
+        ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
+        for(ArrayList<Byte> line : linesArrayList){
+            linesCloneArrayList.add((ArrayList<Byte>) line.clone());
         }
         return linesCloneArrayList;
     };
@@ -79,7 +80,7 @@ public class FileBuffer {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
-            String lineString = new String(byteArrListToArray(linesArrayList.get(i)));
+            String lineString = new String(byteArrListToPrimArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex;
             //endindex -1 to make space for vertical bar
@@ -101,16 +102,16 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(byteArrListToArray(this.byteContent));
+        this.file.save(byteArrListToPrimArray(this.byteContent));
         this.dirty = false;
     }
 
     /**
      * Inserts the byte values.
      */
-    private void insert(byte[] data) {
-        byteContent.addAll(insertionPointByteIndex, Arrays.<byte>asList(data));
-        linesArrayList = FileAnalyserUtil.getContentLines(this.getContent());
+    private void insert(byte... data) {
+        byteContent.addAll(insertionPointByteIndex, Arrays.<Byte>asList(wrapEachByteElem(data)));
+        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
 /*    *//**
@@ -132,8 +133,8 @@ public class FileBuffer {
     /**
      * Returns copy of this buffers' content.
      */
-    byte[] getContent() {
-        return byteArrListToArray(byteContent);
+    byte[] getBytes() {
+        return byteArrListToPrimArray(byteContent);
     }
 
     /**
@@ -146,18 +147,18 @@ public class FileBuffer {
     /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
      */
-    boolean contentsEqual(ArrayList<byte> compare) {
+    boolean contentsEqual(ArrayList<Byte> compare) {
         if(compare.size() != byteContent.size()) return false;
         for(int i = 0; i < compare.size(); i++)
-            if(compare.get(i) != byteContent.get(i)) return false;
+            if(compare.get(i) != byteContent.get(i).byteValue()) return false;
         return true;
     }
 
     /**
      * Clones the byte array
      */
-    private ArrayList<byte> cloneByteArrList() {
-        ArrayList<byte> copy = new ArrayList<byte>(byteContent);
+    private ArrayList<Byte> cloneByteArrList() {
+        ArrayList<Byte> copy = new ArrayList<>(byteContent);
         return copy;
     }
 
@@ -202,13 +203,14 @@ public class FileBuffer {
         }
     }
 
-    private byte[] byteArrListToArray(ArrayList<byte> arrList){
+    private byte[] byteArrListToPrimArray(ArrayList<Byte> arrList){
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
-            resultArray[i] = arrList.get(i);
+            resultArray[i] = arrList.get(i).byteValue();
         }
         return resultArray;
     }
+
 
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0

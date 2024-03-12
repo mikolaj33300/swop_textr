@@ -36,8 +36,8 @@ public class ControllerTest {
         assertNull(Controller.getLineSeparator());
 
         // Na constructor zou volgende root layout moeten bestaan:
-        FileBuffer buffer1 = new FileBuffer(path1, null);
-        FileBuffer buffer2 = new FileBuffer(path2, null);
+        FileBuffer buffer1 = new FileBuffer(path1);
+        FileBuffer buffer2 = new FileBuffer(path2);
         ArrayList<Layout> leaves = new ArrayList<>();
         leaves.add(new LayoutLeaf(buffer1, true));
         leaves.add(new LayoutLeaf(buffer2, false));

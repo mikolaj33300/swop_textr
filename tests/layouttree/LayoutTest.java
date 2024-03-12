@@ -32,10 +32,10 @@ class LayoutTest {
         path2 = "testresources/test2.txt";
         path3 = "testresources/test3.txt";
         path4 = "testresources/test4.txt";
-        fb1 = new FileBuffer(path1, null);
-        fb2 = new FileBuffer(path2, null);
-        fb3 = new FileBuffer(path1, null);
-        fb4 = new FileBuffer(path2, null);
+        fb1 = new FileBuffer(path1);
+        fb2 = new FileBuffer(path2);
+        fb3 = new FileBuffer(path1);
+        fb4 = new FileBuffer(path2);
         l1 = new LayoutLeaf(fb1, true);
         l1a = new LayoutLeaf(fb1, true);
         l1p = new LayoutLeaf(fb1, false);

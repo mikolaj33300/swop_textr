@@ -14,11 +14,11 @@ public class FileAnalyserUtil {
      * the dimension of the window.
      * Used for rendering.
      */
-    public static ArrayList<ArrayList<byte>> getContentLines(byte[] byteContents) {
+    public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
         String fileContentFormatted = formatBytes(byteContents);
         String usedLineSeparatorFormatted = Controller.getLineSeparator();
         int startOfCurrentLine = 0;
-        ArrayList<ArrayList<byte>> linesArrList = new ArrayList<>();
+        ArrayList<ArrayList<Byte>> linesArrList = new ArrayList<>();
 
         // Loop over bytes in String form.
         for(int i = 0; i < fileContentFormatted.length()-1;) {
@@ -43,7 +43,17 @@ public class FileAnalyserUtil {
         return formatter.toString();
     }
 
-    private static ArrayList<byte> toArrayList(String s){
-        return new ArrayList<byte>(Arrays.<byte>asList(s.getBytes()));
+    public static Byte[] wrapEachByteElem(byte[] byteArr){
+        Byte[] wrapperArray = new Byte[byteArr.length];
+        for (int i = 0; i < byteArr.length; i++) {
+            wrapperArray[i] = byteArr[i];
+        }
+        return wrapperArray;
     }
+
+    private static ArrayList<Byte> toArrayList(String s){
+        return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(s.getBytes())));
+    }
+
+
 }

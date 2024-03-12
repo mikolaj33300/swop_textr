@@ -23,10 +23,10 @@ public class LayoutNodeTest {
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";
         String path4 = "testresources/test4.txt";
-        FileBuffer fb1 = new FileBuffer(path1, null);
-        FileBuffer fb2 = new FileBuffer(path2, null);
-        FileBuffer fb3 = new FileBuffer(path3, null);
-        FileBuffer fb4 = new FileBuffer(path4, null);
+        FileBuffer fb1 = new FileBuffer(path1);
+        FileBuffer fb2 = new FileBuffer(path2);
+        FileBuffer fb3 = new FileBuffer(path3);
+        FileBuffer fb4 = new FileBuffer(path4);
         l1 = new LayoutLeaf(fb1, true);
         l1a = new LayoutLeaf(fb1, true);
         l1p = new LayoutLeaf(fb1, false);

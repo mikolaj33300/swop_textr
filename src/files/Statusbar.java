@@ -1,7 +1,5 @@
 package files;
 
-import java.util.List;
-
 public class Statusbar {
 
     private final FileBuffer buffer;
@@ -30,13 +28,13 @@ public class Statusbar {
     String renderStatus() {
         String statusLine = buffer.getFileHolder().getPath();
         statusLine += " ";
-        statusLine += String.valueOf(buffer.getInsertionPoint()/buffer.getContent().length);
+        statusLine += String.valueOf(buffer.getInsertionPoint()/buffer.getBytes().length);
         statusLine += "%";
         return statusLine;
     }
 
     String getScrollbar(int height, int index){
-        if (index == height*((float) buffer.getInsertionPoint()/this.buffer.getContent().length))
+        if (index == height*((float) buffer.getInsertionPoint()/this.buffer.getBytes().length))
             return "+";
         else
             return "|";

@@ -70,7 +70,7 @@ public class Controller {
             if (!Files.exists(checkPath)) {
                 //TODO throw error for unknown path
             } else
-                leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
+                leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
         if(leaves.size() == 1) return leaves.get(0);
         else return new HorizontalLayoutNode(leaves);

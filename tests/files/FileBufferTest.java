@@ -28,7 +28,7 @@ public class FileBufferTest {
         write(path, content);
         buffer = new FileBuffer(path);
 
-        assertTrue(buffer.contentsEqual(new ArrayList<byte>(Arrays.<byte>asList(content.getBytes()))));
+        assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(content.getBytes())))));
 
     }
 
@@ -48,7 +48,7 @@ public class FileBufferTest {
         write(path, text);
         FileBuffer buffer = new FileBuffer(path);
 
-        assertEquals(new String(buffer.getContent()), new String(text.getBytes()));
+        assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
 
         String add = " ; i love using termios library ";
         String result = " ; i love using termios library i love termios ; long live btj";
@@ -58,7 +58,7 @@ public class FileBufferTest {
         buffer.save();
 
         assertFalse(buffer.isDirty());
-        assertTrue(buffer.contentsEqual(new ArrayList<byte>(Arrays.<byte>asList(result.getBytes()))));
+        assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(result.getBytes())))));
         assertTrue(FileHolder.areContentsEqual(buffer.getFileHolder().getContent(), result.getBytes()));
 
     }
