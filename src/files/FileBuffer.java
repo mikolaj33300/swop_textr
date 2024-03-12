@@ -8,12 +8,6 @@ import java.util.*;
 import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
-
-    private int startX;
-    private int startY;
-    private int width;
-    private int height;
-
     /**
      * File reference
      */
@@ -82,11 +76,6 @@ public class FileBuffer {
      * Renders this buffers content between the width & height relative to start coordinates.
      */
     public void render(int startX, int startY, int width, int height) {
-        this.startX = startX;
-        this.startY = startY;
-        this.width = width;
-        this.height = height;
-
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
@@ -208,7 +197,6 @@ public class FileBuffer {
             case 'B':
                 moveCursorDown();
         }
-        this.render(startX, startY, width, height);
     }
 
     private byte[] byteWrapArrListToPrimArray(ArrayList<Byte> arrList){

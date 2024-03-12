@@ -4,15 +4,6 @@ import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
     /**
-     * Enumerator that represents whether the Layouts inside this Layout
-     * will be stacked (VERTICAL) or side-by-side (HORIZONTAL)
-     */
-    public enum Orientation {
-        HORIZONTAL,
-        VERTICAL
-    }
-
-    /**
      * The children of this LayoutNode in the layout-tree
      */
     protected ArrayList<Layout> children;
@@ -81,9 +72,6 @@ public abstract class LayoutNode extends Layout {
         }
         throw new RuntimeException("Contains no active leaf!");
     }
-    public void render() {
-        return;
-    }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
@@ -132,9 +120,8 @@ public abstract class LayoutNode extends Layout {
         return containsActive;
     }
 
-    protected Layout deleteLeftLeaf() {
+    protected void deleteLeftLeaf() {
         children.get(0).deleteLeftLeaf();
-        return getRootLayoutUncloned();
     }
 
     protected void delete(Layout l){
@@ -243,4 +230,13 @@ public abstract class LayoutNode extends Layout {
 
     @Override
     protected abstract LayoutNode clone();
+
+    /**
+     * Enumerator that represents whether the Layouts inside this Layout
+     * will be stacked (VERTICAL) or side-by-side (HORIZONTAL)
+     */
+    public enum Orientation {
+        HORIZONTAL,
+        VERTICAL
+    }
 }
