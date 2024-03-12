@@ -178,6 +178,7 @@ public abstract class LayoutNode extends Layout {
     protected void mergeWithSiblingAndRotate(ROT_DIRECTION rotdir, Layout child) {
         LayoutNode newChild = getNewMergedRotatedChild(rotdir, child);
         this.replaceWithNewLayout(child, newChild);
+        this.deleteRightNeighbor(newChild);
     }
 
     //Returns a layoutnode containing a child and a new specified sibling
@@ -185,7 +186,6 @@ public abstract class LayoutNode extends Layout {
 
     private void replaceWithNewLayout(Layout toReplace, Layout newLayout) {
         int index = children.indexOf(toReplace);
-        newLayout.setParent(this);
         children.set(index, newLayout);
         newLayout.setParent(this);
         this.fixInvarsOfChangedTree();
