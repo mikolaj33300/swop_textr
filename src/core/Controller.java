@@ -1,12 +1,12 @@
 package core;
 
 import files.FileBuffer;
+import files.FileHolder;
 import io.github.btj.termios.Terminal;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
-import org.junit.platform.commons.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -14,10 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
 
 public class Controller {
+
+    private static String lineSeparator;
 
     /**
      * Root layout
@@ -35,7 +35,8 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        this.rootLayout = getRootLayout(args, getLineSeparator(args));
+        lineSeparator = setLineSeparator(args);
+        this.rootLayout = initRootLayout(args, lineSeparator);
     }
 
     /**
@@ -62,7 +63,7 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout getRootLayout(String[] args, String lineSeparator) {
+    private Layout initRootLayout(String[] args, String lineSeparator) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
@@ -136,8 +137,7 @@ public class Controller {
      * Renders the layout with the terminal current height & width
      */
     void render() {
-        // TODO root layout has to render its children on itself.
-        //this.rootLayout.render(this.width, this.height);
+        this.rootLayout.render(0, 0, this.width, this.height);
     }
 
     /**
@@ -179,7 +179,7 @@ public class Controller {
     /**
      * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
-    Layout getRootLayout() {
+    Layout initRootLayout() {
         return rootLayout;
     }
 
@@ -225,7 +225,7 @@ public class Controller {
 
     }
 
-    String getLineSeparator(String[] args) {
+    public static String setLineSeparator(String[] args) {
         if(args[0].equals("--lf"))
             return "0a";
         else if(args[0].equals("--crlf"))
@@ -233,4 +233,7 @@ public class Controller {
         else return null;
     }
 
+    public static String getLineSeparator(){
+        return Controller.lineSeparator;
+    }
 }

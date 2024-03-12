@@ -1,16 +1,12 @@
 package core;
 
-import core.Controller;
 import files.FileBuffer;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,17 +23,17 @@ public class ControllerTest {
 
         // Testing opening with --lf + paths
         Controller controller = new Controller(args);
-        assertEquals(controller.getLineSeparator(args), "0a");
+        assertEquals(Controller.getLineSeparator(), "0a");
 
         // Testing opening with --crlf + paths
         args = new String[] {"--crlf", path1, path2};
         controller = new Controller(args);
-        assertEquals(controller.getLineSeparator(args), "0d0a");
+        assertEquals(Controller.getLineSeparator(), "0d0a");
 
         // Testing only paths
         args = new String[]{path1, path2};
         controller = new Controller(args);
-        assertNull(controller.getLineSeparator(args));
+        assertNull(Controller.getLineSeparator());
 
         // Na constructor zou volgende root layout moeten bestaan:
         FileBuffer buffer1 = new FileBuffer(path1, null);
@@ -48,7 +44,7 @@ public class ControllerTest {
 
         HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
-        assertTrue(controller.getRootLayout().equals(node));
+        assertTrue(controller.initRootLayout().equals(node));
     }
 
 }

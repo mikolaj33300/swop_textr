@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,25 +17,25 @@ public class FileBufferTest {
 
         // Test if the FileHolder is equal == Paths are equal
         String path = "testresources/test.txt";
-        FileHolder holder = new FileHolder(path, null);
+        FileHolder holder = new FileHolder(path);
 
-        FileBuffer buffer = new FileBuffer(path, null);
+        FileBuffer buffer = new FileBuffer(path);
 
         assertTrue(buffer.getFileHolder().equals(holder));
 
         // Test if the content is correctly retrieved
         String content = "abc";
         write(path, content);
-        buffer = new FileBuffer(path, null);
+        buffer = new FileBuffer(path);
 
-        assertTrue(buffer.contentsEqual(content.getBytes()));
+        assertTrue(buffer.contentsEqual(new ArrayList<byte>(Arrays.<byte>asList(content.getBytes()))));
 
     }
 
     @Test
     public void testClone() {
         String path = "testresources/test.txt";
-        FileBuffer buffer = new FileBuffer(path, null);
+        FileBuffer buffer = new FileBuffer(path);
 
         assertTrue(buffer.equals(buffer.clone()));
     }
@@ -44,7 +46,7 @@ public class FileBufferTest {
         String text = "i love termios ; long live btj";
         String path = "testresources/test.txt";
         write(path, text);
-        FileBuffer buffer = new FileBuffer(path, null);
+        FileBuffer buffer = new FileBuffer(path);
 
         assertEquals(new String(buffer.getContent()), new String(text.getBytes()));
 
@@ -56,7 +58,7 @@ public class FileBufferTest {
         buffer.save();
 
         assertFalse(buffer.isDirty());
-        assertTrue(buffer.contentsEqual(result.getBytes()));
+        assertTrue(buffer.contentsEqual(new ArrayList<byte>(Arrays.<byte>asList(result.getBytes()))));
         assertTrue(FileHolder.areContentsEqual(buffer.getFileHolder().getContent(), result.getBytes()));
 
     }
