@@ -114,15 +114,6 @@ public class FileBuffer {
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
-/*    *//**
-     * Called from somewhere that knows the dimensions of a Leaf Layout.
-     *//*
-    public void moveInsertionPoint(int windowHeight, int windowWidth, char code) {
-
-    }*/
-
-    // Test Methods
-
     /**
      * Returns the FileHolder object
      */

@@ -12,7 +12,7 @@ import java.util.Formatter;
  *  andere functie dan buffer
  */
 public class FileHolder {
-    public static final String lineSeparator = Controller.getLineSeparator();
+    public static final String lineSeparator = System.lineSeparator();
     private final String path;
     private File fd;
 
