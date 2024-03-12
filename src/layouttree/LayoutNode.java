@@ -84,7 +84,7 @@ public abstract class LayoutNode extends Layout {
         throw new RuntimeException("Contains no active leaf!");
     }
     public void render() {
-Z    }
+    }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
@@ -129,8 +129,9 @@ Z    }
         return false;
     }
 
-    protected void deleteLeftLeaf() {
+    protected Layout deleteLeftLeaf() {
         children.get(0).deleteLeftLeaf();
+        return getRootLayoutUncloned();
     }
 
     protected void delete(Layout l){
