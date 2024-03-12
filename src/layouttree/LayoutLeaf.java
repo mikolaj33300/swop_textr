@@ -27,8 +27,9 @@ public class LayoutLeaf extends Layout {
         }
     }
     /**
-     Calls the correct moveFocus variant moveFocusRight() or moveFocusLeft(),
-      based on the DIRECTION argument
+     * Moves focus from the currently active Layout, to the neigbouring layout
+     * Which neighbour is decided by the dir argument
+     * If no neighbours left, the active Layout stays active
      */
     public void moveFocus(DIRECTION dir){
         if(dir == DIRECTION.RIGHT){
@@ -39,8 +40,8 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     Moves the focus from the current Layout to the one right of it in the layout-tree
-     I there is only one Layout in the layout-tree, that Layout stays active
+     * Moves focus from the currently active Layout, to the rightneigbouring layout
+     * If no neighbours left, the active Layout stays active
      */
     private void moveFocusRight(){
         if(parent != null){
@@ -49,8 +50,8 @@ public class LayoutLeaf extends Layout {
         }
     }
     /**
-     Moves the focus from the current Layout to the one left f    it in the layout-tree
-     I there is only one Layout in the layout-tree, that Layout stays active
+     * Moves focus from the currently active Layout, to the leftneigbouring layout
+     * If no neighbours left, the active Layout stays active
      */
     private void moveFocusLeft(){
         if(parent != null){
@@ -93,7 +94,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
-        if(getContainsActive() && futureParent.containsActive()){
+        if(getContainsActive() && futureParent.getContainsActive()){
             throw new RuntimeException("Invalid child: more than two active");
         } else {
             return true;

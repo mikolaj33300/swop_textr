@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestHorizontalLayoutNode {
+public class VerticalLayoutNodeTest {
     LayoutLeaf l1;
     LayoutLeaf l2;
     LayoutLeaf l3;
@@ -16,10 +16,10 @@ public class TestHorizontalLayoutNode {
     LayoutLeaf l5;
     LayoutLeaf l6;
     LayoutLeaf l7;
-    HorizontalLayoutNode hn1;
-    HorizontalLayoutNode hn2;
     VerticalLayoutNode vn1;
-    HorizontalLayoutNode hn11;
+    VerticalLayoutNode vn2;
+    HorizontalLayoutNode hn1;
+    VerticalLayoutNode vn11;
 
 
     @BeforeEach
@@ -51,67 +51,47 @@ public class TestHorizontalLayoutNode {
         ArrayList<Layout> children1 = new ArrayList<>();
         children1.add(l1);
         children1.add(l2);
-        hn1 = new HorizontalLayoutNode(children1);
+        vn1 = new VerticalLayoutNode(children1);
 
         ArrayList<Layout> children2 = new ArrayList<>();
         children2.add(l3);
         children2.add(l4);
-        hn2 = new HorizontalLayoutNode(children2);
+        vn2 = new VerticalLayoutNode(children2);
 
         ArrayList<Layout> children3 = new ArrayList<>();
         children3.add(l5);
         children3.add(l6);
-        vn1 = new VerticalLayoutNode(children3);
+        hn1 = new HorizontalLayoutNode(children3);
 
-        HorizontalLayoutNode hn14 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l6,l7)));
-        HorizontalLayoutNode hn13 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l4,l5)));
-        HorizontalLayoutNode hn12 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
-        VerticalLayoutNode vn11 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hn12)));
-        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn13,hn14)));
-        hn11 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(vn11,vn12)));
+        VerticalLayoutNode vn14 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l6,l7)));
+        VerticalLayoutNode vn13 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l4,l5)));
+        VerticalLayoutNode vn12 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
+        HorizontalLayoutNode hn11 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,vn12)));
+        HorizontalLayoutNode hn12 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(vn13,vn14)));
+        vn11 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn11,hn12)));
     }
     @Test
     void testGetOrientation(){
-        assertEquals(hn1.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
-        assertNotEquals(hn1.getOrientation(), LayoutNode.Orientation.VERTICAL);
+        assertEquals(vn1.getOrientation(), LayoutNode.Orientation.VERTICAL);
+        assertNotEquals(vn1.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
     }
     @Test
     void testIsAllowedToBeChildOf(){
-        assertFalse(hn1.isAllowedToBeChildOf(hn2));
-        assertTrue(hn1.isAllowedToBeChildOf(vn1));
+        assertFalse(vn1.isAllowedToBeChildOf(vn2));
+        assertTrue(vn1.isAllowedToBeChildOf(hn1));
     }
 
     @Test
     void testClone(){
-        LayoutNode hn1_clone = hn1.clone();
-        assertEquals(hn1,hn1_clone);
-        assertNotSame(hn1,hn1_clone);
+        LayoutNode hn1_clone = vn1.clone();
+        assertEquals(vn1,hn1_clone);
+        assertNotSame(vn1,hn1_clone);
 
-        LayoutNode hn11_clone = hn11.clone();
-        assertEquals(hn11,hn11_clone);
-        assertNotSame(hn11,hn11_clone);
+        LayoutNode hn11_clone = vn11.clone();
+        assertEquals(vn11,hn11_clone);
+        assertNotSame(vn11,hn11_clone);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
