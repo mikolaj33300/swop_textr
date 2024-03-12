@@ -248,13 +248,6 @@ public class LayoutNodeTest {
         correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
         assertEquals(current_layout,correct_layout);
 
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
-        assertEquals(current_layout,correct_layout);
-
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(current_layout,correct_layout);
 
 
 

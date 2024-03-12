@@ -78,7 +78,12 @@ public abstract class LayoutNode extends Layout {
         if (index < children.size() - 1) {
             return children.get(index + 1).getLeftLeaf(); // Called when we can make child of current node the active one.
         } else {
-            return parent.getRightNeighbor(this); //called when we need to backtrack one level up
+            if(parent != null){
+                return parent.getRightNeighbor(this);
+            } else {
+                return null;
+            }
+             //called when we need to backtrack one level up
         }
     }
 
@@ -175,17 +180,19 @@ public abstract class LayoutNode extends Layout {
     }
 
     //replaces the given child with a new layoutnode with the child and its sibling rotated
-    protected void mergeWithSiblingAndRotate(ROT_DIRECTION rotdir, Layout child) {
-        LayoutNode newChild = getNewMergedRotatedChild(rotdir, child);
+    //Returns the new root layout of the rotated node
+    protected Layout mergeWithSibling(ROT_DIRECTION rotdir, Layout child) {
+        Layout newChild = getNewMergedRotatedChild(rotdir, child);
         this.replaceWithNewLayout(child, newChild);
+        this.deleteRightNeighbor(newChild);
+        return newChild.getRootLayoutUncloned();
     }
 
     //Returns a layoutnode containing a child and a new specified sibling
-    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
+    protected abstract Layout getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
 
     private void replaceWithNewLayout(Layout toReplace, Layout newLayout) {
         int index = children.indexOf(toReplace);
-        newLayout.setParent(this);
         children.set(index, newLayout);
         newLayout.setParent(this);
         this.fixInvarsOfChangedTree();
