@@ -51,18 +51,15 @@ public class HorizontalLayoutNode extends LayoutNode {
     @Override
     protected HorizontalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : super.children){
+        for(Layout l : children){
             deepCopyList.add(l.clone());
         }
         return new HorizontalLayoutNode(deepCopyList);
     }
 
     @Override
-    public void render(int startX, int startY, int width, int height){
-        int xChild = startX;
-        int yChild = startY;
-        int widthChild = width/children.size();
-        int heightChild = height; //rounds down
+    public void render(int xChild, int yChild, int width, int heightChild){
+        int widthChild = width/children.size(); //rounds down
 
         for(Layout child : children){
             child.render(xChild, yChild, widthChild, heightChild);

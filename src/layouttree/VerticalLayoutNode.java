@@ -41,7 +41,7 @@ public class VerticalLayoutNode extends LayoutNode{
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode layoutNode) {
-        return parent.getOrientation() != Orientation.VERTICAL;
+        return layoutNode.getOrientation() != Orientation.VERTICAL;
     }
 
     /**
@@ -51,17 +51,14 @@ public class VerticalLayoutNode extends LayoutNode{
     @Override
     protected VerticalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : super.children){
+        for(Layout l : children){
             deepCopyList.add(l.clone());
         }
         return new VerticalLayoutNode(deepCopyList);
     }
 
     @Override
-    public void render(int startX, int startY, int width, int height){
-        int xChild = startX;
-        int yChild = startY;
-        int widthChild = width;
+    public void render(int xChild, int yChild, int widthChild, int height){
         int heightChild = height/children.size(); //rounds down
 
         for(Layout child : children){
