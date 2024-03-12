@@ -239,26 +239,40 @@ public class LayoutNodeTest {
 
     @Test
     void testRotateRelationshipNeighbor(){
-        LayoutNode current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        VerticalLayoutNode vn3 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
-        assertEquals(current_layout,vn3);
+        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        LayoutNode correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        assertEquals(current_layout,correct_layout);
 
-        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
+        assertEquals(current_layout,correct_layout);
+
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
+        assertEquals(current_layout,correct_layout);
+
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        assertEquals(current_layout,correct_layout);
 
 
 
+
+    }
+
+    @Test
+    void testClone(){
+        LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10))))));
+        LayoutNode complex_clone = complex_tree.clone();
+        assertEquals(complex_clone, complex_tree);
+        assertNotSame(complex_clone, complex_tree);
 
 
     }
 
     @Test
     void testEquals(){
-    }
-
-    @Test
-    void testtest(){
-
     }
 }
 
