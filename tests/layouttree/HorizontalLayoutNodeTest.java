@@ -32,13 +32,13 @@ public class HorizontalLayoutNodeTest {
         String path6 = "testresources/test6.txt";
         String path7 = "testresources/test7.txt";
 
-        FileBuffer fb1 = new FileBuffer(path1, null);
-        FileBuffer fb2 = new FileBuffer(path2, null);
-        FileBuffer fb3 = new FileBuffer(path3, null);
-        FileBuffer fb4 = new FileBuffer(path4, null);
-        FileBuffer fb5 = new FileBuffer(path5, null);
-        FileBuffer fb6 = new FileBuffer(path6, null);
-        FileBuffer fb7 = new FileBuffer(path7, null);
+        FileBuffer fb1 = new FileBuffer(path1);
+        FileBuffer fb2 = new FileBuffer(path2);
+        FileBuffer fb3 = new FileBuffer(path3);
+        FileBuffer fb4 = new FileBuffer(path4);
+        FileBuffer fb5 = new FileBuffer(path5);
+        FileBuffer fb6 = new FileBuffer(path6);
+        FileBuffer fb7 = new FileBuffer(path7);
 
         l1 = new LayoutLeaf(fb1,false);
         l2 = new LayoutLeaf(fb2, false);

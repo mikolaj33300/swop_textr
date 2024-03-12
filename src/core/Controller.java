@@ -6,18 +6,18 @@ import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
-import org.junit.platform.commons.util.StringUtils;
 
+import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
 
 public class Controller {
+
+    private static byte[] lineSeparatorArg;
 
     /**
      * Root layout
@@ -35,7 +35,7 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        this.rootLayout = getRootLayout(args, getLineSeparator(args));
+        this.rootLayout = initRootLayout(args, lineSeparatorArg);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Controller {
         ) { // Then no path is specified, and we cannot open
             throw new RuntimeException("TextR needs at least one specified file");
         }
-
+        setLineSeparatorFromArgs(args);
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -62,14 +62,14 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout getRootLayout(String[] args, String lineSeparator) {
+    private Layout initRootLayout(String[] args, byte[] lineSeparator) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
                 //TODO throw error for unknown path
             } else
-                leaves.add(new LayoutLeaf(new FileBuffer(args[i], lineSeparator), i == 0));
+                leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
         if(leaves.size() == 1) return leaves.get(0);
         else return new HorizontalLayoutNode(leaves);
@@ -136,8 +136,7 @@ public class Controller {
      * Renders the layout with the terminal current height & width
      */
     void render() {
-        // TODO root layout has to render its children on itself.
-        //this.rootLayout.render(this.width, this.height);
+        this.rootLayout.render(0, 0, this.width, this.height);
     }
 
     /**
@@ -179,7 +178,7 @@ public class Controller {
     /**
      * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
-    Layout getRootLayout() {
+    Layout initRootLayout() {
         return rootLayout;
     }
 
@@ -225,12 +224,15 @@ public class Controller {
 
     }
 
-    String getLineSeparator(String[] args) {
+    protected static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
-            return "0a";
+            Controller.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
-            return "0d0a";
-        else return null;
+            Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
+        else Controller.lineSeparatorArg = null;
     }
 
+    public static byte[] getLineSeparatorArg(){
+        return Controller.lineSeparatorArg;
+    }
 }

@@ -135,9 +135,7 @@ Z    }
 
     protected void delete(Layout l){
         children.remove(l);
-        if(children.size() == 1){
-            parent.absorbChildrenAndReplace(this);
-        }
+        this.fixInvarsOfChangedTree();
     }
 
     protected void makeLeftmostLeafActive() {

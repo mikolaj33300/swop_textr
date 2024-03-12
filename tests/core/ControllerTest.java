@@ -1,16 +1,12 @@
 package core;
 
-import core.Controller;
 import files.FileBuffer;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,29 +22,30 @@ public class ControllerTest {
         String[] args = new String[]{"--lf", path1, path2};
 
         // Testing opening with --lf + paths
-        Controller controller = new Controller(args);
-        assertEquals(controller.getLineSeparator(args), "0a");
+        Controller.setLineSeparatorFromArgs(args);
+        assertArrayEquals(Controller.getLineSeparatorArg(), new byte[]{0x0a});
 
         // Testing opening with --crlf + paths
         args = new String[] {"--crlf", path1, path2};
-        controller = new Controller(args);
-        assertEquals(controller.getLineSeparator(args), "0d0a");
+        Controller.setLineSeparatorFromArgs(args);
+        assertArrayEquals(Controller.getLineSeparatorArg(), new byte[]{0x0d, 0x0a});
 
         // Testing only paths
         args = new String[]{path1, path2};
-        controller = new Controller(args);
-        assertNull(controller.getLineSeparator(args));
+        Controller.setLineSeparatorFromArgs(args);
+        assertNull(Controller.getLineSeparatorArg());
 
         // Na constructor zou volgende root layout moeten bestaan:
-        FileBuffer buffer1 = new FileBuffer(path1, null);
-        FileBuffer buffer2 = new FileBuffer(path2, null);
+        Controller controller = new Controller(args);
+        FileBuffer buffer1 = new FileBuffer(path1);
+        FileBuffer buffer2 = new FileBuffer(path2);
         ArrayList<Layout> leaves = new ArrayList<>();
         leaves.add(new LayoutLeaf(buffer1, true));
         leaves.add(new LayoutLeaf(buffer2, false));
 
         HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
-        assertTrue(controller.getRootLayout().equals(node));
+        assertTrue(controller.initRootLayout().equals(node));
     }
 
 }

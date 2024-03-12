@@ -31,7 +31,7 @@ public abstract class Layout implements Cloneable {
     public abstract void writeActiveFile();
     public abstract void deleteActiveFile();*/
 
-    protected abstract void deleteLeftLeaf();
+    protected abstract Layout deleteLeftLeaf();
     protected void setParent(LayoutNode layoutNode){
         this.parent = layoutNode;
     }

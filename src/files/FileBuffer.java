@@ -3,10 +3,9 @@ package files;
 import io.github.btj.termios.Terminal;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
+
+import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
@@ -24,22 +23,42 @@ public class FileBuffer {
      * Holds the 'in memory' byte data of the file.
      * The amount of bytes equals the amount of characters in ASCII
      */
-    private byte[] byteContent;
+    private ArrayList<Byte> byteContent;
+
+    private ArrayList<ArrayList<Byte>> linesArrayList;
 
     /**
      * Keeps track of the insertion point
      */
     private Statusbar status;
 
+    private int insertionPointCol;
+    private int insertionPointLine;
+
+    private int insertionPointByteIndex;
+
     /**
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path, String lineSeparator) {
-        this.file = new FileHolder(path, lineSeparator);
-        this.byteContent = this.file.getContent();
+    public FileBuffer(String path) {
+        this.file = new FileHolder(path);
+        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
+        this.insertionPointCol = 0;
+        this.insertionPointLine = 0;
+        this.insertionPointByteIndex = 0;
         this.status = new Statusbar(this);
     }
+
+    public ArrayList<ArrayList<Byte>> getLines(){
+        int i = 0;
+        ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
+        for(ArrayList<Byte> line : linesArrayList){
+            linesCloneArrayList.add((ArrayList<Byte>) line.clone());
+        }
+        return linesCloneArrayList;
+    };
 
     // Implementation
     public void enterInsertionPoint() {
@@ -49,19 +68,7 @@ public class FileBuffer {
 
     // deletes the line the cursor is on
     public void deleteLine(){
-      int k = status.getInsertionPoint();
-      int i = k;
-      while (i < byteContent.length && (byteContent[i++] != 10));// find next \n
-      while (k!=0 && byteContent[k--] != 10);// find previous \n
-
-      byte[] newContent = new byte[byteContent.length - i + k];
-
-      for (int j = 0; j < k; j++)
-	      newContent[j] = byteContent[j];
-      for (int j = k; j < newContent.length; j++)
-        newContent[j] = byteContent[j + i - k];
-
-      byteContent = newContent;
+      linesArrayList.remove(insertionPointLine);
     }
 
     // Prints the content of the file relative to the coordinates
@@ -70,61 +77,16 @@ public class FileBuffer {
      * Renders this buffers content between the width & height relative to start coordinates.
      */
     public void render(int startX, int startY, int width, int height) {
-        // Get string from bytes & information about line separations
-        String s = new String(byteContent);
-        List<Integer> newLines = FileAnalyser.analyseContents(this.cloneBytes());
-
-        // Absolute values
-        int xAdd = 0;
-        int yAdd = 0;
-
-        // Line separation length for bytes: 0d0a = 2 bytes, 0a = 1 byte.
-        // When encountering a line separator, we skip 1 or 0 bytes, because termios will throw an error upon trying to print a line separator
-        int lineAdd = this.file.getLineSeparator().length() / 2;
-
-        for(int i = 0; i < byteContent.length; i++) {
-
-            // We will always print one character per loop
-            String character = s.substring(i, i+1);
-
-            // We check if at index i for a line separator.
-            if(newLines.contains(i)) {
-
-                xAdd = 0;
-                yAdd += 1;
-                i += lineAdd; // Possibly skip 1 more byte incase of 0d0a
-
-                // When max width is reached, we find the next MANUAL line separator and starting printing from there.
-            } else if(xAdd >= width) {
-
-                // We search the newLines Map for the next line separator
-                for(int separatorIndex : newLines)
-                    if(separatorIndex >= i)
-                        i = separatorIndex+1; // +1 because: our current separation starts at separatorIndex. We need next one
-
-                yAdd++;
-                // Update character to print first i already.
-                character = s.substring(i, i+1);
-                xAdd = 0;
-                Terminal.printText(startY + yAdd, startX, character);
-                xAdd++;
-
-                // No line separator found, we print text normally
-            } else {
-
-                Terminal.printText(startY + yAdd, startX + xAdd, character);
-                xAdd++;
-
-            }
-
+        int currentTerminalRow = startY;
+        //height-1 to make space for status bar
+        for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
+            String lineString = new String(byteArrListToPrimArray(linesArrayList.get(i)));
+            int renderLineStartIndex = insertionPointCol/(width-1);
+            int renderLineEndIndex = renderLineStartIndex;
+            //endindex -1 to make space for vertical bar
+            Terminal.printText(startY, startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex-1, lineString.length())));
+            currentTerminalRow++;
         }
-
-        // print Statusline add end
-        Terminal.printText(startX, startY + height, this.status.renderStatus());
-        for (int i = 0; i < height; i++){
-          Terminal.printText(startX+width, startY+i, this.status.getScrollbar(height, i));
-        }
-
     }
 
     /**
@@ -140,34 +102,17 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(this.byteContent);
+        this.file.save(byteArrListToPrimArray(this.byteContent));
         this.dirty = false;
     }
 
     /**
      * Inserts the byte values.
      */
-    private void insert(byte[] data) {
-        int insertionPoint = status.getInsertionPoint();
-        byte[] newContent = new byte[byteContent.length + data.length];
-        for(int i = 0; i < byteContent.length + data.length; i++) {
-            if(i < insertionPoint)
-                newContent[i] = byteContent[i];
-            else if(i >= insertionPoint && i < insertionPoint + data.length)
-                newContent[i] = data[i-insertionPoint];
-            else newContent[i] = byteContent[i - data.length];
-        }
-        byteContent = newContent;
+    private void insert(byte... data) {
+        byteContent.addAll(insertionPointByteIndex, Arrays.<Byte>asList(wrapEachByteElem(data)));
+        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
-
-    /**
-     * Called from somewhere that knows the dimensions of a Leaf Layout.
-     */
-    public void moveInsertionPoint(int windowHeight, int windowWidth, char code) {
-
-    }
-
-    // Test Methods
 
     /**
      * Returns the FileHolder object
@@ -179,8 +124,8 @@ public class FileBuffer {
     /**
      * Returns copy of this buffers' content.
      */
-    byte[] getContent() {
-        return byteContent.clone();
+    byte[] getBytes() {
+        return byteArrListToPrimArray(byteContent);
     }
 
     /**
@@ -193,20 +138,18 @@ public class FileBuffer {
     /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
      */
-    boolean contentsEqual(byte[] compare) {
-        if(compare.length != byteContent.length) return false;
-        for(int i = 0; i < compare.length; i++)
-            if(compare[i] != byteContent[i]) return false;
+    boolean contentsEqual(ArrayList<Byte> compare) {
+        if(compare.size() != byteContent.size()) return false;
+        for(int i = 0; i < compare.size(); i++)
+            if(compare.get(i) != byteContent.get(i).byteValue()) return false;
         return true;
     }
 
     /**
      * Clones the byte array
      */
-    byte[] cloneBytes() {
-        byte[] copy = new byte[this.byteContent.length];
-        for(int i = 0; i < byteContent.length; i++)
-            copy[i] = byteContent[i];
+    private ArrayList<Byte> cloneByteArrList() {
+        ArrayList<Byte> copy = new ArrayList<>(byteContent);
         return copy;
     }
 
@@ -216,9 +159,9 @@ public class FileBuffer {
      * Clones this object
      */
     public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath(), this.file.getLineSeparator());
+        FileBuffer copy = new FileBuffer(this.file.getPath());
         copy.dirty = this.dirty;
-        copy.byteContent = this.cloneBytes();
+        copy.byteContent = this.cloneByteArrList();
         return copy;
     }
 
@@ -230,4 +173,94 @@ public class FileBuffer {
         return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
+    public int getInsertionPoint() {
+        return insertionPointByteIndex;
+    }
+
+    void moveCursor(char direction) {
+        switch(direction) {
+            // Right
+            case 'C':
+                moveCursorRight();
+            // Left
+            case 'D':
+                moveCursorLeft();
+            // Up
+            case 'A':
+                moveCursorUp();
+                // Down
+            case 'B':
+                moveCursorDown();
+        }
+    }
+
+    private byte[] byteArrListToPrimArray(ArrayList<Byte> arrList){
+        byte[] resultArray = new byte[arrList.size()];
+        for(int i = 0; i < arrList.size() ; i++){
+            resultArray[i] = arrList.get(i).byteValue();
+        }
+        return resultArray;
+    }
+
+
+    //Add the amount of bytes from lines above,
+    //and bytes before this col, assuming line and col start at 0
+    private int convertLineAndColToIndex(int line, int col){
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length/2;
+        int byteArrIndex = 0;
+        for(int i = 0; i<line; i++){
+            byteArrIndex = byteArrIndex+linesArrayList.get(i).size()+byteLengthSeparatorLen;
+        }
+        byteArrIndex = byteArrIndex + col;
+        return byteArrIndex;
+    }
+
+    private void moveCursorDown() {
+        if(insertionPointLine<linesArrayList.size()-1){
+            insertionPointLine++;
+            insertionPointCol=Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
+            insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        }
+        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+    }
+
+    private void moveCursorUp() {
+        if(insertionPointLine>0){
+            insertionPointLine--;
+            //shift left if the current line is longer than the previous
+            insertionPointCol=Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
+            insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        }
+        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+    }
+
+    private void moveCursorLeft(){
+        if(insertionPointCol>0){
+            insertionPointCol--;
+            insertionPointByteIndex--;
+        } else {
+            if(insertionPointLine!=0){
+                //move one line up, to last character
+                insertionPointLine--;
+                insertionPointCol=linesArrayList.get(insertionPointLine).size()-1;
+            }
+            //otherwise do nothing, stay at first byte
+        }
+        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+    }
+
+    private void moveCursorRight(){
+        if(insertionPointCol<linesArrayList.get(insertionPointLine).size()-1){
+            insertionPointCol++;
+            insertionPointByteIndex++;
+        } else {
+            //Move cursor one line down
+            if(insertionPointLine<linesArrayList.size()-1){
+                insertionPointLine++;
+                insertionPointCol=0;
+            }
+            //otherwise do nothing
+        }
+        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+    }
 }

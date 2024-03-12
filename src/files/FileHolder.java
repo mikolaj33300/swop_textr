@@ -1,9 +1,10 @@
 package files;
 
+import core.Controller;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Formatter;
 
 /*
@@ -11,16 +12,15 @@ import java.util.Formatter;
  *  andere functie dan buffer
  */
 public class FileHolder {
-    private final String lineSeparator;
+    public static final byte[] lineSeparator = Controller.getLineSeparatorArg() == null ? System.lineSeparator().getBytes() : Controller.getLineSeparatorArg();
     private final String path;
     private File fd;
 
     /**
      * Creates File object with given path
      */
-    public FileHolder(String path, String lineSeparator) {
+    public FileHolder(String path) {
         this.fd = new File(path);
-        this.lineSeparator = lineSeparator;
         this.path = path;
     }
 
@@ -28,8 +28,8 @@ public class FileHolder {
         return new String(this.path);
     }
 
-    String getLineSeparator() {
-        return this.lineSeparator == null ? FileAnalyser.formatBytes(System.lineSeparator().getBytes()) : this.lineSeparator;
+    byte[] getLineSeparator() {
+        return this.lineSeparator == null ? System.lineSeparator().getBytes() : this.lineSeparator;
     }
 
     /**
@@ -67,7 +67,7 @@ public class FileHolder {
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : lineSeparator;
+            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : FileAnalyserUtil.formatBytes(lineSeparator);
 
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);
@@ -94,7 +94,7 @@ public class FileHolder {
     }
 
     public FileHolder clone() {
-        return new FileHolder(new String(this.path), lineSeparator == null ? null : new String(this.lineSeparator));
+        return new FileHolder(new String(this.path));
     }
 
     /**

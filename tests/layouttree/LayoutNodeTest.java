@@ -14,7 +14,6 @@ public class LayoutNodeTest {
     LayoutLeaf l2;
     LayoutLeaf l2a;
     LayoutLeaf l3;
-    LayoutLeaf l3a;
     LayoutLeaf l4;
     LayoutLeaf l4a;
     LayoutLeaf l5;
@@ -60,6 +59,7 @@ public class LayoutNodeTest {
         FileBuffer fb9 = new FileBuffer(path9, null);
         FileBuffer fb10 = new FileBuffer(path10, null);
         l1 = new LayoutLeaf(fb1, true);
+        l1a = new LayoutLeaf(fb1, true);
         l1p = new LayoutLeaf(fb1, false);
         l2 = new LayoutLeaf(fb2, false);
         l2a = new LayoutLeaf(fb2, true);

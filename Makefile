@@ -1,6 +1,6 @@
 include config.mk
 
-all: options uml $(DIAGS) $(termios) build
+all: options uml $(DIAGS) jar $(JAR) $(termios) build
 
 options:
 	@echo OFORMAT: $(OFORMAT)
@@ -11,18 +11,28 @@ docs: uml $(DIAGS)
 
 build: textr.jar
 
+jar: $(JAR)
+	mkdir -p $(BUILD_DIR)
+	$(foreach jar, $(JAR), jar xvf $(jar);)
+	cp -vr ./io ./build/io
+	cp -vr ./org ./build/org
+
 textr.jar:
-	jar -xf ./termios/_build/main/io.github.btj.termios.jar
-	javac $(SRC)
-	jar cvf textr.jar $(OBJ) ./libio_github_btj_termios.so
+	javac -d $(BUILD_DIR) $(SRC)
+	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
+test:
+	javac $(TEST)
 
 clean:
 	rm -r \
 		$(DIAGS) \
 		termios/_build/ \
+		org/ \
 		$(OBJ) \
-		io \
-		libio_github_btj_termios
+		io/ \
+		libio_github_btj_termios.so \
+		build/ \
+		*.jar
 
 $(termios):
 	$(MAKE) -C termios -B jar
