@@ -48,9 +48,8 @@ class LayoutLeafTest {
         assertEquals(ln.getDirectChildren().size(),3);
         ln.deleteLeftLeaf();
         assertEquals(ln.getDirectChildren().size(),2);
-        ln.deleteLeftLeaf();
+        Layout lastRemainingLayout = ln.deleteLeftLeaf();
         assertEquals(ln.getDirectChildren().size(),1);
-        ln.deleteLeftLeaf();
     }
     //Dit zijn eigenlijk testen op ln -> testen op een object is niet mogelijk zonder representation exposure
     @Test

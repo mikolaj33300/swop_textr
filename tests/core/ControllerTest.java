@@ -22,20 +22,21 @@ public class ControllerTest {
         String[] args = new String[]{"--lf", path1, path2};
 
         // Testing opening with --lf + paths
-        Controller controller = new Controller(args);
-        assertEquals(Controller.getLineSeparator(), "0a");
+        Controller.setLineSeparatorFromArgs(args);
+        assertArrayEquals(Controller.getLineSeparatorArg(), new byte[]{0x0a});
 
         // Testing opening with --crlf + paths
         args = new String[] {"--crlf", path1, path2};
-        controller = new Controller(args);
-        assertEquals(Controller.getLineSeparator(), "0d0a");
+        Controller.setLineSeparatorFromArgs(args);
+        assertArrayEquals(Controller.getLineSeparatorArg(), new byte[]{0x0d, 0x0a});
 
         // Testing only paths
         args = new String[]{path1, path2};
-        controller = new Controller(args);
-        assertNull(Controller.getLineSeparator());
+        Controller.setLineSeparatorFromArgs(args);
+        assertNull(Controller.getLineSeparatorArg());
 
         // Na constructor zou volgende root layout moeten bestaan:
+        Controller controller = new Controller(args);
         FileBuffer buffer1 = new FileBuffer(path1);
         FileBuffer buffer2 = new FileBuffer(path2);
         ArrayList<Layout> leaves = new ArrayList<>();

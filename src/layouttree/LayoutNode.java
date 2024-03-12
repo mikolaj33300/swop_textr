@@ -109,15 +109,13 @@ public abstract class LayoutNode extends Layout {
         return containsActive;
     }
 
-    protected void deleteLeftLeaf() {
-        children.get(0).deleteLeftLeaf();
+    protected Layout deleteLeftLeaf() {
+        return children.get(0).deleteLeftLeaf();
     }
 
     protected void delete(Layout l){
         children.remove(l);
-        if(children.size() == 1){
-            parent.absorbChildrenAndReplace(this);
-        }
+        this.fixInvarsOfChangedTree();
     }
 
     protected void makeLeftmostLeafActive() {

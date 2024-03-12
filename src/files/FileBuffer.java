@@ -206,7 +206,7 @@ public class FileBuffer {
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
     private int convertLineAndColToIndex(int line, int col){
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length()/2;
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length/2;
         int byteArrIndex = 0;
         for(int i = 0; i<line; i++){
             byteArrIndex = byteArrIndex+linesArrayList.get(i).size()+byteLengthSeparatorLen;

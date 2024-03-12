@@ -12,7 +12,7 @@ import java.util.Formatter;
  *  andere functie dan buffer
  */
 public class FileHolder {
-    public static final String lineSeparator = System.lineSeparator();
+    public static final byte[] lineSeparator = Controller.getLineSeparatorArg() == null ? System.lineSeparator().getBytes() : Controller.getLineSeparatorArg();
     private final String path;
     private File fd;
 
@@ -28,8 +28,8 @@ public class FileHolder {
         return new String(this.path);
     }
 
-    String getLineSeparator() {
-        return this.lineSeparator == null ? FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes()) : this.lineSeparator;
+    byte[] getLineSeparator() {
+        return this.lineSeparator == null ? System.lineSeparator().getBytes() : this.lineSeparator;
     }
 
     /**
@@ -67,7 +67,7 @@ public class FileHolder {
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : lineSeparator;
+            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : FileAnalyserUtil.formatBytes(lineSeparator);
 
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);

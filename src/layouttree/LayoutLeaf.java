@@ -21,10 +21,11 @@ public class LayoutLeaf extends Layout {
      * Deletes the mostleft this leaf's parent
      * Since the parent function found this leaf as leftmost, it will be removed
      */
-    protected void deleteLeftLeaf() {
+    protected Layout deleteLeftLeaf() {
         if(super.parent != null) {
             super.parent.delete(this);
         }
+        return getRootLayoutUncloned();
     }
     /**
      Calls the correct moveFocus variant moveFocusRight() or moveFocusLeft(),

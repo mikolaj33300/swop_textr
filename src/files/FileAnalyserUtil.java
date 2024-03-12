@@ -1,5 +1,6 @@
 package files;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -13,21 +14,24 @@ public class FileAnalyserUtil {
      * Used for rendering.
      */
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
-        String fileContentFormatted = formatBytes(byteContents);
-        String usedLineSeparatorFormatted = formatBytes(System.lineSeparator().getBytes());
+        int lineSepLength = System.lineSeparator().getBytes().length;
         int startOfCurrentLine = 0;
         ArrayList<ArrayList<Byte>> linesArrList = new ArrayList<>();
 
         // Loop over bytes in String form.
-        for(int i = 0; i <= fileContentFormatted.length()-1;) {
-            //if separator encountered or end of file reached
-            if(fileContentFormatted.substring(i, Math.min(i+usedLineSeparatorFormatted.length()-1, fileContentFormatted.length())).equals(FileHolder.lineSeparator) || i == fileContentFormatted.length()-2){
-                linesArrList.add(formatToByteArrayList(fileContentFormatted.substring(startOfCurrentLine, i+2)));
-                i = i+usedLineSeparatorFormatted.length();
+        int i = 0;
+        while (i < byteContents.length) {
+            //if separator encountered
+            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength),(FileHolder.lineSeparator))){
+                linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i+1)));
+                i = i+lineSepLength;
                 startOfCurrentLine = i;
             } else {
-                i = i+2;
+                i = i+1;
             }
+        }
+        if(startOfCurrentLine<byteContents.length){
+            linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
         }
         return linesArrList;
     }
@@ -50,15 +54,15 @@ public class FileAnalyserUtil {
         return wrapperArray;
     }
 
-    private static byte[] formatStringAsHexBytes(String s){
+/*    private static byte[] formatStringAsHexBytes(String s){
         byte[] byteArr = new byte[s.length()/2];
         for(int i=0; i<s.length(); i= i+2){
             byteArr[i/2] = Byte.parseByte(s.substring(i, i+2), 16);
         }
         return byteArr;
-    }
-    private static ArrayList<Byte> formatToByteArrayList(String s){
-        return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(formatStringAsHexBytes(s))));
+    }*/
+    private static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
+        return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
     }
 
 

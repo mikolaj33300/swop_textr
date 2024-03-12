@@ -1,13 +1,13 @@
 package core;
 
 import files.FileBuffer;
-import files.FileHolder;
 import io.github.btj.termios.Terminal;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.LayoutNode;
 
+import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class Controller {
 
-    private static String lineSeparator;
+    private static byte[] lineSeparatorArg;
 
     /**
      * Root layout
@@ -35,8 +35,7 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        lineSeparator = setLineSeparator(args);
-        this.rootLayout = initRootLayout(args, lineSeparator);
+        this.rootLayout = initRootLayout(args, lineSeparatorArg);
     }
 
     /**
@@ -54,7 +53,7 @@ public class Controller {
         ) { // Then no path is specified, and we cannot open
             throw new RuntimeException("TextR needs at least one specified file");
         }
-
+        setLineSeparatorFromArgs(args);
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -63,7 +62,7 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout initRootLayout(String[] args, String lineSeparator) {
+    private Layout initRootLayout(String[] args, byte[] lineSeparator) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
@@ -225,15 +224,15 @@ public class Controller {
 
     }
 
-    public static String setLineSeparator(String[] args) {
+    protected static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
-            return "0a";
+            Controller.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
-            return "0d0a";
-        else return null;
+            Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
+        else Controller.lineSeparatorArg = null;
     }
 
-    public static String getLineSeparator(){
-        return Controller.lineSeparator;
+    public static byte[] getLineSeparatorArg(){
+        return Controller.lineSeparatorArg;
     }
 }
