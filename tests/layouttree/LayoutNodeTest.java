@@ -108,7 +108,7 @@ public class LayoutNodeTest {
             assertEquals(get_children2.get(i), children2.get(i));
             assertNotSame(get_children2.get(i), children2.get(i));
         }
-        LayoutNode hn3 = new HorizontalLayoutNode(new ArrayList<Layout>(Arrays.asList(vn1,l9,l10)));
+        LayoutNode hn3 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(vn1,l9,l10)));
         ArrayList<Layout> get_children3 = hn3.getDirectChildren();
         assertNotSame(get_children3,children3);
         for(int i = 0;i < get_children3.size();i++){

@@ -84,8 +84,7 @@ public abstract class LayoutNode extends Layout {
         throw new RuntimeException("Contains no active leaf!");
     }
     public void render() {
-        return;
-    }
+Z    }
 
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
