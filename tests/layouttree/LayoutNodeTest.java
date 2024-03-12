@@ -239,6 +239,15 @@ public class LayoutNodeTest {
 
     @Test
     void testRotateRelationshipNeighbor(){
+        LayoutNode current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+
+        VerticalLayoutNode vn3 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
+        current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+
+
+
+
 
     }
 
