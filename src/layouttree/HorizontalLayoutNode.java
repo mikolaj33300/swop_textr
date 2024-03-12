@@ -24,7 +24,7 @@ public class HorizontalLayoutNode extends LayoutNode {
      * Rotates the HorizontalLayoutNode's child and its neighbour on the right
      */
     @Override
-    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child) {
+    protected Layout getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child) {
         LayoutLeaf newSibling = this.getRightNeighbor(child);
         ArrayList<Layout> newChildren;
         if(rotdir == ROT_DIRECTION.CLOCKWISE){
