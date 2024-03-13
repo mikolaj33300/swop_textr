@@ -113,7 +113,7 @@ public class FileBuffer {
 
         int cursorXoffset = insertionPointLine % height;
         int cursorYoffset = insertionPointCol % width;
-        Terminal.moveCursor(startY+cursorYoffset, startX+cursorXoffset);
+        Terminal.moveCursor(startY+cursorYoffset, startX+cursorXoffset, "");
 
 
     }

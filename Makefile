@@ -38,5 +38,10 @@ clean:
 $(termios):
 	$(MAKE) -C termios -B jar
 
-dist.zip:
-	zip -b /tmp/ ./dist.zip $(TOPACK)
+dist: all group07.zip
+group07.zip:
+	 mkdir /tmp/group07
+	 $(foreach DFILE, $(TOPACK), echo $(DFILE) | cpio -p -d -v  /tmp/group07/;)
+	 cd /tmp; zip -r -b /tmp/ ./group07.zip ./group07/
+	 mv /tmp/group07.zip ./
+
