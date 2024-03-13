@@ -1,0 +1,29 @@
+digraph {
+  subgraph cluster1 
+  {// user
+    rank=same;
+    start[label=<<table BORDER="0" CELLBORDER="0"><tr><td PORT="a"></td></tr>
+    </table>> ];
+    user -> start[style=dotted, dir=none]
+    start -> end[style=dotted, dir=none]
+  }
+  subgraph cluster2 {// controller
+    rank=same;
+    start2[label=<<table><tr><td PORT="a"></td></tr>
+    </table>>, style=rectangle ];
+    controller -> start2[style=dotted, dir=none, weight=1000]
+  }
+  subgraph cluster3 {// screen
+    rank=same;
+  }
+  subgraph cluster4 {// layout
+    rank=same;
+  }
+  subgraph cluster5 {// filebuffer
+    rank=same;
+  }
+  subgraph cluster6 {// file
+    rank=same;
+  }
+  start:a -> start2:a[weight=100]
+}

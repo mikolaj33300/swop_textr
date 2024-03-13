@@ -4,10 +4,11 @@ all: options uml $(DIAGS) jar $(JAR) $(termios) build
 
 options:
 	@echo OFORMAT: $(OFORMAT)
+	@echo $(DOT)
 
-uml/%.$(OFORMAT): uml/%.dot
+diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
-docs: uml $(DIAGS)
+docs: diagrams $(DIAGS)
 
 build: textr.jar
 
