@@ -53,6 +53,7 @@ public class Controller {
             throw new RuntimeException("TextR needs at least one specified file");
         }
         setLineSeparatorFromArgs(args);
+
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -65,12 +66,11 @@ public class Controller {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
-            if (!Files.exists(checkPath)) {
-                System.out.println("Kutzppoi");
-            } else
+            if (!Files.exists(checkPath))
+                System.out.println("Kutzooi");
+            else
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
-
 
         if(leaves.size() == 1)
             return leaves.get(0);
@@ -90,8 +90,11 @@ public class Controller {
 
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
+        render();
+
         // Main loop
         for ( ; ; ) {
+
             int c = Terminal.readByte();
 
             switch(c) {
@@ -124,7 +127,7 @@ public class Controller {
 
             }
 
-            rootLayout.render(0, 0, width, height);
+            render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -159,6 +162,7 @@ public class Controller {
     void enterText(char str) {
         // Silently ignore non-ASCII characters.
         if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
+
         }
     }
 
