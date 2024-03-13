@@ -72,6 +72,7 @@ public class Controller {
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
 
+
         if(leaves.size() == 1)
             return leaves.get(0);
         else
@@ -90,14 +91,11 @@ public class Controller {
 
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
-        render();
-
         // Main loop
         for ( ; ; ) {
+            int b = Terminal.readByte();
 
-            int c = Terminal.readByte();
-
-            switch(c) {
+            switch(b) {
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -121,8 +119,7 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    enterText((char) c);
-                    //render();
+                    enterText((Integer.valueOf(b)).byteValue());
                     break;
 
             }
@@ -153,21 +150,18 @@ public class Controller {
      * Moves insertion point in a file buffer
      */
     void moveCursor(char code) {
-        
+        rootLayout.moveCursor(code);
     }
 
     /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
-    void enterText(char str) {
-        // Silently ignore non-ASCII characters.
-        if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
-
-        }
+    void enterText(byte b) {
+        rootLayout.enterText(b);
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(char)}
+     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
     }

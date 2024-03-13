@@ -113,15 +113,13 @@ public class FileBuffer {
         int cursorXoffset = insertionPointLine % height;
         int cursorYoffset = insertionPointCol % width;
         Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
-
-
     }
 
     /**
      * Updates the content of the FileBuffer
      */
-    public void write(String updatedContents) {
-        insert(updatedContents.getBytes());
+    public void write(byte updatedContents) {
+        insert(updatedContents);
         dirty = true;
     }
 
