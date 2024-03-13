@@ -24,10 +24,9 @@ public class VerticalLayoutNode extends LayoutNode{
      * Rotates the VerticalLayoutNode's child and its neighbour on the right
      */
     @Override
-    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child) {
-        LayoutLeaf newSibling = this.getRightNeighbor(child);
+    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
         if(newSibling == null){
-            return null;
+            throw new NullPointerException();
         }
         ArrayList<Layout> newChildren;
         if(rotdir == ROT_DIRECTION.CLOCKWISE){
