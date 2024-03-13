@@ -178,7 +178,7 @@ public abstract class LayoutNode extends Layout {
                 children.add(children.indexOf(child)+1, newSibling);
                 newSibling.setParent(this);
             }
-
+            this.fixChangedTreeFromNewNode();
         } else {
             newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
             this.replaceAndSetParent(child, newChild);
@@ -220,6 +220,7 @@ public abstract class LayoutNode extends Layout {
             }
             if(parent.children.size()==1){
                 if(parent.parent != null) {
+                    //As of 13/03 there is no coverage on this part. This is because due to the way delete is called, it takes care of this already. However, if the assignment and order of operations were to change, this would no longer be the case.
                     this.parent.parent.children.set(this.parent.parent.children.indexOf(parent), this);
                     this.parent = parent.parent;
                     this.fixChangedTreeFromNewNode();
