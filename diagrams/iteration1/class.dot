@@ -1,6 +1,7 @@
 digraph {
   node[shape=none]
 
+  /*
   Layout[label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutNode</td></tr>
     <tr><td>-DIRECTION: enum<br/>
@@ -63,4 +64,5 @@ digraph {
       +getLineSeparatorArg()</td></tr>
     </table>>]
   controller -> Layout
+  */
 }
