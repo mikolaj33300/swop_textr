@@ -46,9 +46,9 @@ public class Statusbar {
         else
             statusLine += "Clean";
         statusLine += " ";
-        if(buffer.getLayout().getContainsActive())
-            statusLine += "Active";
-        else
+        //if(buffer.getLayout().getContainsActive())
+        //    statusLine += "Active";
+        //else
             statusLine += "Not Active";
         return statusLine;
     }
