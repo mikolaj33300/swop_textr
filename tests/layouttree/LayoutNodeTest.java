@@ -49,7 +49,7 @@ public class LayoutNodeTest {
         String path8= "testresources/test8.txt";
         String path9 = "testresources/test9.txt";
         String path10 = "testresources/test10.txt";
-        FileBuffer fb1 = new FileBuffer(path1);
+        FileBuffer fb1 = new FileBuffer("testresources/test.txt");
         FileBuffer fb2 = new FileBuffer(path2);
         FileBuffer fb3 = new FileBuffer(path3);
         FileBuffer fb4 = new FileBuffer(path4);
@@ -238,7 +238,16 @@ public class LayoutNodeTest {
     void testInsertDirectChild(){}
 
     @Test
-    void testRotateRelationshipNeighbor() {
+    void testRotateRelationshipNeighbourRoot(){
+        Layout l10 = new LayoutLeaf(new FileBuffer("testresources/test.txt"), true);
+        Layout l10_clone = l10.clone();
+        l10 = l10.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        assertEquals(l10,l10_clone);
+        l10 = l10.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        assertEquals(l10,l10_clone);
+    }
+    @Test
+    void testRotateRelationshipNeighborLeafs() {
         Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
 
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
@@ -249,35 +258,26 @@ public class LayoutNodeTest {
         correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
         assertEquals(current_layout, correct_layout);
 
+        //Can't rotate any further, active leaf is mostright
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout);
-
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
-        assertEquals(current_layout, correct_layout);
-
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
-        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout);
-
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
         correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout);
+        assertEquals(current_layout, correct_layout
+        );
 
-        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
-        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
-        assertEquals(current_layout, correct_layout);
+        current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
 
+        //Can't rotate any further active leaf is mostright
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
         assertEquals(current_layout, correct_layout);
     }
+
 
 
     @Test
     void testEquals() {
     }
+    @Test
     void testClone(){
         LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10))))));
         LayoutNode complex_clone = complex_tree.clone();
