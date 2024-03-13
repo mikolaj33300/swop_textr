@@ -30,6 +30,7 @@ public class FileBuffer {
     /**
      * An array of 'lines' of bytes. Each array in the array is an array separated by a
      * line separator from the other array.
+     * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
 
@@ -82,7 +83,8 @@ public class FileBuffer {
      */
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
-        this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
+        this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
+        this.insertionPointCol = 0;
     }
 
     /**
@@ -101,7 +103,7 @@ public class FileBuffer {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
-            String lineString = new String(byteWrapArrListToPrimArray(linesArrayList.get(i)));
+            String lineString = new String(toArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex;
             //endindex -1 to make space for vertical bar
@@ -129,7 +131,7 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(byteWrapArrListToPrimArray(this.byteContent));
+        this.file.save(toArray(this.byteContent));
         this.dirty = false;
     }
 
@@ -138,6 +140,7 @@ public class FileBuffer {
      */
     private void insert(byte... data) {
         byteContent.addAll(insertionPointByteIndex, Arrays.<Byte>asList(wrapEachByteElem(data)));
+
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
@@ -152,7 +155,7 @@ public class FileBuffer {
      * Returns copy of this buffers' content.
      */
     byte[] getBytes() {
-        return byteWrapArrListToPrimArray(byteContent);
+        return toArray(byteContent);
     }
 
     /**
@@ -232,7 +235,10 @@ public class FileBuffer {
         }
     }
 
-    private byte[] byteWrapArrListToPrimArray(ArrayList<Byte> arrList){
+    /**
+     * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
+     */
+    private byte[] toArray(ArrayList<Byte> arrList){
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
             resultArray[i] = arrList.get(i).byteValue();
@@ -243,11 +249,11 @@ public class FileBuffer {
 
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
-    private int convertLineAndColToIndex(int line, int col){
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length/2;
+    private int convertLineAndColToIndex(int line, int col) {
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length / 2;
         int byteArrIndex = 0;
-        for(int i = 0; i<line; i++){
-            byteArrIndex = byteArrIndex+linesArrayList.get(i).size()+byteLengthSeparatorLen;
+        for(int i = 0; i < line; i++){
+            byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
         }
         byteArrIndex = byteArrIndex + col;
         return byteArrIndex;
@@ -301,4 +307,24 @@ public class FileBuffer {
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
+
+    String getCharAtInsertion() {
+        int chars = this.linesArrayList.get(0).size();
+
+        // Loop over all lines of bytes
+        for(int i = 1; i < this.linesArrayList.size(); i++) {
+            // If we have surpassed the insertion point index, then the insertion point was on the previous line
+            if(chars >= this.insertionPointByteIndex) {
+                chars -= this.linesArrayList.get(i-1).size();
+                int offset = this.insertionPointByteIndex - chars;
+                String s = new String(toArray(this.linesArrayList.get(i-1)));
+                return s.length() < offset ? null : s.substring(offset, offset+1);
+            }
+            // If we have not surpassed the insertion point yet, we add another full line length
+            if(chars < this.insertionPointByteIndex)
+                chars += this.linesArrayList.get(i).size();
+        }
+        return null;
+    }
+
 }

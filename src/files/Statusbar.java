@@ -59,4 +59,5 @@ public class Statusbar {
         else
             return "|";
     }
+
 }
