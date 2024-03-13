@@ -1,2 +1,1 @@
-i love termios
-btj is its maker
+string to test with

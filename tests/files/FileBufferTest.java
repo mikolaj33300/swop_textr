@@ -74,40 +74,35 @@ public class FileBufferTest {
         assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
 
         // More lines
-        write("testresources/test.txt", "i love termios\nbtj is its maker");
+        write("testresources/test.txt", "i\nb");
         buff = new FileBuffer("testresources/test.txt");
         assertEquals(2, buff.getLines().size());
 
         // MOve cursor to after 'maker'
         buff.moveCursor('B');
-        for(int i = 0; i < 16; i++)
+        assertEquals(1, buff.insertionPointLine);
+        for(int i = 0; i < 15; i++)
             buff.moveCursor('C');
-        System.out.println("Char at: " + buff.getCharAtInsertion());
 
         buff.enterInsertionPoint();
         buff.write("btj\n");
-        System.out.println("Insertion point: " + buff.insertionPointCol + ", point: " + buff.insertionPointByteIndex);
-        System.out.println(new String(buff.getBytes()));
         buff.enterInsertionPoint();
         assertEquals(5, buff.getLines().size());
-        assertTrue(buff.getLines().get(4).isEmpty());
     }
 
     @Test
-    public void testGetCharAt() {
-        write("testresources/test.txt", "btj1\nmister\ntermios\na");
+    public void testDeleteLine() {
+
+        write("testresources/test.txt", "everyone likes btj\nbtj is the founder of termios\none of the best terminal applications");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
 
-        assertEquals("b", buffer.getCharAtInsertion());
-        buffer.moveCursor('C');
-        assertEquals("t", buffer.getCharAtInsertion());
         buffer.moveCursor('B');
-        assertEquals("i", buffer.getCharAtInsertion());
-        buffer.moveCursor('B');
-        assertEquals("e", buffer.getCharAtInsertion());
-        buffer.moveCursor('B');
-        // method returns null if there is no character
-        assertNull(buffer.getCharAtInsertion());
+        buffer.deleteLine();
+        assertEquals(1, buffer.insertionPointLine);
+
+        assertEquals(2, buffer.getLines().size());
+        assertEquals("one of the best terminal applications", new String(buffer.toArray(buffer.getLines().get(1))));
+
     }
 
     @Test
@@ -147,6 +142,7 @@ public class FileBufferTest {
         write("testresources/test.txt", "i love btj <3\n and also termios");
         buff = new FileBuffer("testresources/test.txt");
 
+        // Move cursor down
         buff.moveCursor('B');
         assertEquals(1, buff.insertionPointLine);
         assertEquals(0, buff.insertionPointCol);
@@ -159,7 +155,7 @@ public class FileBufferTest {
         assertEquals(0, buff.insertionPointLine);
 
         // Try going to next line by going right
-        for(int i = 0; i < insert.length()+1; i++)
+        for(int i = 0; i < 13; i++)
             buff.moveCursor('C');
         assertEquals(1, buff.insertionPointLine);
         assertEquals(0, buff.insertionPointCol);
@@ -167,7 +163,7 @@ public class FileBufferTest {
         // Test go back to previous line
         buff.moveCursor('D');
         assertEquals(0, buff.insertionPointLine);
-        assertEquals(insert.length(), buff.insertionPointCol);
+        assertEquals(insert.length()-1, buff.insertionPointCol);
 
     }
 
