@@ -97,7 +97,7 @@ public class FileBuffer {
     public void render(int startX, int startY, int width, int height) {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
-        for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
+        for(int i = insertionPointLine; i < Math.min(insertionPointLine + height-1, linesArrayList.size()); i++){
             String lineString = new String(toArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex+width-1;

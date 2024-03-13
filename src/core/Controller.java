@@ -90,11 +90,8 @@ public class Controller {
 
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
-        System.out.println(width);
         // Main loop
         for ( ; ; ) {
-
-            System.out.println("\nAsking for byte: ");
             int c = Terminal.readByte();
 
             switch(c) {
