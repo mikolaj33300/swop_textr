@@ -53,6 +53,7 @@ public class Controller {
             throw new RuntimeException("TextR needs at least one specified file");
         }
         setLineSeparatorFromArgs(args);
+
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -65,9 +66,9 @@ public class Controller {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
-            if (!Files.exists(checkPath)) {
-                System.out.println("Kutzppoi");
-            } else
+            if (!Files.exists(checkPath))
+                System.out.println("Kutzooi");
+            else
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
 
@@ -123,7 +124,7 @@ public class Controller {
 
             }
 
-            rootLayout.render(0, 0, width, height);
+            render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -143,7 +144,6 @@ public class Controller {
      * Saves the FileBuffer's content to its file.
      */
     void saveBuffer() {
-        rootLayout.saveActiveBuffer();
     }
 
     /**

@@ -1,0 +1,27 @@
+digraph{
+  node[shape=tab]
+  rankdir=LR
+  subgraph clustercontroller{
+    label=controller
+    rank=same
+    Controller
+  }
+
+  subgraph clusterlayout{
+    label=layout
+    rank=same
+    layout
+    leaflayout
+  }
+
+  subgraph clusterfiles{
+    label=files
+    filebuffer
+    fileholder
+    filebuffer -> fileholder
+  }
+
+  Controller -> {layout, filebuffer}[weight=1000]
+  layout -> leaflayout -> filebuffer
+
+}

@@ -61,8 +61,12 @@ public class FileBuffer {
         this.insertionPointByteIndex = 0;
         this.status = new Statusbar(this);
     }
-    
-    public ArrayList<ArrayList<Byte>> getLines(){
+
+    /**
+     * Retrieves a {@link java.util.ArrayList<ArrayList<Byte>>}, where each entry is a list of bytes
+     * separated by another entry by a {@link System#lineSeparator()}.
+     */
+    ArrayList<ArrayList<Byte>> getLines(){
         ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
         for(ArrayList<Byte> line : linesArrayList){
             linesCloneArrayList.add((ArrayList<Byte>) line.clone());
@@ -79,18 +83,18 @@ public class FileBuffer {
         insert(System.lineSeparator().getBytes());
         this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
         this.insertionPointCol = 0;
+        this.insertionPointLine++;
     }
 
     /**
-     * Deletes
+     * Deletes the full array
      */
-    public void deleteLine() {
+    void deleteLine() {
         linesArrayList.remove(insertionPointLine);
+        this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
         // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
-    // Prints the content of the file relative to the coordinates
-    // maybe this needs to be in LeafLayout?  but the render logic is only relevant here...
     /**
      * Renders this buffers content between the width & height relative to start coordinates.
      */
@@ -129,6 +133,41 @@ public class FileBuffer {
     }
 
     /**
+     * Moves the cursor in a given direction.
+     * 'C': right
+     * 'D': left
+     * 'A': up
+     * 'B': down
+     */
+    public void moveCursor(char direction) {
+        switch(direction) {
+            // Right
+            case 'C':
+                moveCursorRight();
+                break;
+            // Left
+            case 'D':
+                moveCursorLeft();
+                break;
+            // Up
+            case 'A':
+                moveCursorUp();
+                break;
+            // Down
+            case 'B':
+                moveCursorDown();
+                break;
+        }
+    }
+
+    /**
+     * Determines if the buffer has been modified.
+     */
+    boolean getDirty() {
+        return this.dirty;
+    }
+
+    /**
      * Inserts the byte values.
      */
     private void insert(byte... data) {
@@ -153,13 +192,6 @@ public class FileBuffer {
     }
 
     /**
-     * Determines if the buffer has been modified.
-     */
-    public boolean getDirty() {
-        return this.dirty;
-    }
-
-    /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
      */
     boolean contentsEqual(ArrayList<Byte> compare) {
@@ -176,8 +208,6 @@ public class FileBuffer {
         ArrayList<Byte> copy = new ArrayList<>(byteContent);
         return copy;
     }
-
-    // Base methods
 
     /**
      * Clones this object
@@ -197,36 +227,8 @@ public class FileBuffer {
         return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
-    public int getInsertionPoint() {
+    int getInsertionPoint() {
         return insertionPointByteIndex;
-    }
-
-    /**
-     * Moves the cursor in a given direction.
-     * 'C': right
-     * 'D': left
-     * 'A': up
-     * 'B': down
-     */
-    public void moveCursor(char direction) {
-        switch(direction) {
-            // Right
-            case 'C':
-                moveCursorRight();
-                break;
-            // Left
-            case 'D':
-                moveCursorLeft();
-                break;
-            // Up
-            case 'A':
-                moveCursorUp();
-                break;
-                // Down
-            case 'B':
-                moveCursorDown();
-                break;
-        }
     }
 
     /**
@@ -239,7 +241,6 @@ public class FileBuffer {
         }
         return resultArray;
     }
-
 
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
