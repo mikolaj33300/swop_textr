@@ -2,16 +2,12 @@ package files;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static files.FileAnalyserUtil.getContentLines;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileAnalyzerTest {
+public class FileAnalyserUtilTest {
     @Test
     public void testGetContentLines() {
         byte[] testingByteArr = {65, 65, 65};
