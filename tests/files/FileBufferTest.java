@@ -63,6 +63,85 @@ public class FileBufferTest {
 
     }
 
+    @Test
+    public void testEnterInsertionPoint() {
+        write("testresources/test.txt", "hello");
+        FileBuffer buff = new FileBuffer("testresources/test.txt");
+        assertEquals(1, buff.getLines().size());
+        buff.enterInsertionPoint();
+
+        assertEquals(1, buff.getLines().size());
+
+        write("testresources/test.txt", "hello\nhello");
+        buff = new FileBuffer("testresources/test.txt");
+        assertEquals(2, buff.getLines().size());
+
+        buff.enterInsertionPoint();
+        buff.write("hello mister");
+        buff.enterInsertionPoint();
+        //assertEquals(4, buff.getLines().size());
+        //assertTrue(buff.getLines().get(3).isEmpty());
+    }
+
+    @Test
+    public void testMoveCursor() {
+        String insert = "i love btj <3";
+        write("testresources/test.txt", insert);
+        FileBuffer buff = new FileBuffer("testresources/test.txt");
+
+        // Testing movement in one line
+        // Down
+        buff.moveCursor('B');
+        assertEquals(0, buff.insertionPointLine);
+        assertEquals(0, buff.insertionPointCol);
+
+        // Right
+        buff.moveCursor('C');
+        assertEquals(0, buff.insertionPointLine);
+        assertEquals(1, buff.insertionPointCol);
+
+        for(int i = 0; i < insert.length(); i++)
+            buff.moveCursor('C');
+        assertEquals(insert.length()-1, buff.insertionPointCol);
+
+        // Left
+        buff.moveCursor('D');
+        assertEquals(0, buff.insertionPointLine);
+        assertEquals(insert.length()-2, buff.insertionPointCol);
+
+        // Up
+        buff.moveCursor('A');
+        assertEquals(0, buff.insertionPointLine);
+        assertEquals(insert.length()-2, buff.insertionPointCol);
+
+        // Testing movement in more lines
+        write("testresources/test.txt", "i love btj <3\n and also termios");
+        buff = new FileBuffer("testresources/test.txt");
+
+        buff.moveCursor('B');
+        assertEquals(1, buff.insertionPointLine);
+        assertEquals(0, buff.insertionPointCol);
+
+        // Up to line 0
+        buff.moveCursor('A');
+        assertEquals(0, buff.insertionPointLine);
+        // Up again
+        buff.moveCursor('A');
+        assertEquals(0, buff.insertionPointLine);
+
+        // Try going to next line by going right
+        for(int i = 0; i < insert.length()+1; i++)
+            buff.moveCursor('C');
+        assertEquals(1, buff.insertionPointLine);
+        assertEquals(1, buff.insertionPointCol);
+
+
+        buff.moveCursor('D');
+        assertEquals(1, buff.insertionPointLine);
+        assertEquals(0, buff.insertionPointCol);
+
+    }
+
     /**
      * Helper method that writes given text into the file at given path
      */
