@@ -1,6 +1,7 @@
 package layouttree;
 
 public abstract class Layout implements Cloneable {
+
     protected Layout getRootLayoutUncloned() {
         if(this.parent != null){
             return parent.getRootLayoutUncloned();
