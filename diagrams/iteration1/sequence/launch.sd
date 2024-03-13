@@ -1,0 +1,12 @@
+user:USER[a]
+controller:CONTROLLER[a]
+/layout:LAYOUT[a]
+/layoutLeaf:LAYOUTLEAF[a]
+/filebuffer:FILEBUFFER[a]
+/file:FileHolder[a]
+
+user:controller.main()
+controller:layout.new
+controller:filebuffer.new
+controller:layout.add(filebfr)
+layout:layoutLeaf.new

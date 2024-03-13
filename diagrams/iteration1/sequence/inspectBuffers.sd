@@ -11,11 +11,15 @@ file:FileHolder[a]
     controller:layout.moveFocus(dir)
     layout:layoutLeaf.moveFocus(dir)
     layoutLeaf:layoutLeaf.moveFocusRight()
+    layoutLeaf:filebuffer.getContent()
+    layoutLeaf:layoutLeaf.render()
   [/c]
   [c:loop 0..n]
     user:controller.ctrl+p
     controller:layout.moveFocus(dir)
     layout:layoutLeaf.moveFocus(dir)
     layoutLeaf:layoutLeaf.moveFocusLeft()
+    layoutLeaf:filebuffer.getContent()
+    layoutLeaf:layoutLeaf.render()
   [/c]
 [/c]
