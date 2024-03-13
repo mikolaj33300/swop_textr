@@ -36,7 +36,7 @@ digraph {
     </td></tr>
     <tr><td>+FileBuffer(String path)<br/>
       +LayoutLeaf getLayout()<br/>
-      +ArrayList(ArrayList(Byte)) getLines()<br/>
+      +ArrayList(ArrayList(Byte)) getLines()<br/t
     </td></tr>
     </table>>]
 

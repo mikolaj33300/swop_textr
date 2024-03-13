@@ -66,12 +66,16 @@ public class Controller {
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
-                //TODO throw error for unknown path
+                System.out.println("Kutzppoi");
             } else
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
-        if(leaves.size() == 1) return leaves.get(0);
-        else return new HorizontalLayoutNode(leaves);
+
+
+        if(leaves.size() == 1)
+            return leaves.get(0);
+        else
+            return new HorizontalLayoutNode(leaves);
     }
 
     /**
@@ -86,11 +90,8 @@ public class Controller {
 
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
-
         // Main loop
         for ( ; ; ) {
-
-            System.out.println("\nAsking for byte: ");
             int c = Terminal.readByte();
 
             switch(c) {
@@ -123,6 +124,7 @@ public class Controller {
 
             }
 
+            rootLayout.render(0, 0, width, height);
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -221,6 +223,8 @@ public class Controller {
             width = width * 10 + (tempByte - '0');
             tempByte = Terminal.readByte();
         }
+        this.width = width;
+        this.height = height;
 
     }
 

@@ -93,6 +93,9 @@ public class FileHolder {
         return "".getBytes();
     }
 
+    /**
+     * Return a copy of this FileHolder, without the reference to it
+     */
     public FileHolder clone() {
         return new FileHolder(new String(this.path));
     }

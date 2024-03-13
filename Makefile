@@ -16,7 +16,7 @@ jar: $(JAR)
 	mkdir -p $(BUILD_DIR)
 	$(foreach jar, $(JAR), jar xvf $(jar);)
 	cp -vr ./io ./build/io
-	cp -vr ./org ./build/org
+	#cp -vr ./org ./build/org
 
 textr.jar:
 	javac -d $(BUILD_DIR) $(SRC)
