@@ -71,4 +71,24 @@ public class VerticalLayoutNode extends LayoutNode{
             yChild = yChild + heightChild;
         }
     }
+
+    @Override
+    public boolean equals(Object node) {
+        if(node instanceof VerticalLayoutNode layoutNode) {
+            //Check objects for same activity-status
+            if(this.getContainsActive() != layoutNode.getContainsActive()){
+                return false;
+            }
+            // Return early when the amount of children don't match.
+            if(layoutNode.children.size() != this.children.size()) return false;
+            // Loop over the children of both
+            for(int i = 0; i < layoutNode.children.size(); i++) {
+                // We keep checking if they are equal, if not we return early.
+                if(!layoutNode.children.get(i).equals(this.children.get(i))) return false;
+            }
+            // If the process didn't find disparities, the layouts are equal.
+            return true;
+        }
+        return false;
+    }
 }

@@ -101,25 +101,6 @@ public abstract class LayoutNode extends Layout {
      * the layout of this node. All leaves must have a FileBuffer containing the same path.
      * ! Assumes the children are always put in the same sequence upon creation of layout
      */
-    @Override
-    public boolean equals(Object node) {
-        if(node instanceof LayoutNode layoutNode) {
-            //Check objects for same activity-status
-            if(this.getContainsActive() != layoutNode.getContainsActive()){
-                return false;
-            }
-            // Return early when the amount of children don't match.
-            if(layoutNode.children.size() != this.children.size()) return false;
-            // Loop over the children of both
-            for(int i = 0; i < layoutNode.children.size(); i++) {
-                // We keep checking if they are equal, if not we return early.
-                if(!layoutNode.children.get(i).equals(this.children.get(i))) return false;
-            }
-            // If the process didn't find disparities, the layouts are equal.
-            return true;
-        }
-        return false;
-    }
 
     protected boolean containsActive() {
         return containsActive;
@@ -183,6 +164,9 @@ public abstract class LayoutNode extends Layout {
     //Returns the new root layout of the rotated node
     protected Layout mergeWithSibling(ROT_DIRECTION rotdir, Layout child) {
         Layout newChild = getNewMergedRotatedChild(rotdir, child);
+        if(newChild==child){
+            return child.getRootLayoutUncloned();
+        }
         this.replaceWithNewLayout(child, newChild);
         this.deleteRightNeighbor(newChild);
         return newChild.getRootLayoutUncloned();
