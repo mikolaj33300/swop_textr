@@ -83,12 +83,8 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     Renders the current layout-tree
-     Renders:
-      All the instances of LayoutLeaf
-      A statusbar per file
-      Two scrollbars per file (one horizontal and one vertical)
-     The insertionPoint in the current active LayoutLeaf
+     * Checks if a this LayoutLeaf is allowed to be a child of the given LayoutNode
+     * Two children of a LayoutNode are not allowed to be active at the same time
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
@@ -99,31 +95,40 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Renders the current layout-tree
+     * Renders:
+     * All the instances of LayoutLeaf
+     * A statusbar per file
+     * Two scrollbars per file (one horizontal and one vertical)
+     * The insertionPoint in the current active LayoutLeaf
+     */
+
     public void render(int startX, int startY, int width, int height) {
         containedFileBuffer.render(startX, startY, width, height);
     }
 
     /**
-     Makes a deepcopy of LayoutLeaf
-     The references to this object and its contents will be removed
-      */
+     * Makes a deepcopy of LayoutLeaf
+     * The references to this object and its contents will be removed
+     */
     @Override
     public LayoutLeaf clone() {
         return new LayoutLeaf(containedFileBuffer.clone(), getContainsActive());
     }
 
     /**
-      Makes the leftmost leaf active
-      This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
-      */
+     * Makes the leftmost leaf active
+     * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
+     */
     @Override
     protected void makeLeftmostLeafActive() {
         setContainsActive(true);
     }
 
     /**
-     Makes the rightmost leaf active
-     This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
+     * Makes the rightmost leaf active
+     * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
     @Override
     protected void makeRightmostLeafActive() {
@@ -131,9 +136,9 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     Returns the leftmost leaf of the current layout-level
-     As this a leaf of the layout-structure,
-     it does not have any children and will return a copy of itself
+     * Returns the leftmost leaf of the current layout-level
+     * As this a leaf of the layout-structure,
+     * it does not have any children and will return a copy of itself
      */
     protected LayoutLeaf getLeftLeaf() {
         return this;
