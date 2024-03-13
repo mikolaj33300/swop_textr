@@ -18,4 +18,15 @@ public class FileAnalyzerTest {
         ArrayList<ArrayList<Byte>> a = getContentLines(testingByteArr);
         assertEquals(testingByteArr[0], a.get(0).get(0).byteValue());
     }
+
+    @Test
+    public void testLineSeparatorRemoval() {
+        String test = "mister\nabc";
+        byte[] bytes = test.getBytes();
+        ArrayList<ArrayList<Byte>> a = getContentLines(bytes);
+
+        assertEquals(6, a.get(0).size());
+        assertEquals(3, a.get(1).size());
+    }
+
 }

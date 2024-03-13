@@ -51,7 +51,7 @@ public class HorizontalLayoutNode extends LayoutNode {
      The references to this object and its contents will be removed
      */
     @Override
-    protected HorizontalLayoutNode clone() {
+    public HorizontalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
         for(Layout l : children){
             deepCopyList.add(l.clone());

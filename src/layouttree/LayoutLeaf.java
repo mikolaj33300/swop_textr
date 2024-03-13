@@ -108,7 +108,7 @@ public class LayoutLeaf extends Layout {
      The references to this object and its contents will be removed
       */
     @Override
-    protected LayoutLeaf clone() {
+    public LayoutLeaf clone() {
         return new LayoutLeaf(containedFileBuffer.clone(), getContainsActive());
     }
 
