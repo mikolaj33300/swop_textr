@@ -178,7 +178,7 @@ public abstract class LayoutNode extends Layout {
                 children.add(children.indexOf(child)+1, newSibling);
                 newSibling.setParent(this);
             }
-
+            this.fixChangedTreeFromNewNode();
         } else {
             newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
             this.replaceAndSetParent(child, newChild);
