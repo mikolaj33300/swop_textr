@@ -124,6 +124,7 @@ public class Controller {
                     enterText((char) c);
                     //render();
                     break;
+
             }
 
             rootLayout.render(0, 0, width, height);
