@@ -294,7 +294,7 @@ public class LayoutNodeTest {
         //Leaf on node with leaf on same node
         Layout root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
         root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        LayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
+        LayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
         assertEquals(root_clock,correct_clock);
 
         Layout root_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
