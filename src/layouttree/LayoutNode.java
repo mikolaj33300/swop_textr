@@ -55,6 +55,46 @@ public abstract class LayoutNode extends Layout {
         }
     }
 
+    @Override
+    public void moveCursor(char c) {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.moveCursor(c);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void enterText(byte b) {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.enterText(b);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void enterInsertionPoint() {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.enterInsertionPoint();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void saveActiveBuffer() {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.saveActiveBuffer();
+                return;
+            }
+        }
+    }
+
     public void insertDirectChild(Layout toInsert){
         if(toInsert.isAllowedToBeChildOf(this)){
             Layout cloneOfInsert = toInsert.clone();

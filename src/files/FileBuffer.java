@@ -114,8 +114,8 @@ public class FileBuffer {
     /**
      * Updates the content of the FileBuffer
      */
-    public void write(String updatedContents) {
-        insert(updatedContents.getBytes());
+    public void write(byte updatedContents) {
+        insert(updatedContents);
         dirty = true;
     }
 

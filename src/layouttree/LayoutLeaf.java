@@ -39,6 +39,26 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    @Override
+    public void moveCursor(char c) {
+        containedFileBuffer.moveCursor(c);
+    }
+
+    @Override
+    public void enterText(byte b){
+        containedFileBuffer.write(b);
+    }
+
+    @Override
+    public void saveActiveBuffer() {
+        containedFileBuffer.save();
+    }
+
+    @Override
+    public void enterInsertionPoint(){
+        containedFileBuffer.enterInsertionPoint();
+    }
+
     /**
      * Moves focus from the currently active Layout, to the rightneigbouring layout
      * If no neighbours left, the active Layout stays active
