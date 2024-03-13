@@ -54,10 +54,10 @@ public class FileBufferTest {
         String result = " ; i love using termios library i love termios ; long live btj";
         buffer.write(add);
 
-        assertTrue(buffer.isDirty());
+        assertTrue(buffer.getDirty());
         buffer.save();
 
-        assertFalse(buffer.isDirty());
+        assertFalse(buffer.getDirty());
         assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(result.getBytes())))));
         assertTrue(FileHolder.areContentsEqual(buffer.getFileHolder().getContent(), result.getBytes()));
 
