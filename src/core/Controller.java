@@ -148,6 +148,7 @@ public class Controller {
      * Moves insertion point in a file buffer
      */
     void moveCursor(char code) {
+        
     }
 
     /**

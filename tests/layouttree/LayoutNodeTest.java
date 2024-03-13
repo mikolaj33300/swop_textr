@@ -116,6 +116,7 @@ public class LayoutNodeTest {
             assertNotSame(get_children3.get(i), Arrays.asList(vn1,l9,l10).get(i));
         }
     }
+
     @Test
     void moveFocus(){
         //Test Node with only leafs
