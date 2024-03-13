@@ -102,10 +102,6 @@ public abstract class LayoutNode extends Layout {
      * ! Assumes the children are always put in the same sequence upon creation of layout
      */
 
-    protected boolean containsActive() {
-        return containsActive;
-    }
-
     protected void deleteLeftLeaf() {
         children.get(0).deleteLeftLeaf();
     }
