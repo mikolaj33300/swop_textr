@@ -133,12 +133,12 @@ public class FileBufferTest {
         for(int i = 0; i < insert.length()+1; i++)
             buff.moveCursor('C');
         assertEquals(1, buff.insertionPointLine);
-        assertEquals(1, buff.insertionPointCol);
+        assertEquals(0, buff.insertionPointCol);
 
 
         buff.moveCursor('D');
-        assertEquals(1, buff.insertionPointLine);
-        assertEquals(0, buff.insertionPointCol);
+        assertEquals(0, buff.insertionPointLine);
+        assertEquals(insert.length(), buff.insertionPointCol);
 
     }
 
