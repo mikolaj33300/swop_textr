@@ -1,0 +1,66 @@
+digraph {
+  node[shape=none]
+
+  Layout[label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>LayoutNode</td></tr>
+    <tr><td>-DIRECTION: enum<br/>
+      -ROT_DIRECTION: enum<br/>
+      -parent: LayoutNode: enum<br/>
+      -containsActive: boolean</td></tr>
+    <tr><td>+getRootLayoutUncloned()<br/>
+      +isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +render(int startX, int startY, int width, int height)<br/>
+      +deleteLeftLeaf()<br/>
+      +setParent()<br/>
+      +getContainsActive()<br/>
+      +moveFocus(DIRECTION dir)<br/>
+      +makeLeftmostLeafActive()<br/>
+      +makeRightmostLeafActive()<br/>
+      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
+      +getLeftLeaf()<br/>
+      +setContainsActive(boolean active)<br/>
+      +equals(Object obj)<br/>
+      +clone()</td></tr>
+    </table>>]
+
+  fileBuffer[label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>fileBuffer</td></tr>
+    <tr><td>-leaf: layoutLeaf<br/>
+      -file: FileHolder<br/>
+      -diryt: boolean<br/>
+      -byteContent: ArrayList(ArrayList(Byte))<br/>
+      -status: Statusbar<br/>
+      -insertionPointCol: int<br/>
+      -insertionPointLine: int<br/>
+      -insertionPointByteIndex: int
+    </td></tr>
+    <tr><td>+FileBuffer(String path)<br/>
+      +LayoutLeaf getLayout()<br/>
+      +ArrayList(ArrayList(Byte)) getLines()<br/t
+    </td></tr>
+    </table>>]
+
+  controller[label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>Controller</td></tr>
+    <tr><td>-lineSeparatorArg: byte[]<br/>
+      -rootLayout: Layout<br/>
+      -width: int<br/>
+      -height: int</td></tr>
+    <tr><td>+lineSeparatorArg<br/>
+      +Controller(String[] args)<br/>
+      +main(String[] args)<br/>
+      +initRootLayout(String[] args, byte[] lineSeparator)<br/>
+      +loop()<br/>
+      +render()<br/>
+      +saveBuffer()<br/>
+      +moveCursor(char code)<br/>
+      +enterText(char str)<br/>
+      <!--+enterLineSeparator()<br/>-->
+      +moveFocus(Layout.DIRECTION dir)<br/>
+      +initRootLayout()<br/>
+      +retrieveDimensions()<br/>
+      +setLineSeparatorFromArgs(String[] args)<br/>
+      +getLineSeparatorArg()</td></tr>
+    </table>>]
+  controller -> Layout
+}

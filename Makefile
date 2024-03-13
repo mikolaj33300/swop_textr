@@ -1,10 +1,10 @@
 include config.mk
 
-all: options uml $(DIAGS) jar $(JAR) $(termios) build
+all: options diagrams $(DIAGS) jar $(JAR) $(termios) build
 
 options:
 	@echo OFORMAT: $(OFORMAT)
-	@echo $(DOT)
+	@echo topack: $(TOPACK)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
@@ -16,7 +16,7 @@ jar: $(JAR)
 	mkdir -p $(BUILD_DIR)
 	$(foreach jar, $(JAR), jar xvf $(jar);)
 	cp -vr ./io ./build/io
-	cp -vr ./org ./build/org
+	#cp -vr ./org ./build/org
 
 textr.jar:
 	javac -d $(BUILD_DIR) $(SRC)
@@ -37,3 +37,11 @@ clean:
 
 $(termios):
 	$(MAKE) -C termios -B jar
+
+dist: all group07.zip
+group07.zip:
+	 mkdir /tmp/group07
+	 $(foreach DFILE, $(TOPACK), echo $(DFILE) | cpio -p -d -v  /tmp/group07/;)
+	 cd /tmp; zip -r -b /tmp/ ./group07.zip ./group07/
+	 mv /tmp/group07.zip ./
+
