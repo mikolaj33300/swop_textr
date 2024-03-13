@@ -90,7 +90,7 @@ public class Controller {
 
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
-
+        System.out.println(width);
         // Main loop
         for ( ; ; ) {
 
@@ -124,9 +124,9 @@ public class Controller {
                     enterText((char) c);
                     //render();
                     break;
-
             }
 
+            rootLayout.render(0, 0, width, height);
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -225,6 +225,8 @@ public class Controller {
             width = width * 10 + (tempByte - '0');
             tempByte = Terminal.readByte();
         }
+        this.width = width;
+        this.height = height;
 
     }
 
