@@ -139,7 +139,8 @@ public class FileBuffer {
      * Inserts the byte values.
      */
     private void insert(byte... data) {
-        byteContent.addAll(insertionPointByteIndex, Arrays.<Byte>asList(wrapEachByteElem(data)));
+        byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
+                Arrays.<Byte>asList(wrapEachByteElem(data)));
 
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
@@ -238,7 +239,7 @@ public class FileBuffer {
     /**
      * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
      */
-    private byte[] toArray(ArrayList<Byte> arrList){
+    private byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
             resultArray[i] = arrList.get(i).byteValue();
@@ -306,25 +307,6 @@ public class FileBuffer {
             //otherwise do nothing
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
-    }
-
-    String getCharAtInsertion() {
-        int chars = this.linesArrayList.get(0).size();
-
-        // Loop over all lines of bytes
-        for(int i = 1; i < this.linesArrayList.size(); i++) {
-            // If we have surpassed the insertion point index, then the insertion point was on the previous line
-            if(chars >= this.insertionPointByteIndex) {
-                chars -= this.linesArrayList.get(i-1).size();
-                int offset = this.insertionPointByteIndex - chars;
-                String s = new String(toArray(this.linesArrayList.get(i-1)));
-                return s.length() < offset ? null : s.substring(offset, offset+1);
-            }
-            // If we have not surpassed the insertion point yet, we add another full line length
-            if(chars < this.insertionPointByteIndex)
-                chars += this.linesArrayList.get(i).size();
-        }
-        return null;
     }
 
 }

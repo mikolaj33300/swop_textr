@@ -80,34 +80,16 @@ public class FileBufferTest {
 
         // MOve cursor to after 'maker'
         buff.moveCursor('B');
-        for(int i = 0; i < 16; i++)
+        assertEquals(1, buff.insertionPointLine);
+        for(int i = 0; i < 15; i++)
             buff.moveCursor('C');
-        System.out.println("Char at: " + buff.getCharAtInsertion());
 
         buff.enterInsertionPoint();
         buff.write("btj\n");
-        System.out.println("Insertion point: " + buff.insertionPointCol + ", point: " + buff.insertionPointByteIndex);
         System.out.println(new String(buff.getBytes()));
         buff.enterInsertionPoint();
         assertEquals(5, buff.getLines().size());
         assertTrue(buff.getLines().get(4).isEmpty());
-    }
-
-    @Test
-    public void testGetCharAt() {
-        write("testresources/test.txt", "btj1\nmister\ntermios\na");
-        FileBuffer buffer = new FileBuffer("testresources/test.txt");
-
-        assertEquals("b", buffer.getCharAtInsertion());
-        buffer.moveCursor('C');
-        assertEquals("t", buffer.getCharAtInsertion());
-        buffer.moveCursor('B');
-        assertEquals("i", buffer.getCharAtInsertion());
-        buffer.moveCursor('B');
-        assertEquals("e", buffer.getCharAtInsertion());
-        buffer.moveCursor('B');
-        // method returns null if there is no character
-        assertNull(buffer.getCharAtInsertion());
     }
 
     @Test
@@ -147,6 +129,7 @@ public class FileBufferTest {
         write("testresources/test.txt", "i love btj <3\n and also termios");
         buff = new FileBuffer("testresources/test.txt");
 
+        // Move cursor down
         buff.moveCursor('B');
         assertEquals(1, buff.insertionPointLine);
         assertEquals(0, buff.insertionPointCol);
