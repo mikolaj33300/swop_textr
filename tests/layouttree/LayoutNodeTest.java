@@ -281,9 +281,10 @@ public class LayoutNodeTest {
         assertEquals(root_clock,correct_clock);
 
         Layout root_counter = root.clone();
-        root_counter = root_counter.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        root_counter = root_counter.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
         VerticalLayoutNode correct_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
         assertEquals(root_counter,correct_counter);
+
 
 
     }
