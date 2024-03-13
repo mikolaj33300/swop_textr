@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Swop.iml" filepath="$PROJECT_DIR$/Swop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/termios/src/main/main.iml" filepath="$PROJECT_DIR$/termios/src/main/main.iml" />
     </modules>
   </component>
 </project>

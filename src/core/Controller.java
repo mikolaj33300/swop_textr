@@ -66,12 +66,16 @@ public class Controller {
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath)) {
-                //TODO throw error for unknown path
+                //TODO: thrown new
             } else
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
-        if(leaves.size() == 1) return leaves.get(0);
-        else return new HorizontalLayoutNode(leaves);
+
+
+        if(leaves.size() == 1)
+            return leaves.get(0);
+        else
+            return new HorizontalLayoutNode(leaves);
     }
 
     /**

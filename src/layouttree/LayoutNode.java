@@ -13,6 +13,8 @@ public abstract class LayoutNode extends Layout {
      * LayoutNodes need atleast 2 children in its children-array
      */
     public LayoutNode(ArrayList<Layout> newChildren){
+
+        System.out.println(newChildren.size());
         if(newChildren.size()<2){
             throw new RuntimeException("newChildren too short");
         }
