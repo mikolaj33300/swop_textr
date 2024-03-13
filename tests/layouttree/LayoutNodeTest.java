@@ -236,7 +236,18 @@ public class LayoutNodeTest {
     }
 
     @Test
-    void testInsertDirectChild(){}
+    void testInsertDirectChild(){
+        ArrayList<Layout> old_children = vn1.getDirectChildren();
+        vn1.insertDirectChild(l4);
+        ArrayList<Layout> new_children = vn1.getDirectChildren();
+        old_children.add(l4);
+        assertEquals(old_children,new_children);
+
+        vn1.insertDirectChild(hn2);
+        new_children = vn1.getDirectChildren();
+        old_children.add(hn2);
+        assertEquals(old_children,new_children);
+    }
 
     @Test
     void testRotateRelationshipNeighbourRoot(){
@@ -249,7 +260,7 @@ public class LayoutNodeTest {
     }
     @Test
     void testRotateRelationshipNeighborLeafs() {
-        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
+        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
 
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
         Layout correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
@@ -271,23 +282,59 @@ public class LayoutNodeTest {
         current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
         correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
         assertEquals(current_layout, correct_layout);
+
+        //Test neighbours not affected
+        current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l1,l2,l4)));
+
+        current_layout = current_layout.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2))),l4)));
+        assertEquals(current_layout, correct_layout);
     }
     @Test
     void testRotateRelationShipNeighbourLeafsUnderNode(){
-        VerticalLayoutNode root = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
-
-        Layout root_clock = root.clone();
+        //Leaf on node with leaf on same node
+        Layout root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
         root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
-        VerticalLayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
+        LayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
         assertEquals(root_clock,correct_clock);
 
-        Layout root_counter = root.clone();
+        Layout root_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
         root_counter = root_counter.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
         VerticalLayoutNode correct_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
         assertEquals(root_counter,correct_counter);
 
+        //Leaf off node with leaf on node
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
+        assertEquals(root_clock, correct_clock);
 
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
+        assertEquals(root_clock, correct_clock);
 
+        //Leaf on node with leaf off node
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),l3)));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_clock = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
+        assertEquals(root_clock, correct_clock);
+
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
+        assertEquals(root_clock, correct_clock);
+
+        //Leaf on node with leaf on other node
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4))))));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1))),l4)));
+        assertEquals(root_clock, correct_clock);
+
+        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4))))));
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3))),l4)));
+        assertEquals(root_clock, correct_clock);
     }
 
 
