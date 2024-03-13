@@ -1,6 +1,7 @@
 package files;
 
 import io.github.btj.termios.Terminal;
+import layouttree.LayoutLeaf;
 
 
 import java.util.*;
@@ -9,6 +10,7 @@ import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
+    private LayoutLeaf leaf;
     /**
      * File reference
      */
@@ -61,6 +63,9 @@ public class FileBuffer {
         this.status = new Statusbar(this);
     }
 
+    public LayoutLeaf getLayout(){
+        return this.leaf.clone();
+    }
     public ArrayList<ArrayList<Byte>> getLines(){
         int i = 0;
         ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
@@ -153,7 +158,7 @@ public class FileBuffer {
     /**
      * Determines if the buffer has been modified.
      */
-    boolean isDirty() {
+    public boolean getDirty() {
         return this.dirty;
     }
 

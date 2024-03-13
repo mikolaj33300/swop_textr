@@ -212,7 +212,7 @@ public abstract class LayoutNode extends Layout {
     }
 
     @Override
-    protected abstract LayoutNode clone();
+    public abstract LayoutNode clone();
 
     /**
      * Enumerator that represents whether the Layouts inside this Layout
