@@ -10,7 +10,6 @@ import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
-    private LayoutLeaf leaf;
     /**
      * File reference
      */
@@ -42,7 +41,6 @@ public class FileBuffer {
     /**
      * Insertion points column & line do not represent printing locations!
      * All will be relative to {@link FileBuffer#linesArrayList} indices.
-     *
      * For statusbar, these will need to be increased with 1
      */
     int insertionPointCol;
@@ -63,18 +61,14 @@ public class FileBuffer {
         this.insertionPointByteIndex = 0;
         this.status = new Statusbar(this);
     }
-
-    public LayoutLeaf getLayout(){
-        return this.leaf.clone();
-    }
+    
     public ArrayList<ArrayList<Byte>> getLines(){
-        int i = 0;
         ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
         for(ArrayList<Byte> line : linesArrayList){
             linesCloneArrayList.add((ArrayList<Byte>) line.clone());
         }
         return linesCloneArrayList;
-    };
+    }
 
     // Implementation
 
@@ -91,7 +85,8 @@ public class FileBuffer {
      * Deletes
      */
     public void deleteLine() {
-      linesArrayList.remove(insertionPointLine);
+        linesArrayList.remove(insertionPointLine);
+        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     // Prints the content of the file relative to the coordinates
@@ -239,7 +234,7 @@ public class FileBuffer {
     /**
      * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
      */
-    private byte[] toArray(ArrayList<Byte> arrList) {
+    byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
             resultArray[i] = arrList.get(i).byteValue();

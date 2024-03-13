@@ -319,7 +319,7 @@ public class LayoutNodeTest {
         root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
         correct_clock = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1)));
         assertEquals(root_clock, correct_clock);
-/*
+
         root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
         root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
         correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
