@@ -1,0 +1,12 @@
+user:USER[a]
+controller:CONTROLLER[a]
+layout:LAYOUT[a]
+layoutLeaf:LAYOUTLEAF[a]
+filebuffer:FILEBUFFER[a]
+file:FileHolder[a]
+
+user:controller.ctrl+s
+controller:layout.saveBuffer()
+layout:layoutLeaf.saveBuffer()
+layoutLeaf:filebuffer.save()
+filebuffer:file.save()
