@@ -62,11 +62,21 @@ public class VerticalLayoutNode extends LayoutNode{
     }
 
     @Override
-    public void render(int xChild, int yChild, int widthChild, int height){
+    public void renderTextContent(int xChild, int yChild, int widthChild, int height){
         int heightChild = height/children.size(); //rounds down
 
         for(Layout child : children){
-            child.render(xChild, yChild, widthChild, heightChild);
+            child.renderTextContent(xChild, yChild, widthChild, heightChild);
+            yChild = yChild + heightChild;
+        }
+    }
+
+    @Override
+    public void renderCursor(int xChild, int yChild, int widthChild, int height){
+        int heightChild = height/children.size(); //rounds down
+
+        for(Layout child : children){
+            child.renderCursor(xChild, yChild, widthChild, heightChild);
             yChild = yChild + heightChild;
         }
     }

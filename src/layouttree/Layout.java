@@ -26,7 +26,7 @@ public abstract class Layout implements Cloneable {
 
     protected boolean containsActive;
 
-    public abstract void render(int startX, int startY, int width, int height);
+    public abstract void renderTextContent(int startX, int startY, int width, int height);
 
 /*    public abstract void closeActiveFile();
     public abstract void writeActiveFile();
@@ -46,6 +46,8 @@ public abstract class Layout implements Cloneable {
     public abstract void saveActiveBuffer();
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
+
+    public abstract void renderCursor(int startX, int startY, int width, int height);
 
     public abstract void enterInsertionPoint();
 

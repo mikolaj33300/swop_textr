@@ -62,11 +62,21 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     @Override
-    public void render(int xChild, int yChild, int width, int heightChild){
+    public void renderTextContent(int xChild, int yChild, int width, int heightChild){
         int widthChild = width/children.size(); //rounds down
 
         for(Layout child : children){
-            child.render(xChild, yChild, widthChild, heightChild);
+            child.renderTextContent(xChild, yChild, widthChild, heightChild);
+            xChild = xChild + widthChild;
+        }
+    }
+
+    @Override
+    public void renderCursor(int xChild, int yChild, int width, int heightChild){
+        int widthChild = width/children.size(); //rounds down
+
+        for(Layout child : children){
+            child.renderCursor(xChild, yChild, widthChild, heightChild);
             xChild = xChild + widthChild;
         }
     }

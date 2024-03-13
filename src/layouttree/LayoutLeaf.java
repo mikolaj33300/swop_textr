@@ -127,7 +127,7 @@ public class LayoutLeaf extends Layout {
      * The insertionPoint in the current active LayoutLeaf
      */
 
-    public void render(int startX, int startY, int width, int height) {
+    public void renderTextContent(int startX, int startY, int width, int height) {
         containedFileBuffer.render(startX, startY, width, height);
 
         //height-1 to make space for status bar
@@ -139,7 +139,9 @@ public class LayoutLeaf extends Layout {
             Terminal.printText(1+startY, 1+startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex-1, lineString.length())));
             i++;
         }
+    }
 
+    public void renderCursor(int startX, int startY, int width, int height) {
         if(containsActive){
             int cursorXoffset = containedFileBuffer.getInsertionPointCol() % width;
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % height;

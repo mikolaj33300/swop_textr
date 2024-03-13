@@ -5,7 +5,6 @@ import io.github.btj.termios.Terminal;
 import layouttree.*;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -132,7 +131,8 @@ public class Controller {
      * Renders the layout with the terminal current height & width
      */
     void render() {
-        this.rootLayout.render(0, 0, this.width, this.height);
+        this.rootLayout.renderTextContent(0, 0, this.width, this.height);
+        this.rootLayout.renderCursor(0, 0, this.width, this.height);
     }
 
     /**
