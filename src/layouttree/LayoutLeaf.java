@@ -62,7 +62,7 @@ public class LayoutLeaf extends Layout {
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if(parent != null){
-            return parent.mergeWithSibling(rot_dir, this);
+            return parent.rotateWithRightSibling(rot_dir, this);
         } else {
             System.out.print((char)7); //sounds terminal bell
             return this;
