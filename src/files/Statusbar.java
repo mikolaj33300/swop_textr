@@ -3,7 +3,8 @@ package files;
 public class Statusbar {
 
     private final FileBuffer buffer;
-    private int column, lines, scroll;
+
+    private int scroll;
 
     public Statusbar(FileBuffer buffer) {
         this.buffer = buffer;
@@ -13,21 +14,13 @@ public class Statusbar {
     /**
      * Determines the top visible line in of the buffer
      */
-    public int getScroll() {
+     public int getScroll() {
         return this.scroll;
-    }
+     }
 
-    public int getColumn() {
-        return this.column;
-    }
-
-    public int getLines() {
-        return this.lines;
-    }
-
-    public FileBuffer getBuffer(){
+     public FileBuffer getBuffer(){
         return this.buffer.clone();
-    }
+     }
 
     public String renderStatusbar() {
         String statusLine = buffer.getFileHolder().getPath();
