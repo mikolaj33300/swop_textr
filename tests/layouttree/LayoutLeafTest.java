@@ -43,15 +43,7 @@ class LayoutLeafTest {
         children.add(l4);
         ln = new VerticalLayoutNode(children);
     }
-    @Test
-    void testDeleteLeftLeaf(){
-        /*assertEquals(ln.getDirectChildren().size(),3);
-        ln.deleteLeftLeaf();
-        assertEquals(ln.getDirectChildren().size(),2);
-        ln.deleteLeftLeaf();
-        assertEquals(ln.getDirectChildren().size(),1);
-        ln.deleteLeftLeaf();*/
-    }
+
     //Dit zijn eigenlijk testen op ln -> testen op een object is niet mogelijk zonder representation exposure
     @Test
     void testMoveFocus(){
@@ -115,11 +107,7 @@ class LayoutLeafTest {
         l4.moveFocus(Layout.DIRECTION.LEFT);
         assertFalse(l4.getContainsActive());
     }
-    @Test
-    void testRotateRelationshipNeighbor(){
-        //Layout.ROT_DIRECTION.CLOCKWISE
-        //Layout.ROT_DIRECTION.COUNTERCLOCKWISE
-    }
+
     @Test
     void testEquals(){
         assertNotEquals(l1,l2);
@@ -135,7 +123,7 @@ class LayoutLeafTest {
         assertNotEquals(l2,l2a);
     }
     @Test
-    void render(){}
+    void testRender(){}
     @Test
     void testClone(){
         Layout l1_clone = l1.clone();

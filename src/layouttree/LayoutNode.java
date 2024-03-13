@@ -163,21 +163,40 @@ public abstract class LayoutNode extends Layout {
 
     //replaces the given child with a new layoutnode with the child and its sibling rotated
     //Returns the new root layout of the rotated node
-    protected Layout mergeWithSibling(ROT_DIRECTION rotdir, Layout child) {
-        LayoutNode newChild = getNewMergedRotatedChild(rotdir, child);
-        if(newChild==null){
-            return child.getRootLayoutUncloned();
+    protected Layout rotateWithRightSibling(ROT_DIRECTION rotdir, Layout child) {
+        LayoutLeaf newSibling = this.getRightNeighbor(child);
+        LayoutNode newChild = null;
+
+        if(newSibling == null){
+            System.out.print((char) 7);
+        } else if (newSibling.parent != this){
+            this.deleteRightNeighbor(child);
+            if(rotdir == ROT_DIRECTION.COUNTERCLOCKWISE){
+                children.add(children.indexOf(child), newSibling);
+                newSibling.setParent(this);
+            } else {
+                children.add(children.indexOf(child)+1, newSibling);
+                newSibling.setParent(this);
+            }
+            this.fixChangedTreeFromNewNode();
+        } else {
+            newChild = getNewMergedRotatedChild(rotdir, child, newSibling);
+            this.replaceAndSetParent(child, newChild);
+            this.deleteRightNeighbor(newChild);
+            newChild.fixChangedTreeFromNewNode();
         }
-        this.replaceWithNewLayout(child, newChild);
-        this.deleteRightNeighbor(newChild);
-        newChild.fixChangedTreeFromNewNode();
-        return newChild.getRootLayoutUncloned();
+
+        if(newChild == null){
+            return child.getRootLayoutUncloned();
+        } else {
+            return newChild.getRootLayoutUncloned();
+        }
     }
 
     //Returns a layoutnode containing a child and a new specified sibling
-    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
+    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling);
 
-    private void replaceWithNewLayout(Layout toReplace, Layout newLayout) {
+    private void replaceAndSetParent(Layout toReplace, Layout newLayout) {
         int index = children.indexOf(toReplace);
         children.set(index, newLayout);
         newLayout.setParent(this);
@@ -201,6 +220,7 @@ public abstract class LayoutNode extends Layout {
             }
             if(parent.children.size()==1){
                 if(parent.parent != null) {
+                    //As of 13/03 there is no coverage on this part. This is because due to the way delete is called, it takes care of this already. However, if the assignment and order of operations were to change, this would no longer be the case.
                     this.parent.parent.children.set(this.parent.parent.children.indexOf(parent), this);
                     this.parent = parent.parent;
                     this.fixChangedTreeFromNewNode();
@@ -212,7 +232,7 @@ public abstract class LayoutNode extends Layout {
     }
 
     @Override
-    protected abstract LayoutNode clone();
+    public abstract LayoutNode clone();
 
     /**
      * Enumerator that represents whether the Layouts inside this Layout

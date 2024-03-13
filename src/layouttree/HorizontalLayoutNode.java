@@ -24,10 +24,9 @@ public class HorizontalLayoutNode extends LayoutNode {
      * Rotates the HorizontalLayoutNode's child and its neighbour on the right
      */
     @Override
-    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child) {
-        LayoutLeaf newSibling = this.getRightNeighbor(child);
+    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
         if(newSibling == null){
-            return null;
+            throw new NullPointerException();
         }
         ArrayList<Layout> newChildren;
         if(rotdir == ROT_DIRECTION.CLOCKWISE){
@@ -52,7 +51,7 @@ public class HorizontalLayoutNode extends LayoutNode {
      The references to this object and its contents will be removed
      */
     @Override
-    protected HorizontalLayoutNode clone() {
+    public HorizontalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
         for(Layout l : children){
             deepCopyList.add(l.clone());

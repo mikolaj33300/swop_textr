@@ -1,6 +1,7 @@
 package files;
 
 import io.github.btj.termios.Terminal;
+import layouttree.LayoutLeaf;
 
 
 import java.util.*;
@@ -9,6 +10,7 @@ import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
 
+    private LayoutLeaf leaf;
     /**
      * File reference
      */
@@ -28,6 +30,7 @@ public class FileBuffer {
     /**
      * An array of 'lines' of bytes. Each array in the array is an array separated by a
      * line separator from the other array.
+     * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
 
@@ -61,6 +64,9 @@ public class FileBuffer {
         this.status = new Statusbar(this);
     }
 
+    public LayoutLeaf getLayout(){
+        return this.leaf.clone();
+    }
     public ArrayList<ArrayList<Byte>> getLines(){
         int i = 0;
         ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
@@ -77,7 +83,8 @@ public class FileBuffer {
      */
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
-        this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
+        this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
+        this.insertionPointCol = 0;
     }
 
     /**
@@ -96,7 +103,7 @@ public class FileBuffer {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < insertionPointLine + height-1; i++){
-            String lineString = new String(byteWrapArrListToPrimArray(linesArrayList.get(i)));
+            String lineString = new String(toArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex;
             //endindex -1 to make space for vertical bar
@@ -124,7 +131,7 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(byteWrapArrListToPrimArray(this.byteContent));
+        this.file.save(toArray(this.byteContent));
         this.dirty = false;
     }
 
@@ -132,7 +139,9 @@ public class FileBuffer {
      * Inserts the byte values.
      */
     private void insert(byte... data) {
-        byteContent.addAll(insertionPointByteIndex, Arrays.<Byte>asList(wrapEachByteElem(data)));
+        byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
+                Arrays.<Byte>asList(wrapEachByteElem(data)));
+
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
@@ -147,13 +156,13 @@ public class FileBuffer {
      * Returns copy of this buffers' content.
      */
     byte[] getBytes() {
-        return byteWrapArrListToPrimArray(byteContent);
+        return toArray(byteContent);
     }
 
     /**
      * Determines if the buffer has been modified.
      */
-    boolean isDirty() {
+    public boolean getDirty() {
         return this.dirty;
     }
 
@@ -227,7 +236,10 @@ public class FileBuffer {
         }
     }
 
-    private byte[] byteWrapArrListToPrimArray(ArrayList<Byte> arrList){
+    /**
+     * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
+     */
+    private byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
         for(int i = 0; i < arrList.size() ; i++){
             resultArray[i] = arrList.get(i).byteValue();
@@ -238,11 +250,11 @@ public class FileBuffer {
 
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
-    private int convertLineAndColToIndex(int line, int col){
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length/2;
+    private int convertLineAndColToIndex(int line, int col) {
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length / 2;
         int byteArrIndex = 0;
-        for(int i = 0; i<line; i++){
-            byteArrIndex = byteArrIndex+linesArrayList.get(i).size()+byteLengthSeparatorLen;
+        for(int i = 0; i < line; i++){
+            byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
         }
         byteArrIndex = byteArrIndex + col;
         return byteArrIndex;
@@ -296,4 +308,5 @@ public class FileBuffer {
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
+
 }
