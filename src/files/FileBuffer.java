@@ -1,7 +1,6 @@
 package files;
 
 import io.github.btj.termios.Terminal;
-import layouttree.LayoutLeaf;
 
 
 import java.util.*;
@@ -81,7 +80,7 @@ public class FileBuffer {
      */
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
-        this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
         this.insertionPointCol = 0;
         this.insertionPointLine++;
     }
@@ -91,7 +90,7 @@ public class FileBuffer {
      */
     void deleteLine() {
         linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(toArray(this.byteContent));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
         // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
@@ -102,7 +101,7 @@ public class FileBuffer {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
         for(int i = insertionPointLine; i < Math.min(insertionPointLine + height-1, linesArrayList.size()); i++){
-            String lineString = new String(toArray(linesArrayList.get(i)));
+            String lineString = new String(FileAnalyserUtil.toArray(linesArrayList.get(i)));
             int renderLineStartIndex = insertionPointCol/(width-1);
             int renderLineEndIndex = renderLineStartIndex+width-1;
             //endindex -1 to make space for vertical bar
@@ -110,9 +109,10 @@ public class FileBuffer {
             currentTerminalRow++;
         }
 
-        int cursorXoffset = insertionPointLine % height;
-        int cursorYoffset = insertionPointCol % width;
+        int cursorXoffset = insertionPointCol % width;
+        int cursorYoffset = insertionPointLine % height;
         Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
+        System.out.println(cursorYoffset);
     }
 
     /**
@@ -121,6 +121,7 @@ public class FileBuffer {
     public void write(byte updatedContents) {
         insert(updatedContents);
         dirty = true;
+        moveCursorRight();
     }
 
     /**
@@ -128,7 +129,7 @@ public class FileBuffer {
      */
     public final void save() {
         if (!dirty) return;
-        this.file.save(toArray(this.byteContent));
+        this.file.save(FileAnalyserUtil.toArray(this.byteContent));
         this.dirty = false;
     }
 
@@ -188,7 +189,7 @@ public class FileBuffer {
      * Returns copy of this buffers' content.
      */
     byte[] getBytes() {
-        return toArray(byteContent);
+        return FileAnalyserUtil.toArray(byteContent);
     }
 
     /**
@@ -229,17 +230,6 @@ public class FileBuffer {
 
     int getInsertionPoint() {
         return insertionPointByteIndex;
-    }
-
-    /**
-     * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
-     */
-    byte[] toArray(ArrayList<Byte> arrList) {
-        byte[] resultArray = new byte[arrList.size()];
-        for(int i = 0; i < arrList.size() ; i++){
-            resultArray[i] = arrList.get(i).byteValue();
-        }
-        return resultArray;
     }
 
     //Add the amount of bytes from lines above,
@@ -291,7 +281,6 @@ public class FileBuffer {
     private void moveCursorRight(){
         if(insertionPointCol < linesArrayList.get(insertionPointLine).size() - 1) {
             insertionPointCol++;
-            insertionPointByteIndex++;
         } else {
             //Move cursor one line down, unless already at bottom line
             if(insertionPointLine < linesArrayList.size() - 1){
@@ -303,4 +292,23 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    public int getInsertionPointLine() {
+        return insertionPointLine;
+    }
+
+    public ArrayList<ArrayList<Byte>> getLinesArrayList() {
+        ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
+        for(int i = 0; i<linesArrayList.size(); i++){
+            ArrayList<Byte> clonedLine = new ArrayList<Byte>();
+            for(int j = 0; j<linesArrayList.get(i).size(); j++){
+                clonedLine.add(linesArrayList.get(i).get(j));
+            }
+            clonedLinesList.add(clonedLine);
+        }
+        return clonedLinesList;
+    }
+
+    public int getInsertionPointCol() {
+        return insertionPointCol;
+    }
 }

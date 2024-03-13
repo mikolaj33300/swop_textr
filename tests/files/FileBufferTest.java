@@ -105,7 +105,7 @@ public class FileBufferTest {
         assertEquals(1, buffer.insertionPointLine);
 
         assertEquals(2, buffer.getLines().size());
-        assertEquals("one of the best terminal applications", new String(buffer.toArray(buffer.getLines().get(1))));
+        assertEquals("one of the best terminal applications", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
 
     }
 

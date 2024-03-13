@@ -1,6 +1,9 @@
 package layouttree;
 
+import files.FileAnalyserUtil;
 import files.FileBuffer;
+import io.github.btj.termios.Terminal;
+
 
 /*
     LayoutLeaf represents the leaf layout-structure
@@ -126,6 +129,22 @@ public class LayoutLeaf extends Layout {
 
     public void render(int startX, int startY, int width, int height) {
         containedFileBuffer.render(startX, startY, width, height);
+
+        //height-1 to make space for status bar
+        for(int i = containedFileBuffer.getInsertionPointLine(); i < Math.min(containedFileBuffer.getInsertionPointLine() + height-1, containedFileBuffer.getLinesArrayList().size()); i++){
+            String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLinesArrayList().get(i)));
+            int renderLineStartIndex = containedFileBuffer.getInsertionPointCol()/(width-1);
+            int renderLineEndIndex = renderLineStartIndex+width-1;
+            //endindex -1 to make space for vertical bar
+            Terminal.printText(1+startY, 1+startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex-1, lineString.length())));
+            i++;
+        }
+
+        if(containsActive){
+            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % width;
+            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % height;
+            Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
+        }
     }
 
     /**

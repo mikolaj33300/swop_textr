@@ -2,10 +2,7 @@ package core;
 
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
-import layouttree.HorizontalLayoutNode;
-import layouttree.Layout;
-import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
+import layouttree.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -76,7 +73,7 @@ public class Controller {
         if(leaves.size() == 1)
             return leaves.get(0);
         else
-            return new HorizontalLayoutNode(leaves);
+            return new VerticalLayoutNode(leaves);
     }
 
     /**
@@ -88,9 +85,9 @@ public class Controller {
         Terminal.clearScreen();
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
-
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
+        render();
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
@@ -127,8 +124,6 @@ public class Controller {
             render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
-            retrieveDimensions();
-
         }
 
     }
