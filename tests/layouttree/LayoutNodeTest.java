@@ -271,22 +271,59 @@ public class LayoutNodeTest {
         correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
         assertEquals(current_layout, correct_layout);
     }
+    @Test
+    void testRotateRelationShipNeighbourLeafsUnderNode(){
+        VerticalLayoutNode root = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
 
+        Layout root_clock = root.clone();
+        root_clock = root_clock.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        VerticalLayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
+        assertEquals(root_clock,correct_clock);
+
+        Layout root_counter = root.clone();
+        root_counter = root_counter.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
+        VerticalLayoutNode correct_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
+        assertEquals(root_counter,correct_counter);
+
+
+    }
 
 
     @Test
     void testEquals() {
     }
     @Test
-    void testClone(){
-        LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10))))));
+    void testClone() {
+        LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1, l4, new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2, l10))))));
         LayoutNode complex_clone = complex_tree.clone();
         assertEquals(complex_clone, complex_tree);
         assertNotSame(complex_clone, complex_tree);
     }
-    @Test
-    void testtest(){}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
