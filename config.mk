@@ -19,3 +19,9 @@ SRC = ./src/files/FileBuffer.java ./src/files/FileAnalyser.java ./src/files/Stat
 TEST = ./tests/files/FileBufferTest.java ./tests/files/FileHolderTest.java ./tests/layouttree/LayoutLeafTest.java ./tests/layouttree/LayoutNodeTest.java ./tests/layouttree/LayoutTest.java ./tests/core/SaveBufferTest.java ./tests/core/EditBufferTest.java ./tests/core/ControllerTest.java ./tests/core/RearrangeLayoutTest.java ./tests/core/InspectBufferTest.java ./tests/core/LaunchTextrTest.java ./tests/core/CloseBufferTest.java
 OBJ = $(patsubst %.java,%.class,$(SRC))
 BUILD_DIR = ./build
+
+#
+# package
+#
+EXTS := java pdf png
+TOPACK := $(foreach EXT, $(EXTS), $(shell find . -name '*.$(EXT)'))

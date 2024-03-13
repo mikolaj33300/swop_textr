@@ -1,10 +1,10 @@
 include config.mk
 
-all: options uml $(DIAGS) jar $(JAR) $(termios) build
+all: options diagrams $(DIAGS) jar $(JAR) $(termios) build
 
 options:
 	@echo OFORMAT: $(OFORMAT)
-	@echo $(DOT)
+	@echo topack: $(TOPACK)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
@@ -37,3 +37,6 @@ clean:
 
 $(termios):
 	$(MAKE) -C termios -B jar
+
+dist.zip:
+	zip -b /tmp/ ./dist.zip $(TOPACK)
