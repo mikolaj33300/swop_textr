@@ -112,7 +112,12 @@ public abstract class LayoutNode extends Layout {
 
     protected void delete(Layout l){
         children.remove(l);
-        this.fixInvarsOfChangedTree();
+        if(this.children.size() == 1){
+            if(this.parent != null){
+                this.parent.children.set(this.parent.children.indexOf(this), this.children.get(0));
+                this.children.get(0).setParent(this.parent);
+            }
+        }
     }
 
     protected void makeLeftmostLeafActive() {
@@ -163,23 +168,23 @@ public abstract class LayoutNode extends Layout {
     //replaces the given child with a new layoutnode with the child and its sibling rotated
     //Returns the new root layout of the rotated node
     protected Layout mergeWithSibling(ROT_DIRECTION rotdir, Layout child) {
-        Layout newChild = getNewMergedRotatedChild(rotdir, child);
-        if(newChild==child){
+        LayoutNode newChild = getNewMergedRotatedChild(rotdir, child);
+        if(newChild==null){
             return child.getRootLayoutUncloned();
         }
         this.replaceWithNewLayout(child, newChild);
         this.deleteRightNeighbor(newChild);
+        newChild.fixChangedTreeFromNewNode();
         return newChild.getRootLayoutUncloned();
     }
 
     //Returns a layoutnode containing a child and a new specified sibling
-    protected abstract Layout getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
+    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child);
 
     private void replaceWithNewLayout(Layout toReplace, Layout newLayout) {
         int index = children.indexOf(toReplace);
         children.set(index, newLayout);
         newLayout.setParent(this);
-        this.fixInvarsOfChangedTree();
     }
 
     //Bottom up fixing of tree structure with unary and binary constraints.
@@ -188,35 +193,26 @@ public abstract class LayoutNode extends Layout {
     //make the current node and its parent (may be null) consistent with each other.
     //Rules: A parent's child LayoutNodes aren't empty, don't contain just 1 element
     // and are oriented differently.
-    private void fixInvarsOfChangedTree(){
-        if(parent != null){
-            if(this.getOrientation() == parent.getOrientation()){
-                parent.absorbChildrenAndReplace(this);
-                parent.fixInvarsOfChangedTree();
-                return;
+    private void fixChangedTreeFromNewNode(){
+        if(parent != null) {
+            //absorb this and siblings if orientations of parent
+            if (this.getOrientation() == parent.getOrientation()) {
+                for (Layout l : this.children) {
+                    l.setParent(parent);
+                }
+                parent.children.addAll(parent.children.indexOf(this), this.children);
+                parent.children.remove(this);
+            }
+            if(parent.children.size()==1){
+                if(parent.parent != null) {
+                    this.parent.parent.children.set(this.parent.parent.children.indexOf(parent), this);
+                    this.parent = parent.parent;
+                    this.fixChangedTreeFromNewNode();
+                } else {
+                    this.parent = null;
+                }
             }
         }
-        if(children.size()==1){
-            if(parent != null){
-                parent.absorbChildrenAndReplace(this);
-                parent.fixInvarsOfChangedTree();
-            } else {
-                this.children.get(0).setParent(null);
-            }
-        } else if (children.isEmpty()){
-            if(parent != null){
-                parent.delete(this);
-                parent.fixInvarsOfChangedTree();
-            }
-        }
-    }
-
-    protected void absorbChildrenAndReplace(LayoutNode toAbsorb){
-        int index = children.indexOf(toAbsorb);
-        for(Layout child : toAbsorb.children){
-            child.setParent(this);
-        }
-        this.children.addAll(index, toAbsorb.children);
     }
 
     @Override

@@ -64,7 +64,8 @@ public class LayoutLeaf extends Layout {
         if(parent != null){
             return parent.mergeWithSibling(rot_dir, this);
         } else {
-            throw new RuntimeException("Not implemented yet: child has no more neighbors");
+            System.out.print((char)7); //sounds terminal bell
+            return this;
         }
     }
 
