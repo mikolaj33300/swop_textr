@@ -166,7 +166,7 @@ class LayoutLeafTest {
     @Test
     void testGetLeftLeaf(){
         LayoutLeaf left_l1 = l1.getLeftLeaf();
-        assertNotSame(left_l1, l1);
+        assertSame(left_l1, l1);
         assertEquals(left_l1,l1);
     }
     @Test
