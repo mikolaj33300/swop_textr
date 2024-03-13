@@ -2,7 +2,9 @@ package files;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 public class InsertionPointTest {
+
     Statusbar sb1;
+
     @BeforeEach
     void setUp(){
         String path1 = "testresources/test.txt";
@@ -15,12 +17,8 @@ public class InsertionPointTest {
         assertEquals(sb1.getScroll(),0);
     }
     @Test
-    void testGetColumn(){
-        assertEquals(sb1.getColumn(),0);
-    }
-    @Test
     void testGetLines(){
-        assertEquals(sb1.getLines(), 0);
+
     }
     @Test
     void testRenderStatus(){

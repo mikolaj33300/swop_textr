@@ -3,26 +3,24 @@ package layouttree;
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
+
     /**
      * The children of this LayoutNode in the layout-tree
      */
     protected ArrayList<Layout> children;
 
     /**
-     * Constructor for LayoutNode, clones its arguments to prevent representation exposure
-     * LayoutNodes need atleast 2 children in its children-array
+     * Clones its arguments to prevent representation exposure
+     * LayoutNodes need at least 2 children in its children-array
      */
-    public LayoutNode(ArrayList<Layout> newChildren){
-
-        System.out.println(newChildren.size());
-        if(newChildren.size()<2){
+    public LayoutNode(ArrayList<Layout> newChildren) {
+        if (newChildren.size() < 2)
             throw new RuntimeException("newChildren too short");
-        }
+
         this.children = new ArrayList<>();
-        for(Layout l : newChildren){
-            if(l.isAllowedToBeChildOf(this))
+        for (Layout l : newChildren)
+            if (l.isAllowedToBeChildOf(this))
                 this.insertDirectChild(l.clone());
-        }
     }
 
     /**
@@ -33,9 +31,9 @@ public abstract class LayoutNode extends Layout {
     /**
      * Returns a deepcopy of the children of this LayoutNode
      */
-    public ArrayList<Layout> getDirectChildren(){
+    public ArrayList<Layout> getDirectChildren() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : children){
+        for (Layout l : children) {
             deepCopyList.add(l.clone());
         }
         return deepCopyList;
@@ -48,8 +46,48 @@ public abstract class LayoutNode extends Layout {
      */
     public void moveFocus(DIRECTION dir) throws RuntimeException {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if (l.getContainsActive()) {
                 l.moveFocus(dir);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void moveCursor(char c) {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.moveCursor(c);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void enterText(byte b) {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.enterText(b);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void enterInsertionPoint() {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.enterInsertionPoint();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void saveActiveBuffer() {
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.saveActiveBuffer();
                 return;
             }
         }
@@ -60,7 +98,7 @@ public abstract class LayoutNode extends Layout {
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
-            if(cloneOfInsert.getContainsActive()){
+            if (cloneOfInsert.getContainsActive()) {
                 this.containsActive = true;
             }
         }
@@ -68,27 +106,33 @@ public abstract class LayoutNode extends Layout {
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if (l.getContainsActive()) {
                 return l.rotateRelationshipNeighbor(rot_dir);
             }
         }
         throw new RuntimeException("Contains no active leaf!");
     }
 
+    /**
+     *
+     */
     protected LayoutLeaf getRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
         if (index < children.size() - 1) {
             return children.get(index + 1).getLeftLeaf(); // Called when we can make child of current node the active one.
         } else {
-            if(parent != null){
+            if (parent != null) {
                 return parent.getRightNeighbor(this);
             } else {
                 return null;
             }
-             //called when we need to backtrack one level up
+            //called when we need to backtrack one level up
         }
     }
 
+    /**
+     *
+     */
     protected void deleteRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
         if (index < children.size() - 1) {
@@ -108,10 +152,10 @@ public abstract class LayoutNode extends Layout {
         children.get(0).deleteLeftLeaf();
     }
 
-    protected void delete(Layout l){
+    protected void delete(Layout l) {
         children.remove(l);
-        if(this.children.size() == 1){
-            if(this.parent != null){
+        if (this.children.size() == 1) {
+            if (this.parent != null) {
                 this.parent.children.set(this.parent.children.indexOf(this), this.children.get(0));
                 this.children.get(0).setParent(this.parent);
             }
@@ -119,16 +163,16 @@ public abstract class LayoutNode extends Layout {
     }
 
     protected void makeLeftmostLeafActive() {
-        this.containsActive=true;
+        this.containsActive = true;
         children.get(0).makeLeftmostLeafActive();
     }
 
     protected void makeRightmostLeafActive() {
-        this.containsActive=true;
-        children.get(children.size()-1).makeRightmostLeafActive();
+        this.containsActive = true;
+        children.get(children.size() - 1).makeRightmostLeafActive();
     }
 
-    protected LayoutLeaf getLeftLeaf(){
+    protected LayoutLeaf getLeftLeaf() {
         return children.get(0).getLeftLeaf();
     }
 
@@ -139,7 +183,7 @@ public abstract class LayoutNode extends Layout {
         if (index < children.size() - 1) {
             children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
-            if(parent != null){
+            if (parent != null) {
                 containsActive = false;
                 parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
             } else {
@@ -154,13 +198,13 @@ public abstract class LayoutNode extends Layout {
         if (index > 0) {
             children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
-            if(parent != null){
+            if (parent != null) {
                 containsActive = false;
                 parent.makeLeftNeighbourActive(this); //called when we need to backtrack one level up
             } else {
                 makeLeftmostLeafActive();
             }
-       }
+        }
     }
 
     //replaces the given child with a new layoutnode with the child and its sibling rotated
@@ -169,15 +213,15 @@ public abstract class LayoutNode extends Layout {
         LayoutLeaf newSibling = this.getRightNeighbor(child);
         LayoutNode newChild = null;
 
-        if(newSibling == null){
+        if (newSibling == null) {
             System.out.print((char) 7);
-        } else if (newSibling.parent != this){
+        } else if (newSibling.parent != this) {
             this.deleteRightNeighbor(child);
-            if(rotdir == ROT_DIRECTION.COUNTERCLOCKWISE){
+            if (rotdir == ROT_DIRECTION.COUNTERCLOCKWISE) {
                 children.add(children.indexOf(child), newSibling);
                 newSibling.setParent(this);
             } else {
-                children.add(children.indexOf(child)+1, newSibling);
+                children.add(children.indexOf(child) + 1, newSibling);
                 newSibling.setParent(this);
             }
             this.fixChangedTreeFromNewNode();
@@ -188,7 +232,7 @@ public abstract class LayoutNode extends Layout {
             newChild.fixChangedTreeFromNewNode();
         }
 
-        if(newChild == null){
+        if (newChild == null) {
             return child.getRootLayoutUncloned();
         } else {
             return newChild.getRootLayoutUncloned();
@@ -210,8 +254,8 @@ public abstract class LayoutNode extends Layout {
     //make the current node and its parent (may be null) consistent with each other.
     //Rules: A parent's child LayoutNodes aren't empty, don't contain just 1 element
     // and are oriented differently.
-    private void fixChangedTreeFromNewNode(){
-        if(parent != null) {
+    private void fixChangedTreeFromNewNode() {
+        if (parent != null) {
             //absorb this and siblings if orientations of parent
             if (this.getOrientation() == parent.getOrientation()) {
                 for (Layout l : this.children) {
@@ -220,8 +264,8 @@ public abstract class LayoutNode extends Layout {
                 parent.children.addAll(parent.children.indexOf(this), this.children);
                 parent.children.remove(this);
             }
-            if(parent.children.size()==1){
-                if(parent.parent != null) {
+            if (parent.children.size() == 1) {
+                if (parent.parent != null) {
                     //As of 13/03 there is no coverage on this part. This is because due to the way delete is called, it takes care of this already. However, if the assignment and order of operations were to change, this would no longer be the case.
                     this.parent.parent.children.set(this.parent.parent.children.indexOf(parent), this);
                     this.parent = parent.parent;

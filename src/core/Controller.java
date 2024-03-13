@@ -53,6 +53,7 @@ public class Controller {
             throw new RuntimeException("TextR needs at least one specified file");
         }
         setLineSeparatorFromArgs(args);
+
         Controller btj = new Controller(args);
         btj.loop();
     }
@@ -65,9 +66,9 @@ public class Controller {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
-            if (!Files.exists(checkPath)) {
-                System.out.println("Kutzppoi");
-            } else
+            if (!Files.exists(checkPath))
+                System.out.println("Kutzooi");
+            else
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
 
@@ -92,9 +93,9 @@ public class Controller {
         retrieveDimensions();
         // Main loop
         for ( ; ; ) {
-            int c = Terminal.readByte();
+            int b = Terminal.readByte();
 
-            switch(c) {
+            switch(b) {
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -118,13 +119,12 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    enterText((char) c);
-                    //render();
+                    enterText((Integer.valueOf(b)).byteValue());
                     break;
 
             }
 
-            rootLayout.render(0, 0, width, height);
+            render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
             retrieveDimensions();
@@ -150,20 +150,18 @@ public class Controller {
      * Moves insertion point in a file buffer
      */
     void moveCursor(char code) {
-        
+        rootLayout.moveCursor(code);
     }
 
     /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
-    void enterText(char str) {
-        // Silently ignore non-ASCII characters.
-        if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
-        }
+    void enterText(byte b) {
+        rootLayout.enterText(b);
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(char)}
+     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
     }
