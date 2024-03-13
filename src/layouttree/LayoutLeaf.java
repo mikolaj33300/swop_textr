@@ -10,7 +10,7 @@ public class LayoutLeaf extends Layout {
     private FileBuffer containedFileBuffer;
 
     /**
-       Constructor for LayoutLeaf, clones its arguments to prevent representation exposure
+       Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
     public LayoutLeaf(FileBuffer fb, boolean active){
         this.containedFileBuffer = fb.clone();
@@ -64,7 +64,8 @@ public class LayoutLeaf extends Layout {
         if(parent != null){
             return parent.mergeWithSibling(rot_dir, this);
         } else {
-            throw new RuntimeException("Not implemented yet: child has no more neighbors");
+            System.out.print((char)7); //sounds terminal bell
+            return this;
         }
     }
 
