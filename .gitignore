@@ -30,6 +30,8 @@ bin/
 .DS_Store
 
 *.pdf
+*.ps
+*.png
 *.class
 *.jar
 *.so

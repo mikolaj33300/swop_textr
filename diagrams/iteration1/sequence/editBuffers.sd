@@ -1,0 +1,14 @@
+user:USER[a]
+controller:CONTROLLER[a]
+layout:LAYOUT[a]
+layoutLeaf:LAYOUTLEAF[a]
+filebuffer:FILEBUFFER[a]
+file:FileHolder[a]
+
+[c:loop 0 to inf]
+  user:controller.keyinput
+  controller:layout.enterText(char str)
+  layout:layoutLeaf.enterText()
+  layoutLeaf:filebuffer.insert()
+  filebuffer:filebuffer.dirty=true
+[/c]
