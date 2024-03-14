@@ -11,7 +11,7 @@ public class FileBufferView extends View{
     private FileBuffer containedFileBuffer;
 
     public FileBufferView(String path, LayoutLeaf parent) {
-        super(parent);
+        super.parent = parent;
         containedFileBuffer = new FileBuffer(path);
     }
 
@@ -22,7 +22,7 @@ public class FileBufferView extends View{
     @Override
     public void render() throws IOException {
         super.setCorrectCoords();
-        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
+
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
         //Renders either all the lines until the end, or the next height-2 lines
@@ -36,10 +36,11 @@ public class FileBufferView extends View{
                 Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
             }
         }
+        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
     }
 
     private String renderStatusbar() {
-        String statusLine = containedFileBuffer.getFileHolder().getPath();
+        String statusLine = containedFileBuffer.getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
         statusLine += " #Chars:";

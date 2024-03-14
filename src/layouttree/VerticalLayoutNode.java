@@ -31,9 +31,9 @@ public class VerticalLayoutNode extends LayoutNode{
         if(parent != null){
             int thisY = parent.getStartY(this, terminalWidth, terminalHeight);
             int thisHeight = parent.getHeight(this, terminalWidth, terminalHeight);
-            return thisY+(thisHeight/ children.size())*children.indexOf(this);
+            return (thisY+(thisHeight/ children.size())*children.indexOf(l));
         }
-        return 0;
+        return (terminalHeight/children.size())*children.indexOf(l);
     }
 
     @Override
