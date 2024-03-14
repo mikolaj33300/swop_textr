@@ -44,8 +44,7 @@ public class FileBufferView extends View{
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
         statusLine += " #Chars:";
-        String contents = new String(containedFileBuffer.getFileHolder().getContent());
-        statusLine += contents.length();
+        statusLine += String.valueOf(containedFileBuffer.getAmountChars());
         statusLine += " Insert:[";
         statusLine += containedFileBuffer.getInsertionPointLine();
         statusLine += ";";
