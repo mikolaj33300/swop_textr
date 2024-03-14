@@ -95,13 +95,7 @@ public class Controller {
             Terminal.printText(1,1, bs);*/
 
             switch(b) {
-<<<<<<< HEAD
                 case 8, 127:
-=======
-
-                // Backspace
-                case 127:
->>>>>>> aa630e5eb09404cbcd3a0c58c08e592c392b7f13
                     deleteCharacter();
                     break;
                 // Control + S
