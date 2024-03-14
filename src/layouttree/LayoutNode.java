@@ -103,6 +103,26 @@ public abstract class LayoutNode extends Layout {
         }
     }
 
+    @Override
+    public void closeActive(){
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.closeActive();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void forcedCloseActive(){
+        for (Layout l : children) {
+            if(l.getContainsActive()){
+                l.forcedCloseActive();
+                return;
+            }
+        }
+    }
+
     public void insertDirectChild(Layout toInsert){
         if(toInsert.isAllowedToBeChildOf(this)){
             Layout cloneOfInsert = toInsert.clone();
