@@ -95,9 +95,7 @@ public class Controller {
             Terminal.printText(1,1, bs);*/
 
             switch(b) {
-
-                // Backspace
-                case 127:
+                case 8, 127:
                     deleteCharacter();
                     break;
                 // Control + S
@@ -131,12 +129,14 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    enterText((Integer.valueOf(b)).byteValue());
+                    if (b >= 22 && b <= 126)
+                      enterText((Integer.valueOf(b)).byteValue());
                     break;
 
             }
             Terminal.clearScreen();
             render();
+            //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
@@ -159,6 +159,7 @@ public class Controller {
      * Saves the FileBuffer's content to its file.
      */
     void saveBuffer() {
+      this.rootLayout.saveActiveBuffer();
     }
 
     /**
@@ -179,6 +180,7 @@ public class Controller {
      * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
+      rootLayout.enterInsertionPoint();
     }
 
     /**
