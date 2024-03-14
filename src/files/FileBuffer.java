@@ -82,6 +82,7 @@ public class FileBuffer {
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
         moveCursorDown();
+        moveCursorToFront();
     }
 
     /**
@@ -264,7 +265,7 @@ public class FileBuffer {
     private void moveCursorLeft(){
         if(insertionPointCol > 0){
             insertionPointCol--;
-            insertionPointByteIndex--;
+            //insertionPointByteIndex--;
         } else {
             if(insertionPointLine != 0){
                 //move one line up, to last character
@@ -274,6 +275,12 @@ public class FileBuffer {
             //otherwise do nothing, stay at first byte
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+    }
+    private void moveCursorToFront() {
+      if (insertionPointCol > 0){
+        insertionPointCol = 0;
+      }
+      insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
     private void moveCursorRight(){

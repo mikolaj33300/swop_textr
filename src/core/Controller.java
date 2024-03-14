@@ -90,11 +90,12 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
+            /*System.out.print(b);
+            String bs = String.valueOf(b);
+            Terminal.printText(1,1, bs);*/
+
             switch(b) {
-                case 244:
-                    moveFocus(Layout.DIRECTION.RIGHT);
-                    break;
-                case 8, 127:
+                case 8, 127, 10:
                     deleteCharacter();
                     break;
                 // Control + S
@@ -128,13 +129,13 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    if (b >= 22 && b <= 126)
+                    if (b >= 32 && b <= 126)
                       enterText((Integer.valueOf(b)).byteValue());
                     break;
-
             }
             Terminal.clearScreen();
             render();
+            //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
