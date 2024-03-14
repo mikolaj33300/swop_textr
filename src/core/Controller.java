@@ -19,7 +19,7 @@ public class Controller {
     /**
      * Root layout
      */
-    private Layout rootLayout;
+    Layout rootLayout;
 
     /**
      * Size of the terminal
@@ -53,7 +53,8 @@ public class Controller {
         setLineSeparatorFromArgs(args);
 
         Controller btj = new Controller(args);
-        btj.loop();
+        if(!args[args.length-1].equals("noterminal"))
+            btj.loop();
     }
 
     /**
@@ -69,7 +70,6 @@ public class Controller {
             else
                 leaves.add(new LayoutLeaf(args[i], i == 0));
         }
-
 
         if(leaves.size() == 1)
             return leaves.get(0);
