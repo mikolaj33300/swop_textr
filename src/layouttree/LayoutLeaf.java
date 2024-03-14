@@ -85,6 +85,30 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    public String renderStatusbar() {
+        String statusLine = containedFileBuffer.getFileHorlder().getPath();
+        statusLine += " #Lines:";
+        statusLine += String.valueOf(containedFileBuffer.getLinesArrayList().size());
+        statusLine += " #Chars:";
+        String contents = new String(containedFileBuffer.getFileHorlder().getContent());
+        statusLine += contents.length();
+        statusLine += " Insert:[";
+        statusLine += containedFileBuffer.getInsertionPointLine();
+        statusLine += ";";
+        statusLine += containedFileBuffer.getInsertionPointCol();
+        statusLine += "] ";
+        if(containedFileBuffer.getDirty())
+            statusLine += "Dirty";
+        else
+            statusLine += "Clean";
+        statusLine += " ";
+        if(this.getContainsActive())
+            statusLine += "Active";
+        else
+            statusLine += "Not Active";
+        return statusLine;
+    }
+
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if (parent != null) {
             return parent.rotateWithRightSibling(rot_dir, this);
@@ -146,7 +170,7 @@ public class LayoutLeaf extends Layout {
             //endindex -1 to make space for vertical bar
             Terminal.printText(1+startY+i, 1+startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
         }
-        Terminal.printText(startY + height, startX + 1, containedFileBuffer.getStatusBar());
+        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
     }
 
     public void renderCursor(int startX, int startY, int width, int height) {

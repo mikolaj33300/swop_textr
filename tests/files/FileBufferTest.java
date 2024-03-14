@@ -82,7 +82,7 @@ public class FileBufferTest {
 
         // MOve cursor to after 'maker'
         buff.moveCursor('B');
-        assertEquals(1, buff.insertionPointLine);
+        assertEquals(1, buff.getInsertionPointLine());
         for(int i = 0; i < 15; i++)
             buff.moveCursor('C');
 
@@ -102,7 +102,7 @@ public class FileBufferTest {
 
         buffer.moveCursor('B');
         buffer.deleteLine();
-        assertEquals(1, buffer.insertionPointLine);
+        assertEquals(1, buffer.getInsertionPointLine());
 
         assertEquals(2, buffer.getLines().size());
         assertEquals("one of the best terminal applications", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
@@ -118,29 +118,29 @@ public class FileBufferTest {
         // Testing movement in one line
         // Down
         buff.moveCursor('B');
-        assertEquals(0, buff.insertionPointLine);
-        assertEquals(0, buff.insertionPointCol);
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(0, buff.getInsertionPointCol());
         assertEquals(0, buff.getInsertionPoint());
 
         // Right
         buff.moveCursor('C');
-        assertEquals(0, buff.insertionPointLine);
-        assertEquals(1, buff.insertionPointCol);
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(1, buff.getInsertionPointCol());
         assertEquals(1, buff.getInsertionPoint());
 
         for(int i = 0; i < insert.length(); i++)
             buff.moveCursor('C');
-        assertEquals(insert.length()-1, buff.insertionPointCol);
+        assertEquals(insert.length()-1, buff.getInsertionPointCol());
 
         // Left
         buff.moveCursor('D');
-        assertEquals(0, buff.insertionPointLine);
-        assertEquals(insert.length()-2, buff.insertionPointCol);
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(insert.length()-2, buff.getInsertionPointCol());
 
         // Up
         buff.moveCursor('A');
-        assertEquals(0, buff.insertionPointLine);
-        assertEquals(insert.length()-2, buff.insertionPointCol);
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(insert.length()-2, buff.getInsertionPointCol());
 
         // Testing movement in more lines
         write("testresources/test.txt", "i love btj <3\n and also termios");
@@ -148,26 +148,26 @@ public class FileBufferTest {
 
         // Move cursor down
         buff.moveCursor('B');
-        assertEquals(1, buff.insertionPointLine);
-        assertEquals(0, buff.insertionPointCol);
+        assertEquals(1, buff.getInsertionPointLine());
+        assertEquals(0, buff.getInsertionPointCol());
 
         // Up to line 0
         buff.moveCursor('A');
-        assertEquals(0, buff.insertionPointLine);
+        assertEquals(0, buff.getInsertionPointLine());
         // Up again
         buff.moveCursor('A');
-        assertEquals(0, buff.insertionPointLine);
+        assertEquals(0, buff.getInsertionPointLine());
 
         // Try going to next line by going right
         for(int i = 0; i < 13; i++)
             buff.moveCursor('C');
-        assertEquals(1, buff.insertionPointLine);
-        assertEquals(0, buff.insertionPointCol);
+        assertEquals(1, buff.getInsertionPointLine());
+        assertEquals(0, buff.getInsertionPointCol());
 
         // Test go back to previous line
         buff.moveCursor('D');
-        assertEquals(0, buff.insertionPointLine);
-        assertEquals(insert.length()-1, buff.insertionPointCol);
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(insert.length()-1, buff.getInsertionPointCol());
 
     }
 

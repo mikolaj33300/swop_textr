@@ -32,12 +32,6 @@ public class FileBuffer {
      * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
-
-    /**
-     * Keeps track of the insertion point
-     */
-    private Statusbar status;
-
     /**
      * Insertion points column & line do not represent printing locations!
      * All will be relative to {@link FileBuffer#linesArrayList} indices.
@@ -59,7 +53,6 @@ public class FileBuffer {
         this.insertionPointCol = 0;
         this.insertionPointLine = 0;
         this.insertionPointByteIndex = 0;
-        this.status = new Statusbar(this);
     }
 
     /**
@@ -94,32 +87,6 @@ public class FileBuffer {
         // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
-    /**
-     * Renders this buffers content between the width & height relative to start coordinates.
-     */
-    /*
-    public void render(int startX, int startY, int width, int height) {
-        int currentTerminalRow = startY;
-        //height-1 to make space for status bar
-        for (int i = insertionPointLine; i < Math.min(insertionPointLine + height - 1, linesArrayList.size()); i++) {
-            String lineString = new String(toArray(linesArrayList.get(i)));
-            int renderLineStartIndex = insertionPointCol / (width - 1);
-            int renderLineEndIndex = renderLineStartIndex + width - 1;
-            //endindex -1 to make space for vertical bar
-            Terminal.printText(1 + startY, 1 + startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex - 1, lineString.length())));
-            currentTerminalRow++;
-        }
-
-        int cursorXoffset = insertionPointCol % width;
-        int cursorYoffset = insertionPointLine % height;
-        Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
-        String status = this.status.renderStatusbar();
-    }
-    */
-
-    public String getStatusBar(){
-      return this.status.renderStatusbar();
-    }
     /**
      * Updates the content of the FileBuffer
      */
@@ -169,7 +136,7 @@ public class FileBuffer {
     /**
      * Determines if the buffer has been modified.
      */
-    boolean getDirty() {
+    public boolean getDirty() {
         return this.dirty;
     }
 
@@ -184,9 +151,16 @@ public class FileBuffer {
     }
 
     /**
-     * Returns the FileHolder object
+     * Returns the FileHolder object file (for testing purposes)
      */
     FileHolder getFileHolder() {
+        return this.file.clone();
+    }
+
+    /**
+     * Returns a copy of the Fileholder object, without a reference to the internal object
+     */
+    public FileHolder getFileHorlder(){
         return this.file.clone();
     }
 
@@ -318,6 +292,10 @@ public class FileBuffer {
         return insertionPointLine;
     }
 
+    public int getInsertionPointCol() {
+        return insertionPointCol;
+    }
+
     public ArrayList<ArrayList<Byte>> getLinesArrayList() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
         for(int i = 0; i<linesArrayList.size(); i++){
@@ -328,10 +306,6 @@ public class FileBuffer {
             clonedLinesList.add(clonedLine);
         }
         return clonedLinesList;
-    }
-
-    public int getInsertionPointCol() {
-        return insertionPointCol;
     }
 
     public void deleteCharacter() {
