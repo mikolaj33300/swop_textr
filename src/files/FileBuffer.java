@@ -112,6 +112,7 @@ public class FileBuffer {
         int cursorXoffset = insertionPointCol % width;
         int cursorYoffset = insertionPointLine % height;
         Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
+        String status = this.status.renderStatusbar();
     }
 
     public String getStatusBar(){
