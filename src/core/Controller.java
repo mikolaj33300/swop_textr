@@ -100,7 +100,6 @@ public class Controller {
             switch(b) {
                 case 8, 127, 10, 62:
                     deleteCharacter();
-                    Terminal.clearScreen();
                     break;
                 // Control + S
                 case 19:
@@ -109,22 +108,18 @@ public class Controller {
                 // Control + P
                 case 16:
                     moveFocus(Layout.DIRECTION.LEFT);
-                    Terminal.clearScreen();
                     break;
                 // Control + N
                 case 14:
                     moveFocus(Layout.DIRECTION.RIGHT);
-                    Terminal.clearScreen();
                     break;
                 // Control + R
                 case 18:
                     rotateLayout(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
-                    Terminal.clearScreen();
                     break;
                 // Control + T
                 case 20:
                     rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
-                    Terminal.clearScreen();
                     break;
                 // Arrow keys
                 case 27:
@@ -137,7 +132,6 @@ public class Controller {
                             break;
                         case 'S':// Ctrl+F4
                             System.out.println((char) c);
-                            Terminal.clearScreen();
                             break;
                     }
                     break;
@@ -153,6 +147,8 @@ public class Controller {
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
             }
+            Terminal.clearScreen();
+
             render();
             //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
