@@ -165,7 +165,7 @@ public class Controller {
     }
 
     /**
-     *
+     * Clears the active view's of text
      */
     void clearContent() throws IOException {
         rootLayout.clearContent();
