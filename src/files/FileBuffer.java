@@ -178,6 +178,7 @@ public class FileBuffer {
             }
         }
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+        this.dirty = true;
     }
 
     // Default methods
