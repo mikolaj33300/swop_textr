@@ -12,6 +12,9 @@ import java.util.ArrayList;
 
 public class Controller {
 
+    /**
+     * Holds the line separator for this application
+     */
     private static byte[] lineSeparatorArg;
 
     /**
@@ -217,8 +220,8 @@ public class Controller {
     /**
      * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
-    Layout initRootLayout() {
-        return rootLayout;
+    Layout getRootLayout() {
+        return rootLayout.clone();
     }
 
     /**
@@ -265,12 +268,12 @@ public class Controller {
 
     }
 
-    protected static void setLineSeparatorFromArgs(String[] args) {
+    static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
             Controller.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
             Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
-        else Controller.lineSeparatorArg = null;
+        else Controller.lineSeparatorArg = System.lineSeparator().getBytes();
     }
 
     public static byte[] getLineSeparatorArg(){
