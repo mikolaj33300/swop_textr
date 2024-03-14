@@ -90,10 +90,20 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
+            /*System.out.print(b);
+            String bs = String.valueOf(b);
+            Terminal.printText(1,1, bs);*/
 
             switch(b) {
+<<<<<<< HEAD
                 case 8, 127:
+=======
+
+                // Backspace
+                case 127:
+>>>>>>> aa630e5eb09404cbcd3a0c58c08e592c392b7f13
                     deleteCharacter();
+                    break;
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -115,7 +125,7 @@ public class Controller {
                 case 13:
                     enterLineSeparator();
                     break;
-                // Character input
+                // Character inpu
                 default:
                     if (b >= 22 && b <= 126)
                       enterText((Integer.valueOf(b)).byteValue());

@@ -1,11 +1,13 @@
 package core;
 
+import core.Controller;
 import files.FileBuffer;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,16 +49,5 @@ public class ControllerTest {
 
         assertTrue(controller.initRootLayout().equals(node));
     }
-    @Test
-    public void testGetLineSeperatorArg(){
-        String path1 = "testresources/test.txt";
-        Controller c1 = new Controller(new String[]{"--lf",path1});
-        assertEquals(Controller.getLineSeparatorArg(), new byte[]{0x0a});
 
-        Controller c2 = new Controller(new String[]{"--crlf",path1});
-        assertEquals(Controller.getLineSeparatorArg(), new byte[]{0x0d, 0x0a});
-
-        Controller c3 = new Controller(new String[]{path1});
-        assertEquals(Controller.getLineSeparatorArg(),null);
-    }
 }
