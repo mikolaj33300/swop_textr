@@ -16,16 +16,6 @@ public abstract class Layout implements Cloneable {
 
     public abstract void closeActive();
 
-    public enum DIRECTION {
-        LEFT,
-        RIGHT
-    }
-
-    public enum ROT_DIRECTION {
-        CLOCKWISE,
-        COUNTERCLOCKWISE
-    }
-
     protected LayoutNode parent = null;
 
     protected boolean containsActive;

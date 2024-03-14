@@ -107,19 +107,19 @@ public class Controller {
                     break;
                 // Control + P
                 case 16:
-                    moveFocus(Layout.DIRECTION.LEFT);
+                    moveFocus(DIRECTION.LEFT);
                     break;
                 // Control + N
                 case 14:
-                    moveFocus(Layout.DIRECTION.RIGHT);
+                    moveFocus(DIRECTION.RIGHT);
                     break;
                 // Control + R
                 case 18:
-                    rotateLayout(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+                    rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE);
                     break;
                 // Control + T
                 case 20:
-                    rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
+                    rotateLayout(ROT_DIRECTION.CLOCKWISE);
                     break;
                 // Surrogate keys
                 case 27:
@@ -201,14 +201,14 @@ public class Controller {
     /**
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
-    void rotateLayout(Layout.ROT_DIRECTION orientation){
+    void rotateLayout(ROT_DIRECTION orientation){
         rootLayout.rotateRelationshipNeighbor(orientation);
     }
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
      */
-    void moveFocus(Layout.DIRECTION dir) {
+    void moveFocus(DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
 

@@ -53,42 +53,42 @@ class LayoutLeafTest {
         assertFalse(children.get(1).getContainsActive());
         assertFalse(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        ln.moveFocus(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertFalse(children.get(0).getContainsActive());
         assertTrue(children.get(1).getContainsActive());
         assertFalse(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.LEFT);
+        ln.moveFocus(DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertTrue(children.get(0).getContainsActive());
         assertFalse(children.get(1).getContainsActive());
         assertFalse(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.LEFT);
+        ln.moveFocus(DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertTrue(children.get(0).getContainsActive());
         assertFalse(children.get(1).getContainsActive());
         assertFalse(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        ln.moveFocus(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertFalse(children.get(0).getContainsActive());
         assertTrue(children.get(1).getContainsActive());
         assertFalse(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        ln.moveFocus(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertFalse(children.get(0).getContainsActive());
         assertFalse(children.get(1).getContainsActive());
         assertTrue(children.get(2).getContainsActive());
 
-        ln.moveFocus(Layout.DIRECTION.RIGHT);
+        ln.moveFocus(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActive());
         assertFalse(children.get(0).getContainsActive());
@@ -96,15 +96,15 @@ class LayoutLeafTest {
         assertTrue(children.get(2).getContainsActive());
 
         assertTrue(l3.getContainsActive());
-        l3.moveFocus(Layout.DIRECTION.RIGHT);
+        l3.moveFocus(DIRECTION.RIGHT);
         assertTrue(l3.getContainsActive());
-        l3.moveFocus(Layout.DIRECTION.LEFT);
+        l3.moveFocus(DIRECTION.LEFT);
         assertTrue(l3.getContainsActive());
 
         assertFalse(l4.getContainsActive());
-        l4.moveFocus(Layout.DIRECTION.RIGHT);
+        l4.moveFocus(DIRECTION.RIGHT);
         assertFalse(l4.getContainsActive());
-        l4.moveFocus(Layout.DIRECTION.LEFT);
+        l4.moveFocus(DIRECTION.LEFT);
         assertFalse(l4.getContainsActive());
     }
 
