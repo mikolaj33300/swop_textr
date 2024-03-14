@@ -1,5 +1,7 @@
 package layouttree;
 
+import java.io.IOException;
+
 public abstract class Layout implements Cloneable {
 
     protected Layout getRootLayoutUncloned() {
@@ -10,6 +12,18 @@ public abstract class Layout implements Cloneable {
         }
     }
 
+    public Layout getRootLayout() {
+        if(this.parent != null){
+            return parent.getRootLayout();
+        } else {
+            return this.clone();
+        }
+    }
+
+    public LayoutNode getParent(){
+        return parent.clone();
+    }
+
     protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
 
     public abstract void deleteCharacter();
@@ -18,9 +32,9 @@ public abstract class Layout implements Cloneable {
 
     protected LayoutNode parent = null;
 
-    protected boolean containsActive;
+    protected boolean containsActiveView;
 
-    public abstract void renderTextContent(int startX, int startY, int width, int height);
+    public abstract void renderContent() throws IOException;
 
 /*    public abstract void closeActiveFile();
     public abstract void writeActiveFile();
@@ -30,8 +44,8 @@ public abstract class Layout implements Cloneable {
     protected void setParent(LayoutNode layoutNode){
         this.parent = layoutNode;
     }
-    public boolean getContainsActive(){
-        return containsActive;
+    public boolean getContainsActiveView(){
+        return containsActiveView;
     }
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
 
@@ -41,14 +55,14 @@ public abstract class Layout implements Cloneable {
     protected abstract void makeLeftmostLeafActive();
     protected abstract void makeRightmostLeafActive();
 
-    public abstract void renderCursor(int startX, int startY, int width, int height);
+    public abstract void renderCursor() throws IOException;
 
     public abstract void enterInsertionPoint();
 
     public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir);
     protected abstract LayoutLeaf getLeftLeaf();
-    protected void setContainsActive(boolean active){
-        this.containsActive = active;
+    protected void setContainsActiveView(boolean active){
+        this.containsActiveView = active;
     }
 
     public abstract void forcedCloseActive();

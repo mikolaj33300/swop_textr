@@ -48,21 +48,21 @@ class LayoutTest {
     @Test
     void testGetContainsActive(){
 
-        assertTrue(l1.getContainsActive());
-        assertFalse(l2.getContainsActive());
+        assertTrue(l1.getContainsActiveView());
+        assertFalse(l2.getContainsActiveView());
     }
 
     @Test
     void setContainsActive(){
-        l1.setContainsActive(true);
-        assertTrue(l1.getContainsActive());
-        l1.setContainsActive(false);
-        assertFalse(l1.getContainsActive());
+        l1.setContainsActiveView(true);
+        assertTrue(l1.getContainsActiveView());
+        l1.setContainsActiveView(false);
+        assertFalse(l1.getContainsActiveView());
 
-        l2.setContainsActive(false);
-        assertFalse(l2.getContainsActive());
-        l2.setContainsActive(true);
-        assertTrue(l2.getContainsActive());
+        l2.setContainsActiveView(false);
+        assertFalse(l2.getContainsActiveView());
+        l2.setContainsActiveView(true);
+        assertTrue(l2.getContainsActiveView());
     }
 }
 

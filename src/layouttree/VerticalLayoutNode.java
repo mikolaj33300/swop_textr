@@ -1,15 +1,55 @@
 package layouttree;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class VerticalLayoutNode extends LayoutNode{
+
+    @Override
+    public void renderCursor() throws IOException {
+        super.renderCursor();
+    }
 
     /**
      * Constructor for VerticalLayoutNode, clones its arguments to prevent representation exposure
      */
     public VerticalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
+    }
+
+    @Override
+    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            return parent.getStartX(this, terminalWidth, terminalHeight);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            int thisY = parent.getStartY(this, terminalWidth, terminalHeight);
+            int thisHeight = parent.getHeight(this, terminalWidth, terminalHeight);
+            return thisY+(thisHeight/ children.size())*children.indexOf(this);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            return parent.getWidth(this, terminalWidth, terminalHeight);
+        }
+        return terminalWidth;
+    }
+
+    @Override
+    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            return parent.getHeight(this, terminalWidth, terminalHeight)/this.children.size();
+        }
+        return terminalHeight/this.children.size();
     }
 
     /**
@@ -57,35 +97,15 @@ public class VerticalLayoutNode extends LayoutNode{
             deepCopyList.add(l.clone());
         }
         VerticalLayoutNode cloned = new VerticalLayoutNode(deepCopyList);
-        cloned.setContainsActive(this.getContainsActive());
+        cloned.setContainsActiveView(this.getContainsActiveView());
         return cloned;
-    }
-
-    @Override
-    public void renderTextContent(int xChild, int yChild, int widthChild, int height){
-        int heightChild = height/children.size(); //rounds down
-
-        for(Layout child : children){
-            child.renderTextContent(xChild, yChild, widthChild, heightChild);
-            yChild = yChild + heightChild;
-        }
-    }
-
-    @Override
-    public void renderCursor(int xChild, int yChild, int widthChild, int height){
-        int heightChild = height/children.size(); //rounds down
-
-        for(Layout child : children){
-            child.renderCursor(xChild, yChild, widthChild, heightChild);
-            yChild = yChild + heightChild;
-        }
     }
 
     @Override
     public boolean equals(Object node) {
         if(node instanceof VerticalLayoutNode layoutNode) {
             //Check objects for same activity-status
-            if(this.getContainsActive() != layoutNode.getContainsActive()){
+            if(this.getContainsActiveView() != layoutNode.getContainsActiveView()){
                 return false;
             }
             // Return early when the amount of children don't match.

@@ -356,4 +356,8 @@ public class FileBuffer {
     public void close() {
 
     }
+
+    public String getPath() {
+        return file.getPath();
+    }
 }

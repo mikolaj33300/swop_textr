@@ -12,6 +12,37 @@ public class HorizontalLayoutNode extends LayoutNode {
         super(newChildren);
     }
 
+    @Override
+    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            int thisX = parent.getStartX(this, terminalWidth, terminalHeight);
+            int thisWidth = parent.getWidth(this, terminalWidth, terminalHeight);
+            return thisX+(thisWidth/ children.size())*children.indexOf(this);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            return parent.getStartY(this, terminalWidth, terminalHeight);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
+        if(parent != null){
+            return parent.getWidth(this, terminalWidth, terminalHeight)/this.children.size();
+        }
+        return terminalWidth / children.size();
+    }
+
+    @Override
+    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
+        return parent.getHeight(this, terminalWidth, terminalHeight);
+    }
+
     /**
      * Returns the orientation of the HorizontalLayoutNode
      */
@@ -57,35 +88,15 @@ public class HorizontalLayoutNode extends LayoutNode {
             deepCopyList.add(l.clone());
         }
         HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
-        cloned.setContainsActive(this.getContainsActive());
+        cloned.setContainsActiveView(this.getContainsActiveView());
         return cloned;
-    }
-
-    @Override
-    public void renderTextContent(int xChild, int yChild, int width, int heightChild) {
-        int widthChild = width / children.size(); //rounds down
-
-        for (Layout child : children) {
-            child.renderTextContent(xChild, yChild, widthChild, heightChild);
-            xChild = xChild + widthChild;
-        }
-    }
-
-    @Override
-    public void renderCursor(int xChild, int yChild, int width, int heightChild) {
-        int widthChild = width / children.size(); //rounds down
-
-        for (Layout child : children) {
-            child.renderCursor(xChild, yChild, widthChild, heightChild);
-            xChild = xChild + widthChild;
-        }
     }
 
     @Override
     public boolean equals(Object node) {
         if (node instanceof HorizontalLayoutNode layoutNode) {
             //Check objects for same activity-status
-            if (this.getContainsActive() != layoutNode.getContainsActive()) {
+            if (this.getContainsActiveView() != layoutNode.getContainsActiveView()) {
                 return false;
             }
             // Return early when the amount of children don't match.

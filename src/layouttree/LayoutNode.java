@@ -1,5 +1,6 @@
 package layouttree;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
@@ -22,6 +23,27 @@ public abstract class LayoutNode extends Layout {
             if (l.isAllowedToBeChildOf(this))
                 this.insertDirectChild(l.clone());
     }
+
+    public void renderContent() throws IOException {
+        for(Layout l : children){
+            l.renderContent();
+        }
+    }
+
+    public void renderCursor() throws IOException {
+        for(Layout l : children){
+            l.renderCursor();
+        }
+    }
+
+    //Get start X of child l
+    public abstract int getStartX(Layout l, int terminalWidth, int terminalHeight);
+
+    public abstract int getStartY(Layout l, int terminalWidth, int terminalHeight);
+
+    public abstract int getWidth(Layout l, int terminalWidth, int terminalHeight);
+
+    public abstract int getHeight(Layout l, int terminalWidth, int terminalHeight);
 
     /**
      * Returns the orientation of the LayoutNode
@@ -46,7 +68,7 @@ public abstract class LayoutNode extends Layout {
      */
     public void moveFocus(DIRECTION dir) throws RuntimeException {
         for (Layout l : children) {
-            if (l.getContainsActive()) {
+            if (l.getContainsActiveView()) {
                 l.moveFocus(dir);
                 return;
             }
@@ -56,7 +78,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void moveCursor(char c) {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.moveCursor(c);
                 return;
             }
@@ -66,7 +88,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void enterText(byte b) {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.enterText(b);
                 return;
             }
@@ -76,7 +98,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void enterInsertionPoint() {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.enterInsertionPoint();
                 return;
             }
@@ -86,7 +108,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void saveActiveBuffer() {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.saveActiveBuffer();
                 return;
             }
@@ -96,7 +118,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void deleteCharacter() {
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.deleteCharacter();
                 return;
             }
@@ -106,7 +128,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void closeActive(){
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.closeActive();
                 return;
             }
@@ -116,7 +138,7 @@ public abstract class LayoutNode extends Layout {
     @Override
     public void forcedCloseActive(){
         for (Layout l : children) {
-            if(l.getContainsActive()){
+            if(l.getContainsActiveView()){
                 l.forcedCloseActive();
                 return;
             }
@@ -128,15 +150,15 @@ public abstract class LayoutNode extends Layout {
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
-            if (cloneOfInsert.getContainsActive()) {
-                this.containsActive = true;
+            if (cloneOfInsert.getContainsActiveView()) {
+                this.containsActiveView = true;
             }
         }
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
         for (Layout l : children) {
-            if (l.getContainsActive()) {
+            if (l.getContainsActiveView()) {
                 return l.rotateRelationshipNeighbor(rot_dir);
             }
         }
@@ -192,12 +214,12 @@ public abstract class LayoutNode extends Layout {
     }
 
     protected void makeLeftmostLeafActive() {
-        this.containsActive = true;
+        this.containsActiveView = true;
         children.get(0).makeLeftmostLeafActive();
     }
 
     protected void makeRightmostLeafActive() {
-        this.containsActive = true;
+        this.containsActiveView = true;
         children.get(children.size() - 1).makeRightmostLeafActive();
     }
 
@@ -213,7 +235,7 @@ public abstract class LayoutNode extends Layout {
             children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
             if (parent != null) {
-                containsActive = false;
+                containsActiveView = false;
                 parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
             } else {
                 makeRightmostLeafActive();
@@ -228,7 +250,7 @@ public abstract class LayoutNode extends Layout {
             children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
         } else {
             if (parent != null) {
-                containsActive = false;
+                containsActiveView = false;
                 parent.makeLeftNeighbourActive(this); //called when we need to backtrack one level up
             } else {
                 makeLeftmostLeafActive();

@@ -1,8 +1,10 @@
 package layouttree;
 
-import files.FileAnalyserUtil;
 import files.FileBuffer;
-import io.github.btj.termios.Terminal;
+import ui.FileBufferView;
+import ui.View;
+
+import java.io.IOException;
 
 
 /**
@@ -10,14 +12,29 @@ import io.github.btj.termios.Terminal;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private FileBuffer containedFileBuffer;
+    private FileBufferView containedFileBufferView;
 
+    public int getStartX(int terminalWidth, int terminalHeight){
+        return parent.getStartX(this, terminalWidth, terminalHeight);
+    }
+
+    public int getStartY(int terminalWidth, int terminalHeight){
+        return parent.getStartY(this, terminalWidth, terminalHeight);
+    }
+
+    public int getHeight(int terminalWidth, int terminalHeight){
+        return parent.getHeight(this, terminalWidth, terminalHeight);
+    }
+
+    public int getWidth(int terminalWidth, int terminalHeight){
+        return parent.getWidth(this, terminalWidth, terminalHeight);
+    }
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
     public LayoutLeaf(String path, boolean active) {
-        this.containedFileBuffer = new FileBuffer(path);
-        this.setContainsActive(active);
+        this.containedFileBufferView = new FileBufferView(path, this);
+        this.setContainsActiveView(active);
     }
 
     /**
@@ -45,22 +62,22 @@ public class LayoutLeaf extends Layout {
 
     @Override
     public void moveCursor(char c) {
-        containedFileBuffer.moveCursor(c);
+        containedFileBufferView.moveCursor(c);
     }
 
     @Override
     public void enterText(byte b) {
-        containedFileBuffer.write(b);
+        containedFileBufferView.write(b);
     }
 
     @Override
     public void saveActiveBuffer() {
-        containedFileBuffer.save();
+        containedFileBufferView.save();
     }
 
     @Override
     public void enterInsertionPoint() {
-        containedFileBuffer.enterInsertionPoint();
+        containedFileBufferView.enterInsertionPoint();
     }
 
     /**
@@ -69,7 +86,7 @@ public class LayoutLeaf extends Layout {
      */
     private void moveFocusRight() {
         if (parent != null) {
-            this.setContainsActive(false);
+            this.setContainsActiveView(false);
             parent.makeRightNeighbourActive(this);
         }
     }
@@ -80,35 +97,9 @@ public class LayoutLeaf extends Layout {
      */
     private void moveFocusLeft() {
         if (parent != null) {
-            this.setContainsActive(false);
+            this.setContainsActiveView(false);
             parent.makeLeftNeighbourActive(this);
         }
-    }
-
-    public String renderStatusbar() {
-        String statusLine = containedFileBuffer.getFileHolder().getPath();
-        statusLine += " #Lines:";
-        statusLine += String.valueOf(containedFileBuffer.getLines().size());
-        statusLine += " #Chars:";
-        String contents = new String(containedFileBuffer.getFileHolder().getContent());
-        statusLine += contents.length();
-        statusLine += " Insert:[";
-        statusLine += containedFileBuffer.getInsertionPointLine();
-        statusLine += ";";
-        statusLine += containedFileBuffer.getInsertionPointCol();
-        statusLine += "] ";
-        if (containedFileBuffer.getDirty())
-            statusLine += "Dirty";
-        else
-            statusLine += "Clean";
-        statusLine += " ";
-      
-        if(this.getContainsActive())
-
-            statusLine += "Active";
-        else
-            statusLine += "Not Active";
-        return statusLine;
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
@@ -122,14 +113,19 @@ public class LayoutLeaf extends Layout {
 
     @Override
     public void closeActive() {
-        if (containsActive) {
-            containedFileBuffer.close();
+        if (containsActiveView) {
+            containedFileBufferView.close();
         }
     }
 
     @Override
+    public void renderContent() throws IOException {
+        containedFileBufferView.render();
+    }
+
+    @Override
     public void forcedCloseActive() {
-        if (containsActive) {
+        if (containsActiveView) {
             parent.makeRightNeighbourActive(this);
             parent.delete(this);
         }
@@ -142,7 +138,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof LayoutLeaf leaf) {
-            return leaf.containedFileBuffer.equals(this.containedFileBuffer) && (this.getContainsActive() == leaf.getContainsActive());
+            return leaf.containedFileBufferView.equals(this.containedFileBufferView) && (this.getContainsActiveView() == leaf.getContainsActiveView());
         } else {
             return false;
         }
@@ -154,7 +150,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
-        if (getContainsActive() && futureParent.getContainsActive()) {
+        if (getContainsActiveView() && futureParent.getContainsActiveView()) {
             throw new RuntimeException("Invalid child: more than two active");
         } else {
             return true;
@@ -163,41 +159,7 @@ public class LayoutLeaf extends Layout {
 
     @Override
     public void deleteCharacter() {
-        containedFileBuffer.deleteCharacter();
-    }
-
-    /**
-     * Renders the current layout-tree
-     * Renders:
-     * All the instances of LayoutLeaf
-     * A statusbar per file
-     * Two scrollbars per file (one horizontal and one vertical)
-     * The insertionPoint in the current active LayoutLeaf
-     */
-
-    public void renderTextContent(int startX, int startY, int width, int height) {
-        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
-        //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
-        int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
-        //Renders either all the lines until the end, or the next height-2 lines
-        for (int i = 0; i < Math.min(height - 1, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
-            String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex + i)));
-            //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
-            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
-            int renderLineEndIndex = Math.min(renderLineStartIndex + width - 1, lineString.length());
-            //endindex -1 to make space for vertical bar
-            if (renderLineStartIndex < lineString.length()) {
-                Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
-            }
-        }
-    }
-
-    public void renderCursor(int startX, int startY, int width, int height) {
-        if (containsActive) {
-            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
-            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
-            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
-        }
+        containedFileBufferView.deleteCharacter();
     }
 
     /**
@@ -206,7 +168,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        return new LayoutLeaf(this.containedFileBuffer.getFileHolder().getPath(), getContainsActive());
+        return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
     }
 
     /**
@@ -215,7 +177,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected void makeLeftmostLeafActive() {
-        setContainsActive(true);
+        setContainsActiveView(true);
     }
 
     /**
@@ -224,7 +186,14 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected void makeRightmostLeafActive() {
-        setContainsActive(true);
+        setContainsActiveView(true);
+    }
+
+    @Override
+    public void renderCursor() throws IOException {
+        if(super.containsActiveView){
+            containedFileBufferView.renderCursor();
+        }
     }
 
     /**

@@ -1,6 +1,5 @@
 package core;
 
-import files.FileBuffer;
 import io.github.btj.termios.Terminal;
 import layouttree.*;
 
@@ -82,13 +81,9 @@ public class Controller {
      * Contains the main input loop
      */
     public void loop() throws IOException {
-
-        // Start program.
-        Terminal.clearScreen();
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
         // Reading terminal dimensions for correct rendering
-        retrieveDimensions();
         render();
         // Main loop
         for ( ; ; ) {
@@ -165,9 +160,9 @@ public class Controller {
     /**
      * Renders the layout with the terminal current height & width
      */
-    void render() {
-        this.rootLayout.renderTextContent(0, 0, this.width, this.height);
-        this.rootLayout.renderCursor(0, 0, this.width, this.height);
+    void render() throws IOException {
+        this.rootLayout.renderContent();
+        this.rootLayout.renderCursor();
     }
 
     /**
@@ -219,50 +214,6 @@ public class Controller {
      */
     Layout getRootLayout() {
         return rootLayout.clone();
-    }
-
-    /**
-     * <p>Calculates the dimensions of the terminal
-     * Credits to BTJ. This looks very clean and intuïtive.
-     * Sets the fields {@link Controller#width} and {@link Controller#height}.</p>
-     * <p>Method set to default for unit test access.</p>
-     */
-    void retrieveDimensions() throws IOException {
-
-        Terminal.reportTextAreaSize();
-        int tempByte = 0;
-        for(int i = 0; i < 4; i++)
-            Terminal.readByte();
-
-        int c = Terminal.readByte();
-        int height = c - '0';
-        tempByte = Terminal.readByte();
-
-        for(;;) {
-            if(tempByte < '0' || '9' < tempByte)
-                break;
-            if (height > (Integer.MAX_VALUE - (c - '0')) / 10)
-                break;
-            height = height * 10 + (tempByte - '0');
-            tempByte = Terminal.readByte();
-
-        }
-
-        c = Terminal.readByte();
-        int width = c - '0';
-        tempByte = Terminal.readByte();
-
-        for(;;) {
-            if(tempByte < '0' || '9' < tempByte)
-                break;
-            if (width > (Integer.MAX_VALUE - (c - '0')) / 10)
-                break;
-            width = width * 10 + (tempByte - '0');
-            tempByte = Terminal.readByte();
-        }
-        this.width = width;
-        this.height = height;
-
     }
 
     static void setLineSeparatorFromArgs(String[] args) {
