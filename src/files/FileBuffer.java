@@ -5,6 +5,7 @@ import io.github.btj.termios.Terminal;
 
 import java.util.*;
 
+import static files.FileAnalyserUtil.toArray;
 import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
@@ -80,9 +81,7 @@ public class FileBuffer {
      */
     public void enterInsertionPoint() {
         insert(System.lineSeparator().getBytes());
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
-        this.insertionPointCol = 0;
-        this.insertionPointLine++;
+        moveCursorDown();
     }
 
     /**
@@ -112,7 +111,6 @@ public class FileBuffer {
         int cursorXoffset = insertionPointCol % width;
         int cursorYoffset = insertionPointLine % height;
         Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
-        System.out.println(cursorYoffset);
     }
 
     /**
@@ -235,7 +233,7 @@ public class FileBuffer {
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length / 2;
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
         int byteArrIndex = 0;
         for(int i = 0; i < line; i++){
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
@@ -279,7 +277,7 @@ public class FileBuffer {
     }
 
     private void moveCursorRight(){
-        if(insertionPointCol < linesArrayList.get(insertionPointLine).size() - 1) {
+        if(insertionPointCol < linesArrayList.get(insertionPointLine).size()) {
             insertionPointCol++;
         } else {
             //Move cursor one line down, unless already at bottom line
@@ -310,5 +308,20 @@ public class FileBuffer {
 
     public int getInsertionPointCol() {
         return insertionPointCol;
+    }
+
+    public void deleteCharacter() {
+        if(insertionPointCol > 0) {
+            this.byteContent.remove(insertionPointByteIndex-1);
+
+        } else {
+            if(insertionPointLine!=0){
+                for(int i = 0; i<FileHolder.lineSeparator.length ; i++) {
+                    this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+        moveCursorLeft();
     }
 }

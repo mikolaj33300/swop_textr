@@ -12,6 +12,8 @@ public abstract class Layout implements Cloneable {
 
     protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
 
+    public abstract void deleteCharacter();
+
     public enum DIRECTION {
         LEFT,
         RIGHT

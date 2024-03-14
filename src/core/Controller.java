@@ -92,6 +92,8 @@ public class Controller {
             int b = Terminal.readByte();
 
             switch(b) {
+                case 8:
+                    deleteCharacter();
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -119,12 +121,16 @@ public class Controller {
                     break;
 
             }
-
+            Terminal.clearScreen();
             render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
 
+    }
+
+    private void deleteCharacter() {
+        rootLayout.deleteCharacter();
     }
 
     /**
