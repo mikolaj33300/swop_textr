@@ -95,7 +95,7 @@ public class Controller {
             Terminal.printText(1,1, bs);*/
 
             switch(b) {
-                case 8, 127, 10:
+                case 8, 127, 10, 62:
                     deleteCharacter();
                     break;
                 // Control + S
@@ -118,10 +118,19 @@ public class Controller {
                 case 20:
                     rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
                     break;
-                        // Arrow keys
+                // Arrow keys
                 case 27:
                     Terminal.readByte();
-                    moveCursor((char) Terminal.readByte());
+                    int c = Terminal.readByte();
+
+                    switch ((char) c) {
+                        case 'A', 'B', 'C', 'D':
+                            moveCursor((char) c);
+                            break;
+                        case 'S':// F4
+                            System.out.println((char) c);
+                            break;
+                    }
                     break;
                 // Line separator
                 case 13:
