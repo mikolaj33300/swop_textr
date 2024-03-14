@@ -75,7 +75,7 @@ public abstract class View {
     };
 
     /**
-     * Render all the elements on the current view
+     * Render all the elements on the thid view
      */
     public abstract void render() throws IOException;
 

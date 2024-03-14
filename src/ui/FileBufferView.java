@@ -8,17 +8,22 @@ import layouttree.LayoutLeaf;
 import java.io.IOException;
 
 public class FileBufferView extends View{
+    /**
+     * The FileBuffer linked to this FileBufferView
+     */
     private FileBuffer containedFileBuffer;
 
+    /**
+     * Constructor for FileBufferView that makes copies of its arguments to prevent representation exposure
+     */
     public FileBufferView(String path, LayoutLeaf parent) {
-        super.parent = parent;
+        super.parent = parent.clone();
         containedFileBuffer = new FileBuffer(path);
     }
 
-    public String getContainedPath(){
-        return containedFileBuffer.getPath();
-    }
-
+    /**
+     * Render all the elements on the this FileBufferView
+     */
     @Override
     public void render() throws IOException {
         super.setCorrectCoords();
@@ -36,10 +41,27 @@ public class FileBufferView extends View{
                 Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
             }
         }
-        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
+        Terminal.printText(startY + height, startX + 1, this.generateStatusbar());
     }
 
-    private String renderStatusbar() {
+    /**
+     * Renders the cursor on the current view
+     */
+    public void renderCursor() throws IOException {
+        super.setCorrectCoords();
+        if (parent.getContainsActiveView()) {
+            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
+            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
+            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
+        }
+    }
+
+    /**
+     * Returns a String to be used as Statusbar
+     * Contains the Views path, amount of lines, amount of characters, row and column of insertionpoint,
+     * whether the current view is active, and whether FileBuffer is dirty
+     */
+    private String generateStatusbar() {
         String statusLine = containedFileBuffer.getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
@@ -64,26 +86,46 @@ public class FileBufferView extends View{
         return statusLine;
     }
 
+    /**
+     * Moves the cursor of the FileBuffer linked to this FileBufferView up, down, left or right
+     * The direction of the movement depends on the given argument
+     */
     public void moveCursor(char c) {
         containedFileBuffer.moveCursor(c);
     }
 
+    /**
+     * Writes a byte on the FileBuffer linked to this FileBufferView
+     */
     public void write(byte b) {
         containedFileBuffer.write(b);
     }
 
+    /**
+     * Saves the FileBuffer linked to this FileBufferView to the file linked to its FileHolder
+     */
     public void save() {
         containedFileBuffer.save();
     }
 
+    /**
+     * Inserts a lineseperator on the current insertionpoint in the FileBuffer linked to this FileBufferView
+     */
     public void enterInsertionPoint() {
         containedFileBuffer.enterInsertionPoint();
     }
 
+    /**
+     * Closes the current buffer and recalculates the Layout-tree
+     * If //TODO: kijk of dit specifiek programma sluiot, of een andere test -> zie na implementatie
+     */
     public void close() {
         containedFileBuffer.close();
     }
 
+    /**
+     * Checks whether this FileBuffer and the given object are the same type and have the same contents
+     */
     public boolean equals(Object obj) {
         if (obj instanceof FileBufferView fBufView) {
             return fBufView.containedFileBuffer.equals(this.containedFileBuffer);
@@ -92,20 +134,18 @@ public class FileBufferView extends View{
         }
     }
 
+    /**
+     * Deletes the character at the current insertionpoint of the FileBuffer linked to this FileBufferView
+     */
     public void deleteCharacter() {
         containedFileBuffer.deleteCharacter();
     }
 
+    /**
+     * Returns a copy of the FileBuffer linked to this FileBufferView
+     */
     public FileBuffer getContainedFileBuffer() {
         return containedFileBuffer.clone();
     }
 
-    public void renderCursor() throws IOException {
-        super.setCorrectCoords();
-        if (parent.getContainsActiveView()) {
-            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
-            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
-            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
-        }
-    }
 }
