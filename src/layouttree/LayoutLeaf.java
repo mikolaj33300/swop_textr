@@ -14,6 +14,14 @@ import java.io.IOException;
 public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
+    /**
+     *
+     * @param terminalWidth
+     * @param terminalHeight
+     * @return
+     *
+     * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
+     */
     public int getStartX(int terminalWidth, int terminalHeight){
         if(parent != null){
             return parent.getStartX(this, terminalWidth, terminalHeight);
@@ -21,9 +29,19 @@ public class LayoutLeaf extends Layout {
         return 0;
     }
 
+
     public void clearContent() throws IOException {
         containedFileBufferView.clearContent();
     }
+
+    /**
+     *
+     * @param terminalWidth
+     * @param terminalHeight
+     * @return
+     *
+     * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
+     */
     public int getStartY(int terminalWidth, int terminalHeight){
         if(parent != null){
             return parent.getStartY(this, terminalWidth, terminalHeight);
@@ -31,6 +49,14 @@ public class LayoutLeaf extends Layout {
         return 0;
     }
 
+    /**
+     *
+     * @param terminalWidth
+     * @param terminalHeight
+     * @return
+     *
+     * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
+     */
     public int getHeight(int terminalWidth, int terminalHeight){
         if(parent != null){
             return parent.getHeight(this, terminalWidth, terminalHeight);
@@ -38,6 +64,14 @@ public class LayoutLeaf extends Layout {
         return terminalHeight;
     }
 
+    /**
+     *
+     * @param terminalWidth
+     * @param terminalHeight
+     * @return
+     *
+     * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
+     */
     public int getWidth(int terminalWidth, int terminalHeight){
         if(parent != null){
             return parent.getWidth(this, terminalWidth, terminalHeight);
@@ -75,16 +109,25 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Calls moveCursor() on the contained active {@link ui.FileBufferView}(s).
+     */
     @Override
     public void moveCursor(char c) {
         containedFileBufferView.moveCursor(c);
     }
 
+    /**
+     * Calls enterText() on the contained {@link ui.FileBufferView}.
+     */
     @Override
     public void enterText(byte b) {
         containedFileBufferView.write(b);
     }
 
+    /**
+     * Calls save() on the contained {@link ui.FileBufferView}.
+     */
     @Override
     public void saveActiveBuffer() {
         containedFileBufferView.save();
@@ -97,7 +140,7 @@ public class LayoutLeaf extends Layout {
 
     /**
      * Moves focus from the currently active Layout, to the rightneigbouring layout
-     * If no neighbours left, the active Layout stays active
+     * If no neighbours right, the active Layout stays active
      */
     private void moveFocusRight() {
         if (parent != null) {
@@ -133,11 +176,17 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Calls renderContent() on the contained {@link ui.FileBufferView}(s).
+     */
     @Override
     public void renderContent() throws IOException {
         containedFileBufferView.render();
     }
 
+    /**
+     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     */
     @Override
     public void forcedCloseActive() {
         if (containsActiveView) {
