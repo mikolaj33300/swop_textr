@@ -186,14 +186,16 @@ public class LayoutLeaf extends Layout {
             int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
             int renderLineEndIndex = Math.min(renderLineStartIndex + width - 1, lineString.length());
             //endindex -1 to make space for vertical bar
-            Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+            if (renderLineStartIndex < lineString.length()) {
+                Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+            }
         }
     }
 
     public void renderCursor(int startX, int startY, int width, int height) {
         if (containsActive) {
-            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % width;
-            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % height;
+            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
+            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
             Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
         }
     }
