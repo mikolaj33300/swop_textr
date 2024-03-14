@@ -35,7 +35,7 @@ public class ControllerTest {
         // Testing only paths
         args = new String[]{path1, path2};
         Controller.setLineSeparatorFromArgs(args);
-        assertNull(Controller.getLineSeparatorArg());
+        assertArrayEquals(Controller.getLineSeparatorArg(), System.lineSeparator().getBytes());
 
         // Na constructor zou volgende root layout moeten bestaan:
         Controller controller = new Controller(args);

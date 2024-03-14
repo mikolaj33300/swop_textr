@@ -314,6 +314,10 @@ public class FileBuffer {
         return insertionPointLine;
     }
 
+    public int getInsertionPointCol() {
+        return insertionPointCol;
+    }
+
     public ArrayList<ArrayList<Byte>> getLinesArrayList() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
         for(int i = 0; i<linesArrayList.size(); i++){
@@ -324,10 +328,6 @@ public class FileBuffer {
             clonedLinesList.add(clonedLine);
         }
         return clonedLinesList;
-    }
-
-    public int getInsertionPointCol() {
-        return insertionPointCol;
     }
 
     public void deleteCharacter() {
