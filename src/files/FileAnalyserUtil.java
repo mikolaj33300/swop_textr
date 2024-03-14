@@ -9,12 +9,7 @@ import java.util.Formatter;
 
 public class FileAnalyserUtil {
 
-    /**
-     * Returns a Map<Integer, Boolean> which indicates at which integer a line separator should be printed.
-     * The byte map contains "0d0a" or "0a" as line separators. Other line separations are found by checking
-     * the dimension of the window.
-     * Used for rendering.
-     */
+
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
         int lineSepLength = System.lineSeparator().getBytes().length;
         int startOfCurrentLine = 0;
