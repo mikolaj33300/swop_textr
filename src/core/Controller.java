@@ -92,7 +92,7 @@ public class Controller {
             int b = Terminal.readByte();
 
             switch(b) {
-                case 8:
+                case 8, 127:
                     deleteCharacter();
                 // Control + S
                 case 19:
@@ -117,7 +117,8 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    enterText((Integer.valueOf(b)).byteValue());
+                    if (b >= 22 && b <= 126)
+                      enterText((Integer.valueOf(b)).byteValue());
                     break;
 
             }
