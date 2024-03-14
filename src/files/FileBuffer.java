@@ -345,4 +345,8 @@ public class FileBuffer {
         }
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
     }
+
+    public void close() {
+
+    }
 }

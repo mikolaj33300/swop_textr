@@ -118,6 +118,21 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    @Override
+    public void closeActive(){
+        if(containsActive){
+            containedFileBuffer.close();
+        }
+    }
+
+    @Override
+    public void forcedCloseActive(){
+        if(containsActive){
+            parent.makeRightNeighbourActive(this);
+            parent.delete(this);
+        }
+    }
+
     /**
      * Determines if the given LayoutLeaf and Object are equal content-wise (not reference-wise)
      * Determines if the given layout is a {@link LayoutLeaf} and their {@link FileBuffer}'s are also equal

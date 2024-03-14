@@ -123,7 +123,7 @@ public class Controller {
                     rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
                     Terminal.clearScreen();
                     break;
-                // Arrow keys
+                // Surrogate keys
                 case 27:
                     Terminal.readByte();
                     int c = Terminal.readByte();
