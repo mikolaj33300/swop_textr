@@ -18,9 +18,9 @@ public abstract class View {
 
     protected LayoutLeaf parent;
 
-    public View(LayoutLeaf parent) {
-        this.parent = parent;
-    }
+    //public View(LayoutLeaf parent) {
+        //this.parent = parent;
+    //}
 
     protected void setCorrectCoords() throws IOException {
         retrieveDimensions();

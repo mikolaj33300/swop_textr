@@ -91,6 +91,13 @@ public class HorizontalLayoutNodeTest {
         assertEquals(hn11,hn11_clone);
         assertNotSame(hn11,hn11_clone);
     }
+
+    @Test
+    void testReturnedCoordX(){
+        LayoutLeaf realChild = (LayoutLeaf) hn1.children.get(1);
+        int obtainedX = realChild.getStartX(10, 10);
+        assertEquals(obtainedX, 5);
+    }
 }
 
 

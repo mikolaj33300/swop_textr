@@ -22,11 +22,6 @@ public class Controller {
     Layout rootLayout;
 
     /**
-     * Size of the terminal
-     */
-    private int width, height;
-
-    /**
      * Creates a controller object.
      * Creates a {@link Layout} object which represents the root layout.
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}

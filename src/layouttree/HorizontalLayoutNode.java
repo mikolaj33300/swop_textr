@@ -17,9 +17,9 @@ public class HorizontalLayoutNode extends LayoutNode {
         if(parent != null){
             int thisX = parent.getStartX(this, terminalWidth, terminalHeight);
             int thisWidth = parent.getWidth(this, terminalWidth, terminalHeight);
-            return thisX+(thisWidth/ children.size())*children.indexOf(this);
+            return thisX+(thisWidth/ children.size())*children.indexOf(l);
         }
-        return 0;
+        return (terminalWidth/ children.size())*children.indexOf(l);
     }
 
     @Override
@@ -40,7 +40,11 @@ public class HorizontalLayoutNode extends LayoutNode {
 
     @Override
     public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        return parent.getHeight(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getHeight(this, terminalWidth, terminalHeight);
+        }
+        return terminalWidth;
+
     }
 
     /**
