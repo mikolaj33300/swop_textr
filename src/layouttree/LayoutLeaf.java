@@ -144,7 +144,7 @@ public class LayoutLeaf extends Layout {
             //endindex -1 to make space for vertical bar
             Terminal.printText(1+startY+i, 1+startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
         }
-        Terminal.printText(startY + height, startX + 1, containedFileBuffer.getStatusBar());
+        Terminal.printText(startY + height, startX + 1, containedFileBuffer.getStatusbar());
     }
 
     public void renderCursor(int startX, int startY, int width, int height) {

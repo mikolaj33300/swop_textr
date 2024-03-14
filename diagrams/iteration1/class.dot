@@ -1,25 +1,25 @@
 digraph {
   node[shape=none]
 
-  /*
   Layout[label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutNode</td></tr>
-    <tr><td>-DIRECTION: enum<br/>
-      -ROT_DIRECTION: enum<br/>
-      -parent: LayoutNode: enum<br/>
-      -containsActive: boolean</td></tr>
-    <tr><td>+getRootLayoutUncloned()<br/>
-      +isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +render(int startX, int startY, int width, int height)<br/>
-      +deleteLeftLeaf()<br/>
-      +setParent()<br/>
+    <tr><td>+DIRECTION: enum<br/>
+      +ROT_DIRECTION: enum<br/>
+      #parent: LayoutNode: enum<br/>
+      +containsActive: boolean</td></tr>
+    <tr><td>#getRootLayoutUncloned();<br/>
+      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +deleteCharacter()<br/>
+      +renderTextContent(int startX, int startY, int width, int height)<br/>
+      #deleteLeftLeaf()<br/>
+      #setParent()<br/>
       +getContainsActive()<br/>
       +moveFocus(DIRECTION dir)<br/>
-      +makeLeftmostLeafActive()<br/>
-      +makeRightmostLeafActive()<br/>
+      #makeLeftmostLeafActive()<br/>
+      #makeRightmostLeafActive()<br/>
       +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      +getLeftLeaf()<br/>
-      +setContainsActive(boolean active)<br/>
+      #getLeftLeaf()<br/>
+      #setContainsActive(boolean active)<br/>
       +equals(Object obj)<br/>
       +clone()</td></tr>
     </table>>]
@@ -30,14 +30,14 @@ digraph {
       -file: FileHolder<br/>
       -diryt: boolean<br/>
       -byteContent: ArrayList(ArrayList(Byte))<br/>
+      -linesArrayList: ArrayList(ArrayList(Byte))<br/>
       -status: Statusbar<br/>
-      -insertionPointCol: int<br/>
-      -insertionPointLine: int<br/>
-      -insertionPointByteIndex: int
+      ~insertionPointCol: int<br/>
+      ~insertionPointLine: int<br/>
+      ~insertionPointByteIndex: int
     </td></tr>
     <tr><td>+FileBuffer(String path)<br/>
-      +LayoutLeaf getLayout()<br/>
-      +ArrayList(ArrayList(Byte)) getLines()<br/t
+      ~getLines()<br/>
     </td></tr>
     </table>>]
 
@@ -64,5 +64,4 @@ digraph {
       +getLineSeparatorArg()</td></tr>
     </table>>]
   controller -> Layout
-  */
 }

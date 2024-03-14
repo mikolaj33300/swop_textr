@@ -97,6 +97,7 @@ public class FileBuffer {
     /**
      * Renders this buffers content between the width & height relative to start coordinates.
      */
+    /*
     public void render(int startX, int startY, int width, int height) {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
@@ -118,6 +119,7 @@ public class FileBuffer {
     public String getStatusBar(){
       return this.status.renderStatusbar();
     }
+    */
     /**
      * Updates the content of the FileBuffer
      */
