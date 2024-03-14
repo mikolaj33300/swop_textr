@@ -172,6 +172,9 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void deleteCharacter() {
         containedFileBufferView.deleteCharacter();

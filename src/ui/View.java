@@ -43,13 +43,8 @@ public abstract class View {
      */
     protected LayoutLeaf parent;
 
-    //public View(LayoutLeaf parent) {
-        //this.parent = parent;
-    //}
-
     /**
-     * Sets the startcoordinates and measurements of this window
-     * These can be called when the amount of windows change, rotations happen,...
+     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
      */
     protected void setCorrectCoords() throws IOException {
         retrieveDimensions();

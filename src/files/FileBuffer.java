@@ -2,6 +2,7 @@ package files;
 
 import core.Controller;
 import io.github.btj.termios.Terminal;
+import ui.FileBufferView;
 
 
 import java.util.*;
@@ -167,7 +168,10 @@ public class FileBuffer {
         }
         return clonedLinesList;
     }
-  
+
+    /**
+     * Deletes the character before the {@link FileBuffer#insertionPointByteIndex} and updates the cursor position
+     */
     public void deleteCharacter() {
         if(insertionPointCol > 0) {
             this.byteContent.remove(insertionPointByteIndex-1);
@@ -283,6 +287,9 @@ public class FileBuffer {
         return byteArrIndex;
     }
 
+    /**
+     * Makes the calculation to move the cursor down. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorDown() {
         if (insertionPointLine < linesArrayList.size() - 1) {
             insertionPointLine++;
@@ -292,6 +299,9 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor up. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorUp() {
         if (insertionPointLine > 0) {
             insertionPointLine--;
@@ -303,6 +313,9 @@ public class FileBuffer {
 
     }
 
+    /**
+     * Makes the calculation to move the cursor left. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorLeft() {
         if (insertionPointCol > 0) {
             insertionPointCol--;
@@ -318,6 +331,9 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor to the start of the line. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorToFront() {
         if (insertionPointCol > 0){
             insertionPointCol = 0;
@@ -325,6 +341,9 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor right. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorRight(){
         if(insertionPointCol < linesArrayList.get(insertionPointLine).size()) {
             insertionPointCol++;
@@ -359,11 +378,14 @@ public class FileBuffer {
         return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
+    /**
+     * Warns the user if the {@link FileBuffer#dirty} is set to true and prompts the user to save the
+     * {@link FileBuffer}. When done, it will remove the {@link FileBufferView} linked to this object.
+     */
     public void close() {
+        if(dirty) {
 
+        } else return;
     }
 
-    public String getPath() {
-        return file.getPath();
-    }
 }
