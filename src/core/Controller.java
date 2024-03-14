@@ -68,7 +68,7 @@ public class Controller {
             if (!Files.exists(checkPath))
                 System.out.println("Kutzooi");
             else
-                leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
+                leaves.add(new LayoutLeaf(args[i], i == 0));
         }
 
 
