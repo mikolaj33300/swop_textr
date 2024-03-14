@@ -59,26 +59,26 @@ public class LayoutNodeTest {
         FileBuffer fb8 = new FileBuffer(path8);
         FileBuffer fb9 = new FileBuffer(path9);
         FileBuffer fb10 = new FileBuffer(path10);
-        l1 = new LayoutLeaf(fb1, true);
-        l1p = new LayoutLeaf(fb1, false);
-        l2 = new LayoutLeaf(fb2, false);
-        l2a = new LayoutLeaf(fb2, true);
-        l3 = new LayoutLeaf(fb3, false);
-        l3a = new LayoutLeaf(fb3, true);
-        l4 = new LayoutLeaf(fb4, false);
-        l4a = new LayoutLeaf(fb4, true);
-        l5 = new LayoutLeaf(fb5, false);
-        l5a = new LayoutLeaf(fb5, true);
-        l6 = new LayoutLeaf(fb6, false);
-        l6a = new LayoutLeaf(fb6, true);
-        l7 = new LayoutLeaf(fb7, false);
-        l7a = new LayoutLeaf(fb7, true);
-        l8 = new LayoutLeaf(fb8, false);
-        l8a = new LayoutLeaf(fb8, true);
-        l9 = new LayoutLeaf(fb9, false);
-        l9a = new LayoutLeaf(fb9, true);
-        l10 = new LayoutLeaf(fb10, false);
-        l10a = new LayoutLeaf(fb10, true);
+        l1 = new LayoutLeaf(path1, true);
+        l1p = new LayoutLeaf(path1, false);
+        l2 = new LayoutLeaf(path2, false);
+        l2a = new LayoutLeaf(path2, true);
+        l3 = new LayoutLeaf(path3, false);
+        l3a = new LayoutLeaf(path3, true);
+        l4 = new LayoutLeaf(path4, false);
+        l4a = new LayoutLeaf(path4, true);
+        l5 = new LayoutLeaf(path5, false);
+        l5a = new LayoutLeaf(path5, true);
+        l6 = new LayoutLeaf(path6, false);
+        l6a = new LayoutLeaf(path6, true);
+        l7 = new LayoutLeaf(path7, false);
+        l7a = new LayoutLeaf(path7, true);
+        l8 = new LayoutLeaf(path8, false);
+        l8a = new LayoutLeaf(path8, true);
+        l9 = new LayoutLeaf(path9, false);
+        l9a = new LayoutLeaf(path9, true);
+        l10 = new LayoutLeaf(path10, false);
+        l10a = new LayoutLeaf(path10, true);
 
         children1 = new ArrayList<>(Arrays.asList(l1,l2,l3));
         children2 = new ArrayList<>(Arrays.asList(l4,l5,l6));
@@ -251,7 +251,7 @@ public class LayoutNodeTest {
 
     @Test
     void testRotateRelationshipNeighbourRoot(){
-        Layout l10 = new LayoutLeaf(new FileBuffer("testresources/test.txt"), true);
+        Layout l10 = new LayoutLeaf("testresources/test.txt", true);
         Layout l10_clone = l10.clone();
         l10 = l10.rotateRelationshipNeighbor(Layout.ROT_DIRECTION.CLOCKWISE);
         assertEquals(l10,l10_clone);

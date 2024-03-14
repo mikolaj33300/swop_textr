@@ -40,13 +40,13 @@ public class HorizontalLayoutNodeTest {
         FileBuffer fb6 = new FileBuffer(path6);
         FileBuffer fb7 = new FileBuffer(path7);
 
-        l1 = new LayoutLeaf(fb1,false);
-        l2 = new LayoutLeaf(fb2, false);
-        l3 = new LayoutLeaf(fb3, false);
-        l4 = new LayoutLeaf(fb4, false);
-        l5 = new LayoutLeaf(fb5,false);
-        l6 = new LayoutLeaf(fb6,false);
-        l7 = new LayoutLeaf(fb7,false);
+        l1 = new LayoutLeaf(path1,false);
+        l2 = new LayoutLeaf(path2, false);
+        l3 = new LayoutLeaf(path3, false);
+        l4 = new LayoutLeaf(path4, false);
+        l5 = new LayoutLeaf(path5,false);
+        l6 = new LayoutLeaf(path6,false);
+        l7 = new LayoutLeaf(path7,false);
 
         ArrayList<Layout> children1 = new ArrayList<>();
         children1.add(l1);

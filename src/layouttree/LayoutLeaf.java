@@ -15,8 +15,8 @@ public class LayoutLeaf extends Layout {
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(FileBuffer fb, boolean active) {
-        this.containedFileBuffer = fb.clone();
+    public LayoutLeaf(String path, boolean active) {
+        this.containedFileBuffer = new FileBuffer(path);
         this.setContainsActive(active);
     }
 
@@ -204,7 +204,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        return new LayoutLeaf(containedFileBuffer.clone(), getContainsActive());
+        return new LayoutLeaf(this.containedFileBuffer.getFileHolder().getPath(), getContainsActive());
     }
 
     /**

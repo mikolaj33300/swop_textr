@@ -36,14 +36,14 @@ class LayoutTest {
         fb2 = new FileBuffer(path2);
         fb3 = new FileBuffer(path1);
         fb4 = new FileBuffer(path2);
-        l1 = new LayoutLeaf(fb1, true);
-        l1a = new LayoutLeaf(fb1, true);
-        l1p = new LayoutLeaf(fb1, false);
-        l2 = new LayoutLeaf(fb2, false);
-        l2a = new LayoutLeaf(fb2, true);
-        l2p = new LayoutLeaf(fb2, false);
-        l3 = new LayoutLeaf(fb1, true);
-        l4 = new LayoutLeaf(fb2, false);
+        l1 = new LayoutLeaf(path1, true);
+        l1a = new LayoutLeaf(path1, true);
+        l1p = new LayoutLeaf(path1, false);
+        l2 = new LayoutLeaf(path2, false);
+        l2a = new LayoutLeaf(path2, true);
+        l2p = new LayoutLeaf(path2, false);
+        l3 = new LayoutLeaf(path1, true);
+        l4 = new LayoutLeaf(path2, false);
     }
     @Test
     void testGetContainsActive(){

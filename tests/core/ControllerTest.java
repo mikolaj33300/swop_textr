@@ -42,8 +42,8 @@ public class ControllerTest {
         FileBuffer buffer1 = new FileBuffer(path1);
         FileBuffer buffer2 = new FileBuffer(path2);
         ArrayList<Layout> leaves = new ArrayList<>();
-        leaves.add(new LayoutLeaf(buffer1, true));
-        leaves.add(new LayoutLeaf(buffer2, false));
+        leaves.add(new LayoutLeaf(path1, true));
+        leaves.add(new LayoutLeaf(path2, false));
 
         HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
