@@ -25,7 +25,7 @@ public class FileHolder {
         this.path = path;
     }
 
-    String getPath() {
+    public String getPath() {
         return new String(this.path);
     }
 
