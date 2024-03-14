@@ -17,7 +17,7 @@ public class FileAnalyserUtilTest {
 
     @Test
     public void testLineSeparatorRemoval() {
-        String test = "mister\nabc";
+        String test = "mister"+System.lineSeparator()+"abc";
         byte[] bytes = test.getBytes();
         ArrayList<ArrayList<Byte>> a = getContentLines(bytes);
 

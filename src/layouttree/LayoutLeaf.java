@@ -18,6 +18,9 @@ public class LayoutLeaf extends Layout {
         return parent.getStartX(this, terminalWidth, terminalHeight);
     }
 
+    public void clearContent() throws IOException {
+        containedFileBufferView.clearContent();
+    }
     public int getStartY(int terminalWidth, int terminalHeight){
         return parent.getStartY(this, terminalWidth, terminalHeight);
     }

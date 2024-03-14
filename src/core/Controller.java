@@ -78,6 +78,7 @@ public class Controller {
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
+        clearContent();
         // Reading terminal dimensions for correct rendering
         render();
         // Main loop
@@ -138,7 +139,7 @@ public class Controller {
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
             }
-            Terminal.clearScreen();
+            rootLayout.clearContent();
 
             render();
             //Terminal.printText(10, 10, String.valueOf(b));
@@ -158,6 +159,10 @@ public class Controller {
     void render() throws IOException {
         this.rootLayout.renderContent();
         this.rootLayout.renderCursor();
+    }
+
+    void clearContent() throws IOException {
+        rootLayout.clearContent();
     }
 
     /**

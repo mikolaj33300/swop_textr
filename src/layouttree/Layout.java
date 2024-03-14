@@ -30,6 +30,8 @@ public abstract class Layout implements Cloneable {
 
     public abstract void closeActive();
 
+    public abstract void clearContent() throws IOException;
+
     protected LayoutNode parent = null;
 
     protected boolean containsActiveView;

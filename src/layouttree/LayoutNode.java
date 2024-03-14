@@ -39,6 +39,12 @@ public abstract class LayoutNode extends Layout {
     //Get start X of child l
     public abstract int getStartX(Layout l, int terminalWidth, int terminalHeight);
 
+    public void clearContent() throws IOException {
+        for(Layout l : children){
+            l.clearContent();
+        }
+    }
+
     public abstract int getStartY(Layout l, int terminalWidth, int terminalHeight);
 
     public abstract int getWidth(Layout l, int terminalWidth, int terminalHeight);

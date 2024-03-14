@@ -32,8 +32,14 @@ public abstract class View {
 
 
 
-    public void clearContent(){
-
+    public void clearContent() throws IOException {
+/*        retrieveDimensions();
+        for(int i = startY; i<startY+height; i++){
+            for(int j = startX; j<startX+width; j++){
+                Terminal.printText(i+1, j+1, " ");
+            }
+        }*/
+        Terminal.clearScreen();
     };
 
     public abstract void render() throws IOException;

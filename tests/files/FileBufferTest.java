@@ -76,7 +76,7 @@ public class FileBufferTest {
         assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
 
         // More lines
-        write("testresources/test.txt", "i\nb");
+        write("testresources/test.txt", "i"+System.lineSeparator()+"b");
         buff = new FileBuffer("testresources/test.txt");
         assertEquals(2, buff.getLines().size());
 
