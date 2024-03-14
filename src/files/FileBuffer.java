@@ -56,18 +56,6 @@ public class FileBuffer {
         this.insertionPointByteIndex = 0;
     }
 
-    /**
-     * Retrieves a {@link java.util.ArrayList<ArrayList<Byte>>}, where each entry is a list of bytes
-     * separated by another entry by a {@link System#lineSeparator()}.
-     */
-    ArrayList<ArrayList<Byte>> getLines() {
-        ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
-        for (ArrayList<Byte> line : linesArrayList) {
-            linesCloneArrayList.add((ArrayList<Byte>) line.clone());
-        }
-        return linesCloneArrayList;
-    }
-
     // Implementation
 
     /**
@@ -77,15 +65,6 @@ public class FileBuffer {
         insert(System.lineSeparator().getBytes());
         moveCursorDown();
         moveCursorToFront();
-    }
-
-    /**
-     * Deletes the full array
-     */
-    void deleteLine() {
-        linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
-        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     /**
@@ -134,13 +113,6 @@ public class FileBuffer {
         }
     }
 
-    /**
-     * Determines if the buffer has been modified.
-     */
-    boolean getDirty() {
-        return this.dirty;
-    }
-
     public String getRender() {
         String statusLine = this.getFileHorlder().getPath();
         statusLine += " #Lines:";
@@ -161,15 +133,43 @@ public class FileBuffer {
         return statusLine;
     }
 
-    /**
-     * Inserts the byte values.
-     */
-    private void insert(byte... data) {
-        byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
-                Arrays.<Byte>asList(wrapEachByteElem(data)));
-
-        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
+    public int getInsertionPointLine() {
+        return insertionPointLine;
     }
+
+    public int getInsertionPointCol() {
+        return insertionPointCol;
+    }
+
+    public ArrayList<ArrayList<Byte>> getLinesArrayList() {
+        ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
+        for(int i = 0; i<linesArrayList.size(); i++){
+            ArrayList<Byte> clonedLine = new ArrayList<Byte>();
+            for(int j = 0; j<linesArrayList.get(i).size(); j++){
+                clonedLine.add(linesArrayList.get(i).get(j));
+            }
+            clonedLinesList.add(clonedLine);
+        }
+        return clonedLinesList;
+    }
+
+    public void deleteCharacter() {
+        if(insertionPointCol > 0) {
+            this.byteContent.remove(insertionPointByteIndex-1);
+            moveCursorLeft();
+        } else {
+            if(insertionPointLine!=0){
+                //shift left the amount of bytes that need to be deleted and delete them one by one
+                moveCursorLeft();
+                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
+                    this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+    }
+
+    // Default methods
 
     /**
      * Returns the FileHolder object file (for testing purposes)
@@ -211,21 +211,15 @@ public class FileBuffer {
     }
 
     /**
-     * Clones this object
+     * Retrieves a {@link java.util.ArrayList<ArrayList<Byte>>}, where each entry is a list of bytes
+     * separated by another entry by a {@link System#lineSeparator()}.
      */
-    public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath());
-        copy.dirty = this.dirty;
-        copy.byteContent = this.cloneByteArrList();
-        return copy;
-    }
-
-    /**
-     * Checks if the given {@link FileBuffer} references the same {@link FileHolder}
-     * and temporarily, if the content, and dirty boolean match.
-     */
-    public boolean equals(FileBuffer buffer) {
-        return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
+    ArrayList<ArrayList<Byte>> getLines() {
+        ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
+        for (ArrayList<Byte> line : linesArrayList) {
+            linesCloneArrayList.add((ArrayList<Byte>) line.clone());
+        }
+        return linesCloneArrayList;
     }
 
     int getInsertionPoint() {
@@ -241,6 +235,34 @@ public class FileBuffer {
             resultArray[i] = arrList.get(i).byteValue();
         }
         return resultArray;
+    }
+
+    /**
+     * Determines if the buffer has been modified.
+     */
+    boolean getDirty() {
+        return this.dirty;
+    }
+
+    /**
+     * Deletes the full array
+     */
+    void deleteLine() {
+        linesArrayList.remove(insertionPointLine);
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
+        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
+    }
+
+    // Private implementations
+
+    /**
+     * Inserts the byte values.
+     */
+    private void insert(byte... data) {
+        byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
+                Arrays.<Byte>asList(wrapEachByteElem(data)));
+
+        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
     //Add the amount of bytes from lines above,
@@ -309,39 +331,24 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-    public int getInsertionPointLine() {
-        return insertionPointLine;
+    // Base methods
+
+    /**
+     * Clones this object
+     */
+    public FileBuffer clone() {
+        FileBuffer copy = new FileBuffer(this.file.getPath());
+        copy.dirty = this.dirty;
+        copy.byteContent = this.cloneByteArrList();
+        return copy;
     }
 
-    public int getInsertionPointCol() {
-        return insertionPointCol;
+    /**
+     * Checks if the given {@link FileBuffer} references the same {@link FileHolder}
+     * and temporarily, if the content, and dirty boolean match.
+     */
+    public boolean equals(FileBuffer buffer) {
+        return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
-    public ArrayList<ArrayList<Byte>> getLinesArrayList() {
-        ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
-        for(int i = 0; i<linesArrayList.size(); i++){
-            ArrayList<Byte> clonedLine = new ArrayList<Byte>();
-            for(int j = 0; j<linesArrayList.get(i).size(); j++){
-                clonedLine.add(linesArrayList.get(i).get(j));
-            }
-            clonedLinesList.add(clonedLine);
-        }
-        return clonedLinesList;
-    }
-
-    public void deleteCharacter() {
-        if(insertionPointCol > 0) {
-            this.byteContent.remove(insertionPointByteIndex-1);
-            moveCursorLeft();
-        } else {
-            if(insertionPointLine!=0){
-                //shift left the amount of bytes that need to be deleted and delete them one by one
-                moveCursorLeft();
-                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
-                    this.byteContent.remove(insertionPointByteIndex);
-                }
-            }
-        }
-        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
-    }
 }

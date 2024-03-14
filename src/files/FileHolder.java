@@ -68,7 +68,7 @@ public class FileHolder {
                     // Contains 0a, not 0d0a, code is 0d0a
                     || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
-                return "Error: Invalid file contents - Wrong line separator".getBytes();
+                return "Error: Invalid file contents - Invalid line separator".getBytes();
 
             return fileContent;
 
@@ -79,7 +79,7 @@ public class FileHolder {
 
         }
 
-        return "".getBytes();
+        return "Unreadable file".getBytes();
     }
 
     /**
