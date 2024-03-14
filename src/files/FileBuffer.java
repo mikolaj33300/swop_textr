@@ -32,12 +32,6 @@ public class FileBuffer {
      * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
-
-    /**
-     * Keeps track of the insertion point
-     */
-    private Statusbar status;
-
     /**
      * Insertion points column & line do not represent printing locations!
      * All will be relative to {@link FileBuffer#linesArrayList} indices.
@@ -59,7 +53,6 @@ public class FileBuffer {
         this.insertionPointCol = 0;
         this.insertionPointLine = 0;
         this.insertionPointByteIndex = 0;
-        this.status = new Statusbar(this);
     }
 
     /**
@@ -116,10 +109,6 @@ public class FileBuffer {
         String status = this.status.renderStatusbar();
     }
     */
-
-    public String getStatusBar(){
-      return this.status.renderStatusbar();
-    }
     /**
      * Updates the content of the FileBuffer
      */

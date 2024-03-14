@@ -143,7 +143,7 @@ public class Controller {
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
             }
-            //Terminal.clearScreen();
+            Terminal.clearScreen();
             render();
             //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions

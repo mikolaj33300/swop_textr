@@ -3,13 +3,10 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 public class InsertionPointTest {
 
-    Statusbar sb1;
-
     @BeforeEach
     void setUp(){
         String path1 = "testresources/test.txt";
         FileBuffer fb1 = new FileBuffer(path1);
-        sb1 = new Statusbar(fb1);
     }
 
     @Test
