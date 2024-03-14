@@ -90,11 +90,10 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
-            /*System.out.print(b);
-            String bs = String.valueOf(b);
-            Terminal.printText(1,1, bs);*/
-
             switch(b) {
+                case 244:
+                    moveFocus(Layout.DIRECTION.RIGHT);
+                    break;
                 case 8, 127:
                     deleteCharacter();
                     break;
@@ -136,7 +135,6 @@ public class Controller {
             }
             Terminal.clearScreen();
             render();
-            //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
