@@ -25,7 +25,7 @@ public class FileHolder {
         this.path = path;
     }
 
-    public String getPath() {
+    String getPath() {
         return new String(this.path);
     }
 
@@ -70,7 +70,6 @@ public class FileHolder {
                     lineSeperatorCode.equals("0d0a")))
                 return "Error: Invalid file contents - Wrong line separator".getBytes();
 
-
             return fileContent;
 
         } catch (IOException e) {
@@ -79,6 +78,7 @@ public class FileHolder {
             System.out.println("[FileBuffer] Exception while trying to read contents of file.");
 
         }
+
         return "".getBytes();
     }
 
@@ -96,6 +96,9 @@ public class FileHolder {
         return this.path.equals(holder.path);
     }
 
+    /**
+     * Checks if given
+     */
     public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
         if(arr1.length != arr2.length) return false;
         for(int i = 0; i < arr1.length; i++)

@@ -137,8 +137,28 @@ public class FileBuffer {
     /**
      * Determines if the buffer has been modified.
      */
-    public boolean getDirty() {
+    boolean getDirty() {
         return this.dirty;
+    }
+
+    public String getRender() {
+        String statusLine = this.getFileHorlder().getPath();
+        statusLine += " #Lines:";
+        statusLine += String.valueOf(this.getLinesArrayList().size());
+        statusLine += " #Chars:";
+        String contents = new String(this.getFileHorlder().getContent());
+        statusLine += contents.length();
+        statusLine += " Insert:[";
+        statusLine += this.getInsertionPointLine();
+        statusLine += ";";
+        statusLine += this.getInsertionPointCol();
+        statusLine += "] ";
+        if(this.getDirty())
+            statusLine += "Dirty";
+        else
+            statusLine += "Clean";
+        statusLine += " ";
+        return statusLine;
     }
 
     /**
@@ -161,7 +181,7 @@ public class FileBuffer {
     /**
      * Returns a copy of the Fileholder object, without a reference to the internal object
      */
-    public FileHolder getFileHorlder(){
+    FileHolder getFileHorlder(){
         return this.file.clone();
     }
 

@@ -86,22 +86,7 @@ public class LayoutLeaf extends Layout {
     }
 
     public String renderStatusbar() {
-        String statusLine = containedFileBuffer.getFileHorlder().getPath();
-        statusLine += " #Lines:";
-        statusLine += String.valueOf(containedFileBuffer.getLinesArrayList().size());
-        statusLine += " #Chars:";
-        String contents = new String(containedFileBuffer.getFileHorlder().getContent());
-        statusLine += contents.length();
-        statusLine += " Insert:[";
-        statusLine += containedFileBuffer.getInsertionPointLine();
-        statusLine += ";";
-        statusLine += containedFileBuffer.getInsertionPointCol();
-        statusLine += "] ";
-        if(containedFileBuffer.getDirty())
-            statusLine += "Dirty";
-        else
-            statusLine += "Clean";
-        statusLine += " ";
+        String statusLine = this.containedFileBuffer.getRender();
         if(this.getContainsActive())
             statusLine += "Active";
         else
