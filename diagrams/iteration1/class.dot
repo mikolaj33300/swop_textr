@@ -1,7 +1,7 @@
 digraph {
   node[shape=none]
 
-  Layout[label=<<table BORDER="0" CELLBORDER="1">
+  Layout[color=pink, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>Layout</td></tr>
     <tr><td>+DIRECTION: enum<br/>
       +ROT_DIRECTION: enum<br/>
@@ -24,7 +24,7 @@ digraph {
       +clone()</td></tr>
     </table>>]
 
-  LayoutNode[label=<<table BORDER="0" CELLBORDER="1">
+  LayoutNode[color=pink, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutNode</td></tr>
     <tr><td>+DIRECTION: enum<br/>
       +ROT_DIRECTION: enum<br/>
@@ -47,7 +47,7 @@ digraph {
       +clone()</td></tr>
     </table>>]
 
-  LayoutLeaf[label=<<table BORDER="0" CELLBORDER="1">
+  LayoutLeaf[color=pink, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutLeaf</td></tr>
     <tr><td>-containedFileBuffer<br/>
     +DIRECTION: enum<br/>
@@ -80,7 +80,7 @@ digraph {
       </td></tr>
     </table>>]
 
-  LayoutNodeHorizontal[label=<<table BORDER="0" CELLBORDER="1">
+  LayoutNodeHorizontal[color=pink, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutLeaf</td></tr>
     <tr><td>+DIRECTION: enum<br/>
       +ROT_DIRECTION: enum<br/>
@@ -103,8 +103,8 @@ digraph {
       +clone()</td></tr>
     </table>>]
   
-  LayoutNodeVertical[label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>LayoutLeaf</td></tr>
+  LayoutNodeVertical[color=pink, label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>VerticalLayoutNode</td></tr>
     <tr><td>+DIRECTION: enum<br/>
       +ROT_DIRECTION: enum<br/>
       #parent: LayoutNode: enum<br/>
@@ -126,7 +126,7 @@ digraph {
       +clone()</td></tr>
     </table>>]
 
-  fileBuffer[label=<<table BORDER="0" CELLBORDER="1">
+  fileBuffer[color=brown, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>fileBuffer</td></tr>
     <tr><td>-leaf: layoutLeaf<br/>
       -file: FileHolder<br/>
@@ -168,7 +168,7 @@ digraph {
     </td></tr>
     </table>>]
 
-  controller[label=<<table BORDER="0" CELLBORDER="1">
+  controller[color=black, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>Controller</td></tr>
     <tr><td>-lineSeparatorArg: byte[]<br/>
       -rootLayout: Layout<br/>
@@ -193,7 +193,7 @@ digraph {
       +getLineSeparatorArg()</td></tr>
     </table>>]
 
-    fileHolder[label=<<table BORDER="0" CELLBORDER="1"><tr><td>
+    fileHolder[color=brown, label=<<table BORDER="0" CELLBORDER="1"><tr><td>
         fileHolder
       </td></tr><tr><td>
         +lineSeparator: byte[]<br/>
@@ -203,8 +203,13 @@ digraph {
         +FileHolder(String path)<br/>
         ~getPath()<br/>
         ~getLineSeparator()<br/>
-        +save(byte[] fileContent)<br/>
+        ~save(byte[] fileContent)<br/>
+        +getContent()<br/>
+        +clone()<br/>
+        +equals(FileHolder holder)<br/>
+        +areContentsEqual(byte[] arr1, byte[] arr2)<br/>
       </td></tr></table>>]
+
   controller -> Layout 
   Layout -> {LayoutNode, LayoutLeaf}[arrowhead=onormal]
   LayoutNode -> {LayoutNodeHorizontal, LayoutNodeVertical}[arrowhead=onormal]
