@@ -57,6 +57,9 @@ public class LaunchTextrTest {
         lineSeparator = (byte[]) field.get(null); // pass null for static fields
         assertTrue(FileHolder.areContentsEqual(new byte[]{0x0a}, lineSeparator));
 
+        //Controller c = new Controller(new String[] {"test.txt"});
+        //c.enterText(Integer.valueOf(170).byteValue());
+        //assertThrows(IOException.class, () -> c.getRootLayout().saveActiveBuffer());
     }
 
 }
