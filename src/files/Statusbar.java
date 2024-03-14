@@ -29,7 +29,6 @@ public class Statusbar {
         statusLine += " #Chars:";
         statusLine += String.valueOf(getBuffer().getBytes().length);
         statusLine += "Insert:[";
-        //TODO: getInsertionPoint implementeren om lines door te geven aan de statusbar
         //statusLine += String.valueOf(buffer.getLayout().getInsertionPoint().getLine());
         statusLine += ";";
         //statusLine += String.valueOf(buffer.getLayout().getInsertionPoint().getColumn());
@@ -52,5 +51,4 @@ public class Statusbar {
         else
             return "|";
     }
-
 }

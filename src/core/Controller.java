@@ -90,10 +90,16 @@ public class Controller {
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
+            /*System.out.print(b);
+            String bs = String.valueOf(b);
+            Terminal.printText(1,1, bs);*/
 
             switch(b) {
-                case 8:
+
+                // Backspace
+                case 127:
                     deleteCharacter();
+                    break;
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -115,7 +121,7 @@ public class Controller {
                 case 13:
                     enterLineSeparator();
                     break;
-                // Character input
+                // Character inpu
                 default:
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
