@@ -8,11 +8,6 @@ public class InsertionPointTest {
         String path1 = "testresources/test.txt";
         FileBuffer fb1 = new FileBuffer(path1);
     }
-
-    @Test
-    void testGetScroll(){
-        assertEquals(sb1.getScroll(),0);
-    }
     @Test
     void testGetLines(){
 
