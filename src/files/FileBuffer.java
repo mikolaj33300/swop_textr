@@ -111,6 +111,9 @@ public class FileBuffer {
         }
     }
 
+    /**
+     * Returns a string with relevant information for the statusbar
+     */
     public String getRender() {
         String statusLine = this.getFileHolder().getPath();
         statusLine += " #Lines:";
@@ -131,14 +134,24 @@ public class FileBuffer {
         return statusLine;
     }
 
+    /**
+     * Returns the Y coordinate where the insertion point should be rendered.
+     */
     public int getInsertionPointLine() {
         return insertionPointLine;
     }
 
+    /**
+     * Returns the X coordinate where the insertion point should be rendered.
+     */
     public int getInsertionPointCol() {
         return insertionPointCol;
     }
 
+    /**
+     * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
+     * another array by a line separator specified in {@link Controller#getLineSeparatorArg()}.
+     */
     public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
         for(int i = 0; i<linesArrayList.size(); i++){
@@ -150,7 +163,7 @@ public class FileBuffer {
         }
         return clonedLinesList;
     }
-
+  
     public void deleteCharacter() {
         if(insertionPointCol > 0) {
             this.byteContent.remove(insertionPointByteIndex-1);
@@ -172,7 +185,7 @@ public class FileBuffer {
     /**
      * Returns the FileHolder object file (for testing purposes)
      */
-    FileHolder getFileHolder() {
+    public FileHolder getFileHolder() {
         return this.file.clone();
     }
 
@@ -201,7 +214,10 @@ public class FileBuffer {
         return copy;
     }
 
-    int getInsertionPoint() {
+    /**
+     * Returns the insertion point.
+     */
+    public int getInsertionPoint() {
         return insertionPointByteIndex;
     }
 
@@ -219,7 +235,7 @@ public class FileBuffer {
     /**
      * Determines if the buffer has been modified.
      */
-    boolean getDirty() {
+    public boolean getDirty() {
         return this.dirty;
     }
 
@@ -244,8 +260,14 @@ public class FileBuffer {
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
     }
 
-    //Add the amount of bytes from lines above,
-    //and bytes before this col, assuming line and col start at 0
+    /**
+     * <p>Each array in {@link FileBuffer#linesArrayList} represents a line that is being printed in
+     * the render. The class fields {@link FileBuffer#insertionPointLine} represents on which line
+     * we are with the cursor, and {@link FileBuffer#insertionPointCol} the position in the list.</p>
+     * <p>The {@link FileBuffer#insertionPointByteIndex} is not accurate on the {@link FileBuffer#byteContent},
+     * because line separators are in that array. With the given parameters we can retrieve the correct
+     * value of the {@link FileBuffer#insertionPointByteIndex} </p>
+     */
     private int convertLineAndColToIndex(int line, int col) {
         int byteLengthSeparatorLen = Controller.getLineSeparatorArg().length;
         int byteArrIndex = 0;
@@ -291,10 +313,10 @@ public class FileBuffer {
     }
 
     private void moveCursorToFront() {
-      if (insertionPointCol > 0){
-        insertionPointCol = 0;
-      }
-      insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        if (insertionPointCol > 0){
+            insertionPointCol = 0;
+        }
+        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
     private void moveCursorRight(){
@@ -331,4 +353,23 @@ public class FileBuffer {
         return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
+    public void deleteCharacter() {
+        if(insertionPointCol > 0) {
+            this.byteContent.remove(insertionPointByteIndex-1);
+            moveCursorLeft();
+        } else {
+            if(insertionPointLine!=0){
+                //shift left the amount of bytes that need to be deleted and delete them one by one
+                moveCursorLeft();
+                for(int i = 0; i< Controller.getLineSeparatorArg().length; i++) {
+                    this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+    }
+
+    public void close() {
+
+    }
 }

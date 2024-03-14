@@ -6,8 +6,8 @@ import io.github.btj.termios.Terminal;
 
 
 /**
-    LayoutLeaf represents the leaf layout-structure
-    LayoutLeaf inherets from Layout
+ * LayoutLeaf represents the leaf layout-structure
+ * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
     private FileBuffer containedFileBuffer;
@@ -86,8 +86,25 @@ public class LayoutLeaf extends Layout {
     }
 
     public String renderStatusbar() {
-        String statusLine = this.containedFileBuffer.getRender();
+        String statusLine = containedFileBuffer.getFileHolder().getPath();
+        statusLine += " #Lines:";
+        statusLine += String.valueOf(containedFileBuffer.getLines().size());
+        statusLine += " #Chars:";
+        String contents = new String(containedFileBuffer.getFileHolder().getContent());
+        statusLine += contents.length();
+        statusLine += " Insert:[";
+        statusLine += containedFileBuffer.getInsertionPointLine();
+        statusLine += ";";
+        statusLine += containedFileBuffer.getInsertionPointCol();
+        statusLine += "] ";
+        if (containedFileBuffer.getDirty())
+            statusLine += "Dirty";
+        else
+            statusLine += "Clean";
+        statusLine += " ";
+      
         if(this.getContainsActive())
+
             statusLine += "Active";
         else
             statusLine += "Not Active";
@@ -100,6 +117,21 @@ public class LayoutLeaf extends Layout {
         } else {
             System.out.print((char) 7); //sounds terminal bell
             return this;
+        }
+    }
+
+    @Override
+    public void closeActive() {
+        if (containsActive) {
+            containedFileBuffer.close();
+        }
+    }
+
+    @Override
+    public void forcedCloseActive() {
+        if (containsActive) {
+            parent.makeRightNeighbourActive(this);
+            parent.delete(this);
         }
     }
 
@@ -144,25 +176,25 @@ public class LayoutLeaf extends Layout {
      */
 
     public void renderTextContent(int startX, int startY, int width, int height) {
-        //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
-        int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine()/(height-1))*(height-1);
-        //Renders either all the lines until the end, or the next height-2 lines
-        for(int i = 0; i < Math.min(height-1, containedFileBuffer.getLines().size()-renderStartingLineIndex); i++){
-            String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex+i)));
-            //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
-            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol()/(width-1))*(width-1);
-            int renderLineEndIndex = Math.min(renderLineStartIndex+width-1, lineString.length());
-            //endindex -1 to make space for vertical bar
-            Terminal.printText(1+startY+i, 1+startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
-        }
         Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
+        //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
+        int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
+        //Renders either all the lines until the end, or the next height-2 lines
+        for (int i = 0; i < Math.min(height - 1, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
+            String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex + i)));
+            //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
+            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
+            int renderLineEndIndex = Math.min(renderLineStartIndex + width - 1, lineString.length());
+            //endindex -1 to make space for vertical bar
+            Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+        }
     }
 
     public void renderCursor(int startX, int startY, int width, int height) {
-        if(containsActive){
+        if (containsActive) {
             int cursorXoffset = containedFileBuffer.getInsertionPointCol() % width;
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % height;
-            Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
+            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
         }
     }
 
