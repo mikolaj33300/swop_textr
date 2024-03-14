@@ -22,7 +22,7 @@ textr.jar:
 	javac -d $(BUILD_DIR) $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
 test:
-	javac $(TEST)
+	javac -g $(TEST)
 
 clean:
 	rm -r \
