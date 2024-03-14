@@ -163,6 +163,22 @@ public class FileBuffer {
         }
         return clonedLinesList;
     }
+  
+    public void deleteCharacter() {
+        if(insertionPointCol > 0) {
+            this.byteContent.remove(insertionPointByteIndex-1);
+            moveCursorLeft();
+        } else {
+            if(insertionPointLine!=0){
+                //shift left the amount of bytes that need to be deleted and delete them one by one
+                moveCursorLeft();
+                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
+                    this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+    }
 
     // Default methods
 

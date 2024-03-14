@@ -25,7 +25,7 @@ public class FileHolder {
         this.path = path;
     }
 
-    public String getPath() {
+    String getPath() {
         return new String(this.path);
     }
 
@@ -56,8 +56,8 @@ public class FileHolder {
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-
             String lineSeperatorCode = FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes());
+
 
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);

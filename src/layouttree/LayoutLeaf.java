@@ -102,7 +102,9 @@ public class LayoutLeaf extends Layout {
         else
             statusLine += "Clean";
         statusLine += " ";
-        if (this.getContainsActive())
+      
+        if(this.getContainsActive())
+
             statusLine += "Active";
         else
             statusLine += "Not Active";

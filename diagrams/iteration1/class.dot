@@ -1,7 +1,30 @@
 digraph {
   node[shape=none]
 
-  Layout[label=<<table BORDER="0" CELLBORDER="1">
+  Layout[color=pink, label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>Layout</td></tr>
+    <tr><td>+DIRECTION: enum<br/>
+      +ROT_DIRECTION: enum<br/>
+      #parent: LayoutNode: enum<br/>
+      +containsActive: boolean</td></tr>
+    <tr><td>#getRootLayoutUncloned();<br/>
+      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +deleteCharacter()<br/>
+      +renderTextContent(int startX, int startY, int width, int height)<br/>
+      #deleteLeftLeaf()<br/>
+      #setParent()<br/>
+      +getContainsActive()<br/>
+      +moveFocus(DIRECTION dir)<br/>
+      #makeLeftmostLeafActive()<br/>
+      #makeRightmostLeafActive()<br/>
+      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
+      #getLeftLeaf()<br/>
+      #setContainsActive(boolean active)<br/>
+      +equals(Object obj)<br/>
+      +clone()</td></tr>
+    </table>>]
+
+  LayoutNode[color=pink, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>LayoutNode</td></tr>
     <tr><td>+DIRECTION: enum<br/>
       +ROT_DIRECTION: enum<br/>
@@ -24,7 +47,86 @@ digraph {
       +clone()</td></tr>
     </table>>]
 
-  fileBuffer[label=<<table BORDER="0" CELLBORDER="1">
+  LayoutLeaf[color=pink, label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>LayoutLeaf</td></tr>
+    <tr><td>-containedFileBuffer<br/>
+    +DIRECTION: enum<br/>
+      +ROT_DIRECTION: enum<br/>
+      #parent: LayoutNode: enum<br/>
+      +containsActive: boolean</td></tr>
+    <tr><td>+LayoutLeaf(FileBuffer fb, boolean active)<br/>
+      #getRootLayoutUncloned();<br/>
+      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +deleteCharacter()<br/>
+      +renderTextContent(int startX, int startY, int width, int height)<br/>
+      #deleteLeftLeaf()<br/>
+      +moveCursor(char c)<br/>
+      +enterText(byte b)<br/>
+      +saveActiveBuffer()<br/>
+      +enterInsertionPoint()<br/>
+      -moveFocusRight()<br/>
+      -moveFocusLeft()<br/>
+      #setParent()<br/>
+      +getContainsActive()<br/>
+      +moveFocus(DIRECTION dir)<br/>
+      #makeLeftmostLeafActive()<br/>
+      #makeRightmostLeafActive()<br/>
+      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
+      #getLeftLeaf()<br/>
+      #setContainsActive(boolean active)<br/>
+      +equals(Object obj)<br/>
+      +renderCursor(int startX, int startY, int width, int height)<br/>
+      +clone()<br/>
+      </td></tr>
+    </table>>]
+
+  LayoutNodeHorizontal[color=pink, label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>LayoutLeaf</td></tr>
+    <tr><td>+DIRECTION: enum<br/>
+      +ROT_DIRECTION: enum<br/>
+      #parent: LayoutNode: enum<br/>
+      +containsActive: boolean</td></tr>
+    <tr><td>#getRootLayoutUncloned();<br/>
+      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +deleteCharacter()<br/>
+      +renderTextContent(int startX, int startY, int width, int height)<br/>
+      #deleteLeftLeaf()<br/>
+      #setParent()<br/>
+      +getContainsActive()<br/>
+      +moveFocus(DIRECTION dir)<br/>
+      #makeLeftmostLeafActive()<br/>
+      #makeRightmostLeafActive()<br/>
+      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
+      #getLeftLeaf()<br/>
+      #setContainsActive(boolean active)<br/>
+      +equals(Object obj)<br/>
+      +clone()</td></tr>
+    </table>>]
+  
+  LayoutNodeVertical[color=pink, label=<<table BORDER="0" CELLBORDER="1">
+    <tr><td>VerticalLayoutNode</td></tr>
+    <tr><td>+DIRECTION: enum<br/>
+      +ROT_DIRECTION: enum<br/>
+      #parent: LayoutNode: enum<br/>
+      +containsActive: boolean</td></tr>
+    <tr><td>#getRootLayoutUncloned();<br/>
+      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
+      +deleteCharacter()<br/>
+      +renderTextContent(int startX, int startY, int width, int height)<br/>
+      #deleteLeftLeaf()<br/>
+      #setParent()<br/>
+      +getContainsActive()<br/>
+      +moveFocus(DIRECTION dir)<br/>
+      #makeLeftmostLeafActive()<br/>
+      #makeRightmostLeafActive()<br/>
+      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
+      #getLeftLeaf()<br/>
+      #setContainsActive(boolean active)<br/>
+      +equals(Object obj)<br/>
+      +clone()</td></tr>
+    </table>>]
+
+  fileBuffer[color=brown, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>fileBuffer</td></tr>
     <tr><td>-leaf: layoutLeaf<br/>
       -file: FileHolder<br/>
@@ -66,7 +168,7 @@ digraph {
     </td></tr>
     </table>>]
 
-  controller[label=<<table BORDER="0" CELLBORDER="1">
+  controller[color=black, label=<<table BORDER="0" CELLBORDER="1">
     <tr><td>Controller</td></tr>
     <tr><td>-lineSeparatorArg: byte[]<br/>
       -rootLayout: Layout<br/>
@@ -90,5 +192,26 @@ digraph {
       #setLineSeparatorFromArgs(String[] args)<br/>
       +getLineSeparatorArg()</td></tr>
     </table>>]
-  controller -> Layout
+
+    fileHolder[color=brown, label=<<table BORDER="0" CELLBORDER="1"><tr><td>
+        fileHolder
+      </td></tr><tr><td>
+        +lineSeparator: byte[]<br/>
+        -path: String<br/>
+        -fd: File
+      </td></tr><tr><td>
+        +FileHolder(String path)<br/>
+        ~getPath()<br/>
+        ~getLineSeparator()<br/>
+        ~save(byte[] fileContent)<br/>
+        +getContent()<br/>
+        +clone()<br/>
+        +equals(FileHolder holder)<br/>
+        +areContentsEqual(byte[] arr1, byte[] arr2)<br/>
+      </td></tr></table>>]
+
+  controller -> Layout 
+  Layout -> {LayoutNode, LayoutLeaf}[arrowhead=onormal]
+  LayoutNode -> {LayoutNodeHorizontal, LayoutNodeVertical}[arrowhead=onormal]
+  LayoutLeaf -> fileBuffer -> fileHolder
 }
