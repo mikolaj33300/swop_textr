@@ -148,7 +148,7 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    if(b < 32 && b != 10 && b != 13 || 127 <= b)
+                    if(b < 32 && b != 10 || 127 <= b)
                         break;
                     enterText((Integer.valueOf(b)).byteValue());
                     break;

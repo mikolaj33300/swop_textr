@@ -88,28 +88,6 @@ public class FileBuffer {
     }
 
     /**
-     * Renders this buffers content between the width & height relative to start coordinates.
-     */
-    /*
-    public void render(int startX, int startY, int width, int height) {
-        int currentTerminalRow = startY;
-        //height-1 to make space for status bar
-        for (int i = insertionPointLine; i < Math.min(insertionPointLine + height - 1, linesArrayList.size()); i++) {
-            String lineString = new String(toArray(linesArrayList.get(i)));
-            int renderLineStartIndex = insertionPointCol / (width - 1);
-            int renderLineEndIndex = renderLineStartIndex + width - 1;
-            //endindex -1 to make space for vertical bar
-            Terminal.printText(1 + startY, 1 + startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex - 1, lineString.length())));
-            currentTerminalRow++;
-        }
-
-        int cursorXoffset = insertionPointCol % width;
-        int cursorYoffset = insertionPointLine % height;
-        Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
-        String status = this.status.renderStatusbar();
-    }
-    */
-    /**
      * Updates the content of the FileBuffer
      */
     public void write(byte updatedContents) {

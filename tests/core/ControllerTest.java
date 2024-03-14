@@ -47,7 +47,7 @@ public class ControllerTest {
 
         HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
-        assertTrue(controller.initRootLayout().equals(node));
+        assertTrue(controller.getRootLayout().equals(node));
     }
 
 }

@@ -25,11 +25,11 @@ public class HorizontalLayoutNode extends LayoutNode {
      */
     @Override
     protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
-        if(newSibling == null){
+        if (newSibling == null) {
             throw new NullPointerException();
         }
         ArrayList<Layout> newChildren;
-        if(rotdir == ROT_DIRECTION.CLOCKWISE){
+        if (rotdir == ROT_DIRECTION.CLOCKWISE) {
             newChildren = new ArrayList<>(Arrays.asList(child, newSibling));
         } else {
             newChildren = new ArrayList<>(Arrays.asList(newSibling, child));
@@ -47,13 +47,13 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     Makes a deepcopy of HorizontalLayoutNode
-     The references to this object and its contents will be removed
+     * Makes a deepcopy of HorizontalLayoutNode
+     * The references to this object and its contents will be removed
      */
     @Override
     public HorizontalLayoutNode clone() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
-        for(Layout l : children){
+        for (Layout l : children) {
             deepCopyList.add(l.clone());
         }
         HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
@@ -62,20 +62,20 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     @Override
-    public void renderTextContent(int xChild, int yChild, int width, int heightChild){
-        int widthChild = width/children.size(); //rounds down
+    public void renderTextContent(int xChild, int yChild, int width, int heightChild) {
+        int widthChild = width / children.size(); //rounds down
 
-        for(Layout child : children){
+        for (Layout child : children) {
             child.renderTextContent(xChild, yChild, widthChild, heightChild);
             xChild = xChild + widthChild;
         }
     }
 
     @Override
-    public void renderCursor(int xChild, int yChild, int width, int heightChild){
-        int widthChild = width/children.size(); //rounds down
+    public void renderCursor(int xChild, int yChild, int width, int heightChild) {
+        int widthChild = width / children.size(); //rounds down
 
-        for(Layout child : children){
+        for (Layout child : children) {
             child.renderCursor(xChild, yChild, widthChild, heightChild);
             xChild = xChild + widthChild;
         }
@@ -83,21 +83,22 @@ public class HorizontalLayoutNode extends LayoutNode {
 
     @Override
     public boolean equals(Object node) {
-        if(node instanceof HorizontalLayoutNode layoutNode) {
+        if (node instanceof HorizontalLayoutNode layoutNode) {
             //Check objects for same activity-status
-            if(this.getContainsActive() != layoutNode.getContainsActive()){
+            if (this.getContainsActive() != layoutNode.getContainsActive()) {
                 return false;
             }
             // Return early when the amount of children don't match.
-            if(layoutNode.children.size() != this.children.size()) return false;
+            if (layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both
-            for(int i = 0; i < layoutNode.children.size(); i++) {
+            for (int i = 0; i < layoutNode.children.size(); i++) {
                 // We keep checking if they are equal, if not we return early.
-                if(!layoutNode.children.get(i).equals(this.children.get(i))) return false;
+                if (!layoutNode.children.get(i).equals(this.children.get(i))) return false;
             }
             // If the process didn't find disparities, the layouts are equal.
             return true;
         }
         return false;
     }
+
 }
