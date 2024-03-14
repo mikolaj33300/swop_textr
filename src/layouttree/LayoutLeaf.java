@@ -83,6 +83,30 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    public String renderStatusbar() {
+        String statusLine = containedFileBuffer.getFileHorlder().getPath();
+        statusLine += " #Lines:";
+        statusLine += String.valueOf(containedFileBuffer.getLinesArrayList().size());
+        statusLine += " #Chars:";
+        String contents = new String(containedFileBuffer.getFileHorlder().getContent());
+        statusLine += contents.length();
+        statusLine += " Insert:[";
+        statusLine += containedFileBuffer.getInsertionPointLine();
+        statusLine += ";";
+        statusLine += containedFileBuffer.getInsertionPointCol();
+        statusLine += "] ";
+        if(containedFileBuffer.getDirty())
+            statusLine += "Dirty";
+        else
+            statusLine += "Clean";
+        statusLine += " ";
+        if(this.getContainsActive())
+            statusLine += "Active";
+        else
+            statusLine += "Not Active";
+        return statusLine;
+    }
+
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if(parent != null){
             return parent.rotateWithRightSibling(rot_dir, this);

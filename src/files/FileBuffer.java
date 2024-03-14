@@ -163,7 +163,7 @@ public class FileBuffer {
     /**
      * Determines if the buffer has been modified.
      */
-    boolean getDirty() {
+    public boolean getDirty() {
         return this.dirty;
     }
 
@@ -178,10 +178,17 @@ public class FileBuffer {
     }
 
     /**
-     * Returns the FileHolder object
+     * Returns the FileHolder object file (for testing purposes)
      */
     FileHolder getFileHolder() {
         return this.file;
+    }
+
+    /**
+     * Returns a copy of the Fileholder object, without a reference to the internal object
+     */
+    public FileHolder getFileHorlder(){
+        return this.file.clone();
     }
 
     /**
