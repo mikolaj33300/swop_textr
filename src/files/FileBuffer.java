@@ -115,11 +115,11 @@ public class FileBuffer {
         Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
         String status = this.status.renderStatusbar();
     }
+    */
 
     public String getStatusBar(){
       return this.status.renderStatusbar();
     }
-    */
     /**
      * Updates the content of the FileBuffer
      */
