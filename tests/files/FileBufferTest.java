@@ -91,7 +91,7 @@ public class FileBufferTest {
             buff.write(b);
         }
         buff.enterInsertionPoint();
-        assertEquals(5, buff.getLines().size());
+        assertEquals(4, buff.getLines().size());
     }
 
     @Test
@@ -104,8 +104,8 @@ public class FileBufferTest {
         buffer.deleteLine();
         assertEquals(1, buffer.getInsertionPointLine());
 
-        assertEquals(2, buffer.getLines().size());
-        assertEquals("one of the best terminal applications", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
+        assertEquals(3, buffer.getLines().size());
+        assertEquals("btj is the founder of termios", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
 
     }
 
@@ -130,17 +130,17 @@ public class FileBufferTest {
 
         for(int i = 0; i < insert.length(); i++)
             buff.moveCursor('C');
-        assertEquals(insert.length()-1, buff.getInsertionPointCol());
+        assertEquals(insert.length(), buff.getInsertionPointCol());
 
         // Left
         buff.moveCursor('D');
         assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length()-2, buff.getInsertionPointCol());
+        assertEquals(insert.length()-1, buff.getInsertionPointCol());
 
         // Up
         buff.moveCursor('A');
         assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length()-2, buff.getInsertionPointCol());
+        assertEquals(insert.length()-1, buff.getInsertionPointCol());
 
         // Testing movement in more lines
         write("testresources/test.txt", "i love btj <3\n and also termios");
@@ -161,8 +161,8 @@ public class FileBufferTest {
         // Try going to next line by going right
         for(int i = 0; i < 13; i++)
             buff.moveCursor('C');
-        assertEquals(1, buff.getInsertionPointLine());
-        assertEquals(0, buff.getInsertionPointCol());
+        assertEquals(0, buff.getInsertionPointLine());
+        assertEquals(13, buff.getInsertionPointCol());
 
         // Test go back to previous line
         buff.moveCursor('D');

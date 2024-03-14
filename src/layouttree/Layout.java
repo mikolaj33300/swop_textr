@@ -14,6 +14,8 @@ public abstract class Layout implements Cloneable {
 
     public abstract void deleteCharacter();
 
+    public abstract void closeActive();
+
     public enum DIRECTION {
         LEFT,
         RIGHT
@@ -58,6 +60,9 @@ public abstract class Layout implements Cloneable {
     protected void setContainsActive(boolean active){
         this.containsActive = active;
     }
+
+    public abstract void forcedCloseActive();
+
     public abstract boolean equals(Object obj);
     public abstract Layout clone();
 }

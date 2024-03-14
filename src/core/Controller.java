@@ -33,7 +33,7 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        this.rootLayout = initRootLayout(args, lineSeparatorArg);
+        this.rootLayout = initRootLayout(args);
     }
 
     /**
@@ -61,7 +61,7 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout initRootLayout(String[] args, byte[] lineSeparator) {
+    private Layout initRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
@@ -121,7 +121,7 @@ public class Controller {
                 case 20:
                     rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
                     break;
-                // Arrow keys
+                // Surrogate keys
                 case 27:
                     Terminal.readByte();
                     int c = Terminal.readByte();
@@ -130,7 +130,7 @@ public class Controller {
                         case 'A', 'B', 'C', 'D':
                             moveCursor((char) c);
                             break;
-                        case 'S':// Ctrl+F4
+                        case 'S':// F4
                             System.out.println((char) c);
                             break;
                     }
@@ -142,7 +142,8 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    if(b < 32 && b != 10 || 127 <= b)
+                    Terminal.clearScreen();
+                    if(b < 32 && b != 10 && b != 13 || 127 <= b)
                         break;
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
@@ -275,4 +276,5 @@ public class Controller {
     public static byte[] getLineSeparatorArg(){
         return Controller.lineSeparatorArg;
     }
+
 }
