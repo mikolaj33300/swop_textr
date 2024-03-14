@@ -148,6 +148,10 @@ public class FileBuffer {
         return insertionPointCol;
     }
 
+    public int getAmountChars(){
+        return this.byteContent.size();
+    }
+
     /**
      * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
      * another array by a line separator specified in {@link Controller#getLineSeparatorArg()}.
