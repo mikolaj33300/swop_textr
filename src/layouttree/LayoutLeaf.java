@@ -10,6 +10,7 @@ import io.github.btj.termios.Terminal;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
+    
     private FileBuffer containedFileBuffer;
 
     /**

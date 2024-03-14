@@ -30,7 +30,7 @@ public abstract class Layout implements Cloneable {
     protected void setParent(LayoutNode layoutNode){
         this.parent = layoutNode;
     }
-    public boolean getContainsActive(){
+    boolean getContainsActive(){
         return containsActive;
     }
     public abstract void moveFocus(DIRECTION dir) throws RuntimeException;

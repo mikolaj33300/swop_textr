@@ -20,7 +20,7 @@ public class Controller {
     /**
      * Root layout
      */
-    private Layout rootLayout;
+    Layout rootLayout;
 
     /**
      * Size of the terminal
@@ -70,7 +70,6 @@ public class Controller {
             else
                 leaves.add(new LayoutLeaf(args[i], i == 0));
         }
-
 
         if(leaves.size() == 1)
             return leaves.get(0);
