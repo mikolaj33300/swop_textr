@@ -63,7 +63,7 @@ public class Controller {
      */
     private Layout initRootLayout(String[] args, byte[] lineSeparator) {
         ArrayList<Layout> leaves = new ArrayList<>();
-        for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
+        for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath))
                 System.out.println("Kutzooi");
