@@ -128,6 +128,7 @@ public class Controller {
             }
             Terminal.clearScreen();
             render();
+            Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
@@ -150,6 +151,7 @@ public class Controller {
      * Saves the FileBuffer's content to its file.
      */
     void saveBuffer() {
+      this.rootLayout.saveActiveBuffer();
     }
 
     /**
