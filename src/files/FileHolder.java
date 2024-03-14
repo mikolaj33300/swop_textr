@@ -32,7 +32,7 @@ public class FileHolder {
     /**
      * saves file
      */
-    public void save(byte[] fileContent) {
+    void save(byte[] fileContent) {
         try {
             Files.write(Path.of(this.path), fileContent);
         } catch (IOException e) {
