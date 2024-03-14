@@ -15,22 +15,34 @@ public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
     public int getStartX(int terminalWidth, int terminalHeight){
-        return parent.getStartX(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getStartX(this, terminalWidth, terminalHeight);
+        }
+        return 0;
     }
 
     public void clearContent() throws IOException {
         containedFileBufferView.clearContent();
     }
     public int getStartY(int terminalWidth, int terminalHeight){
-        return parent.getStartY(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getStartY(this, terminalWidth, terminalHeight);
+        }
+        return 0;
     }
 
     public int getHeight(int terminalWidth, int terminalHeight){
-        return parent.getHeight(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getHeight(this, terminalWidth, terminalHeight);
+        }
+        return terminalHeight;
     }
 
     public int getWidth(int terminalWidth, int terminalHeight){
-        return parent.getWidth(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getWidth(this, terminalWidth, terminalHeight);
+        }
+        return terminalWidth;
     }
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
