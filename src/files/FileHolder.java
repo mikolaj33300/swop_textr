@@ -43,14 +43,6 @@ public class FileHolder {
         }
     }
 
-    public void save(String content) {
-        try {
-            Files.write(Path.of(this.path), content.getBytes());
-        } catch (IOException e) {
-            System.out.println("[FileHolder] Exception while trying to save file content");
-        }
-    }
-
     /**
      * Returns the content of the file
      */
