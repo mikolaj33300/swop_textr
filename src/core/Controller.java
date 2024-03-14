@@ -30,7 +30,7 @@ public class Controller {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
     public Controller(String[] args) {
-        this.rootLayout = initRootLayout(args, lineSeparatorArg);
+        this.rootLayout = initRootLayout(args);
     }
 
     /**
@@ -58,9 +58,9 @@ public class Controller {
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
      */
-    private Layout initRootLayout(String[] args, byte[] lineSeparator) {
+    private Layout initRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
-        for(int i = lineSeparator == null ? 0 : 1 ; i < args.length; i++) {
+        for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath))
                 System.out.println("Kutzooi");
@@ -218,7 +218,7 @@ public class Controller {
     /**
      * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
-    Layout initRootLayout() {
+    Layout getRootLayout() {
         return rootLayout;
     }
 
@@ -266,15 +266,16 @@ public class Controller {
 
     }
 
-    protected static void setLineSeparatorFromArgs(String[] args) {
+    static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
             Controller.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
             Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
-        else Controller.lineSeparatorArg = null;
+        else Controller.lineSeparatorArg = System.lineSeparator().getBytes();
     }
 
     public static byte[] getLineSeparatorArg(){
         return Controller.lineSeparatorArg;
     }
+
 }

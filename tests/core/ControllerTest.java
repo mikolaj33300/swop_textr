@@ -35,7 +35,7 @@ public class ControllerTest {
         // Testing only paths
         args = new String[]{path1, path2};
         Controller.setLineSeparatorFromArgs(args);
-        assertNull(Controller.getLineSeparatorArg());
+        assertArrayEquals(Controller.getLineSeparatorArg(), System.lineSeparator().getBytes());
 
         // Na constructor zou volgende root layout moeten bestaan:
         Controller controller = new Controller(args);
@@ -47,7 +47,7 @@ public class ControllerTest {
 
         HorizontalLayoutNode node = new HorizontalLayoutNode(leaves);
 
-        //assertTrue(controller.initRootLayout().equals(node));
+        //assertTrue(controller.getRootLayout().equals(node));
     }
 
 }

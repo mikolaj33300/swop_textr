@@ -1,5 +1,7 @@
 package files;
 
+import core.Controller;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +24,7 @@ public class FileAnalyserUtil {
         int i = 0;
         while (i < byteContents.length) {
             //if separator encountered
-            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), FileHolder.lineSeparator)){
+            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), Controller.getLineSeparatorArg())){
                 linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
                 i += lineSepLength;
                 startOfCurrentLine = i;
@@ -54,13 +56,13 @@ public class FileAnalyserUtil {
         return wrapperArray;
     }
 
-/*    private static byte[] formatStringAsHexBytes(String s){
-        byte[] byteArr = new byte[s.length()/2];
-        for(int i=0; i<s.length(); i= i+2){
-            byteArr[i/2] = Byte.parseByte(s.substring(i, i+2), 16);
-        }
-        return byteArr;
-    }*/
+    /*    private static byte[] formatStringAsHexBytes(String s){
+            byte[] byteArr = new byte[s.length()/2];
+            for(int i=0; i<s.length(); i= i+2){
+                byteArr[i/2] = Byte.parseByte(s.substring(i, i+2), 16);
+            }
+            return byteArr;
+        }*/
     private static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
         return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
     }

@@ -22,11 +22,11 @@ public class FileHolderTest {
         String teststring1 = "string to test with";
         String teststring2 = "string to test with in another file";
 
-        f1.save(teststring1);
+        f1.save(teststring1.getBytes());
         assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring1.getBytes()));
         assertTrue(FileHolder.areContentsEqual(f1_.getContent(), teststring1.getBytes()));
 
-        f1_.save(teststring2);
+        f1_.save(teststring2.getBytes());
         assertTrue(FileHolder.areContentsEqual(f1_.getContent(), teststring2.getBytes()));
         assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring2.getBytes()));
     }
@@ -35,7 +35,7 @@ public class FileHolderTest {
     void testGetContent() {
         String teststring = "string to test with";
 
-        f1.save(teststring);
+        f1.save(teststring.getBytes());
         assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring.getBytes()));
     }
 

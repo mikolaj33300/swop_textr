@@ -12,9 +12,10 @@ import java.util.Formatter;
  *  andere functie dan buffer
  */
 public class FileHolder {
-    public static final byte[] lineSeparator = Controller.getLineSeparatorArg() == null ? System.lineSeparator().getBytes() : Controller.getLineSeparatorArg();
+
     private final String path;
-    private File fd;
+
+    private final File fd;
 
     /**
      * Creates File object with given path
@@ -28,24 +29,12 @@ public class FileHolder {
         return new String(this.path);
     }
 
-    byte[] getLineSeparator() {
-        return this.lineSeparator == null ? System.lineSeparator().getBytes() : this.lineSeparator;
-    }
-
     /**
      * saves file
      */
-    public void save(byte[] fileContent) {
+    void save(byte[] fileContent) {
         try {
             Files.write(Path.of(this.path), fileContent);
-        } catch (IOException e) {
-            System.out.println("[FileHolder] Exception while trying to save file content");
-        }
-    }
-
-    public void save(String content) {
-        try {
-            Files.write(Path.of(this.path), content.getBytes());
         } catch (IOException e) {
             System.out.println("[FileHolder] Exception while trying to save file content");
         }
@@ -67,7 +56,8 @@ public class FileHolder {
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = this.lineSeparator == null ? formatterLine.toString() : FileAnalyserUtil.formatBytes(lineSeparator);
+
+            String lineSeperatorCode = FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes());
 
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);
@@ -79,8 +69,7 @@ public class FileHolder {
                     // Contains 0a, not 0d0a, code is 0d0a
                     || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
-                return "Error: Invalid file contents - Wrong line separator".getBytes();
-
+                return "Error: Invalid file contents - Invalid line separator".getBytes();
 
             return fileContent;
 
@@ -90,7 +79,8 @@ public class FileHolder {
             System.out.println("[FileBuffer] Exception while trying to read contents of file.");
 
         }
-        return "".getBytes();
+
+        return "Unreadable file".getBytes();
     }
 
     /**
@@ -107,6 +97,9 @@ public class FileHolder {
         return this.path.equals(holder.path);
     }
 
+    /**
+     * Checks if given
+     */
     public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
         if(arr1.length != arr2.length) return false;
         for(int i = 0; i < arr1.length; i++)
