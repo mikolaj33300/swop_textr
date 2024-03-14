@@ -54,7 +54,8 @@ public class Controller {
         setLineSeparatorFromArgs(args);
 
         Controller btj = new Controller(args);
-        btj.loop();
+        if(!args[args.length-1].equals("noterminal"))
+            btj.loop();
     }
 
     /**

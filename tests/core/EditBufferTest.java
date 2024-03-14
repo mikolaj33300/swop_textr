@@ -2,6 +2,7 @@ package core;
 
 import core.Controller;
 import files.FileHolder;
+import layouttree.DIRECTION;
 import layouttree.Layout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +43,12 @@ public class EditBufferTest {
         c.rootLayout.saveActiveBuffer();
 
         b = (Integer.valueOf(98)).byteValue();
-        c.moveFocus(Layout.DIRECTION.RIGHT);
+        c.moveFocus(DIRECTION.RIGHT);
         c.enterText(b);
         c.rootLayout.saveActiveBuffer();
 
         b = (Integer.valueOf(99)).byteValue();
-        c.moveFocus(Layout.DIRECTION.RIGHT);
+        c.moveFocus(DIRECTION.RIGHT);
         c.enterText(b);
         c.rootLayout.saveActiveBuffer();
 
