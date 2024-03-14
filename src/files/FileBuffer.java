@@ -33,15 +33,13 @@ public class FileBuffer {
      * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
+
     /**
      * Insertion points column & line do not represent printing locations!
      * All will be relative to {@link FileBuffer#linesArrayList} indices.
      * For statusbar, these will need to be increased with 1
      */
-    private int insertionPointCol;
-    private int insertionPointLine;
-
-    int insertionPointByteIndex;
+    private int insertionPointCol, insertionPointLine, insertionPointByteIndex;
 
     /**
      * Creates FileBuffer object with given path;
@@ -114,11 +112,11 @@ public class FileBuffer {
     }
 
     public String getRender() {
-        String statusLine = this.getFileHorlder().getPath();
+        String statusLine = this.getFileHolder().getPath();
         statusLine += " #Lines:";
-        statusLine += String.valueOf(this.getLinesArrayList().size());
+        statusLine += String.valueOf(this.getLines().size());
         statusLine += " #Chars:";
-        String contents = new String(this.getFileHorlder().getContent());
+        String contents = new String(this.getFileHolder().getContent());
         statusLine += contents.length();
         statusLine += " Insert:[";
         statusLine += this.getInsertionPointLine();
@@ -141,7 +139,7 @@ public class FileBuffer {
         return insertionPointCol;
     }
 
-    public ArrayList<ArrayList<Byte>> getLinesArrayList() {
+    public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
         for(int i = 0; i<linesArrayList.size(); i++){
             ArrayList<Byte> clonedLine = new ArrayList<Byte>();
@@ -179,13 +177,6 @@ public class FileBuffer {
     }
 
     /**
-     * Returns a copy of the Fileholder object, without a reference to the internal object
-     */
-    FileHolder getFileHorlder(){
-        return this.file.clone();
-    }
-
-    /**
      * Returns copy of this buffers' content.
      */
     byte[] getBytes() {
@@ -208,18 +199,6 @@ public class FileBuffer {
     ArrayList<Byte> cloneByteArrList() {
         ArrayList<Byte> copy = new ArrayList<>(byteContent);
         return copy;
-    }
-
-    /**
-     * Retrieves a {@link java.util.ArrayList<ArrayList<Byte>>}, where each entry is a list of bytes
-     * separated by another entry by a {@link System#lineSeparator()}.
-     */
-    ArrayList<ArrayList<Byte>> getLines() {
-        ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
-        for (ArrayList<Byte> line : linesArrayList) {
-            linesCloneArrayList.add((ArrayList<Byte>) line.clone());
-        }
-        return linesCloneArrayList;
     }
 
     int getInsertionPoint() {
@@ -310,6 +289,7 @@ public class FileBuffer {
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
+
     private void moveCursorToFront() {
       if (insertionPointCol > 0){
         insertionPointCol = 0;
