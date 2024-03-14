@@ -1,5 +1,6 @@
 package files;
 
+import core.Controller;
 import io.github.btj.termios.Terminal;
 
 
@@ -225,7 +226,7 @@ public class FileBuffer {
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
+        int byteLengthSeparatorLen = Controller.getLineSeparatorArg().length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
@@ -316,7 +317,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 moveCursorLeft();
-                for(int i = 0; i<FileHolder.lineSeparator.length ; i++) {
+                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
                     this.byteContent.remove(insertionPointByteIndex);
                 }
             }
