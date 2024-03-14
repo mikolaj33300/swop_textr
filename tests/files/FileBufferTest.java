@@ -52,7 +52,9 @@ public class FileBufferTest {
 
         String add = " ; i love using termios library ";
         String result = " ; i love using termios library i love termios ; long live btj";
-        buffer.write(add);
+        for (byte b : add.getBytes()) {
+            buffer.write(b);
+        }
 
         assertTrue(buffer.getDirty());
         buffer.save();
@@ -85,7 +87,9 @@ public class FileBufferTest {
             buff.moveCursor('C');
 
         buff.enterInsertionPoint();
-        buff.write("btj\n");
+        for (byte b : "btj\n".getBytes()) {
+            buff.write(b);
+        }
         buff.enterInsertionPoint();
         assertEquals(5, buff.getLines().size());
     }
@@ -101,7 +105,7 @@ public class FileBufferTest {
         assertEquals(1, buffer.insertionPointLine);
 
         assertEquals(2, buffer.getLines().size());
-        assertEquals("one of the best terminal applications", new String(buffer.toArray(buffer.getLines().get(1))));
+        assertEquals("one of the best terminal applications", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
 
     }
 

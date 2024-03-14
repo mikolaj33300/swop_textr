@@ -2,13 +2,9 @@ package core;
 
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
-import layouttree.HorizontalLayoutNode;
-import layouttree.Layout;
-import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
+import layouttree.*;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,10 +68,11 @@ public class Controller {
                 leaves.add(new LayoutLeaf(new FileBuffer(args[i]), i == 0));
         }
 
+
         if(leaves.size() == 1)
             return leaves.get(0);
         else
-            return new HorizontalLayoutNode(leaves);
+            return new VerticalLayoutNode(leaves);
     }
 
     /**
@@ -87,17 +84,16 @@ public class Controller {
         Terminal.clearScreen();
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
-
         // Reading terminal dimensions for correct rendering
         retrieveDimensions();
         render();
-
         // Main loop
         for ( ; ; ) {
+            int b = Terminal.readByte();
 
-            int c = Terminal.readByte();
-
-            switch(c) {
+            switch(b) {
+                case 8:
+                    deleteCharacter();
                 // Control + S
                 case 19:
                     saveBuffer();
@@ -121,26 +117,28 @@ public class Controller {
                     break;
                 // Character input
                 default:
-                    enterText((char) c);
-                    //render();
+                    enterText((Integer.valueOf(b)).byteValue());
                     break;
 
             }
-
+            Terminal.clearScreen();
             render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
-            retrieveDimensions();
-
         }
 
+    }
+
+    private void deleteCharacter() {
+        rootLayout.deleteCharacter();
     }
 
     /**
      * Renders the layout with the terminal current height & width
      */
     void render() {
-        this.rootLayout.render(0, 0, this.width, this.height);
+        this.rootLayout.renderTextContent(0, 0, this.width, this.height);
+        this.rootLayout.renderCursor(0, 0, this.width, this.height);
     }
 
     /**
@@ -153,21 +151,18 @@ public class Controller {
      * Moves insertion point in a file buffer
      */
     void moveCursor(char code) {
-        
+        rootLayout.moveCursor(code);
     }
 
     /**
      * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
      */
-    void enterText(char str) {
-        // Silently ignore non-ASCII characters.
-        if(Charset.forName("ASCII").newEncoder().canEncode(str)) {
-
-        }
+    void enterText(byte b) {
+        rootLayout.enterText(b);
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(char)}
+     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
     }

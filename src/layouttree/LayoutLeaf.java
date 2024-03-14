@@ -1,6 +1,9 @@
 package layouttree;
 
+import files.FileAnalyserUtil;
 import files.FileBuffer;
+import io.github.btj.termios.Terminal;
+
 
 /*
     LayoutLeaf represents the leaf layout-structure
@@ -37,6 +40,26 @@ public class LayoutLeaf extends Layout {
         } else {
             moveFocusLeft();
         }
+    }
+
+    @Override
+    public void moveCursor(char c) {
+        containedFileBuffer.moveCursor(c);
+    }
+
+    @Override
+    public void enterText(byte b){
+        containedFileBuffer.write(b);
+    }
+
+    @Override
+    public void saveActiveBuffer() {
+        containedFileBuffer.save();
+    }
+
+    @Override
+    public void enterInsertionPoint(){
+        containedFileBuffer.enterInsertionPoint();
     }
 
     /**
@@ -95,6 +118,11 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    @Override
+    public void deleteCharacter() {
+        containedFileBuffer.deleteCharacter();
+    }
+
     /**
      * Renders the current layout-tree
      * Renders:
@@ -104,8 +132,26 @@ public class LayoutLeaf extends Layout {
      * The insertionPoint in the current active LayoutLeaf
      */
 
-    public void render(int startX, int startY, int width, int height) {
-        containedFileBuffer.render(startX, startY, width, height);
+    public void renderTextContent(int startX, int startY, int width, int height) {
+        //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
+        int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine()/(height-1))*(height-1);
+        //Renders either all the lines until the end, or the next height-2 lines
+        for(int i = 0; i < Math.min(height-1, containedFileBuffer.getLinesArrayList().size()-renderStartingLineIndex); i++){
+            String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLinesArrayList().get(renderStartingLineIndex+i)));
+            //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
+            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol()/(width-1))*(width-1);
+            int renderLineEndIndex = Math.min(renderLineStartIndex+width-1, lineString.length());
+            //endindex -1 to make space for vertical bar
+            Terminal.printText(1+startY+i, 1+startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+        }
+    }
+
+    public void renderCursor(int startX, int startY, int width, int height) {
+        if(containsActive){
+            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % width;
+            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % height;
+            Terminal.moveCursor(1+startY+cursorYoffset, 1+startX+cursorXoffset);
+        }
     }
 
     /**
@@ -143,5 +189,6 @@ public class LayoutLeaf extends Layout {
     protected LayoutLeaf getLeftLeaf() {
         return this;
     }
+
 }
 

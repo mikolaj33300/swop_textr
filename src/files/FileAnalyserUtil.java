@@ -66,4 +66,14 @@ public class FileAnalyserUtil {
     }
 
 
+    /**
+     * Puts all elements from a Byte ArrayList in a byte[]
+     */
+    public static byte[] toArray(ArrayList<Byte> arrList) {
+        byte[] resultArray = new byte[arrList.size()];
+        for(int i = 0; i < arrList.size() ; i++){
+            resultArray[i] = arrList.get(i).byteValue();
+        }
+        return resultArray;
+    }
 }
