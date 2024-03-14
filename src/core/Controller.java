@@ -132,7 +132,7 @@ public class Controller {
                         case 'A', 'B', 'C', 'D':
                             moveCursor((char) c);
                             break;
-                        case 'S':// Ctrl+F4
+                        case 'S':// F4
                             System.out.println((char) c);
                             Terminal.clearScreen();
                             break;
@@ -145,6 +145,7 @@ public class Controller {
                     break;
                 // Character input
                 default:
+                    Terminal.clearScreen();
                     if(b < 32 && b != 10 && b != 13 || 127 <= b)
                         break;
                     enterText((Integer.valueOf(b)).byteValue());

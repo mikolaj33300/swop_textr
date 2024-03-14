@@ -159,6 +159,7 @@ public class LayoutLeaf extends Layout {
      */
 
     public void renderTextContent(int startX, int startY, int width, int height) {
+        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine()/(height-1))*(height-1);
         //Renders either all the lines until the end, or the next height-2 lines
@@ -170,7 +171,6 @@ public class LayoutLeaf extends Layout {
             //endindex -1 to make space for vertical bar
             Terminal.printText(1+startY+i, 1+startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
         }
-        Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
     }
 
     public void renderCursor(int startX, int startY, int width, int height) {
