@@ -112,7 +112,15 @@ public class Controller {
                 case 14:
                     moveFocus(Layout.DIRECTION.RIGHT);
                     break;
-                // Arrow keys
+                // Control + R
+                case 18:
+                    rotateLayout(Layout.ROT_DIRECTION.COUNTERCLOCKWISE);
+                    break;
+                // Control + T
+                case 20:
+                    rotateLayout(Layout.ROT_DIRECTION.CLOCKWISE);
+                    break;
+                        // Arrow keys
                 case 27:
                     Terminal.readByte();
                     moveCursor((char) Terminal.readByte());
@@ -121,7 +129,7 @@ public class Controller {
                 case 13:
                     enterLineSeparator();
                     break;
-                // Character inpu
+                // Character input
                 default:
                     enterText((Integer.valueOf(b)).byteValue());
                     break;
@@ -171,6 +179,13 @@ public class Controller {
      * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
+    }
+
+    /**
+     * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
+     */
+    void rotateLayout(Layout.ROT_DIRECTION orientation){
+        rootLayout.rotateRelationshipNeighbor(orientation);
     }
 
     /**
