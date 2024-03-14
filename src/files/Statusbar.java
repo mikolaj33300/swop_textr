@@ -28,7 +28,7 @@ public class Statusbar {
         statusLine += String.valueOf(getBuffer().getLines().size());
         statusLine += " #Chars:";
         statusLine += String.valueOf(getBuffer().getBytes().length);
-        statusLine += "Insert:[";
+        statusLine += " Insert:[";
         //statusLine += String.valueOf(buffer.getLayout().getInsertionPoint().getLine());
         statusLine += ";";
         //statusLine += String.valueOf(buffer.getLayout().getInsertionPoint().getColumn());
