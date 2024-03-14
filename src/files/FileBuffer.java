@@ -294,8 +294,9 @@ public class FileBuffer {
             //shift left if the current line is longer than the previous
             insertionPointCol = Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
             insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+            insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
         }
-        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+
     }
 
     private void moveCursorLeft() {

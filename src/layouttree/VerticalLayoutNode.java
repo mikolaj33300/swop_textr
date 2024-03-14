@@ -49,7 +49,7 @@ public class VerticalLayoutNode extends LayoutNode{
         if(parent != null){
             return parent.getHeight(this, terminalWidth, terminalHeight)/this.children.size();
         }
-        return terminalHeight/this.children.size();
+        return terminalHeight/(this.children.size());
     }
 
     /**
