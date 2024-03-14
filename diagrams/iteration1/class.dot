@@ -32,12 +32,37 @@ digraph {
       -byteContent: ArrayList(ArrayList(Byte))<br/>
       -linesArrayList: ArrayList(ArrayList(Byte))<br/>
       -status: Statusbar<br/>
-      ~insertionPointCol: int<br/>
-      ~insertionPointLine: int<br/>
+      -insertionPointCol: int<br/>
+      -insertionPointLine: int<br/>
       ~insertionPointByteIndex: int
     </td></tr>
     <tr><td>+FileBuffer(String path)<br/>
       ~getLines()<br/>
+      +enterInsertionPoint()<br/>
+      ~deleteLine()<br/>
+      +getStatusBar()<br/>
+      +save()<br/>
+      +moveCursor(char direction)<br/>
+      ~getDirty()<br/>
+      -insert(byte... data)<br/>
+      ~getFileHolder()<br/>
+      ~getBytes()<br/>
+      ~contentsEqual(ArrayList(Byte) compare)<br/>
+      ~cloneByteArrList()<br/>
+      +clone()<br/>
+      +equals(FileBuffer buffer)<br/>
+      ~getInsertionPoint()<br/>
+      ~toArray(ArrayList(Byte) arrList)<br/>
+      -convertLineAndColToIndex(int line, int col)<br/>
+      -moveCursorDown()<br/>
+      -moveCursorUp()<br/>
+      -moveCursorLeft()<br/>
+      -moveCursorToFront()<br/>
+      -moveCursorRight()<br/>
+      +getInsertionPointLine()<br/>
+      +getLinesArrayList()<br/>
+      +getInsertionPointCol()<br/>
+      +deleteCharacter()
     </td></tr>
     </table>>]
 
@@ -46,21 +71,23 @@ digraph {
     <tr><td>-lineSeparatorArg: byte[]<br/>
       -rootLayout: Layout<br/>
       -width: int<br/>
-      -height: int</td></tr>
-    <tr><td>+lineSeparatorArg<br/>
-      +Controller(String[] args)<br/>
+      -height: int<br/>
+      -lineSeparatorArg</td></tr>
+    <tr><td>+Controller(String[] args)<br/>
       +main(String[] args)<br/>
-      +initRootLayout(String[] args, byte[] lineSeparator)<br/>
+      -initRootLayout(String[] args, byte[] lineSeparator)<br/>
       +loop()<br/>
-      +render()<br/>
-      +saveBuffer()<br/>
-      +moveCursor(char code)<br/>
-      +enterText(char str)<br/>
-      <!--+enterLineSeparator()<br/>-->
-      +moveFocus(Layout.DIRECTION dir)<br/>
-      +initRootLayout()<br/>
-      +retrieveDimensions()<br/>
-      +setLineSeparatorFromArgs(String[] args)<br/>
+      -deleteCharacter()<br/>
+      ~render()<br/>
+      ~saveBuffer()<br/>
+      ~moveCursor(char code)<br/>
+      ~enterText(char str)<br/>
+      ~enterLineSeparator()<br/>
+      ~rotateLayout(Layout.ROT_DIRECTION orientation)<br/>
+      ~moveFocus(Layout.DIRECTION dir)<br/>
+      ~initRootLayout()<br/>
+      ~retrieveDimensions()<br/>
+      #setLineSeparatorFromArgs(String[] args)<br/>
       +getLineSeparatorArg()</td></tr>
     </table>>]
   controller -> Layout

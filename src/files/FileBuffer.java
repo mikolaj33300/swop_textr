@@ -43,8 +43,8 @@ public class FileBuffer {
      * All will be relative to {@link FileBuffer#linesArrayList} indices.
      * For statusbar, these will need to be increased with 1
      */
-    int insertionPointCol;
-    int insertionPointLine;
+    private int insertionPointCol;
+    private int insertionPointLine;
 
     int insertionPointByteIndex;
 
