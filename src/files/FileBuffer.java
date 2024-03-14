@@ -66,9 +66,9 @@ public class FileBuffer {
      * Retrieves a {@link java.util.ArrayList<ArrayList<Byte>>}, where each entry is a list of bytes
      * separated by another entry by a {@link System#lineSeparator()}.
      */
-    ArrayList<ArrayList<Byte>> getLines(){
+    ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> linesCloneArrayList = new ArrayList<ArrayList<Byte>>();
-        for(ArrayList<Byte> line : linesArrayList){
+        for (ArrayList<Byte> line : linesArrayList) {
             linesCloneArrayList.add((ArrayList<Byte>) line.clone());
         }
         return linesCloneArrayList;
@@ -101,12 +101,12 @@ public class FileBuffer {
     public void render(int startX, int startY, int width, int height) {
         int currentTerminalRow = startY;
         //height-1 to make space for status bar
-        for(int i = insertionPointLine; i < Math.min(insertionPointLine + height-1, linesArrayList.size()); i++){
-            String lineString = new String(FileAnalyserUtil.toArray(linesArrayList.get(i)));
-            int renderLineStartIndex = insertionPointCol/(width-1);
-            int renderLineEndIndex = renderLineStartIndex+width-1;
+        for (int i = insertionPointLine; i < Math.min(insertionPointLine + height - 1, linesArrayList.size()); i++) {
+            String lineString = new String(toArray(linesArrayList.get(i)));
+            int renderLineStartIndex = insertionPointCol / (width - 1);
+            int renderLineEndIndex = renderLineStartIndex + width - 1;
             //endindex -1 to make space for vertical bar
-            Terminal.printText(1+startY, 1+startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex-1, lineString.length())));
+            Terminal.printText(1 + startY, 1 + startX, lineString.substring(renderLineStartIndex, Math.min(renderLineEndIndex - 1, lineString.length())));
             currentTerminalRow++;
         }
 
@@ -146,7 +146,7 @@ public class FileBuffer {
      * 'B': down
      */
     public void moveCursor(char direction) {
-        switch(direction) {
+        switch (direction) {
             // Right
             case 'C':
                 moveCursorRight();
@@ -187,7 +187,7 @@ public class FileBuffer {
      * Returns the FileHolder object
      */
     FileHolder getFileHolder() {
-        return this.file;
+        return this.file.clone();
     }
 
     /**
@@ -201,9 +201,9 @@ public class FileBuffer {
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
      */
     boolean contentsEqual(ArrayList<Byte> compare) {
-        if(compare.size() != byteContent.size()) return false;
-        for(int i = 0; i < compare.size(); i++)
-            if(compare.get(i) != byteContent.get(i).byteValue()) return false;
+        if (compare.size() != byteContent.size()) return false;
+        for (int i = 0; i < compare.size(); i++)
+            if (compare.get(i) != byteContent.get(i).byteValue()) return false;
         return true;
     }
 
@@ -237,12 +237,23 @@ public class FileBuffer {
         return insertionPointByteIndex;
     }
 
+    /**
+     * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
+     */
+    byte[] toArray(ArrayList<Byte> arrList) {
+        byte[] resultArray = new byte[arrList.size()];
+        for (int i = 0; i < arrList.size(); i++) {
+            resultArray[i] = arrList.get(i).byteValue();
+        }
+        return resultArray;
+    }
+
     //Add the amount of bytes from lines above,
     //and bytes before this col, assuming line and col start at 0
     private int convertLineAndColToIndex(int line, int col) {
         int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
         int byteArrIndex = 0;
-        for(int i = 0; i < line; i++){
+        for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
         }
         byteArrIndex = byteArrIndex + col;
@@ -250,30 +261,30 @@ public class FileBuffer {
     }
 
     private void moveCursorDown() {
-        if(insertionPointLine < linesArrayList.size() - 1){
+        if (insertionPointLine < linesArrayList.size() - 1) {
             insertionPointLine++;
-            insertionPointCol=Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
+            insertionPointCol = Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
             insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
     private void moveCursorUp() {
-        if(insertionPointLine > 0){
+        if (insertionPointLine > 0) {
             insertionPointLine--;
             //shift left if the current line is longer than the previous
-            insertionPointCol=Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
+            insertionPointCol = Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
             insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-    private void moveCursorLeft(){
-        if(insertionPointCol > 0){
+    private void moveCursorLeft() {
+        if (insertionPointCol > 0) {
             insertionPointCol--;
             //insertionPointByteIndex--;
         } else {
-            if(insertionPointLine != 0){
+            if (insertionPointLine != 0) {
                 //move one line up, to last character
                 insertionPointLine--;
                 insertionPointCol = linesArrayList.get(insertionPointLine).size();
@@ -294,9 +305,9 @@ public class FileBuffer {
             insertionPointCol++;
         } else {
             //Move cursor one line down, unless already at bottom line
-            if(insertionPointLine < linesArrayList.size() - 1){
+            if (insertionPointLine < linesArrayList.size() - 1) {
                 insertionPointLine++;
-                insertionPointCol=0;
+                insertionPointCol = 0;
             }
             //otherwise do nothing
         }

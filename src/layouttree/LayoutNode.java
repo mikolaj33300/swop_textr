@@ -141,15 +141,14 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     *
+     * Deletes right neighbour.
      */
     protected void deleteRightNeighbor(Layout subtree) {
         int index = children.indexOf(subtree);
-        if (index < children.size() - 1) {
+        if (index < children.size() - 1)
             children.get(index + 1).deleteLeftLeaf(); // Called when we can make child of current node the active one.
-        } else {
+        else
             parent.deleteRightNeighbor(this); //called when we need to backtrack one level up
-        }
     }
 
     /**

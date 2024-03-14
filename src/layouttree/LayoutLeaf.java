@@ -5,7 +5,7 @@ import files.FileBuffer;
 import io.github.btj.termios.Terminal;
 
 
-/*
+/**
     LayoutLeaf represents the leaf layout-structure
     LayoutLeaf inherets from Layout
  */
@@ -13,9 +13,9 @@ public class LayoutLeaf extends Layout {
     private FileBuffer containedFileBuffer;
 
     /**
-       Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
+     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(FileBuffer fb, boolean active){
+    public LayoutLeaf(FileBuffer fb, boolean active) {
         this.containedFileBuffer = fb.clone();
         this.setContainsActive(active);
     }
@@ -25,17 +25,18 @@ public class LayoutLeaf extends Layout {
      * Since the parent function found this leaf as leftmost, it will be removed
      */
     protected void deleteLeftLeaf() {
-        if(super.parent != null) {
+        if (super.parent != null) {
             super.parent.delete(this);
         }
     }
+
     /**
      * Moves focus from the currently active Layout, to the neigbouring layout
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public void moveFocus(DIRECTION dir){
-        if(dir == DIRECTION.RIGHT){
+    public void moveFocus(DIRECTION dir) {
+        if (dir == DIRECTION.RIGHT) {
             moveFocusRight();
         } else {
             moveFocusLeft();
@@ -48,7 +49,7 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    public void enterText(byte b){
+    public void enterText(byte b) {
         containedFileBuffer.write(b);
     }
 
@@ -58,7 +59,7 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    public void enterInsertionPoint(){
+    public void enterInsertionPoint() {
         containedFileBuffer.enterInsertionPoint();
     }
 
@@ -66,28 +67,29 @@ public class LayoutLeaf extends Layout {
      * Moves focus from the currently active Layout, to the rightneigbouring layout
      * If no neighbours left, the active Layout stays active
      */
-    private void moveFocusRight(){
-        if(parent != null){
+    private void moveFocusRight() {
+        if (parent != null) {
             this.setContainsActive(false);
             parent.makeRightNeighbourActive(this);
         }
     }
+
     /**
      * Moves focus from the currently active Layout, to the leftneigbouring layout
      * If no neighbours left, the active Layout stays active
      */
-    private void moveFocusLeft(){
-        if(parent != null){
+    private void moveFocusLeft() {
+        if (parent != null) {
             this.setContainsActive(false);
             parent.makeLeftNeighbourActive(this);
         }
     }
 
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        if(parent != null){
+        if (parent != null) {
             return parent.rotateWithRightSibling(rot_dir, this);
         } else {
-            System.out.print((char)7); //sounds terminal bell
+            System.out.print((char) 7); //sounds terminal bell
             return this;
         }
     }
@@ -98,7 +100,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof LayoutLeaf leaf) {
+        if (obj instanceof LayoutLeaf leaf) {
             return leaf.containedFileBuffer.equals(this.containedFileBuffer) && (this.getContainsActive() == leaf.getContainsActive());
         } else {
             return false;
@@ -111,7 +113,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
-        if(getContainsActive() && futureParent.getContainsActive()){
+        if (getContainsActive() && futureParent.getContainsActive()) {
             throw new RuntimeException("Invalid child: more than two active");
         } else {
             return true;
