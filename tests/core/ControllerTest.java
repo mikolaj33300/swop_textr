@@ -1,6 +1,7 @@
 package core;
 
 import files.FileBuffer;
+import files.FileHolder;
 import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
@@ -24,17 +25,17 @@ public class ControllerTest {
 
         // Testing opening with --lf + paths
         TextR.setLineSeparatorFromArgs(args);
-        assertArrayEquals(TextR.getLineSeparatorArg(), new byte[]{0x0a});
+        assertArrayEquals(FileHolder.lineSeparator, new byte[]{0x0a});
 
         // Testing opening with --crlf + paths
-        args = new String[] {"--crlf", path1, path2};
-        TextR.setLineSeparatorFromArgs(args);
+        String[] sar gs = new String[] {"--crlf", path1, path2};
+        TextR.setLineSeparatorFromArgs(sargs);
         assertArrayEquals(TextR.getLineSeparatorArg(), new byte[]{0x0d, 0x0a});
 
         // Testing only paths
         args = new String[]{path1, path2};
         TextR.setLineSeparatorFromArgs(args);
-        assertArrayEquals(TextR.getLineSeparatorArg(), System.lineSeparator().getBytes());
+        assertArrayEquals(FileHolder.lineSeparator, System.lineSeparator().getBytes());
 
         // Na constructor zou volgende root layout moeten bestaan:
         TextR controller = new TextR(args);

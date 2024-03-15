@@ -14,7 +14,7 @@ public class TextR {
     /**
      * Holds the line separator for this application
      */
-    private static byte[] lineSeparatorArg;
+    private static byte[] lineSeparatorArg = System.lineSeparator().getBytes();
     protected UseCaseController activeUseCaseController;
 
     /**
