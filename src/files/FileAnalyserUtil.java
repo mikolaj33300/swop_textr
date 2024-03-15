@@ -9,6 +9,11 @@ import java.util.Formatter;
 public class FileAnalyserUtil {
 
 
+    /**
+     * Subdivides the given byte array into lines
+     * @param byteContents
+     * @return
+     */
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
         int lineSepLength = System.lineSeparator().getBytes().length;
         int startOfCurrentLine = 0;
