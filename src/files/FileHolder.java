@@ -1,5 +1,7 @@
 package files;
 
+import core.TextR;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ import java.util.Formatter;
  */
 public class FileHolder {
 
+    public static byte[] lineSeparator = TextR.getLineSeparatorArg();
     private final String path;
 
     private final File fd;
