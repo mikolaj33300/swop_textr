@@ -6,10 +6,6 @@ import java.util.Arrays;
 
 public class VerticalLayoutNode extends LayoutNode{
 
-    @Override
-    public void renderCursor() throws IOException {
-        super.renderCursor();
-    }
 
     /**
      * Constructor for VerticalLayoutNode, clones its arguments to prevent representation exposure
@@ -18,6 +14,17 @@ public class VerticalLayoutNode extends LayoutNode{
         super(newChildren);
     }
 
+    /**
+     * Returns the starting x-coordinate of this VerticalLayoutNode
+     */
+    @Override
+    public void renderCursor() throws IOException {
+        super.renderCursor();
+    }
+
+    /**
+     * Returns the starting x-coordinate of this VerticalLayoutNode
+     */
     @Override
     public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -26,6 +33,9 @@ public class VerticalLayoutNode extends LayoutNode{
         return 0;
     }
 
+    /**
+     * Returns the starting y-coordinate of this VerticalLayoutNode
+     */
     @Override
     public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -36,6 +46,9 @@ public class VerticalLayoutNode extends LayoutNode{
         return (terminalHeight/children.size())*children.indexOf(l);
     }
 
+    /**
+     * Returns the width of this VerticalLayoutNode
+     */
     @Override
     public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -44,6 +57,9 @@ public class VerticalLayoutNode extends LayoutNode{
         return terminalWidth;
     }
 
+    /**
+     * Returns the height of this VerticalLayoutNode
+     */
     @Override
     public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -101,6 +117,9 @@ public class VerticalLayoutNode extends LayoutNode{
         return cloned;
     }
 
+    /**
+     * Returns whether this HorizontalLayoutNode and the given object are equals in contents
+     */
     @Override
     public boolean equals(Object node) {
         if(node instanceof VerticalLayoutNode layoutNode) {

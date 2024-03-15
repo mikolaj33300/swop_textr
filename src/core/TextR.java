@@ -40,8 +40,8 @@ public class TextR {
                 (
                         // Or --lf || --crlf is given
                         (args[0].equals("--lf") || (args[0].equals("--crlf")))
-                        // But amount of args is 1
-                        && args.length == 1
+                                // But amount of args is 1
+                                && args.length == 1
                 )
         ) { // Then no path is specified, and we cannot open
             throw new RuntimeException("TextR needs at least one specified file");
@@ -49,9 +49,10 @@ public class TextR {
         setLineSeparatorFromArgs(args);
 
         TextR btj = new TextR(args);
-        if(!args[args.length-1].equals("noterminal"))
+        if(!args[args.length-1].equals("noterminal")) {
             btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
+        }
     }
 
     /**
@@ -131,7 +132,7 @@ public class TextR {
      * Saves the FileBuffer's content to its file.
      */
     void saveBuffer() {
-      this.rootLayout.saveActiveBuffer();
+        this.rootLayout.saveActiveBuffer();
     }
 
     /**
@@ -152,7 +153,7 @@ public class TextR {
      * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
      */
     void enterLineSeparator() {
-      rootLayout.enterInsertionPoint();
+        rootLayout.enterInsertionPoint();
     }
 
     /**
