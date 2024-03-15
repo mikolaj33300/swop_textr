@@ -9,6 +9,10 @@ public class UserPopupBox {
         Terminal.printText(1,1, message);
     }
 
+    public void clearContent(){
+        Terminal.clearScreen();
+    }
+
     public UserPopupBox(String message){
         this.message = message;
     }

@@ -5,6 +5,7 @@ import ui.UserPopupBox;
 import java.io.IOException;
 
 public class DirtyClosePromptController extends UseCaseController {
+    UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)");
 
     protected DirtyClosePromptController(TextR coreControllerParent) {
         super(coreControllerParent);
@@ -31,11 +32,11 @@ public class DirtyClosePromptController extends UseCaseController {
 
     @Override
     public void render() throws IOException {
-        (new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)")).render();
+        userPopupBox.render();
     }
 
     @Override
     public void clearContent() throws IOException {
-        coreControllerParent.rootLayout.clearContent();
+        userPopupBox.clearContent();
     }
 }
