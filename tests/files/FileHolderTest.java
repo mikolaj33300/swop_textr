@@ -3,6 +3,7 @@ package files;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+import util.Debug;
 
 import java.io.*;
 
@@ -15,6 +16,13 @@ public class FileHolderTest {
     void testGetPath() {
         assertEquals("testresources/test.txt", f1.getPath());
         assertEquals("testresources/test2.txt", f2.getPath());
+    }
+
+    @Test
+    void testGetContents() {
+        String str = "hallo i am a student of btj ; im learning to use termios the best console thing ever made111!!!";
+        Debug.write("testresources/test.txt", str);
+        assertTrue(FileHolder.areContentsEqual(f1.getContent(), str.getBytes()));
     }
 
     @Test

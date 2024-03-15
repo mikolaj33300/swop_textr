@@ -1,13 +1,16 @@
 package core;
 
+import files.FileBuffer;
 import files.FileHolder;
 import layouttree.DIRECTION;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import util.Debug;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -25,18 +28,26 @@ public class EditBufferTest {
 
     @BeforeEach
     public void setVariables() {
-        write(path1, "ai lov yousing termios");
-        write(path2, "btj is a mister");
-        write(path3, "btj makes great libraries");
+        Debug.write(path1, "ai lov yousing termios");
+        Debug.write(path2, "btj is a mister");
+        Debug.write(path3, "btj makes great libraries");
         c = new TextR(new String[] {path1, path2, path3});
     }
 
+    /**
+     * This test asserts that:
+     * 1. Moving between views works
+     * 2. The controller can insert text into the active file buffer
+     * 3. Implicitly asserting that contents writting to the buffer are saved correctly,
+     *    because saveActiveBuffer() writes the edited contents to disk.
+     */
     @Test
-    public void testEditBuffer() throws IOException {
+    public void testEditBuffer() throws IOException, NoSuchFieldException {
         // We schrijven a op plaats 0 in path1.
         TextR.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
         byte b = (Integer.valueOf(97)).byteValue();
 
+        // Enter text at column 0.
         c.enterText(b);
         c.rootLayout.saveActiveBuffer();
 
@@ -61,20 +72,6 @@ public class EditBufferTest {
                 ,Files.readAllBytes(Path.of(path3))));
 
 
-    }
-
-    /**
-     * Helper method that writes given text into the file at given path
-     */
-    private void write(String path, String text) {
-        try {
-            // Overwrite file test.txt
-            FileWriter writer = new FileWriter(new File(path));
-            writer.write(text);
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

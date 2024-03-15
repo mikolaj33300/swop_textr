@@ -14,11 +14,6 @@ public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartX(int terminalWidth, int terminalHeight){
@@ -34,11 +29,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartY(int terminalWidth, int terminalHeight){
@@ -49,11 +39,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getHeight(int terminalWidth, int terminalHeight){
@@ -64,11 +49,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getWidth(int terminalWidth, int terminalHeight){
