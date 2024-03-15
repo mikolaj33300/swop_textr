@@ -49,9 +49,10 @@ public class TextR {
         setLineSeparatorFromArgs(args);
 
         TextR btj = new TextR(args);
-        if(!args[args.length-1].equals("noterminal"))
+        if(!args[args.length-1].equals("noterminal")) {
             btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
+        }
     }
 
     /**
