@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class TextR {
-
+    private static boolean testMode_NoTerminal;
     /**
      * Holds the line separator for this application
      */
@@ -48,10 +48,10 @@ public class TextR {
         }
         setLineSeparatorFromArgs(args);
 
-        TextR btj = new TextR(args);
+        TextR textR = new TextR(args);
         if(!args[args.length-1].equals("noterminal")) {
-            btj.activeUseCaseController = new InspectContentsController(btj);
-            btj.loop();
+            textR.activeUseCaseController = new InspectContentsController(textR);
+            textR.loop();
         }
     }
 
@@ -85,20 +85,22 @@ public class TextR {
      */
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
-        Terminal.enterRawInputMode();
-        activeUseCaseController.clearContent();
-        // Reading terminal dimensions for correct rendering
-        render();
-        // Main loop
-        for ( ; ; ) {
-            int b = Terminal.readByte();
-            activeUseCaseController.handle(b);
-            activeUseCaseController.clearContent();
-            activeUseCaseController.render();
-            // Flush stdIn & Recalculate dimensions
-            System.in.skipNBytes(System.in.available());
-        }
+        if(!testMode_NoTerminal){
 
+            Terminal.enterRawInputMode();
+            activeUseCaseController.clearContent();
+            // Reading terminal dimensions for correct rendering
+            activeUseCaseController.render();
+            // Main loop
+            for ( ; ; ) {
+                int b = Terminal.readByte();
+                activeUseCaseController.handle(b);
+                activeUseCaseController.clearContent();
+                activeUseCaseController.render();
+                // Flush stdIn & Recalculate dimensions
+                System.in.skipNBytes(System.in.available());
+            }
+        }
     }
 
     /**
@@ -106,26 +108,6 @@ public class TextR {
      */
     void deleteCharacter() {
         rootLayout.deleteCharacter();
-    }
-
-    /**
-     * Renders the layout with the terminal current height & width
-     */
-    void render() {
-        try{
-            this.rootLayout.renderContent();
-            this.rootLayout.renderCursor();
-        } catch (IOException e){
-            this.activeUseCaseController = new FileErrorPopupController(this);
-        }
-
-    }
-
-    /**
-     * Clears the active view's of text
-     */
-    void clearContent() throws IOException {
-        rootLayout.clearContent();
     }
 
     /**

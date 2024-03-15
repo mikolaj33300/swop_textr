@@ -52,6 +52,7 @@ public class InspectContentsController extends UseCaseController {
                         if(result == 1){ //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if(result == 2){
+                            coreControllerParent.rootLayout=null;
                             System.out.println("22222222222222");
                             System.exit(0);
                         }
@@ -74,11 +75,22 @@ public class InspectContentsController extends UseCaseController {
     }
 
     @Override
-    public void render() throws IOException {
-        coreControllerParent.rootLayout.renderContent();
-        coreControllerParent.rootLayout.renderCursor();
+    /**
+     * Renders the layout with the terminal current height & width
+     */
+    public void render() {
+        try{
+            coreControllerParent.rootLayout.renderContent();
+            coreControllerParent.rootLayout.renderCursor();
+        } catch (IOException e){
+            coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
+        }
     }
 
+    /**
+     * Clears the active layouttree of text
+     * @throws IOException
+     */
     @Override
     public void clearContent() throws IOException {
         coreControllerParent.rootLayout.clearContent();

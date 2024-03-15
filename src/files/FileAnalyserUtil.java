@@ -9,8 +9,13 @@ import java.util.Formatter;
 public class FileAnalyserUtil {
 
 
+    /**
+     * Subdivides the given byte array into lines
+     * @param byteContents
+     * @return
+     */
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
-        int lineSepLength = System.lineSeparator().getBytes().length;
+        int lineSepLength = FileHolder.lineSeparator.length;
         int startOfCurrentLine = 0;
         ArrayList<ArrayList<Byte>> linesArrList = new ArrayList<>();
 
@@ -42,6 +47,11 @@ public class FileAnalyserUtil {
         return formatter.toString();
     }
 
+    /**
+     * Returns an array of Byte wrappers for given array of bytes
+     * @param byteArr
+     * @return
+     */
     public static Byte[] wrapEachByteElem(byte[] byteArr){
         Byte[] wrapperArray = new Byte[byteArr.length];
         for (int i = 0; i < byteArr.length; i++) {
@@ -64,6 +74,8 @@ public class FileAnalyserUtil {
 
     /**
      * Puts all elements from a Byte ArrayList in a byte[]
+     * @param arrList
+     * @return
      */
     public static byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
