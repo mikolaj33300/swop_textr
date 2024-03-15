@@ -46,15 +46,18 @@ public class FileBufferView extends View {
                     Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
             }
         }
+        //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            Terminal.printText(startY + height, startX + 1, this.renderStatusbar());
+            Terminal.printText(startY + height, startX + 1, this.getStatusbarString());
+        renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
+
     }
 
     /**
      * Generates the string that is used to display the statusbar.
      */
-    private String renderStatusbar() {
+    private String getStatusbarString() {
         String statusLine = containedFileBuffer.getFileHolder().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
@@ -77,6 +80,19 @@ public class FileBufferView extends View {
         else
             statusLine += "Not Active";
         return statusLine;
+    }
+
+    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
+        for(int i = 0; i<(super.height-1); i++){
+            double visibleStartPercent = ((focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
+            double visibleEndPercent = ((1+focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
+
+            if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
+                Terminal.printText(1+startY+i, 1+scrollStartX, "+");
+            } else {
+                Terminal.printText(1+startY+i, 1+scrollStartX, "-");
+            }
+        }
     }
 
     /**
@@ -129,7 +145,7 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link Controller}
+     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link core.TextR}
      */
     public void deleteCharacter() {
         containedFileBuffer.deleteCharacter();
