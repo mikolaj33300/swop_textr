@@ -176,7 +176,7 @@ public class FileBufferTest {
 
     }
 
-   @Test
+    @Test
     public void testAmountChar() throws IOException {
 
         Debug.write("testresources/test.txt", "btj");
