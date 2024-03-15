@@ -20,7 +20,7 @@ public class InspectBufferTest {
 
 
     @Test
-    public void testInspectBuffer(){
+    public void testInspectBuffer() throws IOException {
         TextR c1 = new TextR(new String[]{"testresources/test.txt", "testresources/test2.txt"});
 
         String insert = "i love btj <3";

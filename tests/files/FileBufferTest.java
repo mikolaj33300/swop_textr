@@ -177,7 +177,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testAmountChar() {
+    public void testAmountChar() throws IOException {
 
         Debug.write("testresources/test.txt", "btj");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
@@ -190,7 +190,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testDeleteCharacter() {
+    public void testDeleteCharacter() throws IOException {
 
         Debug.write("testresources/test.txt", "hallo btj i am your loyal student i use termios daily");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
