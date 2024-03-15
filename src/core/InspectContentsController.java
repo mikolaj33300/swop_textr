@@ -6,7 +6,12 @@ import layouttree.ROT_DIRECTION;
 
 import java.io.IOException;
 
-public class InspectContentsController extends UseCaseController{
+public class InspectContentsController extends UseCaseController {
+
+    protected InspectContentsController(TextR coreControllerParent){
+        super(coreControllerParent);
+    }
+
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
@@ -78,7 +83,5 @@ public class InspectContentsController extends UseCaseController{
     public void clearContent() throws IOException {
         coreControllerParent.rootLayout.clearContent();
     }
-    protected InspectContentsController(Controller coreControllerParent){
-        super(coreControllerParent);
-    }
+
 }

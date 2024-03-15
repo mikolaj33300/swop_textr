@@ -3,9 +3,9 @@ package core;
 import java.io.IOException;
 
 public abstract class UseCaseController {
-    protected Controller coreControllerParent;
+    protected TextR coreControllerParent;
 
-    protected UseCaseController(Controller coreControllerParent){
+    protected UseCaseController(TextR coreControllerParent){
         this.coreControllerParent = coreControllerParent;
     }
 

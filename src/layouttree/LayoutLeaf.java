@@ -14,6 +14,14 @@ public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
     /**
+     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
+     */
+    public LayoutLeaf(String path, boolean active) throws IOException {
+        this.containedFileBufferView = new FileBufferView(path, this);
+        this.setContainsActiveView(active);
+    }
+
+    /**
      * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartX(int terminalWidth, int terminalHeight){
@@ -58,13 +66,6 @@ public class LayoutLeaf extends Layout {
             return parent.getWidth(this, terminalWidth, terminalHeight);
         }
         return terminalWidth;
-    }
-    /**
-     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
-     */
-    public LayoutLeaf(String path, boolean active) throws IOException {
-        this.containedFileBufferView = new FileBufferView(path, this);
-        this.setContainsActiveView(active);
     }
 
     /**
@@ -143,6 +144,12 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Rotates the active layoutLeaf under this structure if there is one with its right neighbor if there is one,
+     * clockwise or counterclockwise according to rotdir. If the right neighbor is a direct sibling it rotates to stand
+     * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
+     * active leaf and rotated then.
+     */
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if (parent != null) {
             return parent.rotateWithRightSibling(rot_dir, this);
@@ -152,6 +159,10 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+      * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+      * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
+     */
     @Override
     public int closeActive() {
         if (containsActiveView) {

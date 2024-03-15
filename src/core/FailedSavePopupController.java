@@ -8,7 +8,7 @@ public class FailedSavePopupController extends UseCaseController {
 
     UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.");
 
-    protected FailedSavePopupController(Controller coreControllerParent) {
+    protected FailedSavePopupController(TextR coreControllerParent) {
         super(coreControllerParent);
     }
 

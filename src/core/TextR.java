@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Controller {
+public class TextR {
 
     /**
      * Holds the line separator for this application
@@ -25,9 +25,9 @@ public class Controller {
     /**
      * Creates a controller object.
      * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
+     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      */
-    public Controller(String[] args) {
+    public TextR(String[] args) {
         this.rootLayout = initRootLayout(args);
     }
 
@@ -40,18 +40,19 @@ public class Controller {
                 (
                         // Or --lf || --crlf is given
                         (args[0].equals("--lf") || (args[0].equals("--crlf")))
-                        // But amount of args is 1
-                        && args.length == 1
+                                // But amount of args is 1
+                                && args.length == 1
                 )
         ) { // Then no path is specified, and we cannot open
-            throw new RuntimeException("Controller needs at least one specified file");
+            throw new RuntimeException("TextR needs at least one specified file");
         }
         setLineSeparatorFromArgs(args);
 
-        Controller btj = new Controller(args);
-        if(!args[args.length-1].equals("noterminal"))
+        TextR btj = new TextR(args);
+        if(!args[args.length-1].equals("noterminal")) {
             btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
+        }
     }
 
     /**
@@ -131,7 +132,7 @@ public class Controller {
      * Saves the FileBuffer's content to its file.
      */
     void saveBuffer() {
-      this.rootLayout.saveActiveBuffer();
+        this.rootLayout.saveActiveBuffer();
     }
 
     /**
@@ -149,10 +150,10 @@ public class Controller {
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
+     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
      */
     void enterLineSeparator() {
-      rootLayout.enterInsertionPoint();
+        rootLayout.enterInsertionPoint();
     }
 
     /**
@@ -172,7 +173,7 @@ public class Controller {
     // Test functions
 
     /**
-     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
+     * Returns the root layout {@link TextR#rootLayout}. Only for testing purposes (default access modifier)
      */
     Layout getRootLayout() {
         return rootLayout.clone();
@@ -180,14 +181,14 @@ public class Controller {
 
     static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
-            Controller.lineSeparatorArg = new byte[]{0x0a};
+            TextR.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
-            Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
-        else Controller.lineSeparatorArg = System.lineSeparator().getBytes();
+            TextR.lineSeparatorArg = new byte[]{0x0d, 0x0a};
+        else TextR.lineSeparatorArg = System.lineSeparator().getBytes();
     }
 
     public static byte[] getLineSeparatorArg(){
-        return Controller.lineSeparatorArg;
+        return TextR.lineSeparatorArg;
     }
 
 }

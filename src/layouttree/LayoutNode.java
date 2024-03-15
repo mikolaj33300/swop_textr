@@ -33,6 +33,9 @@ public abstract class LayoutNode extends Layout {
         }
     }
 
+    /**
+     * Returns the starting x-coordinate of this LayoutNode
+     */
     public void renderCursor() throws IOException {
         for(Layout l : children){
             l.renderCursor();

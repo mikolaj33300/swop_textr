@@ -6,16 +6,20 @@ import java.util.Arrays;
 
 public class VerticalLayoutNode extends LayoutNode{
 
-    @Override
-    public void renderCursor() throws IOException {
-        super.renderCursor();
-    }
 
     /**
      * Constructor for VerticalLayoutNode, clones its arguments to prevent representation exposure
      */
     public VerticalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
+    }
+
+    /**
+     * Returns the starting x-coordinate of this VerticalLayoutNode
+     */
+    @Override
+    public void renderCursor() throws IOException {
+        super.renderCursor();
     }
 
     /**

@@ -21,26 +21,26 @@ public class LaunchTextrTest {
         // Test empty input arguments
         String[] args = new String[] {};
         String[] finalArgs = args;
-        assertThrows(RuntimeException.class, () -> Controller.main(finalArgs));
+        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs));
 
         // Test no path but --lf input
         args = new String[] {"--lf"};
         String[] finalArgs1 = args;
-        assertThrows(RuntimeException.class, () -> Controller.main(finalArgs1));
+        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs1));
 
         // Test no path but -crlf input
         args = new String[] {"--crlf"};
         String[] finalArgs2 = args;
-        assertThrows(RuntimeException.class, () -> Controller.main(finalArgs2));
+        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs2));
 
         // Testing -crlf recognition
         args = new String[] {"--crlf", path2, path3, "noterminal"};
         String[] finalArgs3 = args;
-        assertDoesNotThrow(() -> Controller.main(finalArgs3));
+        assertDoesNotThrow(() -> TextR.main(finalArgs3));
 
         // Testing -crlf result
         // It's reflection time.
-        Field field = Controller.class.getDeclaredField("lineSeparatorArg");
+        Field field = TextR.class.getDeclaredField("lineSeparatorArg");
         field.setAccessible(true);
         byte[] lineSeparator = (byte[]) field.get(null); // pass null for static fields
         assertTrue(FileHolder.areContentsEqual(new byte[]{0x0d, 0x0a}, lineSeparator));
@@ -48,16 +48,16 @@ public class LaunchTextrTest {
         // Testing lf recognition
         args = new String[] {"--lf", path2, path3, "noterminal"};
         String[] finalArgs4 = args;
-        assertDoesNotThrow(() -> Controller.main(finalArgs4));
+        assertDoesNotThrow(() -> TextR.main(finalArgs4));
 
         // Testing result
         // It's reflection time.
-        field = Controller.class.getDeclaredField("lineSeparatorArg");
+        field = TextR.class.getDeclaredField("lineSeparatorArg");
         field.setAccessible(true);
         lineSeparator = (byte[]) field.get(null); // pass null for static fields
         assertTrue(FileHolder.areContentsEqual(new byte[]{0x0a}, lineSeparator));
 
-        //Controller c = new Controller(new String[] {"test.txt"});
+        //TextR c = new TextR(new String[] {"test.txt"});
         //c.enterText(Integer.valueOf(170).byteValue());
         //assertThrows(IOException.class, () -> c.getRootLayout().saveActiveBuffer());
     }
