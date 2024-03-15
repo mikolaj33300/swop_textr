@@ -6,8 +6,7 @@ import layouttree.ROT_DIRECTION;
 
 import java.io.IOException;
 
-public class InspectContentsController implements UseCaseController{
-    private TextR coreControllerParent;
+public class InspectContentsController extends UseCaseController{
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
@@ -44,7 +43,13 @@ public class InspectContentsController implements UseCaseController{
                         coreControllerParent.rootLayout.moveCursor((char) c);
                         break;
                     case 'S':// F4
-                        System.out.println((char) c);
+                        int result = coreControllerParent.rootLayout.closeActive();
+                        if(result == 1){ //If was dirty
+                            coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
+                        } else if(result == 2){
+                            System.out.println("22222222222222");
+                            System.exit(0);
+                        }
                         break;
                 }
                 break;
@@ -74,6 +79,6 @@ public class InspectContentsController implements UseCaseController{
         coreControllerParent.rootLayout.clearContent();
     }
     protected InspectContentsController(TextR coreControllerParent){
-        this.coreControllerParent = coreControllerParent;
+        super(coreControllerParent);
     }
 }

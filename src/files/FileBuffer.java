@@ -379,11 +379,15 @@ public class FileBuffer {
     /**
      * Warns the user if the {@link FileBuffer#dirty} is set to true and prompts the user to save the
      * {@link FileBuffer}. When done, it will remove the {@link FileBufferView} linked to this object.
+     *
+     * @return
      */
-    public void close() {
+    public int close() {
         if(dirty) {
-
-        } else return;
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }

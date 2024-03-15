@@ -1,6 +1,5 @@
 package ui;
 
-import core.TextR;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
@@ -109,9 +108,11 @@ public class FileBufferView extends View {
 
     /**
      * Closes this {@link FileBuffer}
+     *
+     * @return
      */
-    public void close() {
-        containedFileBuffer.close();
+    public int close() {
+        return containedFileBuffer.close();
     }
 
     /**

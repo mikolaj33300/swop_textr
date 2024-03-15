@@ -169,9 +169,25 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    public void closeActive() {
+    public int closeActive() {
         if (containsActiveView) {
-            containedFileBufferView.close();
+            if(containedFileBufferView.close()==0){
+                if(parent != null){
+                    //should be replaced by hasrightneighbour
+                    if(parent.children.indexOf(this)<parent.children.size()-1){
+                        parent.makeRightNeighbourActive(this);
+                    } else {
+                        parent.makeLeftNeighbourActive(this);
+                    }
+                    parent.delete(this);
+                    return 0;
+                }
+                else return 2;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
         }
     }
 
@@ -184,14 +200,19 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     * @inheritDoc
      */
     @Override
-    public void forcedCloseActive() {
+    public int forcedCloseActive() {
         if (containsActiveView) {
-            parent.makeRightNeighbourActive(this);
-            parent.delete(this);
+            if(parent != null){
+                parent.makeRightNeighbourActive(this);
+                parent.delete(this);
+                return 0;
+            }
+
         }
+        return 0;
     }
 
     /**
@@ -221,7 +242,7 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
+     * @inheritDoc
      */
     @Override
     public void deleteCharacter() {
@@ -255,6 +276,10 @@ public class LayoutLeaf extends Layout {
         setContainsActiveView(true);
     }
 
+    /**
+     *
+     * @inheritDoc
+     */
     @Override
     public void renderCursor() throws IOException {
         if(super.containsActiveView){

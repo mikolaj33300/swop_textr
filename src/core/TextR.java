@@ -15,7 +15,7 @@ public class TextR {
      * Holds the line separator for this application
      */
     private static byte[] lineSeparatorArg;
-    protected static UseCaseController activeUseCaseController;
+    protected UseCaseController activeUseCaseController;
 
     /**
      * Root layout
@@ -50,7 +50,7 @@ public class TextR {
 
         TextR btj = new TextR(args);
         if(!args[args.length-1].equals("noterminal"))
-            TextR.activeUseCaseController = new InspectContentsController(btj);
+            btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
     }
 

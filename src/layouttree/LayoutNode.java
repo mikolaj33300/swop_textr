@@ -132,23 +132,24 @@ public abstract class LayoutNode extends Layout {
     }
 
     @Override
-    public void closeActive(){
+    public int closeActive(){
         for (Layout l : children) {
             if(l.getContainsActiveView()){
-                l.closeActive();
-                return;
+                return l.closeActive();
             }
         }
+        return 0;
     }
 
     @Override
-    public void forcedCloseActive(){
+    public int forcedCloseActive(){
         for (Layout l : children) {
             if(l.getContainsActiveView()){
                 l.forcedCloseActive();
-                return;
+                return 0;
             }
         }
+        return 0;
     }
 
     public void insertDirectChild(Layout toInsert){
