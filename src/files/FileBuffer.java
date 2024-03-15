@@ -158,6 +158,9 @@ public class FileBuffer {
      * Deletes the character before the {@link FileBuffer#insertionPointByteIndex} and updates the cursor position
      */
     public void deleteCharacter() {
+        if(this.insertionPointCol > 0 || this.insertionPointLine > 0) {
+            this.dirty = true;
+        }
         if(insertionPointCol > 0) {
             this.byteContent.remove(insertionPointByteIndex-1);
             moveCursorLeft();
@@ -171,7 +174,6 @@ public class FileBuffer {
             }
         }
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
-        this.dirty = true;
     }
 
     // Default methods
