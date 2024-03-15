@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// Tests eenkel relevant op mac
 public class FileBufferTest {
 
     @Test

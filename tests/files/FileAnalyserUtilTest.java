@@ -15,6 +15,7 @@ public class FileAnalyserUtilTest {
         assertEquals(testingByteArr[0], a.get(0).get(0).byteValue());
     }
 
+    // test enkel relevant op mac
     @Test
     public void testLineSeparatorRemoval() {
         String test = "mister"+System.lineSeparator()+"abc";

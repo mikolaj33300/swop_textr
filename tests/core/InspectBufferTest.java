@@ -17,6 +17,7 @@ public class InspectBufferTest {
     private final String path3 = root + "test3.txt";
 
 
+    /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
     @Test
     public void testInspectBuffer() throws IOException {
         TextR c1 = new TextR(new String[]{"testresources/test.txt", "testresources/test2.txt"});

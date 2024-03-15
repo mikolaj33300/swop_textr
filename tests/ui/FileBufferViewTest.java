@@ -51,11 +51,13 @@ public class FileBufferViewTest {
         String statusbar = filebufferview1.getStatusbarString();
         assertEquals(statusbar,"testresources/test.txt #Lines:1 #Chars:19 Insert:[0;0] Clean Active");
     }
+
     @Test
     public void testEquals(){
         assertTrue(filebufferview1.equals(filebufferview1_));
         assertFalse(filebufferview1.equals(filebufferview2));
     }
+
 
     /**
      * Visueel merkbaar, niets testbaar met Junit
@@ -63,9 +65,6 @@ public class FileBufferViewTest {
     @Test
     public void testClose(){}
 
-    @Test
-    public void testDeleteCharacter(){
-    }
 
     @Test
     public void testGetContainedFileBuffer(){
