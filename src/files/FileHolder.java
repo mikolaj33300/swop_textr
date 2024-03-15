@@ -91,7 +91,7 @@ public class FileHolder {
     }
 
     /**
-     * Checks if given
+     * Checks if given have equal contents
      */
     public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
         if(arr1.length != arr2.length) return false;

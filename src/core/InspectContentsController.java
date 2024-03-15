@@ -52,6 +52,7 @@ public class InspectContentsController extends UseCaseController {
                         if(result == 1){ //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if(result == 2){
+                            coreControllerParent.rootLayout=null;
                             System.out.println("22222222222222");
                             System.exit(0);
                         }
