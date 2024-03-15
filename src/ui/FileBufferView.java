@@ -1,6 +1,6 @@
 package ui;
 
-import core.Controller;
+import core.TextR;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
@@ -124,7 +124,7 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link Controller}
+     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link TextR}
      */
     public void deleteCharacter() {
         containedFileBuffer.deleteCharacter();

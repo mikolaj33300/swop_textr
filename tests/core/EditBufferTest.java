@@ -1,9 +1,7 @@
 package core;
 
-import core.Controller;
 import files.FileHolder;
 import layouttree.DIRECTION;
-import layouttree.Layout;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EditBufferTest {
 
 
-    Controller c;
+    TextR c;
     private final String root = "testresources/";
     private final String path1 = root + "test.txt";
     private final String path2 = root + "test2.txt";
@@ -30,13 +28,13 @@ public class EditBufferTest {
         write(path1, "ai lov yousing termios");
         write(path2, "btj is a mister");
         write(path3, "btj makes great libraries");
-        c = new Controller(new String[] {path1, path2, path3});
+        c = new TextR(new String[] {path1, path2, path3});
     }
 
     @Test
     public void testEditBuffer() throws IOException {
         // We schrijven a op plaats 0 in path1.
-        Controller.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
+        TextR.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
         byte b = (Integer.valueOf(97)).byteValue();
 
         c.enterText(b);

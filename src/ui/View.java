@@ -1,9 +1,7 @@
 package ui;
 
-import core.Controller;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
 
 import java.io.IOException;
 
