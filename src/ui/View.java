@@ -1,9 +1,7 @@
 package ui;
 
-import core.Controller;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
 
 import java.io.IOException;
 
@@ -67,7 +65,7 @@ public abstract class View {
             }
         }*/
         Terminal.clearScreen();
-    };
+    }
 
     /**
      * Render all the elements on the thid view
@@ -88,13 +86,12 @@ public abstract class View {
     private void retrieveDimensions() throws IOException {
 
         Terminal.reportTextAreaSize();
-        int tempByte = 0;
         for(int i = 0; i < 4; i++)
             Terminal.readByte();
 
         int c = Terminal.readByte();
         int height = c - '0';
-        tempByte = Terminal.readByte();
+        int tempByte = Terminal.readByte();
 
         for(;;) {
             if(tempByte < '0' || '9' < tempByte)

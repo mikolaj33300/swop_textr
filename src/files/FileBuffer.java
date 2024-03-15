@@ -1,13 +1,11 @@
 package files;
 
 import core.Controller;
-import io.github.btj.termios.Terminal;
 import ui.FileBufferView;
 
 
 import java.util.*;
 
-import static files.FileAnalyserUtil.toArray;
 import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
@@ -112,28 +110,6 @@ public class FileBuffer {
         }
     }
 
-    /**
-     * Returns a string with relevant information for the statusbar
-     */
-    public String getRender() {
-        String statusLine = this.getFileHolder().getPath();
-        statusLine += " #Lines:";
-        statusLine += String.valueOf(this.getLines().size());
-        statusLine += " #Chars:";
-        String contents = new String(this.getFileHolder().getContent());
-        statusLine += contents.length();
-        statusLine += " Insert:[";
-        statusLine += this.getInsertionPointLine();
-        statusLine += ";";
-        statusLine += this.getInsertionPointCol();
-        statusLine += "] ";
-        if(this.getDirty())
-            statusLine += "Dirty";
-        else
-            statusLine += "Clean";
-        statusLine += " ";
-        return statusLine;
-    }
 
     /**
      * Returns the Y coordinate where the insertion point should be rendered.
@@ -219,8 +195,7 @@ public class FileBuffer {
      * Clones the byte array
      */
     ArrayList<Byte> cloneByteArrList() {
-        ArrayList<Byte> copy = new ArrayList<>(byteContent);
-        return copy;
+        return new ArrayList<>(byteContent);
     }
 
     /**

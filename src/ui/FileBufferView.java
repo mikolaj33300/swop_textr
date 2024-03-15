@@ -4,6 +4,7 @@ import files.FileAnalyserUtil;
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
+import core.Controller;
 
 import java.io.IOException;
 
@@ -109,8 +110,7 @@ public class FileBufferView extends View {
     /**
      * Closes the current buffer and recalculates the Layout-tree
      * If //TODO: kijk of dit specifiek programma sluiot, of een andere test -> zie na implementatie
-     */
-    /**
+     *
      * Closes this {@link FileBuffer}
      */
     public void close() {
