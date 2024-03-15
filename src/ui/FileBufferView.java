@@ -19,7 +19,7 @@ public class FileBufferView extends View {
      * Constructor for FileBufferView
      */
     public FileBufferView(String path, LayoutLeaf parent) {
-        super.parent = parent;
+        super.parent = parent.clone();
         containedFileBuffer = new FileBuffer(path);
     }
 
