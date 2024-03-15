@@ -149,6 +149,9 @@ public class Controller {
 
     }
 
+    /**
+     * Removes the character before the insertion point
+     */
     private void deleteCharacter() {
         rootLayout.deleteCharacter();
     }
@@ -161,6 +164,9 @@ public class Controller {
         this.rootLayout.renderCursor();
     }
 
+    /**
+     * Clears the active view's of text
+     */
     void clearContent() throws IOException {
         rootLayout.clearContent();
     }

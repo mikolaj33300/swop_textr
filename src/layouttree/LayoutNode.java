@@ -57,7 +57,7 @@ public abstract class LayoutNode extends Layout {
     public abstract Orientation getOrientation();
 
     /**
-     * Returns a deepcopy of the children of this LayoutNode
+     * Returns a deep-copy of the children of this LayoutNode
      */
     public ArrayList<Layout> getDirectChildren() {
         ArrayList<Layout> deepCopyList = new ArrayList<>();
