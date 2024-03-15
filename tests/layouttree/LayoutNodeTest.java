@@ -4,6 +4,7 @@ import files.FileBuffer;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -37,7 +38,7 @@ public class LayoutNodeTest {
     LayoutNode vn2;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";
@@ -249,7 +250,7 @@ public class LayoutNodeTest {
     }
 
     @Test
-    void testRotateRelationshipNeighbourRoot(){
+    void testRotateRelationshipNeighbourRoot() throws IOException {
         Layout l10 = new LayoutLeaf("testresources/test.txt", true);
         Layout l10_clone = l10.clone();
         l10 = l10.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE);

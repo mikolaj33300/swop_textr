@@ -4,16 +4,17 @@ import ui.UserPopupBox;
 
 import java.io.IOException;
 
-public class SystemErrorMessageController extends UseCaseController {
-    UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file provided");
+public class FailedSavePopupController extends UseCaseController {
 
-    protected SystemErrorMessageController(TextR coreControllerParent) {
+    UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.");
+
+    protected FailedSavePopupController(TextR coreControllerParent) {
         super(coreControllerParent);
     }
 
     @Override
     public void handle(int b) throws IOException {
-        System.exit(1);
+        coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
     }
 
     @Override

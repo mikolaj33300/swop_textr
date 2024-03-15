@@ -100,8 +100,10 @@ public abstract class Layout implements Cloneable {
 
     /**
      * Calls save() on the contained {@link ui.FileBufferView} if it's active.
+     *
+     * @return
      */
-    public abstract void saveActiveBuffer();
+    public abstract int saveActiveBuffer();
 
     /**
      * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.

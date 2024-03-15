@@ -17,7 +17,7 @@ public class FileBufferView extends View {
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(String path, LayoutLeaf parent) {
+    public FileBufferView(String path, LayoutLeaf parent) throws IOException {
         super.parent = parent;
         containedFileBuffer = new FileBuffer(path);
     }
@@ -95,8 +95,8 @@ public class FileBufferView extends View {
     /**
      * Saves the contents of the {@link FileBuffer} to {@link java.io.File}
      */
-    public void save() {
-        containedFileBuffer.save();
+    public int save() {
+        return containedFileBuffer.save();
     }
 
     /**

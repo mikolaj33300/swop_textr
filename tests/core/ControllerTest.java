@@ -6,6 +6,7 @@ import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +17,7 @@ public class ControllerTest {
      * Tests the constructor. Will it create the layout correctly?
      */
     @Test
-    public void testArguments() {
+    public void testArguments() throws IOException {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test.txt";
         String[] args = new String[]{"--lf", path1, path2};

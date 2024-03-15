@@ -63,9 +63,14 @@ public class TextR {
         for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath))
-                System.out.println("Kutzooi");
+                this.activeUseCaseController = new FileErrorPopupController(this);
             else
-                leaves.add(new LayoutLeaf(args[i], i == 0));
+                try {
+                    leaves.add(new LayoutLeaf(args[i], i == 0));
+                } catch (IOException e){
+                    activeUseCaseController = new FileErrorPopupController(this);
+                }
+
         }
 
         if(leaves.size() == 1)
@@ -89,7 +94,6 @@ public class TextR {
             activeUseCaseController.handle(b);
             activeUseCaseController.clearContent();
             activeUseCaseController.render();
-            //Terminal.printText(10, 10, String.valueOf(b));
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
@@ -106,9 +110,14 @@ public class TextR {
     /**
      * Renders the layout with the terminal current height & width
      */
-    void render() throws IOException {
-        this.rootLayout.renderContent();
-        this.rootLayout.renderCursor();
+    void render() {
+        try{
+            this.rootLayout.renderContent();
+            this.rootLayout.renderCursor();
+        } catch (IOException e){
+            this.activeUseCaseController = new FileErrorPopupController(this);
+        }
+
     }
 
     /**

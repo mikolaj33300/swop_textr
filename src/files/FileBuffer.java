@@ -4,6 +4,7 @@ import core.TextR;
 import ui.FileBufferView;
 
 
+import java.io.IOException;
 import java.util.*;
 
 import static files.FileAnalyserUtil.wrapEachByteElem;
@@ -44,7 +45,7 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path) {
+    public FileBuffer(String path) throws IOException {
         this.file = new FileHolder(path);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
@@ -76,10 +77,16 @@ public class FileBuffer {
     /**
      * Saves the buffer contents to disk
      */
-    public final void save() {
-        if (!dirty) return;
-        this.file.save(FileAnalyserUtil.toArray(this.byteContent));
-        this.dirty = false;
+    public final int save() {
+        if (!dirty) return 0;
+        int result = this.file.save(FileAnalyserUtil.toArray(this.byteContent));
+        if(result == 0){
+            this.dirty = false;
+            return 0;
+        } else {
+            return result;
+        }
+
     }
 
     /**
@@ -108,29 +115,6 @@ public class FileBuffer {
                 moveCursorDown();
                 break;
         }
-    }
-
-    /**
-     * Returns a string with relevant information for the statusbar
-     */
-    public String getRender() {
-        String statusLine = this.getFileHolder().getPath();
-        statusLine += " #Lines:";
-        statusLine += String.valueOf(this.getLines().size());
-        statusLine += " #Chars:";
-        String contents = new String(this.getFileHolder().getContent());
-        statusLine += contents.length();
-        statusLine += " Insert:[";
-        statusLine += this.getInsertionPointLine();
-        statusLine += ";";
-        statusLine += this.getInsertionPointCol();
-        statusLine += "] ";
-        if(this.getDirty())
-            statusLine += "Dirty";
-        else
-            statusLine += "Clean";
-        statusLine += " ";
-        return statusLine;
     }
 
     /**
@@ -362,7 +346,12 @@ public class FileBuffer {
      * Clones this object
      */
     public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath());
+        FileBuffer copy = null;
+        try {
+            copy = new FileBuffer(this.file.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         copy.dirty = this.dirty;
         copy.byteContent = this.cloneByteArrList();
         return copy;

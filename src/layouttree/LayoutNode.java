@@ -112,13 +112,14 @@ public abstract class LayoutNode extends Layout {
     }
 
     @Override
-    public void saveActiveBuffer() {
+    public int saveActiveBuffer() {
         for (Layout l : children) {
             if(l.getContainsActiveView()){
                 l.saveActiveBuffer();
-                return;
+                return 0;
             }
         }
+        return 0;
     }
 
     @Override

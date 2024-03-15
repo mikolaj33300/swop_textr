@@ -2,6 +2,9 @@ package ui;
 import files.FileBuffer;
 import layouttree.LayoutLeaf;
 import org.junit.jupiter.api.*;
+
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBufferViewTest {
@@ -12,7 +15,7 @@ public class FileBufferViewTest {
 
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() throws IOException {
         path = "testresources/test.txt";
         LayoutLeaf leaf = new LayoutLeaf(path,true);
         filebufferview = new FileBufferView(path, leaf);

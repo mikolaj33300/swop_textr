@@ -80,7 +80,7 @@ public class LayoutLeaf extends Layout {
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active) {
+    public LayoutLeaf(String path, boolean active) throws IOException {
         this.containedFileBufferView = new FileBufferView(path, this);
         this.setContainsActiveView(active);
     }
@@ -126,10 +126,12 @@ public class LayoutLeaf extends Layout {
 
     /**
      * Calls save() on the contained {@link ui.FileBufferView}.
+     *
+     * @return
      */
     @Override
-    public void saveActiveBuffer() {
-        containedFileBufferView.save();
+    public int saveActiveBuffer() {
+        return containedFileBufferView.save();
     }
 
     @Override
@@ -255,7 +257,11 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        try {
+            return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

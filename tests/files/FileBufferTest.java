@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBufferTest {
 
     @Test
-    public void testConstructor() {
+    public void testConstructor() throws IOException {
 
         // Test if the FileHolder is equal == Paths are equal
         String path = "testresources/test.txt";
@@ -33,7 +33,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws IOException {
         String path = "testresources/test.txt";
         FileBuffer buffer = new FileBuffer(path);
 
@@ -41,7 +41,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testWriteSave() {
+    public void testWriteSave() throws IOException {
         // Test if the function write correctly adds strings to the content.
         String text = "i love termios ; long live btj";
         String path = "testresources/test.txt";
@@ -67,7 +67,7 @@ public class FileBufferTest {
 
 
     @Test
-    public void testEnterInsertionPoint() {
+    public void testEnterInsertionPoint() throws IOException {
         // One line test
         write("testresources/test.txt", "termios is life");
         FileBuffer buff = new FileBuffer("testresources/test.txt");
@@ -95,7 +95,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testDeleteLine() {
+    public void testDeleteLine() throws IOException {
 
         write("testresources/test.txt", "everyone likes btj\nbtj is the founder of termios\none of the best terminal applications");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
@@ -110,7 +110,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testMoveCursor() {
+    public void testMoveCursor() throws IOException {
         String insert = "i love btj <3";
         write("testresources/test.txt", insert);
         FileBuffer buff = new FileBuffer("testresources/test.txt");
