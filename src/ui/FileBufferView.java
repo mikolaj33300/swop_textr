@@ -14,6 +14,7 @@ public class FileBufferView extends View {
      */
     private final FileBuffer containedFileBuffer;
 
+    //TODO: fix representation exposure
     /**
      * Constructor for FileBufferView
      */
@@ -58,7 +59,7 @@ public class FileBufferView extends View {
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
         statusLine += " #Chars:";
-        statusLine += String.valueOf(containedFileBuffer.getAmountChars());
+        statusLine += String.valueOf(containedFileBuffer.getByteContent().size());
         statusLine += " Insert:[";
         statusLine += containedFileBuffer.getInsertionPointLine();
         statusLine += ";";

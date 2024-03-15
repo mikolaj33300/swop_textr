@@ -131,8 +131,11 @@ public class FileBuffer {
         return insertionPointCol;
     }
 
-    public int getAmountChars(){
-        return this.byteContent.size();
+    /**
+     * Returns a copy of the byteConent of this FileBuffer
+     */
+    public ArrayList<Byte> getByteContent(){
+        return (ArrayList<Byte>) this.byteContent.clone();
     }
 
     /**
@@ -185,6 +188,13 @@ public class FileBuffer {
      */
     byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
+    }
+
+    /**
+     *  Returns the amount of chars in the buffercontent
+     */
+    public int getAmountChars(){
+        return this.byteContent.size();
     }
 
     /**
