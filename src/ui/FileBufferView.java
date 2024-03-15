@@ -15,6 +15,9 @@ public class FileBufferView extends View {
      */
     private final FileBuffer containedFileBuffer;
 
+    /**
+     * Constructor for FileBufferView
+     */
     public FileBufferView(String path, LayoutLeaf parent) {
         super.parent = parent;
         containedFileBuffer = new FileBuffer(path);
@@ -124,15 +127,14 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link TextR}
+     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link Controller}
      */
     public void deleteCharacter() {
         containedFileBuffer.deleteCharacter();
     }
 
     /**
-     *
-     * @return
+     * Returns a copy of the FileBuffer of this FileBufferView
      */
     public FileBuffer getContainedFileBuffer() {
         return containedFileBuffer.clone();

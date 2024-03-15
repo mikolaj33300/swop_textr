@@ -2,7 +2,6 @@ package layouttree;
 
 import files.FileBuffer;
 import ui.FileBufferView;
-import ui.View;
 
 import java.io.IOException;
 
