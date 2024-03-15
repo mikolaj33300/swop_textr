@@ -51,7 +51,6 @@ public class FileBufferViewTest {
         //filebufferview1.write(symbol);
     }
 
-    @Test
 
 
     @Test
