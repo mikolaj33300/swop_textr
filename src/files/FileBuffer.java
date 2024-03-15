@@ -1,9 +1,10 @@
 package files;
 
-import core.Controller;
+import core.TextR;
 import ui.FileBufferView;
 
 
+import java.io.IOException;
 import java.util.*;
 
 import static files.FileAnalyserUtil.wrapEachByteElem;
@@ -44,7 +45,7 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path) {
+    public FileBuffer(String path) throws IOException {
         this.file = new FileHolder(path);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
@@ -76,10 +77,16 @@ public class FileBuffer {
     /**
      * Saves the buffer contents to disk
      */
-    public final void save() {
-        if (!dirty) return;
-        this.file.save(FileAnalyserUtil.toArray(this.byteContent));
-        this.dirty = false;
+    public final int save() {
+        if (!dirty) return 0;
+        int result = this.file.save(FileAnalyserUtil.toArray(this.byteContent));
+        if(result == 0){
+            this.dirty = false;
+            return 0;
+        } else {
+            return result;
+        }
+
     }
 
     /**
@@ -110,7 +117,6 @@ public class FileBuffer {
         }
     }
 
-
     /**
      * Returns the Y coordinate where the insertion point should be rendered.
      */
@@ -134,7 +140,7 @@ public class FileBuffer {
 
     /**
      * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
-     * another array by a line separator specified in {@link Controller#getLineSeparatorArg()}.
+     * another array by a line separator specified in {@link TextR#getLineSeparatorArg()}.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
@@ -159,7 +165,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 moveCursorLeft();
-                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
+                for(int i = 0; i< TextR.getLineSeparatorArg().length ; i++) {
                     this.byteContent.remove(insertionPointByteIndex);
                 }
             }
@@ -198,7 +204,8 @@ public class FileBuffer {
      * Clones the byte array
      */
     ArrayList<Byte> cloneByteArrList() {
-        return new ArrayList<>(byteContent);
+        ArrayList<Byte> copy = new ArrayList<>(byteContent);
+        return copy;
     }
 
     /**
@@ -256,7 +263,7 @@ public class FileBuffer {
      * value of the {@link FileBuffer#insertionPointByteIndex} </p>
      */
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = Controller.getLineSeparatorArg().length;
+        int byteLengthSeparatorLen = TextR.getLineSeparatorArg().length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
@@ -342,7 +349,12 @@ public class FileBuffer {
      * Clones this object
      */
     public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath());
+        FileBuffer copy = null;
+        try {
+            copy = new FileBuffer(this.file.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         copy.dirty = this.dirty;
         copy.byteContent = this.cloneByteArrList();
         return copy;
@@ -359,11 +371,15 @@ public class FileBuffer {
     /**
      * Warns the user if the {@link FileBuffer#dirty} is set to true and prompts the user to save the
      * {@link FileBuffer}. When done, it will remove the {@link FileBufferView} linked to this object.
+     *
+     * @return
      */
-    public void close() {
+    public int close() {
         if(dirty) {
-
-        } else return;
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
 }

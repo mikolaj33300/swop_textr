@@ -46,8 +46,10 @@ public abstract class Layout implements Cloneable {
 
     /**
      * Calls close on the {@link ui.FileBufferView} contained in the active {@link LayoutLeaf} under this node, if there is one.
+     * Returns 1 if there was an error (the buffer was dirty) or 0 otherwise. Returns 2 if the deleted leaf had no parent (was the last file open)
+     * @return
      */
-    public abstract void closeActive();
+    public abstract int closeActive();
 
     /**
      * Calls clearContent on the contained {@link ui.FileBufferView}(s).
@@ -98,8 +100,10 @@ public abstract class Layout implements Cloneable {
 
     /**
      * Calls save() on the contained {@link ui.FileBufferView} if it's active.
+     *
+     * @return
      */
-    public abstract void saveActiveBuffer();
+    public abstract int saveActiveBuffer();
 
     /**
      * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.
@@ -145,8 +149,10 @@ public abstract class Layout implements Cloneable {
 
     /**
      * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
+     * @return
      */
-    public abstract void forcedCloseActive();
+    public abstract int forcedCloseActive();
 
     public abstract boolean equals(Object obj);
     public abstract Layout clone();

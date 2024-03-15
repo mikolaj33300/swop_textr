@@ -4,6 +4,7 @@ import files.FileBuffer;
 
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +21,7 @@ class LayoutLeafTest {
     LayoutNode ln;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";

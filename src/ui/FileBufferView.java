@@ -4,7 +4,6 @@ import files.FileAnalyserUtil;
 import files.FileBuffer;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
-import core.Controller;
 
 import java.io.IOException;
 
@@ -19,7 +18,7 @@ public class FileBufferView extends View {
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(String path, LayoutLeaf parent) {
+    public FileBufferView(String path, LayoutLeaf parent) throws IOException {
         super.parent = parent;
         containedFileBuffer = new FileBuffer(path);
     }
@@ -97,8 +96,8 @@ public class FileBufferView extends View {
     /**
      * Saves the contents of the {@link FileBuffer} to {@link java.io.File}
      */
-    public void save() {
-        containedFileBuffer.save();
+    public int save() {
+        return containedFileBuffer.save();
     }
 
     /**
@@ -109,13 +108,12 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Closes the current buffer and recalculates the Layout-tree
-     * If //TODO: kijk of dit specifiek programma sluiot, of een andere test -> zie na implementatie
-     *
      * Closes this {@link FileBuffer}
+     *
+     * @return
      */
-    public void close() {
-        containedFileBuffer.close();
+    public int close() {
+        return containedFileBuffer.close();
     }
 
     /**

@@ -4,6 +4,7 @@ import files.FileHolder;
 import layouttree.DIRECTION;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import util.Debug;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SaveBufferTest {
 
-    Controller c;
+    TextR c;
     private final String root = "testresources/";
     private final String path1 = root + "test.txt";
     private final String path2 = root + "test2.txt";
@@ -23,17 +24,21 @@ public class SaveBufferTest {
 
     @BeforeEach
     public void setVariables() {
-        write(path1, "ai lov yousing termios");
-        write(path2, "btj is a mister");
-        write(path3, "btj makes great libraries");
-        c = new Controller(new String[] {path1, path2, path3, "noterminal"});
+        Debug.write(path1, "ai lov yousing termios");
+        Debug.write(path2, "btj is a mister");
+        Debug.write(path3, "btj makes great libraries");
+        c = new TextR(new String[] {path1, path2, path3, "noterminal"});
     }
 
+    /**
+     * This test asserts that switching between views, entering text via controller and saving the buffer
+     * works. The buffer contents are correctly saved to disk.
+     */
     @Test
     public void testMoveFocus() throws IOException {
 
         // We schrijven a op plaats 0 in path1.
-        Controller.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
+        TextR.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
         byte b = (Integer.valueOf(97)).byteValue();
 
         c.enterText(b);
@@ -61,17 +66,4 @@ public class SaveBufferTest {
 
     }
 
-    /**
-     * Helper method that writes given text into the file at given path
-     */
-    private void write(String path, String text) {
-        try {
-            // Overwrite file test.txt
-            FileWriter writer = new FileWriter(new File(path));
-            writer.write(text);
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

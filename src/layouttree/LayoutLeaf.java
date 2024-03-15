@@ -14,11 +14,6 @@ public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartX(int terminalWidth, int terminalHeight){
@@ -34,11 +29,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartY(int terminalWidth, int terminalHeight){
@@ -49,11 +39,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getHeight(int terminalWidth, int terminalHeight){
@@ -64,11 +49,6 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @param terminalWidth
-     * @param terminalHeight
-     * @return
-     *
      * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getWidth(int terminalWidth, int terminalHeight){
@@ -80,7 +60,7 @@ public class LayoutLeaf extends Layout {
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active) {
+    public LayoutLeaf(String path, boolean active) throws IOException {
         this.containedFileBufferView = new FileBufferView(path, this);
         this.setContainsActiveView(active);
     }
@@ -126,10 +106,12 @@ public class LayoutLeaf extends Layout {
 
     /**
      * Calls save() on the contained {@link ui.FileBufferView}.
+     *
+     * @return
      */
     @Override
-    public void saveActiveBuffer() {
-        containedFileBufferView.save();
+    public int saveActiveBuffer() {
+        return containedFileBufferView.save();
     }
 
     @Override
@@ -169,9 +151,25 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    public void closeActive() {
+    public int closeActive() {
         if (containsActiveView) {
-            containedFileBufferView.close();
+            if(containedFileBufferView.close()==0){
+                if(parent != null){
+                    //should be replaced by hasrightneighbour
+                    if(parent.children.indexOf(this)<parent.children.size()-1){
+                        parent.makeRightNeighbourActive(this);
+                    } else {
+                        parent.makeLeftNeighbourActive(this);
+                    }
+                    parent.delete(this);
+                    return 0;
+                }
+                else return 2;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
         }
     }
 
@@ -184,14 +182,19 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     * @inheritDoc
      */
     @Override
-    public void forcedCloseActive() {
+    public int forcedCloseActive() {
         if (containsActiveView) {
-            parent.makeRightNeighbourActive(this);
-            parent.delete(this);
+            if(parent != null){
+                parent.makeRightNeighbourActive(this);
+                parent.delete(this);
+                return 0;
+            }
+
         }
+        return 0;
     }
 
     /**
@@ -221,7 +224,7 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
+     * @inheritDoc
      */
     @Override
     public void deleteCharacter() {
@@ -234,7 +237,11 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        try {
+            return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -255,6 +262,10 @@ public class LayoutLeaf extends Layout {
         setContainsActiveView(true);
     }
 
+    /**
+     *
+     * @inheritDoc
+     */
     @Override
     public void renderCursor() throws IOException {
         if(super.containsActiveView){

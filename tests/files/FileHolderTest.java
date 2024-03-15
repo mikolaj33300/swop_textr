@@ -18,7 +18,7 @@ public class FileHolderTest {
     }
 
     @Test
-    void testSave() {
+    void testSave() throws IOException {
         String teststring1 = "string to test with";
         String teststring2 = "string to test with in another file";
 
@@ -32,7 +32,7 @@ public class FileHolderTest {
     }
 
     @Test
-    void testGetContent() {
+    void testGetContent() throws IOException {
         String teststring = "string to test with";
 
         f1.save(teststring.getBytes());

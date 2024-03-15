@@ -1,6 +1,7 @@
 package files;
 
 import org.junit.jupiter.api.Test;
+import util.Debug;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBufferTest {
 
     @Test
-    public void testConstructor() {
+    public void testConstructor() throws IOException {
 
         // Test if the FileHolder is equal == Paths are equal
         String path = "testresources/test.txt";
@@ -25,7 +26,7 @@ public class FileBufferTest {
 
         // Test if the content is correctly retrieved
         String content = "abc";
-        write(path, content);
+        Debug.write(path, content);
         buffer = new FileBuffer(path);
 
         assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(content.getBytes())))));
@@ -33,7 +34,7 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testClone() {
+    public void testClone() throws IOException {
         String path = "testresources/test.txt";
         FileBuffer buffer = new FileBuffer(path);
 
@@ -41,11 +42,11 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testWriteSave() {
+    public void testWriteSave() throws IOException {
         // Test if the function write correctly adds strings to the content.
         String text = "i love termios ; long live btj";
         String path = "testresources/test.txt";
-        write(path, text);
+        Debug.write(path, text);
         FileBuffer buffer = new FileBuffer(path);
 
         assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
@@ -67,16 +68,16 @@ public class FileBufferTest {
 
 
     @Test
-    public void testEnterInsertionPoint() {
+    public void testEnterInsertionPoint() throws IOException {
         // One line test
-        write("testresources/test.txt", "termios is life");
+        Debug.write("testresources/test.txt", "termios is life");
         FileBuffer buff = new FileBuffer("testresources/test.txt");
         assertEquals(1, buff.getLines().size());
         buff.enterInsertionPoint();
         assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
 
         // More lines
-        write("testresources/test.txt", "i"+System.lineSeparator()+"b");
+        Debug.write("testresources/test.txt", "i"+System.lineSeparator()+"b");
         buff = new FileBuffer("testresources/test.txt");
         assertEquals(2, buff.getLines().size());
 
@@ -95,9 +96,9 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testDeleteLine() {
+    public void testDeleteLine() throws IOException {
 
-        write("testresources/test.txt", "everyone likes btj\nbtj is the founder of termios\none of the best terminal applications");
+        Debug.write("testresources/test.txt", "everyone likes btj\nbtj is the founder of termios\none of the best terminal applications");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
 
         buffer.moveCursor('B');
@@ -110,9 +111,9 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testMoveCursor() {
+    public void testMoveCursor() throws IOException {
         String insert = "i love btj <3";
-        write("testresources/test.txt", insert);
+        Debug.write("testresources/test.txt", insert);
         FileBuffer buff = new FileBuffer("testresources/test.txt");
 
         // Testing movement in one line
@@ -128,28 +129,32 @@ public class FileBufferTest {
         assertEquals(1, buff.getInsertionPointCol());
         assertEquals(1, buff.getInsertionPoint());
 
-        for(int i = 0; i < insert.length(); i++)
+        for (int i = 0; i < insert.length(); i++)
             buff.moveCursor('C');
         assertEquals(insert.length(), buff.getInsertionPointCol());
 
         // Left
         buff.moveCursor('D');
         assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length()-1, buff.getInsertionPointCol());
+        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
 
         // Up
         buff.moveCursor('A');
         assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length()-1, buff.getInsertionPointCol());
+        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
 
         // Testing movement in more lines
-        write("testresources/test.txt", "i love btj <3\n and also termios");
+        Debug.write("testresources/test.txt", "i love btj <3\n and also termios");
         buff = new FileBuffer("testresources/test.txt");
 
         // Move cursor down
         buff.moveCursor('B');
         assertEquals(1, buff.getInsertionPointLine());
         assertEquals(0, buff.getInsertionPointCol());
+
+        buff.moveCursor('D');
+        assertEquals(0, buff.getInsertionPointLine());
+        buff.moveCursor('C');
 
         // Up to line 0
         buff.moveCursor('A');
@@ -159,7 +164,7 @@ public class FileBufferTest {
         assertEquals(0, buff.getInsertionPointLine());
 
         // Try going to next line by going right
-        for(int i = 0; i < 13; i++)
+        for (int i = 0; i < 13; i++)
             buff.moveCursor('C');
         assertEquals(0, buff.getInsertionPointLine());
         assertEquals(13, buff.getInsertionPointCol());
@@ -167,22 +172,52 @@ public class FileBufferTest {
         // Test go back to previous line
         buff.moveCursor('D');
         assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length()-1, buff.getInsertionPointCol());
+        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
 
     }
 
-    /**
-     * Helper method that writes given text into the file at given path
-     */
-    private void write(String path, String text) {
-        try {
-            // Overwrite file test.txt
-            FileWriter writer = new FileWriter(new File(path));
-            writer.write(text);
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Test
+    public void testAmountChar() {
+
+        Debug.write("testresources/test.txt", "btj");
+        FileBuffer buffer = new FileBuffer("testresources/test.txt");
+
+        assertEquals(buffer.getAmountChars(), 3);
+
+        buffer.write((Integer.valueOf(98)).byteValue());
+
+        assertEquals(buffer.getAmountChars(),4);
+    }
+
+    @Test
+    public void testDeleteCharacter() {
+
+        Debug.write("testresources/test.txt", "hallo btj i am your loyal student i use termios daily");
+        FileBuffer buffer = new FileBuffer("testresources/test.txt");
+
+        buffer.moveCursor('C');
+        buffer.deleteCharacter();
+
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer.getBytes(),
+                        "allo btj i am your loyal student i use termios daily".getBytes()
+                        )
+                );
+
+        assertTrue(buffer.getInsertionPointCol() == 0);
+
+
+        Debug.write("testresources/test.txt", "hello btj\nmister");
+        buffer = new FileBuffer("testresources/test.txt");
+        buffer.moveCursor('B');
+        buffer.moveCursor('C');
+        buffer.moveCursor('C');
+        buffer.deleteCharacter();
+        assertEquals(1, buffer.getInsertionPointCol());
+
+        buffer.save();
+
     }
 
 }

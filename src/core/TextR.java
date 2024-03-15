@@ -9,12 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class Controller {
+public class TextR {
 
     /**
      * Holds the line separator for this application
      */
     private static byte[] lineSeparatorArg;
+    protected UseCaseController activeUseCaseController;
 
     /**
      * Root layout
@@ -24,9 +25,9 @@ public class Controller {
     /**
      * Creates a controller object.
      * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
+     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      */
-    public Controller(String[] args) {
+    public TextR(String[] args) {
         this.rootLayout = initRootLayout(args);
     }
 
@@ -47,8 +48,9 @@ public class Controller {
         }
         setLineSeparatorFromArgs(args);
 
-        Controller btj = new Controller(args);
+        TextR btj = new TextR(args);
         if(!args[args.length-1].equals("noterminal"))
+            btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
     }
 
@@ -61,9 +63,14 @@ public class Controller {
         for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
             Path checkPath = Paths.get(args[i]);
             if (!Files.exists(checkPath))
-                System.out.println("Kutzooi");
+                this.activeUseCaseController = new FileErrorPopupController(this);
             else
-                leaves.add(new LayoutLeaf(args[i], i == 0));
+                try {
+                    leaves.add(new LayoutLeaf(args[i], i == 0));
+                } catch (IOException e){
+                    activeUseCaseController = new FileErrorPopupController(this);
+                }
+
         }
 
         if(leaves.size() == 1)
@@ -78,71 +85,15 @@ public class Controller {
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
-        clearContent();
+        activeUseCaseController.clearContent();
         // Reading terminal dimensions for correct rendering
         render();
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
-            /*System.out.print(b);
-            String bs = String.valueOf(b);
-            Terminal.printText(1,1, bs);*/
-
-            switch(b) {
-                case 8, 127, 10, 62:
-                    deleteCharacter();
-                    break;
-                // Control + S
-                case 19:
-                    saveBuffer();
-                    break;
-                // Control + P
-                case 16:
-                    moveFocus(DIRECTION.LEFT);
-                    break;
-                // Control + N
-                case 14:
-                    moveFocus(DIRECTION.RIGHT);
-                    break;
-                // Control + R
-                case 18:
-                    rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE);
-                    break;
-                // Control + T
-                case 20:
-                    rotateLayout(ROT_DIRECTION.CLOCKWISE);
-                    break;
-                // Surrogate keys
-                case 27:
-                    Terminal.readByte();
-                    int c = Terminal.readByte();
-
-                    switch ((char) c) {
-                        case 'A', 'B', 'C', 'D':
-                            moveCursor((char) c);
-                            break;
-                        case 'S':// F4
-                            System.out.println((char) c);
-                            break;
-                    }
-                    break;
-                // Line separator
-                case 13:
-                    enterLineSeparator();
-                    Terminal.clearScreen();
-                    break;
-                // Character input
-                default:
-                    Terminal.clearScreen();
-                    if(b < 32 && b != 10 && b != 13 || 127 <= b)
-                        break;
-                    enterText((Integer.valueOf(b)).byteValue());
-                    break;
-            }
-            rootLayout.clearContent();
-
-            render();
-            //Terminal.printText(10, 10, String.valueOf(b));
+            activeUseCaseController.handle(b);
+            activeUseCaseController.clearContent();
+            activeUseCaseController.render();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
         }
@@ -152,16 +103,21 @@ public class Controller {
     /**
      * Removes the character before the insertion point
      */
-    private void deleteCharacter() {
+    void deleteCharacter() {
         rootLayout.deleteCharacter();
     }
 
     /**
      * Renders the layout with the terminal current height & width
      */
-    void render() throws IOException {
-        this.rootLayout.renderContent();
-        this.rootLayout.renderCursor();
+    void render() {
+        try{
+            this.rootLayout.renderContent();
+            this.rootLayout.renderCursor();
+        } catch (IOException e){
+            this.activeUseCaseController = new FileErrorPopupController(this);
+        }
+
     }
 
     /**
@@ -193,7 +149,7 @@ public class Controller {
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
+     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
      */
     void enterLineSeparator() {
       rootLayout.enterInsertionPoint();
@@ -216,7 +172,7 @@ public class Controller {
     // Test functions
 
     /**
-     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
+     * Returns the root layout {@link TextR#rootLayout}. Only for testing purposes (default access modifier)
      */
     Layout getRootLayout() {
         return rootLayout.clone();
@@ -224,14 +180,14 @@ public class Controller {
 
     static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
-            Controller.lineSeparatorArg = new byte[]{0x0a};
+            TextR.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
-            Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
-        else Controller.lineSeparatorArg = System.lineSeparator().getBytes();
+            TextR.lineSeparatorArg = new byte[]{0x0d, 0x0a};
+        else TextR.lineSeparatorArg = System.lineSeparator().getBytes();
     }
 
     public static byte[] getLineSeparatorArg(){
-        return Controller.lineSeparatorArg;
+        return TextR.lineSeparatorArg;
     }
 
 }
