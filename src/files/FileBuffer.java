@@ -191,6 +191,13 @@ public class FileBuffer {
     }
 
     /**
+     *  Returns the amount of chars in the buffercontent
+     */
+    public int getAmountChars(){
+        return this.byteContent.size();
+    }
+
+    /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
      */
     boolean contentsEqual(ArrayList<Byte> compare) {

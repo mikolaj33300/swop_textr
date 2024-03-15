@@ -1,10 +1,12 @@
 package ui;
 
-import core.Controller;
 import files.FileBuffer;
 import layouttree.LayoutLeaf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.sound.sampled.Control;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +23,8 @@ public class FileBufferViewTest {
     String path1;
     String path2;
     String path3;
-    Controller controller;
-
     @BeforeEach
-    public void setUp(){
+    public void setUp() throws IOException {
         path1 = "testresources/test.txt";
         path2 = "testresources/test2.txt";
         path3 = "testresources/test3.txt";
