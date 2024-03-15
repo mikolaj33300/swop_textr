@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class TextR {
+public class Controller {
 
     /**
      * Holds the line separator for this application
@@ -25,9 +25,9 @@ public class TextR {
     /**
      * Creates a controller object.
      * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
+     * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link Controller#main(String[])}
      */
-    public TextR(String[] args) {
+    public Controller(String[] args) {
         this.rootLayout = initRootLayout(args);
     }
 
@@ -44,11 +44,11 @@ public class TextR {
                         && args.length == 1
                 )
         ) { // Then no path is specified, and we cannot open
-            throw new RuntimeException("TextR needs at least one specified file");
+            throw new RuntimeException("Controller needs at least one specified file");
         }
         setLineSeparatorFromArgs(args);
 
-        TextR btj = new TextR(args);
+        Controller btj = new Controller(args);
         if(!args[args.length-1].equals("noterminal"))
             btj.activeUseCaseController = new InspectContentsController(btj);
             btj.loop();
@@ -149,7 +149,7 @@ public class TextR {
     }
 
     /**
-     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
+     * Line separator is non-ASCII, so cannot enter through {@link Controller#enterText(byte)}
      */
     void enterLineSeparator() {
       rootLayout.enterInsertionPoint();
@@ -172,7 +172,7 @@ public class TextR {
     // Test functions
 
     /**
-     * Returns the root layout {@link TextR#rootLayout}. Only for testing purposes (default access modifier)
+     * Returns the root layout {@link Controller#rootLayout}. Only for testing purposes (default access modifier)
      */
     Layout getRootLayout() {
         return rootLayout.clone();
@@ -180,14 +180,14 @@ public class TextR {
 
     static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
-            TextR.lineSeparatorArg = new byte[]{0x0a};
+            Controller.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))
-            TextR.lineSeparatorArg = new byte[]{0x0d, 0x0a};
-        else TextR.lineSeparatorArg = System.lineSeparator().getBytes();
+            Controller.lineSeparatorArg = new byte[]{0x0d, 0x0a};
+        else Controller.lineSeparatorArg = System.lineSeparator().getBytes();
     }
 
     public static byte[] getLineSeparatorArg(){
-        return TextR.lineSeparatorArg;
+        return Controller.lineSeparatorArg;
     }
 
 }

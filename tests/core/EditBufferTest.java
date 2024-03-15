@@ -1,16 +1,12 @@
 package core;
 
-import files.FileBuffer;
 import files.FileHolder;
 import layouttree.DIRECTION;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Debug;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -20,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EditBufferTest {
 
 
-    TextR c;
+    Controller c;
     private final String root = "testresources/";
     private final String path1 = root + "test.txt";
     private final String path2 = root + "test2.txt";
@@ -31,7 +27,7 @@ public class EditBufferTest {
         Debug.write(path1, "ai lov yousing termios");
         Debug.write(path2, "btj is a mister");
         Debug.write(path3, "btj makes great libraries");
-        c = new TextR(new String[] {path1, path2, path3});
+        c = new Controller(new String[] {path1, path2, path3});
     }
 
     /**
@@ -44,7 +40,7 @@ public class EditBufferTest {
     @Test
     public void testEditBuffer() throws IOException, NoSuchFieldException {
         // We schrijven a op plaats 0 in path1.
-        TextR.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
+        Controller.setLineSeparatorFromArgs(new String[] {path1, path2, path3});
         byte b = (Integer.valueOf(97)).byteValue();
 
         // Enter text at column 0.

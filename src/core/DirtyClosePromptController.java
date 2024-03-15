@@ -7,7 +7,7 @@ import java.io.IOException;
 public class DirtyClosePromptController extends UseCaseController {
     UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)");
 
-    protected DirtyClosePromptController(TextR coreControllerParent) {
+    protected DirtyClosePromptController(Controller coreControllerParent) {
         super(coreControllerParent);
     }
 

@@ -150,10 +150,16 @@ public abstract class Layout implements Cloneable {
     /**
      * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
      * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
-     * @return
      */
     public abstract int forcedCloseActive();
 
+    /**
+     * Returns whether this Layout and the given object are equals in contents
+     */
     public abstract boolean equals(Object obj);
+
+    /**
+     * Returns a clone of this Layout, without any references to it
+     */
     public abstract Layout clone();
 }

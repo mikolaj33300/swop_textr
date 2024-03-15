@@ -4,15 +4,13 @@ import files.FileBuffer;
 import org.junit.jupiter.api.*;
 import util.Debug;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InspectBufferTest {
 
-    TextR c;
+    Controller c;
     private final String root = "testresources/";
     private final String path1 = root + "test.txt";
     private final String path2 = root + "test2.txt";
@@ -21,7 +19,7 @@ public class InspectBufferTest {
 
     @Test
     public void testInspectBuffer() throws IOException {
-        TextR c1 = new TextR(new String[]{"testresources/test.txt", "testresources/test2.txt"});
+        Controller c1 = new Controller(new String[]{"testresources/test.txt", "testresources/test2.txt"});
 
         String insert = "i love btj <3";
         Debug.write("testresources/test.txt", insert);

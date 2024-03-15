@@ -23,7 +23,9 @@ public class LayoutLeaf extends Layout {
         return 0;
     }
 
-
+    /**
+     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
+     */
     public void clearContent() throws IOException {
         containedFileBufferView.clearContent();
     }
@@ -182,7 +184,8 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * @inheritDoc
+     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
      */
     @Override
     public int forcedCloseActive() {
@@ -224,7 +227,7 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * @inheritDoc
+     * Calls deleteCharacter on the {@link ui.FileBufferView} contained in the active {@link LayoutLeaf} under this node, if there is one.
      */
     @Override
     public void deleteCharacter() {
@@ -263,8 +266,8 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     *
-     * @inheritDoc
+     * Calls renderCursor() on the contained {@link ui.FileBufferView} if it's active.
+     * Should be called after all the Termios prints are done to ensure a correct cursor position.
      */
     @Override
     public void renderCursor() throws IOException {

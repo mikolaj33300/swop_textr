@@ -1,6 +1,6 @@
 package files;
 
-import core.TextR;
+import core.Controller;
 import ui.FileBufferView;
 
 
@@ -140,7 +140,7 @@ public class FileBuffer {
 
     /**
      * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
-     * another array by a line separator specified in {@link TextR#getLineSeparatorArg()}.
+     * another array by a line separator specified in {@link Controller#getLineSeparatorArg()}.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
@@ -165,7 +165,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 moveCursorLeft();
-                for(int i = 0; i< TextR.getLineSeparatorArg().length ; i++) {
+                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
                     this.byteContent.remove(insertionPointByteIndex);
                 }
             }
@@ -270,7 +270,7 @@ public class FileBuffer {
      * value of the {@link FileBuffer#insertionPointByteIndex} </p>
      */
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = TextR.getLineSeparatorArg().length;
+        int byteLengthSeparatorLen = Controller.getLineSeparatorArg().length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;

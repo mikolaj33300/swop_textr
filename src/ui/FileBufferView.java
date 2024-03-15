@@ -129,7 +129,7 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link Controller}
+     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link TextR}
      */
     public void deleteCharacter() {
         containedFileBuffer.deleteCharacter();

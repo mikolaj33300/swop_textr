@@ -78,7 +78,7 @@ public class InspectContentsController extends UseCaseController{
     public void clearContent() throws IOException {
         coreControllerParent.rootLayout.clearContent();
     }
-    protected InspectContentsController(TextR coreControllerParent){
+    protected InspectContentsController(Controller coreControllerParent){
         super(coreControllerParent);
     }
 }
