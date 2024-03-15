@@ -26,7 +26,7 @@ public class FileBufferViewTest {
 
     @Test
     public void testGetContainedFileBuffer(){
-        assertEquals(filebufferview.getContainedFileBuffer(),filebuffer);
+        assertTrue(filebufferview.getContainedFileBuffer().equals(filebuffer));
         assertNotSame(filebufferview.getContainedFileBuffer(),filebufferview);
 
     }

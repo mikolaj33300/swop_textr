@@ -6,8 +6,10 @@ import layouttree.ROT_DIRECTION;
 
 import java.io.IOException;
 
-public class InspectContentsController implements UseCaseController{
+public class InspectContentsController implements UseCaseController {
+
     private TextR coreControllerParent;
+
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
