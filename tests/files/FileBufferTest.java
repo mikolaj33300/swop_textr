@@ -45,7 +45,7 @@ public class FileBufferTest {
     @Test
     public void testWriteSave() throws IOException {
         // Test if the function write correctly adds strings to the content.
-        String text = "i love termios ; long live btj";
+        String text = "i love termios ; long live kaas";
         String path = "testresources/test.txt";
         Debug.write(path, text);
         FileBuffer buffer = new FileBuffer(path);
@@ -53,7 +53,7 @@ public class FileBufferTest {
         assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
 
         String add = " ; i love using termios library ";
-        String result = " ; i love using termios library i love termios ; long live btj";
+        String result = " ; i love using termios library i love termios ; long live kaas";
         for (byte b : add.getBytes()) {
             buffer.write(b);
         }
@@ -89,7 +89,7 @@ public class FileBufferTest {
             buff.moveCursor('C');
 
         buff.enterInsertionPoint();
-        for (byte b : "btj\n".getBytes()) {
+        for (byte b : "kaas\n".getBytes()) {
             buff.write(b);
         }
         buff.enterInsertionPoint();
@@ -99,7 +99,7 @@ public class FileBufferTest {
     @Test
     public void testDeleteLine() throws IOException {
 
-        Debug.write("testresources/test.txt", "everyone likes btj\nbtj is the founder of termios\none of the best terminal applications");
+        Debug.write("testresources/test.txt", "everyone likes kaas\nkaas is the founder of termios\none of the best terminal applications");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
 
         buffer.moveCursor('B');
@@ -107,13 +107,13 @@ public class FileBufferTest {
         assertEquals(1, buffer.getInsertionPointLine());
 
         assertEquals(3, buffer.getLines().size());
-        assertEquals("btj is the founder of termios", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
+        assertEquals("kaas is the founder of termios", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
 
     }
 
     @Test
     public void testMoveCursor() throws IOException {
-        String insert = "i love btj <3";
+        String insert = "i love kaas <3";
         Debug.write("testresources/test.txt", insert);
         FileBuffer buff = new FileBuffer("testresources/test.txt");
 
@@ -145,7 +145,7 @@ public class FileBufferTest {
         assertEquals(insert.length() - 1, buff.getInsertionPointCol());
 
         // Testing movement in more lines
-        Debug.write("testresources/test.txt", "i love btj <3\n and also termios");
+        Debug.write("testresources/test.txt", "i love kaas <3\n and also termios");
         buff = new FileBuffer("testresources/test.txt");
 
         // Move cursor down
@@ -180,7 +180,7 @@ public class FileBufferTest {
     @Test
     public void testAmountChar() throws IOException {
 
-        Debug.write("testresources/test.txt", "btj");
+        Debug.write("testresources/test.txt", "kaas");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
 
         assertEquals(buffer.getAmountChars(), 3);
@@ -193,7 +193,7 @@ public class FileBufferTest {
     @Test
     public void testDeleteCharacter() throws IOException {
 
-        Debug.write("testresources/test.txt", "hallo btj i am your loyal student i use termios daily");
+        Debug.write("testresources/test.txt", "hallo kaas i am your loyal student i use termios daily");
         FileBuffer buffer = new FileBuffer("testresources/test.txt");
 
         buffer.moveCursor('C');
@@ -202,14 +202,14 @@ public class FileBufferTest {
         assertTrue(
                 FileHolder.areContentsEqual(
                         buffer.getBytes(),
-                        "allo btj i am your loyal student i use termios daily".getBytes()
+                        "allo kaas i am your loyal student i use termios daily".getBytes()
                         )
                 );
 
         assertTrue(buffer.getInsertionPointCol() == 0);
 
 
-        Debug.write("testresources/test.txt", "hello btj\nmister");
+        Debug.write("testresources/test.txt", "hello kaas\nmister");
         buffer = new FileBuffer("testresources/test.txt");
         buffer.moveCursor('B');
         buffer.moveCursor('C');

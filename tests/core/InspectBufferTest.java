@@ -22,7 +22,7 @@ public class InspectBufferTest {
     public void testInspectBuffer() throws IOException {
         TextR c1 = new TextR(new String[]{"testresources/test.txt", "testresources/test2.txt"});
 
-        String insert = "i love btj <3";
+        String insert = "i love kaas <3";
         Debug.write("testresources/test.txt", insert);
         FileBuffer buff = new FileBuffer("testresources/test.txt");
 
@@ -54,7 +54,7 @@ public class InspectBufferTest {
         assertEquals(insert.length()-1, buff.getInsertionPointCol());
 
         // Testing movement in more lines
-        Debug.write("testresources/test.txt", "i love btj <3\n and also termios");
+        Debug.write("testresources/test.txt", "i love kaas <3\n and also termios");
         buff = new FileBuffer("testresources/test.txt");
 
         // Move cursor down

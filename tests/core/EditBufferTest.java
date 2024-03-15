@@ -25,8 +25,8 @@ public class EditBufferTest {
     @BeforeEach
     public void setVariables() {
         Debug.write(path1, "ai lov yousing termios");
-        Debug.write(path2, "btj is a mister");
-        Debug.write(path3, "btj makes great libraries");
+        Debug.write(path2, "kaas is a mister");
+        Debug.write(path3, "kaas makes great libraries");
         c = new TextR(new String[] {path1, path2, path3});
     }
 
@@ -61,10 +61,10 @@ public class EditBufferTest {
                 "aai lov yousing termios".getBytes()
                 ,Files.readAllBytes(Path.of(path1))));
         assertTrue(FileHolder.areContentsEqual(
-                "bbtj is a mister".getBytes()
+                "bkaas is a mister".getBytes()
                 ,Files.readAllBytes(Path.of(path2))));
         assertTrue(FileHolder.areContentsEqual(
-                "cbtj makes great libraries".getBytes()
+                "ckaas makes great libraries".getBytes()
                 ,Files.readAllBytes(Path.of(path3))));
 
 
