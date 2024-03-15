@@ -41,6 +41,10 @@ public abstract class View {
      */
     protected LayoutLeaf parent;
 
+    public LayoutLeaf getParent(){
+        return parent.clone();
+    }
+
     /**
      * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
      */

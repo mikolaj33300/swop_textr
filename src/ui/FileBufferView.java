@@ -56,7 +56,7 @@ public class FileBufferView extends View {
     /**
      * Generates the string that is used to display the statusbar.
      */
-    private String getStatusbarString() {
+    public String getStatusbarString() {
         String statusLine = containedFileBuffer.getFileHolder().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());

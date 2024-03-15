@@ -15,6 +15,7 @@ public class FileBufferViewTest {
     LayoutLeaf layouleaf2;
     LayoutLeaf layouleaf3;
     FileBufferView filebufferview1;
+    FileBufferView filebufferview1_;
     FileBufferView filebufferview2;
     FileBufferView filebufferview3;
     FileBuffer filebuffer1;
@@ -32,6 +33,7 @@ public class FileBufferViewTest {
         LayoutLeaf leaf2 = new LayoutLeaf(path2,true);
         LayoutLeaf leaf3 = new LayoutLeaf(path3,true);
         filebufferview1 = new FileBufferView(path1, leaf1);
+        filebufferview1_ = new FileBufferView(path1, leaf1);
         filebufferview2 = new FileBufferView(path2, leaf2);
         filebufferview3 = new FileBufferView(path3, leaf3);
         filebuffer1 = new FileBuffer(path1);
@@ -39,19 +41,31 @@ public class FileBufferViewTest {
         filebuffer3 = new FileBuffer(path3);
     }
 
+    /**
+     * Viseel werkt de render, niets testbaar met JUnit
+     */
     @Test
-    public void testSetCoords(){
-        //filebufferview.setCorrectCoords();
+    public void testRender(){}
+
+    @Test public void testGetStatusbarString(){
+        String statusbar = filebufferview1.getStatusbarString();
+        assertEquals(statusbar,"testresources/test.txt #Lines:1 #Chars:19 Insert:[0;0] Clean Active");
     }
+    @Test
+    public void testEquals(){
+        assertTrue(filebufferview1.equals(filebufferview1_));
+        assertFalse(filebufferview1.equals(filebufferview2));
+    }
+
+    /**
+     * Visueel merkbaar, niets testbaar met Junit
+     */
+    @Test
+    public void testClose(){}
 
     @Test
     public void testDeleteCharacter(){
-        //Byte symbol = 96;
-        //filebufferview1.getContainedFileBuffer().getByteContent();
-        //filebufferview1.write(symbol);
     }
-
-
 
     @Test
     public void testGetContainedFileBuffer(){
