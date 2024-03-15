@@ -14,6 +14,14 @@ public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
     /**
+     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
+     */
+    public LayoutLeaf(String path, boolean active) throws IOException {
+        this.containedFileBufferView = new FileBufferView(path, this);
+        this.setContainsActiveView(active);
+    }
+
+    /**
      * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartX(int terminalWidth, int terminalHeight){
@@ -56,13 +64,6 @@ public class LayoutLeaf extends Layout {
             return parent.getWidth(this, terminalWidth, terminalHeight);
         }
         return terminalWidth;
-    }
-    /**
-     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
-     */
-    public LayoutLeaf(String path, boolean active) throws IOException {
-        this.containedFileBufferView = new FileBufferView(path, this);
-        this.setContainsActiveView(active);
     }
 
     /**
