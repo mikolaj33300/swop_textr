@@ -166,7 +166,7 @@ public class FileBufferView extends View {
         if (parent.getContainsActiveView()) {
             int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
-            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
+            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset, "");
         }
     }
 }
