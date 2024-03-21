@@ -3,7 +3,7 @@ downloadTermios:
     stage: build
     script:
         - mkdir build
-        - curl -L "https://github.com/btj/termios/releases/download/0.7/io.github.btj.termios-0.7.jar" -o ./termios.jar
-        - jar xvf ./termios.jar
-        - mv ./io ./build/
+        - curl -L "https://github.com/btj/termios/releases/download/0.7/io.github.btj.termios-0.7.jar" -O
+        - jar xvf ./*.jar
+        - cp -r ./io ./build/
         - javac -d ./build ./src/*/*.java
