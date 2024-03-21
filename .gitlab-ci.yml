@@ -1,4 +1,4 @@
-image: openjdk
+image: openjdk:21
 downloadTermios:
     stage: build
     script:
