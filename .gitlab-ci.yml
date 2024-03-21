@@ -1,0 +1,5 @@
+image: openjdk
+build:
+    stage: build
+    script:
+        javac ./src/*/*.java
