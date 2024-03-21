@@ -2,4 +2,4 @@ image: openjdk
 build:
     stage: build
     script:
-        javac $(find ./src/ -name '*.java')
+        javac ./src/*/*.java
