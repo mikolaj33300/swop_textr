@@ -6,4 +6,4 @@ downloadTermios:
         - curl -L "https://github.com/btj/termios/releases/download/0.7/io.github.btj.termios-0.7.jar" -O
         - jar xvf ./*.jar
         - cp -vr ./io ./build/
-        - javac -cp ./build/ -d ./build ./src/*/*.java
+        - javac -d ./build ./src/*/*.java
