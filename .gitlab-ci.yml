@@ -1,3 +1,4 @@
+image: openjdk
 build:
     stage: build
     script:
