@@ -4,6 +4,4 @@ downloadTermios:
     script:
         - mkdir build
         - curl -L "https://github.com/btj/termios/releases/download/0.7/io.github.btj.termios-0.7.jar" -O
-        - jar xvf ./*.jar
-        - cp -r ./io ./build/
-        - javac -d ./build ./src/*/*.java
+        - javac -cp ./io.github.btj.termios-0.7.jar -d ./build ./src/*/*.java
