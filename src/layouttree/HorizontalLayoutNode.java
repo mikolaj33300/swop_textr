@@ -12,16 +12,22 @@ public class HorizontalLayoutNode extends LayoutNode {
         super(newChildren);
     }
 
+    /**
+     * Returns the starting x-coordinate of this HorizontalLayoutNode
+     */
     @Override
     public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
             int thisX = parent.getStartX(this, terminalWidth, terminalHeight);
             int thisWidth = parent.getWidth(this, terminalWidth, terminalHeight);
-            return thisX+(thisWidth/ children.size())*children.indexOf(this);
+            return thisX+(thisWidth/ children.size())*children.indexOf(l);
         }
-        return 0;
+        return (terminalWidth/ children.size())*children.indexOf(l);
     }
 
+    /**
+     * Returns the starting y-coordinate of this HorizontalLayoutNode
+     */
     @Override
     public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -30,6 +36,9 @@ public class HorizontalLayoutNode extends LayoutNode {
         return 0;
     }
 
+    /**
+     * Returns the width y-coordinate of this HorizontalLayoutNode
+     */
     @Override
     public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
@@ -38,9 +47,16 @@ public class HorizontalLayoutNode extends LayoutNode {
         return terminalWidth / children.size();
     }
 
+    /**
+     * Returns the starting height of this HorizontalLayoutNode
+     */
     @Override
     public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        return parent.getHeight(this, terminalWidth, terminalHeight);
+        if(parent != null){
+            return parent.getHeight(this, terminalWidth, terminalHeight);
+        }
+        return terminalWidth;
+
     }
 
     /**
@@ -92,6 +108,9 @@ public class HorizontalLayoutNode extends LayoutNode {
         return cloned;
     }
 
+    /**
+     * Returns whether this HorizontalLayoutNode and the given object are equals in contents
+     */
     @Override
     public boolean equals(Object node) {
         if (node instanceof HorizontalLayoutNode layoutNode) {

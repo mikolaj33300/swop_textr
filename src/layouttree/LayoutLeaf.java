@@ -2,7 +2,6 @@ package layouttree;
 
 import files.FileBuffer;
 import ui.FileBufferView;
-import ui.View;
 
 import java.io.IOException;
 
@@ -14,27 +13,59 @@ import java.io.IOException;
 public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
 
-    public int getStartX(int terminalWidth, int terminalHeight){
-        return parent.getStartX(this, terminalWidth, terminalHeight);
-    }
-
-    public int getStartY(int terminalWidth, int terminalHeight){
-        return parent.getStartY(this, terminalWidth, terminalHeight);
-    }
-
-    public int getHeight(int terminalWidth, int terminalHeight){
-        return parent.getHeight(this, terminalWidth, terminalHeight);
-    }
-
-    public int getWidth(int terminalWidth, int terminalHeight){
-        return parent.getWidth(this, terminalWidth, terminalHeight);
-    }
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active) {
+    public LayoutLeaf(String path, boolean active) throws IOException {
         this.containedFileBufferView = new FileBufferView(path, this);
         this.setContainsActiveView(active);
+    }
+
+    /**
+     * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
+     */
+    public int getStartX(int terminalWidth, int terminalHeight){
+        if(parent != null){
+            return parent.getStartX(this, terminalWidth, terminalHeight);
+        }
+        return 0;
+    }
+
+    /**
+     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
+     */
+    public void clearContent() throws IOException {
+        containedFileBufferView.clearContent();
+    }
+
+    /**
+     * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
+     */
+    public int getStartY(int terminalWidth, int terminalHeight){
+        if(parent != null){
+            return parent.getStartY(this, terminalWidth, terminalHeight);
+        }
+        return 0;
+    }
+
+    /**
+     * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
+     */
+    public int getHeight(int terminalWidth, int terminalHeight){
+        if(parent != null){
+            return parent.getHeight(this, terminalWidth, terminalHeight);
+        }
+        return terminalHeight;
+    }
+
+    /**
+     * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
+     */
+    public int getWidth(int terminalWidth, int terminalHeight){
+        if(parent != null){
+            return parent.getWidth(this, terminalWidth, terminalHeight);
+        }
+        return terminalWidth;
     }
 
     /**
@@ -60,19 +91,30 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Calls moveCursor() on the contained active {@link ui.FileBufferView}(s).
+     */
     @Override
     public void moveCursor(char c) {
         containedFileBufferView.moveCursor(c);
     }
 
+    /**
+     * Calls enterText() on the contained {@link ui.FileBufferView}.
+     */
     @Override
     public void enterText(byte b) {
         containedFileBufferView.write(b);
     }
 
+    /**
+     * Calls save() on the contained {@link ui.FileBufferView}.
+     *
+     * @return
+     */
     @Override
-    public void saveActiveBuffer() {
-        containedFileBufferView.save();
+    public int saveActiveBuffer() {
+        return containedFileBufferView.save();
     }
 
     @Override
@@ -82,7 +124,7 @@ public class LayoutLeaf extends Layout {
 
     /**
      * Moves focus from the currently active Layout, to the rightneigbouring layout
-     * If no neighbours left, the active Layout stays active
+     * If no neighbours right, the active Layout stays active
      */
     private void moveFocusRight() {
         if (parent != null) {
@@ -102,6 +144,12 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Rotates the active layoutLeaf under this structure if there is one with its right neighbor if there is one,
+     * clockwise or counterclockwise according to rotdir. If the right neighbor is a direct sibling it rotates to stand
+     * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
+     * active leaf and rotated then.
+     */
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
         if (parent != null) {
             return parent.rotateWithRightSibling(rot_dir, this);
@@ -111,24 +159,56 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+      * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+      * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
+     */
     @Override
-    public void closeActive() {
+    public int closeActive() {
         if (containsActiveView) {
-            containedFileBufferView.close();
+            if(containedFileBufferView.close()==0){
+                if(parent != null){
+                    //should be replaced by hasrightneighbour
+                    if(parent.children.indexOf(this)<parent.children.size()-1){
+                        parent.makeRightNeighbourActive(this);
+                    } else {
+                        parent.makeLeftNeighbourActive(this);
+                    }
+                    parent.delete(this);
+                    return 0;
+                }
+                else return 2;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
         }
     }
 
+    /**
+     * Calls renderContent() on the contained {@link ui.FileBufferView}(s).
+     */
     @Override
     public void renderContent() throws IOException {
         containedFileBufferView.render();
     }
 
+    /**
+     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
+     * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
+     */
     @Override
-    public void forcedCloseActive() {
+    public int forcedCloseActive() {
         if (containsActiveView) {
-            parent.makeRightNeighbourActive(this);
-            parent.delete(this);
+            if(parent != null){
+                parent.makeRightNeighbourActive(this);
+                parent.delete(this);
+                return 0;
+            }
+
         }
+        return 0;
     }
 
     /**
@@ -157,6 +237,9 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Calls deleteCharacter on the {@link ui.FileBufferView} contained in the active {@link LayoutLeaf} under this node, if there is one.
+     */
     @Override
     public void deleteCharacter() {
         containedFileBufferView.deleteCharacter();
@@ -168,7 +251,11 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        try {
+            return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -189,6 +276,10 @@ public class LayoutLeaf extends Layout {
         setContainsActiveView(true);
     }
 
+    /**
+     * Calls renderCursor() on the contained {@link ui.FileBufferView} if it's active.
+     * Should be called after all the Termios prints are done to ensure a correct cursor position.
+     */
     @Override
     public void renderCursor() throws IOException {
         if(super.containsActiveView){

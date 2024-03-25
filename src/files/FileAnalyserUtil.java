@@ -1,22 +1,21 @@
 package files;
 
-import core.Controller;
+import core.TextR;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
 
 public class FileAnalyserUtil {
 
+
     /**
-     * Returns a Map<Integer, Boolean> which indicates at which integer a line separator should be printed.
-     * The byte map contains "0d0a" or "0a" as line separators. Other line separations are found by checking
-     * the dimension of the window.
-     * Used for rendering.
+     * Subdivides the given byte array into lines
+     * @param byteContents
+     * @return
      */
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
-        int lineSepLength = System.lineSeparator().getBytes().length;
+        int lineSepLength = FileHolder.lineSeparator.length;
         int startOfCurrentLine = 0;
         ArrayList<ArrayList<Byte>> linesArrList = new ArrayList<>();
 
@@ -24,7 +23,7 @@ public class FileAnalyserUtil {
         int i = 0;
         while (i < byteContents.length) {
             //if separator encountered
-            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), Controller.getLineSeparatorArg())){
+            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), FileHolder.lineSeparator)){
                 linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
                 i += lineSepLength;
                 startOfCurrentLine = i;
@@ -48,6 +47,11 @@ public class FileAnalyserUtil {
         return formatter.toString();
     }
 
+    /**
+     * Returns an array of Byte wrappers for given array of bytes
+     * @param byteArr
+     * @return
+     */
     public static Byte[] wrapEachByteElem(byte[] byteArr){
         Byte[] wrapperArray = new Byte[byteArr.length];
         for (int i = 0; i < byteArr.length; i++) {
@@ -70,6 +74,8 @@ public class FileAnalyserUtil {
 
     /**
      * Puts all elements from a Byte ArrayList in a byte[]
+     * @param arrList
+     * @return
      */
     public static byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];

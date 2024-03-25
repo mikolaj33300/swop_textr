@@ -3,6 +3,7 @@ package layouttree;
 import files.FileBuffer;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class HorizontalLayoutNodeTest {
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";
@@ -90,6 +91,13 @@ public class HorizontalLayoutNodeTest {
         LayoutNode hn11_clone = hn11.clone();
         assertEquals(hn11,hn11_clone);
         assertNotSame(hn11,hn11_clone);
+    }
+
+    @Test
+    void testReturnedCoordX(){
+        LayoutLeaf realChild = (LayoutLeaf) hn1.children.get(1);
+        int obtainedX = realChild.getStartX(10, 10);
+        assertEquals(obtainedX, 5);
     }
 }
 

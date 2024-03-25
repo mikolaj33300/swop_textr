@@ -1,6 +1,6 @@
 package files;
 
-import core.Controller;
+import core.TextR;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -13,6 +13,7 @@ import java.util.Formatter;
  */
 public class FileHolder {
 
+    public static byte[] lineSeparator = TextR.getLineSeparatorArg();
     private final String path;
 
     private final File fd;
@@ -32,25 +33,26 @@ public class FileHolder {
     /**
      * saves file
      */
-    void save(byte[] fileContent) {
+    int save(byte[] fileContent) {
         try {
             Files.write(Path.of(this.path), fileContent);
+            return 0;
         } catch (IOException e) {
-            System.out.println("[FileHolder] Exception while trying to save file content");
+            return 1;
         }
     }
 
     /**
      * Returns the content of the file
      */
-    public final byte[] getContent() {
-        try {
+    public final byte[] getContent() throws IOException, RuntimeException {
+
             // Check for invalid bytes
             // 1. Non ASCII characters
             byte[] fileContent = Files.readAllBytes(this.fd.toPath());
             for(byte b : fileContent)
                 if(b < 32 && b != 10 && b != 13 || 127 <= b)
-                    return "Error: Invalid file contents - Invalid bytes".getBytes();
+                    throw new RuntimeException("Error: Invalid file contents - Invalid bytes");
             // 2. Non platform specific line seperators
             byte[] lineSeperatorBytes = System.lineSeparator().getBytes();
             Formatter formatterLine = new Formatter();
@@ -69,18 +71,9 @@ public class FileHolder {
                     // Contains 0a, not 0d0a, code is 0d0a
                     || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
-                return "Error: Invalid file contents - Invalid line separator".getBytes();
+                throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
 
             return fileContent;
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-            System.out.println("[FileBuffer] Exception while trying to read contents of file.");
-
-        }
-
-        return "Unreadable file".getBytes();
     }
 
     /**

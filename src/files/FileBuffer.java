@@ -1,12 +1,12 @@
 package files;
 
-import core.Controller;
-import io.github.btj.termios.Terminal;
+import core.TextR;
+import ui.FileBufferView;
 
 
+import java.io.IOException;
 import java.util.*;
 
-import static files.FileAnalyserUtil.toArray;
 import static files.FileAnalyserUtil.wrapEachByteElem;
 
 public class FileBuffer {
@@ -45,7 +45,7 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path) {
+    public FileBuffer(String path) throws IOException {
         this.file = new FileHolder(path);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
@@ -77,10 +77,16 @@ public class FileBuffer {
     /**
      * Saves the buffer contents to disk
      */
-    public final void save() {
-        if (!dirty) return;
-        this.file.save(FileAnalyserUtil.toArray(this.byteContent));
-        this.dirty = false;
+    public final int save() {
+        if (!dirty) return 0;
+        int result = this.file.save(FileAnalyserUtil.toArray(this.byteContent));
+        if(result == 0){
+            this.dirty = false;
+            return 0;
+        } else {
+            return result;
+        }
+
     }
 
     /**
@@ -112,29 +118,6 @@ public class FileBuffer {
     }
 
     /**
-     * Returns a string with relevant information for the statusbar
-     */
-    public String getRender() {
-        String statusLine = this.getFileHolder().getPath();
-        statusLine += " #Lines:";
-        statusLine += String.valueOf(this.getLines().size());
-        statusLine += " #Chars:";
-        String contents = new String(this.getFileHolder().getContent());
-        statusLine += contents.length();
-        statusLine += " Insert:[";
-        statusLine += this.getInsertionPointLine();
-        statusLine += ";";
-        statusLine += this.getInsertionPointCol();
-        statusLine += "] ";
-        if(this.getDirty())
-            statusLine += "Dirty";
-        else
-            statusLine += "Clean";
-        statusLine += " ";
-        return statusLine;
-    }
-
-    /**
      * Returns the Y coordinate where the insertion point should be rendered.
      */
     public int getInsertionPointLine() {
@@ -149,8 +132,15 @@ public class FileBuffer {
     }
 
     /**
+     * Returns a copy of the byteConent of this FileBuffer
+     */
+    public ArrayList<Byte> getByteContent(){
+        return (ArrayList<Byte>) this.byteContent.clone();
+    }
+
+    /**
      * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
-     * another array by a line separator specified in {@link Controller#getLineSeparatorArg()}.
+     * another array by a line separator specified in {@link TextR#getLineSeparatorArg()}.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
@@ -163,8 +153,14 @@ public class FileBuffer {
         }
         return clonedLinesList;
     }
-  
+
+    /**
+     * Deletes the character before the {@link FileBuffer#insertionPointByteIndex} and updates the cursor position
+     */
     public void deleteCharacter() {
+        if(this.insertionPointCol > 0 || this.insertionPointLine > 0) {
+            this.dirty = true;
+        }
         if(insertionPointCol > 0) {
             this.byteContent.remove(insertionPointByteIndex-1);
             moveCursorLeft();
@@ -172,7 +168,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 moveCursorLeft();
-                for(int i = 0; i< Controller.getLineSeparatorArg().length ; i++) {
+                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
                     this.byteContent.remove(insertionPointByteIndex);
                 }
             }
@@ -194,6 +190,13 @@ public class FileBuffer {
      */
     byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
+    }
+
+    /**
+     *  Returns the amount of chars in the buffercontent
+     */
+    public int getAmountChars(){
+        return this.byteContent.size();
     }
 
     /**
@@ -269,7 +272,7 @@ public class FileBuffer {
      * value of the {@link FileBuffer#insertionPointByteIndex} </p>
      */
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = Controller.getLineSeparatorArg().length;
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
@@ -278,6 +281,9 @@ public class FileBuffer {
         return byteArrIndex;
     }
 
+    /**
+     * Makes the calculation to move the cursor down. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorDown() {
         if (insertionPointLine < linesArrayList.size() - 1) {
             insertionPointLine++;
@@ -287,16 +293,23 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor up. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorUp() {
         if (insertionPointLine > 0) {
             insertionPointLine--;
             //shift left if the current line is longer than the previous
             insertionPointCol = Math.min(linesArrayList.get(insertionPointLine).size(), insertionPointCol);
             insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+            insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
         }
-        insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+
     }
 
+    /**
+     * Makes the calculation to move the cursor left. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorLeft() {
         if (insertionPointCol > 0) {
             insertionPointCol--;
@@ -312,6 +325,9 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor to the start of the line. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorToFront() {
         if (insertionPointCol > 0){
             insertionPointCol = 0;
@@ -319,6 +335,9 @@ public class FileBuffer {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
+    /**
+     * Makes the calculation to move the cursor right. Modifies the {@link FileBuffer#insertionPointCol} and {@link FileBuffer#insertionPointLine} accordingly.
+     */
     private void moveCursorRight(){
         if(insertionPointCol < linesArrayList.get(insertionPointLine).size()) {
             insertionPointCol++;
@@ -339,7 +358,12 @@ public class FileBuffer {
      * Clones this object
      */
     public FileBuffer clone() {
-        FileBuffer copy = new FileBuffer(this.file.getPath());
+        FileBuffer copy = null;
+        try {
+            copy = new FileBuffer(this.file.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         copy.dirty = this.dirty;
         copy.byteContent = this.cloneByteArrList();
         return copy;
@@ -353,11 +377,18 @@ public class FileBuffer {
         return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
     }
 
-    public void close() {
-
+    /**
+     * Warns the user if the {@link FileBuffer#dirty} is set to true and prompts the user to save the
+     * {@link FileBuffer}. When done, it will remove the {@link FileBufferView} linked to this object.
+     *
+     * @return
+     */
+    public int close() {
+        if(dirty) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public String getPath() {
-        return file.getPath();
-    }
 }

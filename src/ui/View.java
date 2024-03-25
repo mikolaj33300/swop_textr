@@ -1,27 +1,53 @@
 package ui;
 
-import core.Controller;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
-import layouttree.LayoutNode;
 
 import java.io.IOException;
 
 public abstract class View {
+    /**
+     * The lefmost point where this view starts
+     */
     int startX;
+
+    /**
+     * The topmost point where this view starts
+     */
     int startY;
+
+    /**
+     * The height of this window
+     */
     int height;
+
+    /**
+     * The width of this window
+     */
     int width;
 
+    /**
+     * The total width of the terminal
+     */
     static int terminalWidth;
+
+    /**
+     * The total height of the terminal
+     */
     static int terminalHeight;
 
+    /**
+     * The leaf to which this view belongs
+     */
     protected LayoutLeaf parent;
 
-    public View(LayoutLeaf parent) {
-        this.parent = parent;
+    public LayoutLeaf getParent(){
+        return parent.clone();
     }
 
+    /**
+     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
+     */
     protected void setCorrectCoords() throws IOException {
         retrieveDimensions();
         startX = parent.getStartX(terminalWidth, terminalHeight);
@@ -31,13 +57,28 @@ public abstract class View {
     }
 
 
+    /**
+     * Clears the content on the terminal window
+     * Used when to prevent text ghosting on the screen
+     */
+    public void clearContent() throws IOException {
+/*        retrieveDimensions();
+        for(int i = startY; i<startY+height; i++){
+            for(int j = startX; j<startX+width; j++){
+                Terminal.printText(i+1, j+1, " ");
+            }
+        }*/
+        Terminal.clearScreen();
+    }
 
-    public void clearContent(){
-
-    };
-
+    /**
+     * Render all the elements on the thid view
+     */
     public abstract void render() throws IOException;
 
+    /**
+     * Renders the cursor on the current view
+     */
     public abstract void renderCursor() throws IOException;
 
     /**
@@ -49,13 +90,12 @@ public abstract class View {
     private void retrieveDimensions() throws IOException {
 
         Terminal.reportTextAreaSize();
-        int tempByte = 0;
         for(int i = 0; i < 4; i++)
             Terminal.readByte();
 
         int c = Terminal.readByte();
         int height = c - '0';
-        tempByte = Terminal.readByte();
+        int tempByte = Terminal.readByte();
 
         for(;;) {
             if(tempByte < '0' || '9' < tempByte)
@@ -64,9 +104,7 @@ public abstract class View {
                 break;
             height = height * 10 + (tempByte - '0');
             tempByte = Terminal.readByte();
-
         }
-
         c = Terminal.readByte();
         int width = c - '0';
         tempByte = Terminal.readByte();
@@ -81,8 +119,10 @@ public abstract class View {
         }
         View.terminalWidth = width;
         View.terminalHeight = height;
-
     }
 
+    /**
+     * Checks whether this View and the given object are the same type and have the same contents
+     */
     public abstract boolean equals(Object o);
 }

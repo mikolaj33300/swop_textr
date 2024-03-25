@@ -1,11 +1,19 @@
 package layouttree;
 
+import core.TextR;
 import files.FileBuffer;
+import files.FileHolder;
 import org.junit.jupiter.api.*;
+import util.Debug;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class LayoutNodeTest {
     LayoutLeaf l1;
@@ -37,7 +45,7 @@ public class LayoutNodeTest {
     LayoutNode vn2;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         String path1 = "testresources/test.txt";
         String path2 = "testresources/test2.txt";
         String path3 = "testresources/test3.txt";
@@ -249,7 +257,7 @@ public class LayoutNodeTest {
     }
 
     @Test
-    void testRotateRelationshipNeighbourRoot(){
+    void testRotateRelationshipNeighbourRoot() throws IOException {
         Layout l10 = new LayoutLeaf("testresources/test.txt", true);
         Layout l10_clone = l10.clone();
         l10 = l10.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE);
@@ -257,6 +265,7 @@ public class LayoutNodeTest {
         l10 = l10.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE);
         assertEquals(l10,l10_clone);
     }
+
     @Test
     void testRotateRelationshipNeighborLeafs() {
         Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
@@ -289,6 +298,7 @@ public class LayoutNodeTest {
         correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2))),l4)));
         assertEquals(current_layout, correct_layout);
     }
+
     @Test
     void testRotateRelationShipNeighbourLeafsUnderNode(){
         //Leaf on node with leaf on same node
@@ -339,7 +349,9 @@ public class LayoutNodeTest {
 
     @Test
     void testEquals() {
+
     }
+
     @Test
     void testClone() {
         LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1, l4, new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2, l10))))));
