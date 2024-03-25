@@ -1,217 +1,287 @@
 digraph {
   node[shape=none]
+  comment="class Diagram"
+  layout=fdp
+  sep=0.1
+  edge[labelfontsize=20]
+  overlap=false
+  //splines=true
 
-  Layout[color=pink, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>Layout</td></tr>
-    <tr><td>+DIRECTION: enum<br/>
-      +ROT_DIRECTION: enum<br/>
-      #parent: LayoutNode: enum<br/>
-      +containsActive: boolean</td></tr>
-    <tr><td>#getRootLayoutUncloned();<br/>
-      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +deleteCharacter()<br/>
-      +renderTextContent(int startX, int startY, int width, int height)<br/>
-      #deleteLeftLeaf()<br/>
-      #setParent()<br/>
-      +getContainsActive()<br/>
-      +moveFocus(DIRECTION dir)<br/>
-      #makeLeftmostLeafActive()<br/>
-      #makeRightmostLeafActive()<br/>
-      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      #getLeftLeaf()<br/>
-      #setContainsActive(boolean active)<br/>
-      +equals(Object obj)<br/>
-      +clone()</td></tr>
-    </table>>]
+subgraph clusterlayout {
+rank=same
+Layout[color=darkgreen, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+Layout
+</td></tr><tr><td BALIGN="LEFT">
+#parent: LayoutNode<br ALIGN="LEFT"/>
++containsActive: boolean
+</td></tr><tr><td BALIGN="LEFT">
+#getRootLayoutUncloned()<br ALIGN="LEFT"/>
+#isAllowedToBeChildOf(LayoutNode layoutNode)<br ALIGN="LEFT"/>
++deleteCharacter()<br ALIGN="LEFT"/>
++renderTextContent(int startX, int startY, int width, int height)<br ALIGN="LEFT"/> 
+#deleteLeftLeaf()<br ALIGN="LEFT"/>
+#setParent()<br ALIGN="LEFT"/>
++getContainsActive()<br ALIGN="LEFT"/>
++moveFocus(DIRECTION dir)<br ALIGN="LEFT"/>
+#makeLeftmostLeafActive()<br ALIGN="LEFT"/>
+#makeRightmostLeafActive()<br ALIGN="LEFT"/>
++rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br ALIGN="LEFT"/>
+#getLeftLeaf()<br ALIGN="LEFT"/>
+#setContainsActive(boolean active)<br ALIGN="LEFT"/>
++equals(Object obj)<br ALIGN="LEFT"/>
++clone()
+</td></tr></table>>]
 
-  LayoutNode[color=pink, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>LayoutNode</td></tr>
-    <tr><td>+DIRECTION: enum<br/>
-      +ROT_DIRECTION: enum<br/>
-      #parent: LayoutNode: enum<br/>
-      +containsActive: boolean</td></tr>
-    <tr><td>#getRootLayoutUncloned();<br/>
-      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +deleteCharacter()<br/>
-      +renderTextContent(int startX, int startY, int width, int height)<br/>
-      #deleteLeftLeaf()<br/>
-      #setParent()<br/>
-      +getContainsActive()<br/>
-      +moveFocus(DIRECTION dir)<br/>
-      #makeLeftmostLeafActive()<br/>
-      #makeRightmostLeafActive()<br/>
-      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      #getLeftLeaf()<br/>
-      #setContainsActive(boolean active)<br/>
-      +equals(Object obj)<br/>
-      +clone()</td></tr>
-    </table>>]
+LayoutNode[color=darkgreen, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+LayoutNode
+</td></tr><tr><td BALIGN="LEFT">
++containsActive: boolean<br ALIGN="LEFT"/>
+#children: Layout[]
+</td></tr><tr><td BALIGN="LEFT">
+#deleteRightNeighbor(Layout subtree)<br ALIGN="LEFT"/>
+#delete(layout l)<br ALIGN="LEFT"/>
+#rotateWithRightSibling(ROT_DIRECTION rotdir, Layout child)<br ALIGN="LEFT"/>
+#makeLeftNeighbourActive(Layout layout)<br ALIGN="LEFT"/>
+#getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling)<br ALIGN="LEFT"/>
+-fixChangedTreeFromNewNode()
+</td></tr></table>>]
 
-  LayoutLeaf[color=pink, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>LayoutLeaf</td></tr>
-    <tr><td>-containedFileBuffer<br/>
-    +DIRECTION: enum<br/>
-      +ROT_DIRECTION: enum<br/>
-      #parent: LayoutNode: enum<br/>
-      +containsActive: boolean</td></tr>
-    <tr><td>+LayoutLeaf(FileBuffer fb, boolean active)<br/>
-      #getRootLayoutUncloned();<br/>
-      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +deleteCharacter()<br/>
-      +renderTextContent(int startX, int startY, int width, int height)<br/>
-      #deleteLeftLeaf()<br/>
-      +moveCursor(char c)<br/>
-      +enterText(byte b)<br/>
-      +saveActiveBuffer()<br/>
-      +enterInsertionPoint()<br/>
-      -moveFocusRight()<br/>
-      -moveFocusLeft()<br/>
-      #setParent()<br/>
-      +getContainsActive()<br/>
-      +moveFocus(DIRECTION dir)<br/>
-      #makeLeftmostLeafActive()<br/>
-      #makeRightmostLeafActive()<br/>
-      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      #getLeftLeaf()<br/>
-      #setContainsActive(boolean active)<br/>
-      +equals(Object obj)<br/>
-      +renderCursor(int startX, int startY, int width, int height)<br/>
-      +clone()<br/>
-      </td></tr>
-    </table>>]
+LayoutLeaf[color=darkgreen, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+LayoutLeaf
+</td></tr><tr><td BALIGN="LEFT">
+-containedFileBuffer<br ALIGN="LEFT"/>
+</td></tr><tr><td BALIGN="LEFT">
++LayoutLeaf(String path, boolean active)<br ALIGN="LEFT"/>
++getStartX(int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getStartY(int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getHeight(int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getWidth(int terminalWidth, int terminalHeight)<br align="left"/>
++clearContent(int terminalWidth, int terminalHeight)<br align="left"/>
++moveFocus(DIRECTION dir)<br align="left"/>
+-moveFocusRight()<br align="left"/>
+-moveFocusLeft()<br align="left"/>
++rotateRelationshipNeighbor(ROT_DIRECTION rot_dir)
+</td></tr></table>>]
 
-  LayoutNodeHorizontal[color=pink, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>LayoutLeaf</td></tr>
-    <tr><td>+DIRECTION: enum<br/>
-      +ROT_DIRECTION: enum<br/>
-      #parent: LayoutNode: enum<br/>
-      +containsActive: boolean</td></tr>
-    <tr><td>#getRootLayoutUncloned();<br/>
-      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +deleteCharacter()<br/>
-      +renderTextContent(int startX, int startY, int width, int height)<br/>
-      #deleteLeftLeaf()<br/>
-      #setParent()<br/>
-      +getContainsActive()<br/>
-      +moveFocus(DIRECTION dir)<br/>
-      #makeLeftmostLeafActive()<br/>
-      #makeRightmostLeafActive()<br/>
-      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      #getLeftLeaf()<br/>
-      #setContainsActive(boolean active)<br/>
-      +equals(Object obj)<br/>
-      +clone()</td></tr>
-    </table>>]
+LayoutNodeHorizontal[color=darkgreen, label=<<table BORDER="0" CELLBORDER="1" CELLSPACING="0"><tr><td BALIGN="LEFT">
+HorizontalLayoutNode
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr><tr><td BALIGN="LEFT">
++getStartX(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getStartY(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getWidth(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getHeight(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getOrientation()
+</td></tr></table>>]
   
-  LayoutNodeVertical[color=pink, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>VerticalLayoutNode</td></tr>
-    <tr><td>+DIRECTION: enum<br/>
-      +ROT_DIRECTION: enum<br/>
-      #parent: LayoutNode: enum<br/>
-      +containsActive: boolean</td></tr>
-    <tr><td>#getRootLayoutUncloned();<br/>
-      #isAllowedToBeChildOf(LayoutNode layoutNode)<br/>
-      +deleteCharacter()<br/>
-      +renderTextContent(int startX, int startY, int width, int height)<br/>
-      #deleteLeftLeaf()<br/>
-      #setParent()<br/>
-      +getContainsActive()<br/>
-      +moveFocus(DIRECTION dir)<br/>
-      #makeLeftmostLeafActive()<br/>
-      #makeRightmostLeafActive()<br/>
-      +rotateRelationshipNeighbor(ROT_DIRECTION rotdir)<br/>
-      #getLeftLeaf()<br/>
-      #setContainsActive(boolean active)<br/>
-      +equals(Object obj)<br/>
-      +clone()</td></tr>
-    </table>>]
+LayoutNodeVertical[color=darkgreen, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+VerticalLayoutNode
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr><tr><td BALIGN="LEFT">
++getStartX(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getStartY(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getWidth(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getHeight(Layout l, int terminalWidth, int terminalHeight)<br ALIGN="LEFT"/>
++getOrientation()
+</td></tr></table>>]
 
-  fileBuffer[color=brown, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>fileBuffer</td></tr>
-    <tr><td>-leaf: layoutLeaf<br/>
-      -file: FileHolder<br/>
-      -diryt: boolean<br/>
-      -byteContent: ArrayList(ArrayList(Byte))<br/>
-      -linesArrayList: ArrayList(ArrayList(Byte))<br/>
-      -status: Statusbar<br/>
-      -insertionPointCol: int<br/>
-      -insertionPointLine: int<br/>
-      ~insertionPointByteIndex: int
-    </td></tr>
-    <tr><td>+FileBuffer(String path)<br/>
-      ~getLines()<br/>
-      +enterInsertionPoint()<br/>
-      ~deleteLine()<br/>
-      +getStatusBar()<br/>
-      +save()<br/>
-      +moveCursor(char direction)<br/>
-      ~getDirty()<br/>
-      -insert(byte... data)<br/>
-      ~getFileHolder()<br/>
-      ~getBytes()<br/>
-      ~contentsEqual(ArrayList(Byte) compare)<br/>
-      ~cloneByteArrList()<br/>
-      +clone()<br/>
-      +equals(FileBuffer buffer)<br/>
-      ~getInsertionPoint()<br/>
-      ~toArray(ArrayList(Byte) arrList)<br/>
-      -convertLineAndColToIndex(int line, int col)<br/>
-      -moveCursorDown()<br/>
-      -moveCursorUp()<br/>
-      -moveCursorLeft()<br/>
-      -moveCursorToFront()<br/>
-      -moveCursorRight()<br/>
-      +getInsertionPointLine()<br/>
-      +getLinesArrayList()<br/>
-      +getInsertionPointCol()<br/>
-      +deleteCharacter()
-    </td></tr>
-    </table>>]
+rotDirection[color=grey, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+ROT_DIRECTION
+</td></tr><tr><td BALIGN="LEFT">
++ROT_DIRECTION: enum
+</td></tr></table>>]
 
-  controller[color=black, label=<<table BORDER="0" CELLBORDER="1">
-    <tr><td>Controller</td></tr>
-    <tr><td>-lineSeparatorArg: byte[]<br/>
-      -rootLayout: Layout<br/>
-      -width: int<br/>
-      -height: int<br/>
-      -lineSeparatorArg</td></tr>
-    <tr><td>+Controller(String[] args)<br/>
-      +main(String[] args)<br/>
-      -initRootLayout(String[] args, byte[] lineSeparator)<br/>
-      +loop()<br/>
-      -deleteCharacter()<br/>
-      ~render()<br/>
-      ~saveBuffer()<br/>
-      ~moveCursor(char code)<br/>
-      ~enterText(char str)<br/>
-      ~enterLineSeparator()<br/>
-      ~rotateLayout(Layout.ROT_DIRECTION orientation)<br/>
-      ~moveFocus(Layout.DIRECTION dir)<br/>
-      ~initRootLayout()<br/>
-      ~retrieveDimensions()<br/>
-      #setLineSeparatorFromArgs(String[] args)<br/>
-      +getLineSeparatorArg()</td></tr>
-    </table>>]
+direction[color=grey, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+DIRECTION
+</td></tr><tr><td BALIGN="LEFT">
++DIRECTION: enum
+</td></tr></table>>]
 
-    fileHolder[color=brown, label=<<table BORDER="0" CELLBORDER="1"><tr><td>
-        fileHolder
-      </td></tr><tr><td>
-        +lineSeparator: byte[]<br/>
-        -path: String<br/>
-        -fd: File
-      </td></tr><tr><td>
-        +FileHolder(String path)<br/>
-        ~getPath()<br/>
-        ~getLineSeparator()<br/>
-        ~save(byte[] fileContent)<br/>
-        +getContent()<br/>
-        +clone()<br/>
-        +equals(FileHolder holder)<br/>
-        +areContentsEqual(byte[] arr1, byte[] arr2)<br/>
-      </td></tr></table>>]
+  {LayoutNode, LayoutLeaf} -> Layout[arrowhead=odiamond]
+  LayoutNode -> LayoutLeaf[style=invis]
+direction -> rotDirection[style=invis]
+}
 
-  controller -> Layout 
-  Layout -> {LayoutNode, LayoutLeaf}[arrowhead=onormal]
-  LayoutNode -> {LayoutNodeHorizontal, LayoutNodeVertical}[arrowhead=onormal]
-  LayoutLeaf -> fileBuffer -> fileHolder
+subgraph clusterfile {
+fileBuffer[color=red, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+fileBuffer
+</td></tr><tr><td BALIGN="LEFT">
+-leaf: layoutLeaf<br ALIGN="LEFT"/>
+-file: FileHolder<br ALIGN="LEFT"/>
+-dirty: boolean<br ALIGN="LEFT"/>
+-byteContent: ArrayList&lt;ArrayList&lt;Byte&gt;&gt;<br ALIGN="LEFT"/>
+-linesArrayList: ArrayList&lt;ArrayList&lt;Byte&gt;&gt;<br ALIGN="LEFT"/>
+-status: Statusbar<br ALIGN="LEFT"/>
+-insertionPointCol: int<br ALIGN="LEFT"/>
+-insertionPointLine: int<br ALIGN="LEFT"/>
+~insertionPointByteIndex: int
+</td></tr><tr><td BALIGN="LEFT">
++clone()<br ALIGN="LEFT"/>
++close()<br ALIGN="LEFT"/>
++deleteCharacter()<br ALIGN="LEFT"/>
++enterInsertionPoint()<br ALIGN="LEFT"/>
++equals(FileBuffer buffer)<br ALIGN="LEFT"/>
++getAmountChars()<br ALIGN="LEFT"/>
++getDirty()<br ALIGN="LEFT"/>
++getFileHolder()<br ALIGN="LEFT"/>
++getInsertionPoint()<br ALIGN="LEFT"/>
++getInsertionPointCol()<br ALIGN="LEFT"/>
++getInsertionPointLine()<br ALIGN="LEFT"/>
++ArrayList&lt;ArrayList&lt;Byte&gt;&gt; <br ALIGN="LEFT"/>
++getLines()<br ALIGN="LEFT"/>
++moveCursor(char direction)<br ALIGN="LEFT"/>
++save()<br ALIGN="LEFT"/>
++write(byte updatedContents)<br ALIGN="LEFT"/>
+-convertLineAndColToIndex(int line, int col)<br ALIGN="LEFT"/>
+-moveCursorDown()<br ALIGN="LEFT"/>
+-moveCursorUp()<br ALIGN="LEFT"/>
+-moveCursorLeft()<br ALIGN="LEFT"/>
+-moveCursorToFront()<br ALIGN="LEFT"/>
+-moveCursorRight()
+</td></tr></table>>]
+
+fileHolder[color=red, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+fileHolder
+</td></tr><tr><td BALIGN="LEFT">
++lineSeparator: byte[]<br ALIGN="LEFT"/>
+-path: String<br ALIGN="LEFT"/>
+-fd: File
+</td></tr><tr><td BALIGN="LEFT">
++FileHolder(String path)<br ALIGN="LEFT"/>
+~getPath()<br ALIGN="LEFT"/>
+~getLineSeparator()<br ALIGN="LEFT"/>
+~save(byte[] fileContent)<br ALIGN="LEFT"/>
++getContent()<br ALIGN="LEFT"/>
++clone()<br ALIGN="LEFT"/>
++equals(FileHolder holder)<br ALIGN="LEFT"/>
++areContentsEqual(byte[] arr1, byte[] arr2)<br ALIGN="LEFT"/>
+</td></tr></table>>]
+
+fileAnalyserUtil[color=red, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+fileAnalyserUtil
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr><tr><td BALIGN="LEFT">
++fileAnalyserUtil()<br ALIGN="LEFT"/>
++getContentLines(byte[] byteContent)<br ALIGN="LEFT"/>
++formatBytes(byte[] bytes)<br ALIGN="LEFT"/>
++wrapEachByteElem(byte[] byteArr)<br ALIGN="LEFT"/>
++toArray(ArrayList&lt;Byte&gt; arrList)
+</td></tr></table>>]
+}
+
+/*
+rotDirection[color=grey, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+ROT_DIRECTION
+</td></tr><tr><td BALIGN="LEFT">
++ROT_DIRECTION: enum
+</td></tr></table>>]
+
+direction[color=grey, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+DIRECTION
+</td></tr><tr><td BALIGN="LEFT">
++DIRECTION: enum
+</td></tr></table>>]
+*/
+
+subgraph clustercore {
+controller[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+Textr
+</td></tr><tr><td BALIGN="LEFT">
+-lineSeparatorArg: byte[]<br ALIGN="LEFT"/>
+-rootLayout: Layout<br ALIGN="LEFT"/>
+-width: int<br ALIGN="LEFT"/>
+-height: int<br ALIGN="LEFT"/>
+-lineSeparatorArg
+</td></tr><tr><td BALIGN="LEFT">
++Controller(String[] args)<br ALIGN="LEFT"/>
++main(String[] args)<br ALIGN="LEFT"/>
++loop()<br ALIGN="LEFT"/>
++getLineSeparatorArg()
+</td></tr></table>>]
+
+usecontroller[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+UseCaseController
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr></table>>]
+
+DirtyClosePromptController[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+DirtyClosePromptController
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr></table>>]
+
+InspectContentController[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+InspectContentController
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr></table>>]
+
+FailedSaveController[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+FailedSaveController
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr></table>>]
+
+FileErrorController[color=black, label=<<table BORDER="0" CELLBORDER="1">
+<tr><td BALIGN="LEFT">
+FileErrorController
+</td></tr><tr><td BALIGN="LEFT">
+</td></tr></table>>]
+
+controller -> usecontroller[label=1]
+{FailedSaveController, InspectContentController, FileErrorController, DirtyClosePromptController} -> usecontroller[arrowhead=odiamond]
+}
+
+subgraph clusterui {
+view[color=darkblue, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+View
+</td></tr><tr><td BALIGN="LEFT">
+~startX: int<br ALIGN="LEFT"/>
+~startY: int<br ALIGN="LEFT"/>
+~height: int<br ALIGN="LEFT"/>
+~width: int<br ALIGN="LEFT"/>
+~terminalWidth: int<br ALIGN="LEFT"/>
+~terminalHeight: int<br ALIGN="LEFT"/>
+#parent: LayoutLeaf
+</td></tr><tr><td BALIGN="LEFT">
+#setCorrecCoords()<br ALIGN="LEFT"/>
++clearContent()<br ALIGN="LEFT"/>
++render()<br ALIGN="LEFT"/>
++renderCursor()<br ALIGN="LEFT"/>
+-retrieveDimensions()<br ALIGN="LEFT"/>
++equals(Object o)
+</td></tr></table>>, pos="0,0"]
+
+FileBufferView[color=darkblue, label=<<table BORDER="0" CELLBORDER="1"><tr><td BALIGN="LEFT">
+FileBufferView
+</td></tr><tr><td BALIGN="LEFT">
+-containedFileBuffer: FileBuffer
+</td></tr><tr><td BALIGN="LEFT">
++render()<br ALIGN="LEFT"/>
+-renderStatusBar()<br ALIGN="LEFT"/>
++moveCursor()<br ALIGN="LEFT"/>
++save<br ALIGN="LEFT"/>
++enterInsertionPoint()<br ALIGN="LEFT"/>
++close()<br ALIGN="LEFT"/>
++equals(Object obj)<br ALIGN="LEFT"/>
++deleteCharacter()<br ALIGN="LEFT"/>
++getContainedFileBuffer()<br ALIGN="LEFT"/>
++renderCursor()
+</td></tr></table>>, pos="1,0"]
+FileBufferView->view[style=invis]
+}
+
+
+  Layout -> controller[label=1]
+  Layout -> LayoutNode[label=n]
+  {LayoutNodeHorizontal, LayoutNodeVertical} -> LayoutNode[arrowhead=odiamond]
+  fileHolder -> fileBuffer -> FileBufferView -> LayoutLeaf[label=1]
+  Layout -> {rotDirection, direction}[label=1]
+  FileBufferView -> view[arrowhead=odiamond]
+  {fileBuffer, fileHolder} -> fileAnalyserUtil[style=dotted]
+
+  LayoutNodeVertical->LayoutNodeHorizontal[style=invis]
 }

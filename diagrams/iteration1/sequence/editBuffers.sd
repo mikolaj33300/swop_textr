@@ -1,14 +1,27 @@
-user:USER[a]
-controller:CONTROLLER[a]
-layout:LAYOUT[a]
-layoutLeaf:LAYOUTLEAF[a]
-filebuffer:FILEBUFFER[a]
-file:FileHolder[a]
+user:User
+controller:Controller
+rootLayout:Layout
+layout:Layout
+layoutLeaf:Layoutleaf
+view:View
+filebuffer:Filebuffer
+Terminal:Terminal
 
-[c:loop 0 to inf]
-  user:controller.keyinput
-  controller:layout.enterText(char str)
-  layout:layoutLeaf.enterText()
-  layoutLeaf:filebuffer.insert()
+[c:while user presses ascii keys]
+  user:controller.keypress
+  controller:rootLayout.enterText(byte char)
+  rootLayout:layout.enterText(byte char) 
+  layout:layoutLeaf.enterText(byte char)
+  layoutLeaf:view.enterText(byte char)
+  view:filebuffer.insert(byte char)
   filebuffer:filebuffer.dirty=true
+
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+[c:loop over characters]
+	view:Terminal.printText(i, j, string)
+[/c]
 [/c]
