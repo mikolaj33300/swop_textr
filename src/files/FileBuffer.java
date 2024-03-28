@@ -1,6 +1,6 @@
 package files;
 
-import core.TextR;
+import controller.TextR;
 import ui.FileBufferView;
 
 

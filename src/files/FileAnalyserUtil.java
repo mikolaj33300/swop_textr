@@ -1,6 +1,6 @@
 package files;
 
-import core.TextR;
+import controller.TextR;
 
 import java.util.ArrayList;
 import java.util.Arrays;
