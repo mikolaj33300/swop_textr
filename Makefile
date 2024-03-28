@@ -16,13 +16,14 @@ jar: $(JAR)
 	mkdir -p $(BUILD_DIR)
 	$(foreach jar, $(JAR), jar xvf $(jar);)
 	cp -vr ./io ./build/io
-	#cp -vr ./org ./build/org
+	cp -vr ./org ./build/org
 
 textr.jar:
 	javac -d $(BUILD_DIR) $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
 test:
-	javac -g $(TEST)
+	javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
+	junit-platform-console --class-path ./build/ --scan-classpath ./build/
 
 clean:
 	rm -r \

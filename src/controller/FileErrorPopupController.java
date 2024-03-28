@@ -1,20 +1,19 @@
-package core;
+package controller;
 
 import ui.UserPopupBox;
 
 import java.io.IOException;
 
-public class FailedSavePopupController extends UseCaseController {
+public class FileErrorPopupController extends UseCaseController {
+    UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file");
 
-    UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.");
-
-    protected FailedSavePopupController(TextR coreControllerParent) {
+    protected FileErrorPopupController(TextR coreControllerParent) {
         super(coreControllerParent);
     }
 
     @Override
     public void handle(int b) throws IOException {
-        coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
+        Runtime.getRuntime().halt(1);
     }
 
     @Override

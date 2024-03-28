@@ -1,4 +1,4 @@
-package core;
+package controller;
 
 import io.github.btj.termios.Terminal;
 import layouttree.DIRECTION;
