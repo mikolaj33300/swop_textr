@@ -1,7 +1,7 @@
 package core;
 
 import io.github.btj.termios.Terminal;
-import layouttree.DIRECTION;
+import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
 
 import java.io.IOException;
@@ -24,11 +24,11 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Control + P
             case 16:
-                coreControllerParent.rootLayout.moveFocus(DIRECTION.LEFT);
+                coreControllerParent.rootLayout.moveFocus(MOVE_DIRECTION.LEFT);
                 break;
             // Control + N
             case 14:
-                coreControllerParent.rootLayout.moveFocus(DIRECTION.RIGHT);
+                coreControllerParent.rootLayout.moveFocus(MOVE_DIRECTION.RIGHT);
                 break;
             // Control + R
             case 18:

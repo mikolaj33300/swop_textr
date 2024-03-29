@@ -83,8 +83,8 @@ public class LayoutLeaf extends Layout {
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public void moveFocus(DIRECTION dir) {
-        if (dir == DIRECTION.RIGHT) {
+    public void moveFocus(MOVE_DIRECTION dir) {
+        if (dir == MOVE_DIRECTION.RIGHT) {
             moveFocusRight();
         } else {
             moveFocusLeft();

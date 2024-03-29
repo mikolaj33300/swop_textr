@@ -86,7 +86,7 @@ public abstract class Layout implements Cloneable {
     /**
      * Makes next/previous view in the structure active according to dir (left/right).
      */
-    public abstract void moveFocus(DIRECTION dir) throws RuntimeException;
+    public abstract void moveFocus(MOVE_DIRECTION dir) throws RuntimeException;
 
     /**
      * Calls moveCursor() on the contained active {@link ui.FileBufferView}(s).
