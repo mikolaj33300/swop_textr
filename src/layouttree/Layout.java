@@ -61,11 +61,6 @@ public abstract class Layout implements Cloneable {
     protected boolean containsActiveView;
 
     /**
-     * Calls renderContent() on the contained {@link ui.FileBufferView}(s).
-     */
-    public abstract void renderContent() throws IOException;
-
-    /**
      * Deletes the leftmost {@link LayoutLeaf}from the underlying structure. In composite Layouts it is relayed to the leftmost child. If this is a leaf, it itself deletes itself from the parent.
      */
     protected abstract void deleteLeftLeaf();

@@ -26,13 +26,13 @@ class ControllerFacade {
 
 		for (int i = 0; i < paths.length; i++) {
 		    Path checkPath = Paths.get(paths[i]); 
+
+		    this.windows.add(new window(new view(paths[i]), new inputhandler(paths[i])));
 		    if (!Files.exists(checkPath)) 
 			    this.activeUseCaseController = new FileErrorPopupController(this);
 		    else
-			    leaves.add(new LayoutLeaf(path, false, ));
+			leaves.add(new LayoutLeaf(paths[i], i==0, windows[i].view.getHash()));
 
-		    this.windows.add(new window(new view(paths[i]), new inputhandler(paths[i])));
-		    leaves.add(new LayoutLeaf(paths[i], i==0, windows[i].view.getHash()));
 		}
 
 		if(leaves.size() == 1)

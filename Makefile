@@ -1,6 +1,6 @@
 include config.mk
 
-all: options diagrams $(DIAGS) jar $(JAR) $(termios) build
+all: options diagrams $(DIAGS) $(termios) build
 
 options:
 	@echo OFORMAT: $(OFORMAT)
@@ -19,7 +19,8 @@ jar: $(JAR)
 	cp -vr ./org ./build/org
 
 textr.jar:
-	javac -d $(BUILD_DIR) $(SRC)
+	mkdir -p $(BUILD_DIR)
+	javac -cp termios/_build/main/io.github.btj.termios.jar -d $(BUILD_DIR) $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
 test:
 	javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
