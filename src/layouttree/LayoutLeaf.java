@@ -18,19 +18,9 @@ public class LayoutLeaf extends Layout {
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
     public LayoutLeaf(String path, boolean active, int hash) throws IOException {
-        this.containedFileBufferView = new FileBufferView(path, this);
+	this.containedFileBufferView = new FileBufferView(path, this);
         this.setContainsActiveView(active);
 	this.hashCode = hash;
-    }
-
-    /**
-     * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
-     */
-    public int getStartX(int terminalWidth, int terminalHeight){
-        if(parent != null){
-            return parent.getStartX(this, terminalWidth, terminalHeight);
-        }
-        return 0;
     }
 
     /**
@@ -41,10 +31,20 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
+     * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
+     */
+    public int getStartX(int terminalWidth, int terminalHeight, int hash){
+        if(parent != null && hash == this.hash){
+            return parent.getStartX(this, terminalWidth, terminalHeight);
+        }
+        return 0;
+    }
+
+    /**
      * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
-    public int getStartY(int terminalWidth, int terminalHeight){
-        if(parent != null){
+    public int getStartY(int terminalWidth, int terminalHeight, int hash){
+        if(parent != null && hash == this.hash){
             return parent.getStartY(this, terminalWidth, terminalHeight);
         }
         return 0;
@@ -53,29 +53,29 @@ public class LayoutLeaf extends Layout {
     /**
      * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
      */
-    public int getHeight(int terminalWidth, int terminalHeight){
-        if(parent != null){
+    public int getHeight(int terminalWidth, int terminalHeight, int hash){
+        if(parent != null && hash = this.hash){
             return parent.getHeight(this, terminalWidth, terminalHeight);
         }
-        return terminalHeight;
+        return 0;
     }
 
     /**
      * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
      */
-    public int getWidth(int terminalWidth, int terminalHeight){
-        if(parent != null){
+    public int getWidth(int terminalWidth, int terminalHeight, int hash){
+        if(parent != null && hash == this.hash){
             return parent.getWidth(this, terminalWidth, terminalHeight);
         }
-        return terminalWidth;
+        return 0;
     }
 
     /**
      * Deletes the mostleft this leaf's parent
      * Since the parent function found this leaf as leftmost, it will be removed
      */
-    protected void deleteLeftLeaf() {
-        if (super.parent != null) {
+    protected void deleteLeftLeaf(int hash) {
+        if (super.parent != null && hash == this.hash) {
             super.parent.delete(this);
         }
     }
@@ -85,10 +85,10 @@ public class LayoutLeaf extends Layout {
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public void moveFocus(DIRECTION dir) {
-        if (dir == DIRECTION.RIGHT) {
+    public void moveFocus(DIRECTION dir, int hash) {
+        if (dir == DIRECTION.RIGHT && hash == this.hash) {
             moveFocusRight();
-        } else {
+        } else if (dir == DIRECTION.LEFT && hash == this.hash) {
             moveFocusLeft();
         }
     }
@@ -97,16 +97,18 @@ public class LayoutLeaf extends Layout {
      * Calls moveCursor() on the contained active {@link ui.FileBufferView}(s).
      */
     @Override
-    public void moveCursor(char c) {
-        containedFileBufferView.moveCursor(c);
+    public void moveCursor(char c, int hash) {
+	if (hash == this.hash)
+	    containedFileBufferView.moveCursor(c);
     }
 
     /**
      * Calls enterText() on the contained {@link ui.FileBufferView}.
      */
     @Override
-    public void enterText(byte b) {
-        containedFileBufferView.write(b);
+    public void enterText(byte b, int hash) {
+	if (hash == this.hash)
+	    containedFileBufferView.write(b);
     }
 
     /**
@@ -115,21 +117,24 @@ public class LayoutLeaf extends Layout {
      * @return
      */
     @Override
-    public int saveActiveBuffer() {
-        return containedFileBufferView.save();
+    public int saveActiveBuffer(int hash) {
+	if (hash == this.hash)
+	    return containedFileBufferView.save();
+	return 0;
     }
 
     @Override
-    public void enterInsertionPoint() {
-        containedFileBufferView.enterInsertionPoint();
+    public void enterInsertionPoint(int hash) {
+	if (hash == this.hash)
+	    containedFileBufferView.enterInsertionPoint();
     }
 
     /**
      * Moves focus from the currently active Layout, to the rightneigbouring layout
      * If no neighbours right, the active Layout stays active
      */
-    private void moveFocusRight() {
-        if (parent != null) {
+    private void moveFocusRight(int hash) {
+        if (parent != null && hash == this.hash) {
             this.setContainsActiveView(false);
             parent.makeRightNeighbourActive(this);
         }
@@ -139,8 +144,8 @@ public class LayoutLeaf extends Layout {
      * Moves focus from the currently active Layout, to the leftneigbouring layout
      * If no neighbours left, the active Layout stays active
      */
-    private void moveFocusLeft() {
-        if (parent != null) {
+    private void moveFocusLeft(int hash) {
+        if (parent != null && hash == this.hash) {
             this.setContainsActiveView(false);
             parent.makeLeftNeighbourActive(this);
         }
@@ -152,10 +157,10 @@ public class LayoutLeaf extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        if (parent != null) {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
+        if (parent != null && hash == this.hash) {
             return parent.rotateWithRightSibling(rot_dir, this);
-        } else {
+        } else if (hash == this.hash) {
             System.out.print((char) 7); //sounds terminal bell
             return this;
         }
@@ -166,7 +171,9 @@ public class LayoutLeaf extends Layout {
       * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
      */
     @Override
-    public int closeActive() {
+    public int closeActive(int hash) {
+	if (hash != this.hash)
+	    return -1;
         if (containsActiveView) {
             if(containedFileBufferView.close()==0){
                 if(parent != null){
@@ -177,23 +184,15 @@ public class LayoutLeaf extends Layout {
                         parent.makeLeftNeighbourActive(this);
                     }
                     parent.delete(this);
-                    return 0;
+                    return 0;// close successful, parent still exists
                 }
-                else return 2;
+                else return 2;// final window
             } else {
-                return 1;
+                return 1;// filebuffer won't close
             }
         } else {
-            return 0;
+            return 0;// isn't active
         }
-    }
-
-    /**
-     * Calls renderContent() on the contained {@link ui.FileBufferView}(s).
-     */
-    @Override
-    public void renderContent() throws IOException {
-        containedFileBufferView.render();
     }
 
     /**
@@ -201,7 +200,9 @@ public class LayoutLeaf extends Layout {
      * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
      */
     @Override
-    public int forcedCloseActive() {
+    public int forcedCloseActive(int hash) {
+	if (hash != this.hash)
+	    return -1;
         if (containsActiveView) {
             if(parent != null){
                 parent.makeRightNeighbourActive(this);
@@ -265,7 +266,9 @@ public class LayoutLeaf extends Layout {
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
     @Override
-    protected void makeLeftmostLeafActive() {
+    protected void makeLeftmostLeafActive(int hash) {
+	if (hash != this.hash)
+	    return -1;
         setContainsActiveView(true);
     }
 
@@ -274,19 +277,10 @@ public class LayoutLeaf extends Layout {
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
     @Override
-    protected void makeRightmostLeafActive() {
+    protected void makeRightmostLeafActive(int hash) {
+	if (hash != this.hash)
+	    return -1;
         setContainsActiveView(true);
-    }
-
-    /**
-     * Calls renderCursor() on the contained {@link ui.FileBufferView} if it's active.
-     * Should be called after all the Termios prints are done to ensure a correct cursor position.
-     */
-    @Override
-    public void renderCursor() throws IOException {
-        if(super.containsActiveView){
-            containedFileBufferView.renderCursor();
-        }
     }
 
     /**
@@ -294,7 +288,9 @@ public class LayoutLeaf extends Layout {
      * As this a leaf of the layout-structure,
      * it does not have any children and will return a copy of itself
      */
-    protected LayoutLeaf getLeftLeaf() {
+    protected LayoutLeaf getLeftLeaf(int hash) {
+	if (hash != this.hash)
+	    return -1;
         return this;
     }
 
