@@ -1,5 +1,8 @@
 package inputhandler;
 
+/*
+ * commands next
+ */
 abstract public class InputHandler{
 
 	boolean surrogate;
