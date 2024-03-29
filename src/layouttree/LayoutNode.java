@@ -25,15 +25,6 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Renders the context of this LayoutNode
-     */
-    public void renderContent() throws IOException {
-        for(Layout l : children){
-            l.renderContent();
-        }
-    }
-
-    /**
      * Returns the starting x-coordinate of this LayoutNode
      */
     public void renderCursor() throws IOException {

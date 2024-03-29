@@ -1,10 +1,11 @@
 package controller;
 
-import Java.String;
-import Java.util.ArrayList;
+import java.io.IOException;
+import java.util.ArrayList;
 
 import layouttree.Layout;
 import inputhandler.InputHandler;
+import ui.View;
 
 class window {
 	public final View view;

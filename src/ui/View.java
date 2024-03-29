@@ -3,7 +3,6 @@ package ui;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
 
-import 
 import java.io.IOException;
 
 public abstract class View {

@@ -28,7 +28,7 @@ public class TextR {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      */
     public TextR(String[] args) {
-        this.rootLayout = initRootLayout(args);
+	// make facade??
     }
 
     /**

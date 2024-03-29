@@ -1,11 +1,34 @@
 package inputhandler;
 
+import files.FileBuffer;
+
 public class FileBufferInput extends InputHandler {
 	FileBuffer fb;
+	boolean surrogate;
+
 	public void FileBufferInput(String path) {
 		this.fb = new FileBuffer(file);
 	}
 
+	public void Input(byte b) {
+		switch(b) {
+			case 27:
+				this.surrogate = true;
+				break;
+			default:
+				if (this.surrogate){
+					surrogateKeysInput(b);
+					this.surrogate = false;
+				} else {
+					asciiInput(b);
+				}
+				break;
+		}
+	}
+
+    /*
+     * handles normal input
+     */
 	public void asciiInput(byte b) {
 		switch(b) {
 		    case 8, 127, 10, 62:
@@ -39,7 +62,10 @@ public class FileBufferInput extends InputHandler {
 	 * handles surrogate input
 	 */
 	public void surrogateKeysInput(byte b) {
-		case(b) {
+		switch((char) b) {
+                    case 'A', 'B', 'C', 'D':
+                        fb.moveCursor((char) c);
+                        break;
 		}
 	}
 }

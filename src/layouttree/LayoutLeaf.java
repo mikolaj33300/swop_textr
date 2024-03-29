@@ -34,7 +34,7 @@ public class LayoutLeaf extends Layout {
      * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartX(int terminalWidth, int terminalHeight, int hash){
-        if(parent != null && hash == this.hash){
+        if(parent != null && hash == this.hashCode){
             return parent.getStartX(this, terminalWidth, terminalHeight);
         }
         return 0;
@@ -44,7 +44,7 @@ public class LayoutLeaf extends Layout {
      * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getStartY(int terminalWidth, int terminalHeight, int hash){
-        if(parent != null && hash == this.hash){
+        if(parent != null && hash == this.hashCode){
             return parent.getStartY(this, terminalWidth, terminalHeight);
         }
         return 0;
@@ -54,7 +54,7 @@ public class LayoutLeaf extends Layout {
      * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getHeight(int terminalWidth, int terminalHeight, int hash){
-        if(parent != null && hash = this.hash){
+        if(parent != null && hash == this.hashCode){
             return parent.getHeight(this, terminalWidth, terminalHeight);
         }
         return 0;
@@ -64,7 +64,7 @@ public class LayoutLeaf extends Layout {
      * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
      */
     public int getWidth(int terminalWidth, int terminalHeight, int hash){
-        if(parent != null && hash == this.hash){
+        if(parent != null && hash == this.hashCode){
             return parent.getWidth(this, terminalWidth, terminalHeight);
         }
         return 0;
@@ -75,7 +75,7 @@ public class LayoutLeaf extends Layout {
      * Since the parent function found this leaf as leftmost, it will be removed
      */
     protected void deleteLeftLeaf(int hash) {
-        if (super.parent != null && hash == this.hash) {
+        if (super.parent != null && hash == this.hashCode) {
             super.parent.delete(this);
         }
     }
@@ -86,10 +86,10 @@ public class LayoutLeaf extends Layout {
      * If no neighbours left, the active Layout stays active
      */
     public void moveFocus(DIRECTION dir, int hash) {
-        if (dir == DIRECTION.RIGHT && hash == this.hash) {
-            moveFocusRight();
-        } else if (dir == DIRECTION.LEFT && hash == this.hash) {
-            moveFocusLeft();
+        if (dir == DIRECTION.RIGHT && hash == this.hashCode) {
+            moveFocusRight(hash);
+        } else if (dir == DIRECTION.LEFT && hash == this.hashCode) {
+            moveFocusLeft(hash);
         }
     }
 
@@ -98,7 +98,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public void moveCursor(char c, int hash) {
-	if (hash == this.hash)
+	if (hash == this.hashCode)
 	    containedFileBufferView.moveCursor(c);
     }
 
@@ -107,7 +107,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public void enterText(byte b, int hash) {
-	if (hash == this.hash)
+	if (hash == this.hashCode)
 	    containedFileBufferView.write(b);
     }
 
@@ -118,14 +118,14 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public int saveActiveBuffer(int hash) {
-	if (hash == this.hash)
+	if (hash == this.hashCode)
 	    return containedFileBufferView.save();
 	return 0;
     }
 
     @Override
     public void enterInsertionPoint(int hash) {
-	if (hash == this.hash)
+	if (hash == this.hashCode)
 	    containedFileBufferView.enterInsertionPoint();
     }
 
@@ -134,7 +134,7 @@ public class LayoutLeaf extends Layout {
      * If no neighbours right, the active Layout stays active
      */
     private void moveFocusRight(int hash) {
-        if (parent != null && hash == this.hash) {
+        if (parent != null && hash == this.hashCode) {
             this.setContainsActiveView(false);
             parent.makeRightNeighbourActive(this);
         }
@@ -145,7 +145,7 @@ public class LayoutLeaf extends Layout {
      * If no neighbours left, the active Layout stays active
      */
     private void moveFocusLeft(int hash) {
-        if (parent != null && hash == this.hash) {
+        if (parent != null && hash == this.hashCode) {
             this.setContainsActiveView(false);
             parent.makeLeftNeighbourActive(this);
         }
@@ -158,9 +158,9 @@ public class LayoutLeaf extends Layout {
      * active leaf and rotated then.
      */
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
-        if (parent != null && hash == this.hash) {
+        if (parent != null && hash == this.hashCode) {
             return parent.rotateWithRightSibling(rot_dir, this);
-        } else if (hash == this.hash) {
+        } else if (hash == this.hashCode) {
             System.out.print((char) 7); //sounds terminal bell
             return this;
         }
@@ -172,7 +172,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public int closeActive(int hash) {
-	if (hash != this.hash)
+	if (hash != this.hashCode)
 	    return -1;
         if (containsActiveView) {
             if(containedFileBufferView.close()==0){
@@ -201,7 +201,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public int forcedCloseActive(int hash) {
-	if (hash != this.hash)
+	if (hash != this.hashCode)
 	    return -1;
         if (containsActiveView) {
             if(parent != null){
@@ -267,7 +267,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected void makeLeftmostLeafActive(int hash) {
-	if (hash != this.hash)
+	if (hash != this.hashCode)
 	    return -1;
         setContainsActiveView(true);
     }
@@ -278,7 +278,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected void makeRightmostLeafActive(int hash) {
-	if (hash != this.hash)
+	if (hash != this.hashCode)
 	    return -1;
         setContainsActiveView(true);
     }
@@ -289,7 +289,7 @@ public class LayoutLeaf extends Layout {
      * it does not have any children and will return a copy of itself
      */
     protected LayoutLeaf getLeftLeaf(int hash) {
-	if (hash != this.hash)
+	if (hash != this.hashCode)
 	    return -1;
         return this;
     }
