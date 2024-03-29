@@ -14,31 +14,6 @@ class window {
 class ControllerFacade {
 	ArrayList<window> windows;
 	Layout rootLayout;
-    /**
-     * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
-     * main input arguments.
-     */
-    private Layout initRootLayout(String[] paths) {
-        ArrayList<Layout> leaves = new ArrayList<>();
-        for(String path:paths) {
-            Path checkPath = Paths.get(path);
-	    // make this a function call? or a 
-            if (!Files.exists(checkPath))
-                this.activeUseCaseController = new FileErrorPopupController(this);
-            else
-                try {
-                    leaves.add(new LayoutLeaf(path, false, ));
-                } catch (IOException e){
-                    activeUseCaseController = new FileErrorPopupController(this);
-                }
-
-        }
-
-        if(leaves.size() == 1)
-            return leaves.get(0);
-        else
-            return new VerticalLayoutNode(leaves);
-    }
 
     /**
      * Creates a ControllerFacade object.
