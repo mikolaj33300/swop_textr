@@ -58,7 +58,6 @@ public class TextR {
     /**
      * Creates an instance of {@link Layout} representing a {@link LayoutNode} containing {@link LayoutLeaf} depending on
      * main input arguments.
-     */
     private Layout initRootLayout(String[] args) {
         ArrayList<Layout> leaves = new ArrayList<>();
         for(int i = args[0].equals("--lf") || args[0].equals("--crlf") ? 1 : 0 ; i < args.length; i++) {
@@ -79,6 +78,7 @@ public class TextR {
         else
             return new VerticalLayoutNode(leaves);
     }
+     */
 
     /**
      * Contains the main input loop

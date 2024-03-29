@@ -12,13 +12,15 @@ import java.io.IOException;
  */
 public class LayoutLeaf extends Layout {
     private FileBufferView containedFileBufferView;
+    private final int hashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active) throws IOException {
+    public LayoutLeaf(String path, boolean active, int hash) throws IOException {
         this.containedFileBufferView = new FileBufferView(path, this);
         this.setContainsActiveView(active);
+	this.hashCode = hash;
     }
 
     /**

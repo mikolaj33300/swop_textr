@@ -3,6 +3,7 @@ package ui;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
 
+import 
 import java.io.IOException;
 
 public abstract class View {
@@ -54,6 +55,14 @@ public abstract class View {
         startY = parent.getStartY(terminalWidth, terminalHeight);
         width = parent.getWidth(terminalWidth, terminalHeight);
         height = parent.getHeight(terminalWidth, terminalHeight);
+    }
+
+    /**
+     * return this objects hashcode for our keys
+     * @return hash
+     */
+    public int getHash() {
+	    return this.hashCode();
     }
 
 
