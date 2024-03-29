@@ -1,19 +1,13 @@
 package layouttree;
 
-import core.TextR;
 import files.FileBuffer;
-import files.FileHolder;
 import org.junit.jupiter.api.*;
-import util.Debug;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LayoutNodeTest {
     LayoutLeaf l1;
@@ -127,20 +121,20 @@ public class LayoutNodeTest {
     @Test
     void moveFocus(){
         //Test Node with only leafs
-        hn1.moveFocus(DIRECTION.LEFT);
+        hn1.moveFocus(MOVE_DIRECTION.LEFT);
         ArrayList<Layout> moved_children1 = hn1.getDirectChildren();
         for(int i = 0;i < moved_children1.size();i++){
             assertEquals(moved_children1.get(i), children1.get(i));
             assertNotSame(moved_children1.get(i), children1.get(i));
         }
-        hn1.moveFocus(DIRECTION.RIGHT);
+        hn1.moveFocus(MOVE_DIRECTION.RIGHT);
         moved_children1 = hn1.getDirectChildren();
         ArrayList<Layout> correct_children1 = new ArrayList<>(Arrays.asList(l1p,l2a,l3));
         for(int i = 0;i < moved_children1.size();i++){
             assertEquals(moved_children1.get(i), correct_children1.get(i));
             assertNotSame(moved_children1.get(i), correct_children1.get(i));
         }
-        hn1.moveFocus(DIRECTION.RIGHT);
+        hn1.moveFocus(MOVE_DIRECTION.RIGHT);
         moved_children1 = hn1.getDirectChildren();
         correct_children1 = new ArrayList<>(Arrays.asList(l1p,l2,l3a));
         for(int i = 0;i < moved_children1.size();i++){
@@ -148,14 +142,14 @@ public class LayoutNodeTest {
             assertNotSame(moved_children1.get(i), correct_children1.get(i));
         }
 
-        hn1.moveFocus(DIRECTION.RIGHT);
+        hn1.moveFocus(MOVE_DIRECTION.RIGHT);
         moved_children1 = hn1.getDirectChildren();
         for(int i = 0;i < moved_children1.size();i++){
             assertEquals(moved_children1.get(i), correct_children1.get(i));
             assertNotSame(moved_children1.get(i), correct_children1.get(i));
         }
 
-        hn1.moveFocus(DIRECTION.LEFT);
+        hn1.moveFocus(MOVE_DIRECTION.LEFT);
         moved_children1 = hn1.getDirectChildren();
         correct_children1 = new ArrayList<>(Arrays.asList(l1p,l2a,l3));
         for(int i = 0;i < moved_children1.size();i++){
@@ -170,75 +164,75 @@ public class LayoutNodeTest {
         VerticalLayoutNode currentlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,hn10)));
 
         VerticalLayoutNode correctlayout = currentlayout.clone();
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2a,l3))),l4,hn10)));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3a))),l4,hn10)));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4a,hn10)));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5a, vn2,l10))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7a,l8,l9))),l10))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7,l8a,l9))),l10))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7,l8,l9a))),l10))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10a))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10a))))));
-        currentlayout.moveFocus(DIRECTION.RIGHT);
+        currentlayout.moveFocus(MOVE_DIRECTION.RIGHT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7,l8,l9a))),l10))))));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7,l8a,l9))),l10))))));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l7a,l8,l9))),l10))))));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5a, vn2,l10))))));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3))),l4a,hn10)));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2,l3a))),l4,hn10)));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1p,l2a,l3))),l4,hn10)));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
 
         correctlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3))),l4,hn10)));
-        currentlayout.moveFocus(DIRECTION.LEFT);
+        currentlayout.moveFocus(MOVE_DIRECTION.LEFT);
         assertEquals(currentlayout,correctlayout);
     }
 

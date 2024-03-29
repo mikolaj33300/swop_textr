@@ -148,7 +148,7 @@ public class TextR {
     /**
      * Changes the focused {@link LayoutLeaf} to another.
      */
-    void moveFocus(DIRECTION dir) {
+    void moveFocus(MOVE_DIRECTION dir) {
         this.rootLayout.moveFocus(dir);
     }
 
