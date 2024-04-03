@@ -82,12 +82,7 @@ public abstract class View {
     /**
      * Render all the elements on the thid view
      */
-    public abstract void render() throws IOException;
-
-    /**
-     * Renders the cursor on the current view
-     */
-    public abstract void renderCursor() throws IOException;
+    public abstract void render(FileBuffer containedFileBuffer) throws IOException;
 
     /**
      * <p>Calculates the dimensions of the terminal
@@ -128,9 +123,4 @@ public abstract class View {
         View.terminalWidth = width;
         View.terminalHeight = height;
     }
-
-    /**
-     * Checks whether this View and the given object are the same type and have the same contents
-     */
-    public abstract boolean equals(Object o);
 }

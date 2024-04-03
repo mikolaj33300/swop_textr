@@ -5,16 +5,21 @@ import java.util.ArrayList;
 
 import layouttree.Layout;
 import inputhandler.InputHandler;
+
 import ui.View;
+import ui.Render;
+import ui.InsertionPoint;
 
 class window {
-	public final View view;
+	public final InsertionPoint point;
 	public final InputHandler handler;
 }
 
 class ControllerFacade {
-	ArrayList<window> windows;
-	Layout rootLayout;
+	private ArrayList<window> windows;
+	private Layout rootLayout;
+	private Render render;
+	private int active;
 
     /**
      * Creates a ControllerFacade object.
@@ -26,6 +31,7 @@ class ControllerFacade {
 		ArrayList<Layout> leaves = new ArrayList<LayoutLeaf>(paths.length);
 
 		for (int i = 0; i < paths.length; i++) {
+		    this.active = 0;
 		    Path checkPath = Paths.get(paths[i]); 
 
 		    this.windows.add(new window(new view(paths[i]), new inputhandler(paths[i])));

@@ -11,15 +11,12 @@ import java.io.IOException;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private FileBufferView containedFileBufferView;
     private final int hashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active, int hash) throws IOException {
-	this.containedFileBufferView = new FileBufferView(path, this);
-        this.setContainsActiveView(active);
+    public LayoutLeaf(int hash) throws IOException {
 	this.hashCode = hash;
     }
 
@@ -265,10 +262,9 @@ public class LayoutLeaf extends Layout {
      * Makes the leftmost leaf active
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
-    @Override
     protected void makeLeftmostLeafActive(int hash) {
 	if (hash != this.hashCode)
-	    return -1;
+	    return;
         setContainsActiveView(true);
     }
 
@@ -276,10 +272,9 @@ public class LayoutLeaf extends Layout {
      * Makes the rightmost leaf active
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
-    @Override
     protected void makeRightmostLeafActive(int hash) {
 	if (hash != this.hashCode)
-	    return -1;
+	    return;
         setContainsActiveView(true);
     }
 
@@ -290,7 +285,7 @@ public class LayoutLeaf extends Layout {
      */
     protected LayoutLeaf getLeftLeaf(int hash) {
 	if (hash != this.hashCode)
-	    return -1;
+	    return null;
         return this;
     }
 
