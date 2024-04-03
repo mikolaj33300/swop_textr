@@ -20,7 +20,7 @@ jar: $(JAR)
 
 textr.jar:
 	mkdir -p $(BUILD_DIR)
-	javac -cp termios/_build/main/io.github.btj.termios.jar -d $(BUILD_DIR) $(SRC)
+	javac -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d $(BUILD_DIR) $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
 test:
 	javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)

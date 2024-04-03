@@ -175,23 +175,6 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Forcecloses the active FileBuffer, its FileHolder,
-     * its File and the LayoutLeaf it's in
-     * It might cause a restructuring of the tree if the tree became invalid
-     * No checks for save closure will be done
-     */
-    @Override
-    public int forcedCloseActive(){
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.forcedCloseActive();
-                return 0;
-            }
-        }
-        return 0;
-    }
-
-    /**
      * Inserts a Layout as a child to this LayoutNode
      * The reference to the given Layout will be lost
      */
