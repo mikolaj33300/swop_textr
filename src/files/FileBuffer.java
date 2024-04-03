@@ -256,7 +256,7 @@ public class FileBuffer {
     /**
      * Inserts the byte values.
      */
-    private void insert(byte... data) {
+    public void insert(byte... data) {
         byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
                 Arrays.<Byte>asList(wrapEachByteElem(data)));
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import layouttree.Layout;
+import layouttree.VerticalLayoutNode;
 import inputhandler.InputHandler;
 import ui.View;
 
