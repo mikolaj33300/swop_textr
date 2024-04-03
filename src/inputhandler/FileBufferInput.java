@@ -7,7 +7,7 @@ public class FileBufferInput extends InputHandler {
 	boolean surrogate;
 
 	public void FileBufferInput(String path) {
-		this.fb = new FileBuffer(file);
+		this.fb = new FileBuffer(path);
 	}
 
 	public void Input(byte b) {
@@ -64,7 +64,7 @@ public class FileBufferInput extends InputHandler {
 	public void surrogateKeysInput(byte b) {
 		switch((char) b) {
                     case 'A', 'B', 'C', 'D':
-                        fb.moveCursor((char) c);
+                        fb.moveCursor((char) b);
                         break;
 		}
 	}

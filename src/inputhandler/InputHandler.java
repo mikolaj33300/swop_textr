@@ -8,16 +8,16 @@ abstract public class InputHandler{
 	/*
 	 * handles all input
 	 */
-	public void Input(byte b);
+	abstract public void Input(byte b);
 
 	/*
 	 * handles general input
 	 */
-	public void asciiInput(byte b);
+	abstract void asciiInput(byte b);
 
 	/*
 	 * handles surrogate input
 	 */
-	public void surrogateKeysInput(byte b);
+	abstract void surrogateKeysInput(byte b);
 	
 }

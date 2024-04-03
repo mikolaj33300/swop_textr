@@ -2,10 +2,15 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 import layouttree.Layout;
+import layouttree.LayoutLeaf;
+import layouttree.VerticalLayoutNode;
 import inputhandler.InputHandler;
-
+import inputhandler.FileBufferInput;
 import ui.View;
 import ui.Render;
 import ui.InsertionPoint;
@@ -34,11 +39,13 @@ class ControllerFacade {
 		    this.active = 0;
 		    Path checkPath = Paths.get(paths[i]); 
 
-		    this.windows.add(new window(new view(paths[i]), new inputhandler(paths[i])));
+		    this.windows.add(new window(new view(paths[i]), new FileBufferinput(paths[i])));
 		    if (!Files.exists(checkPath)) 
 			    this.activeUseCaseController = new FileErrorPopupController(this);
-		    else
-			leaves.add(new LayoutLeaf(paths[i], i==0, windows[i].view.getHash()));
+		    else {
+          LayoutLeaf tmp = new LayoutLeaf(windows.get(i).view.getHash());
+          leaves.add(tmp);
+        }
 
 		}
 
