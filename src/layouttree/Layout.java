@@ -69,6 +69,8 @@ public abstract class Layout implements Cloneable {
         return containsActiveView;
     }
 
+    public abstract int getHashActiveNeighbour(DIRECTION dir, int activeHash);
+
     /**
      * Rotates the active layoutLeaf under this structure if there is one with its right neighbor if there is one,
      * clockwise or counterclockwise according to rotdir. If the right neighbor is a direct sibling it rotates to stand

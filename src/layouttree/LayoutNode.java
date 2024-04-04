@@ -271,4 +271,8 @@ public abstract class LayoutNode extends Layout {
         HORIZONTAL,
         VERTICAL
     }
+
+    public int getHashActiveNeighbour(DIRECTION dir, int activeHash){
+      return 0;
+    }
 }

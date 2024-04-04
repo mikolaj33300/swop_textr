@@ -126,6 +126,10 @@ public class LayoutLeaf extends Layout {
       return false;
     }
 
+    public int getHashActiveNeighbour(DIRECTION dir, int activeHash){
+      return 0;
+    }
+
     /**
      * Returns the leftmost leaf of the current layout-level
      * As this a leaf of the layout-structure,

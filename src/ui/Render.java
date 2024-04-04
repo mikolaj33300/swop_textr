@@ -1,12 +1,13 @@
 package ui;
 
 import java.util.ArrayList;
+import java.io.IOException;
 
 
 public class Render {
     ArrayList<View> Views;
     
-  Render(int[] hashes) {
+  Render(int[] hashes) throws IOException {
     for (int i = 0; i < hashes.length; i++) {
         Views.add(new FileBufferView());
     }

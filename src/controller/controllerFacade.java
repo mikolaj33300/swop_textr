@@ -18,18 +18,18 @@ import ui.FileBufferView;
 import ui.Render;
 import ui.InsertionPoint;
 
-class window {
+class Window {
 	public final InsertionPoint point;
 	public final InputHandler handler;
 
-  public void window(InsertionPoint pt, InputHandler handler) {
+  public Window(InsertionPoint pt, InputHandler handler) {
     this.point = pt;
     this.handler = handler;
   }
 }
 
 class ControllerFacade {
-	private ArrayList<window> windows;
+	private ArrayList<Window> windows;
 	private Layout rootLayout;
 	private Render render;
 	private int active;
@@ -47,7 +47,8 @@ class ControllerFacade {
 		    this.active = 0;
 		    Path checkPath = Paths.get(paths[i]); 
 
-		    this.windows.add(new window(new InsertionPoint(), new FileBufferInput()));
+		    Window win = new Window(new InsertionPoint(0, 0), new FileBufferInput());
+        this.windows.add(win);
 		    if (!Files.exists(checkPath)) 
 			    //this.activeUseCaseController = new FileErrorPopupController(this); => throw error
           throw new IOException("File does not exist");
@@ -84,24 +85,29 @@ class ControllerFacade {
      * Changes the focused {@link LayoutLeaf} to another.
      */
     void moveFocus(DIRECTION dir) {
-        int newActive = this.rootLayout.moveFocus(dir, this.render.getHash(active));
+      return;
+      /*
+        int newActive = this.rootLayout.getHashActiveNeighbour(dir, this.render.getHash(active));
         for (int i = 0; i < this.windows.size(); i++){
           if (this.render.getHash(i) == newActive){
             this.active = i;
             break;
           }
         }
+        */
     }
 
     /**
      * Calls clearContent on the contained {@link ui.FileBufferView}(s).
      */
-    public void clearContent() throws IOException;
+    public void clearContent() throws IOException{
+      return;
+    }
 
     /**
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
     void rotateLayout(ROT_DIRECTION orientation){
-        rootLayout.rotateRelationshipNeighbor(orientation, render.get(active).getHash());
+        rootLayout.rotateRelationshipNeighbor(orientation, render.getHash(active));
     }
 }

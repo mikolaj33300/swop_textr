@@ -14,6 +14,7 @@ public class InspectContentsController extends UseCaseController {
 
     @Override
     public void handle(int b) throws IOException {
+      facade.passToActive(b);
         switch(b) {
             case 8, 127, 10, 62:
                 coreControllerParent.rootLayout.deleteCharacter();
