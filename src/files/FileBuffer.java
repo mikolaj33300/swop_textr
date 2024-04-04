@@ -2,7 +2,7 @@ package files;
 
 import controller.TextR;
 import ui.FileBufferView;
-
+import observer.FileBufferListener;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,6 +33,11 @@ public class FileBuffer {
      * Processed version of {@link FileBuffer#byteContent}
      */
     private ArrayList<ArrayList<Byte>> linesArrayList;
+
+    /*
+     * a List of listeners that need to be notified for our rendering
+     */
+    private List<FileBufferListener> listeners;
 
     /**
      * Insertion points column & line do not represent printing locations!
