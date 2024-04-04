@@ -36,7 +36,7 @@ public class FileBufferInput extends InputHandler {
 			break;
 		    // Control + S
 		    case 19:
-			this.fb.save();
+        this.fb.save();
 			break;
 		    // Control + P
 		    case 16:
@@ -68,4 +68,11 @@ public class FileBufferInput extends InputHandler {
                         break;
 		}
 	}
+
+    /**
+     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
+     */
+  public void enterInsertionPoint(){
+    fb.enterinsertionPoint();
+  }
 }

@@ -80,8 +80,8 @@ public class InspectContentsController extends UseCaseController {
      */
     public void render() {
         try{
-            coreControllerParent.rootLayout.renderContent();
-            coreControllerParent.rootLayout.renderCursor();
+            facade.renderContent();
+            facade.renderCursor();
         } catch (IOException e){
             coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
         }

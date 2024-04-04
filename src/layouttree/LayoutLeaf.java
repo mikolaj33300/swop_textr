@@ -60,49 +60,30 @@ public class LayoutLeaf extends Layout {
         return 0;
     }
 
+
+    /**
+     * Set containsactiveview to the given value.
+     */
+    @Override
+    protected int setContainsActiveView(boolean active){
+        this.containsActiveView = active;
+        return this.hashCode;
+    }
     /**
      * Deletes the mostleft this leaf's parent
      * Since the parent function found this leaf as leftmost, it will be removed
      */
-    protected void deleteLeftLeaf(int hash) {
-        if (super.parent != null && hash == this.hashCode) {
+    protected void deleteLeftLeaf() {
+        if (super.parent != null) {
             super.parent.delete(this);
         }
     }
 
-    /**
-     * Moves focus from the currently active Layout, to the neigbouring layout
-     * Which neighbour is decided by the dir argument
-     * If no neighbours left, the active Layout stays active
-     */
-    public void moveFocus(DIRECTION dir, int hash) {
-        if (dir == DIRECTION.RIGHT && hash == this.hashCode) {
-            moveFocusRight(hash);
-        } else if (dir == DIRECTION.LEFT && hash == this.hashCode) {
-            moveFocusLeft(hash);
-        }
-    }
-
-    /**
-     * Moves focus from the currently active Layout, to the rightneigbouring layout
-     * If no neighbours right, the active Layout stays active
-     */
-    private void moveFocusRight(int hash) {
-        if (parent != null && hash == this.hashCode) {
-            this.setContainsActiveView(false);
-            parent.makeRightNeighbourActive(this);
-        }
-    }
-
-    /**
-     * Moves focus from the currently active Layout, to the leftneigbouring layout
-     * If no neighbours left, the active Layout stays active
-     */
-    private void moveFocusLeft(int hash) {
-        if (parent != null && hash == this.hashCode) {
-            this.setContainsActiveView(false);
-            parent.makeLeftNeighbourActive(this);
-        }
+    @Override
+    public int closeActive(int hashCode){
+      if (this.hashCode == hashCode)
+        parent.delete(this);
+      return 0;
     }
 
     /**
@@ -111,31 +92,18 @@ public class LayoutLeaf extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
-        if (parent != null && hash == this.hashCode) {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hashCode) {
+        if (parent != null) {
             return parent.rotateWithRightSibling(rot_dir, this);
-        } else if (hash == this.hashCode) {
+        } else {
             System.out.print((char) 7); //sounds terminal bell
             return this;
         }
     }
-    /**
-     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
-     * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
-     */
-    @Override
-    public int forcedCloseActive(int hash) {
-	if (hash != this.hashCode)
-	    return -1;
-        if (containsActiveView) {
-            if(parent != null){
-                parent.makeRightNeighbourActive(this);
-                parent.delete(this);
-                return 0;
-            }
 
-        }
-        return 0;
+    @Override
+    public Layout clone(){
+      return this.clone();
     }
 
     /**
@@ -151,24 +119,11 @@ public class LayoutLeaf extends Layout {
         }
     }
 
-    /**
-     * Makes the leftmost leaf active
-     * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
-     */
-    protected void makeLeftmostLeafActive(int hash) {
-	if (hash != this.hashCode)
-	    return;
-        setContainsActiveView(true);
-    }
-
-    /**
-     * Makes the rightmost leaf active
-     * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
-     */
-    protected void makeRightmostLeafActive(int hash) {
-	if (hash != this.hashCode)
-	    return;
-        setContainsActiveView(true);
+    @Override
+    public boolean equals(Object obj) {
+      if (obj instanceof LayoutLeaf leaf)
+        return this.hashCode == leaf.hashCode ;
+      return false;
     }
 
     /**
@@ -176,9 +131,7 @@ public class LayoutLeaf extends Layout {
      * As this a leaf of the layout-structure,
      * it does not have any children and will return a copy of itself
      */
-    protected LayoutLeaf getLeftLeaf(int hash) {
-	if (hash != this.hashCode)
-	    return null;
+    protected LayoutLeaf getLeftLeaf() {
         return this;
     }
 

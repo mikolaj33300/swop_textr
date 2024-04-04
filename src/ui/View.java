@@ -2,6 +2,7 @@ package ui;
 
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
+import files.FileBuffer;
 
 import java.io.IOException;
 
@@ -37,24 +38,17 @@ public abstract class View {
     static int terminalHeight;
 
     /**
-     * The leaf to which this view belongs
-     */
-    protected LayoutLeaf parent;
-
-    public LayoutLeaf getParent(){
-        return parent.clone();
-    }
-
-    /**
      * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
-     */
-    protected void setCorrectCoords() throws IOException {
+     * this will be set out of the render function which can get it out of the tree
+     * TODO
+    protected void setCorrectCoords(int hashCode) throws IOException {
         retrieveDimensions();
-        startX = parent.getStartX(terminalWidth, terminalHeight);
-        startY = parent.getStartY(terminalWidth, terminalHeight);
-        width = parent.getWidth(terminalWidth, terminalHeight);
-        height = parent.getHeight(terminalWidth, terminalHeight);
+        startX = parent.getStartX(terminalWidth, terminalHeight, hashCode);
+        startY = parent.getStartY(terminalWidth, terminalHeight, hashCode);
+        width = parent.getWidth(terminalWidth, terminalHeight, hashCode);
+        height = parent.getHeight(terminalWidth, terminalHeight, hashCode);
     }
+     */
 
     /**
      * return this objects hashcode for our keys
@@ -82,7 +76,7 @@ public abstract class View {
     /**
      * Render all the elements on the thid view
      */
-    public abstract void render(FileBuffer containedFileBuffer) throws IOException;
+    public abstract void render(FileBuffer containedFileBuffer, int hashCode, boolean active) throws IOException;
 
     /**
      * <p>Calculates the dimensions of the terminal

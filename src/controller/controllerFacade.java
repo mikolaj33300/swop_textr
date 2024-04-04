@@ -8,16 +8,24 @@ import java.nio.file.Files;
 
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
+import layouttree.ROT_DIRECTION;
+import layouttree.DIRECTION;
 import layouttree.VerticalLayoutNode;
 import inputhandler.InputHandler;
 import inputhandler.FileBufferInput;
 import ui.View;
+import ui.FileBufferView;
 import ui.Render;
 import ui.InsertionPoint;
 
 class window {
 	public final InsertionPoint point;
 	public final InputHandler handler;
+
+  public void window(InsertionPoint pt, InputHandler handler) {
+    this.point = pt;
+    this.handler = handler;
+  }
 }
 
 class ControllerFacade {
@@ -33,17 +41,18 @@ class ControllerFacade {
      * @throws IOException when the path is invalid
      */
 	public void ControllerFacade(String[] paths) throws IOException {
-		ArrayList<Layout> leaves = new ArrayList<LayoutLeaf>(paths.length);
+		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
 
 		for (int i = 0; i < paths.length; i++) {
 		    this.active = 0;
 		    Path checkPath = Paths.get(paths[i]); 
 
-		    this.windows.add(new window(new view(paths[i]), new FileBufferinput(paths[i])));
+		    this.windows.add(new window(new InsertionPoint(), new FileBufferInput()));
 		    if (!Files.exists(checkPath)) 
-			    this.activeUseCaseController = new FileErrorPopupController(this);
+			    //this.activeUseCaseController = new FileErrorPopupController(this); => throw error
+          throw new IOException("File does not exist");
 		    else {
-          LayoutLeaf tmp = new LayoutLeaf(windows.get(i).view.getHash());
+          LayoutLeaf tmp = new LayoutLeaf(this.render.getHash(i));
           leaves.add(tmp);
         }
 
@@ -54,4 +63,45 @@ class ControllerFacade {
 		else
 		    this.rootLayout = new VerticalLayoutNode(leaves);
 	}
+
+  public void renderContent() throws IOException {
+    return;
+  }
+
+  public void renderCursor() throws IOException {
+    return;
+  }
+
+  public int forceCloseActive() {
+    return 0;
+  }
+
+  public void passToActive(byte b) {
+    this.windows.get(active).handler.Input(b);
+  }
+
+    /**
+     * Changes the focused {@link LayoutLeaf} to another.
+     */
+    void moveFocus(DIRECTION dir) {
+        int newActive = this.rootLayout.moveFocus(dir, this.render.getHash(active));
+        for (int i = 0; i < this.windows.size(); i++){
+          if (this.render.getHash(i) == newActive){
+            this.active = i;
+            break;
+          }
+        }
+    }
+
+    /**
+     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
+     */
+    public void clearContent() throws IOException;
+
+    /**
+     * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
+     */
+    void rotateLayout(ROT_DIRECTION orientation){
+        rootLayout.rotateRelationshipNeighbor(orientation, render.get(active).getHash());
+    }
 }

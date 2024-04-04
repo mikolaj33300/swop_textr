@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public abstract class UseCaseController {
     TextR coreControllerParent;
+    ControllerFacade facade;
 
     /**
      * Constructor that sets the main constructor reference of this to the given reerence.

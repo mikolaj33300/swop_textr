@@ -2,18 +2,21 @@ package ui;
 
 import java.util.ArrayList;
 
-class ViewWId {
-    public final View view;
-    public final int hash;
-}
-
 
 public class Render {
-    ArrayList<ViewWId> Views;
+    ArrayList<View> Views;
     
-    Render(int[] hashes) {
-	for (int i = 0; i < hashes.length; i++) {
-	    Views.add(null);
-	}
+  Render(int[] hashes) {
+    for (int i = 0; i < hashes.length; i++) {
+        Views.add(new FileBufferView());
     }
+  }
+
+  public void appendView(View view){
+    this.Views.add(view);
+  }
+
+  public int getHash(int i) {
+    return this.Views.get(i).getHash();
+  }
 }

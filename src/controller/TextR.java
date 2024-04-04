@@ -103,55 +103,6 @@ public class TextR {
         }
     }
 
-    /**
-     * Removes the character before the insertion point
-     */
-    void deleteCharacter() {
-        rootLayout.deleteCharacter();
-    }
-
-    /**
-     * Saves the FileBuffer's content to its file.
-     */
-    void saveBuffer() {
-        this.rootLayout.saveActiveBuffer();
-    }
-
-    /**
-     * Moves insertion point in a file buffer
-     */
-    void moveCursor(char code) {
-        rootLayout.moveCursor(code);
-    }
-
-    /**
-     * Handles inputted text and redirects them to the active {@link LayoutLeaf}.
-     */
-    void enterText(byte b) {
-        rootLayout.enterText(b);
-    }
-
-    /**
-     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
-     */
-    void enterLineSeparator() {
-        rootLayout.enterInsertionPoint();
-    }
-
-    /**
-     * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
-     */
-    void rotateLayout(ROT_DIRECTION orientation){
-        rootLayout.rotateRelationshipNeighbor(orientation);
-    }
-
-    /**
-     * Changes the focused {@link LayoutLeaf} to another.
-     */
-    void moveFocus(DIRECTION dir) {
-        this.rootLayout.moveFocus(dir);
-    }
-
     // Test functions
 
     /**

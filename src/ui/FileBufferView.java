@@ -16,16 +16,15 @@ public class FileBufferView extends View {
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(LayoutLeaf parent) throws IOException {
-        super.parent = parent;
+    public FileBufferView() throws IOException {
     }
 
     /**
      * Handles the rendering of the whole {@link FileBuffer}
      */
     @Override
-    public void render(FileBuffer containedFileBuffer) throws IOException {
-        super.setCorrectCoords();
+    public void render(FileBuffer containedFileBuffer, int hashCode, boolean active) throws IOException {
+        // super.setCorrectCoords(hashCode); //TODO
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
@@ -46,15 +45,15 @@ public class FileBufferView extends View {
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            Terminal.printText(startY + height, startX + 1, this.getStatusbarString());
-        renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
+            Terminal.printText(startY + height, startX + 1, this.getStatusbarString(containedFileBuffer, active));
+        renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size(), containedFileBuffer);
 
     }
 
     /**
      * Generates the string that is used to display the statusbar.
      */
-    public String getStatusbarString(FileBuffer containedFileBuffer) {
+    public String getStatusbarString(FileBuffer containedFileBuffer, boolean active) {
         String statusLine = containedFileBuffer.getFileHolder().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
@@ -71,15 +70,14 @@ public class FileBufferView extends View {
             statusLine += "Clean";
         statusLine += " ";
 
-        if(super.parent.getContainsActiveView())
-
+        if(active)
             statusLine += "Active";
         else
             statusLine += "Not Active";
         return statusLine;
     }
 
-    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight, int nb, FileBuffer containedFileBuffer){
+    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight, FileBuffer containedFileBuffer){
         for(int i = 0; i<(super.height-1); i++){
             double visibleStartPercent = ((focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
             double visibleEndPercent = ((1+focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
@@ -96,9 +94,9 @@ public class FileBufferView extends View {
      * Handles printing the cursor in this view. Upon calling {@link View#setCorrectCoords()} is called to
      * retrieve the {@link View#startX}, {@link View#startY}, {@link View#width} and {@link View#height}
      */
-    public void renderCursor(InsertionPoint pt) throws IOException {
-        super.setCorrectCoords();
-        if (parent.getContainsActiveView()) {
+    public void renderCursor(InsertionPoint pt, int hashCode, boolean active) throws IOException {
+        //super.setCorrectCoords(hashCode); // TODO
+        if (active) {
             int cursorXoffset = pt.col % (width-1);
             int cursorYoffset = pt.row % (height-1);
             Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);

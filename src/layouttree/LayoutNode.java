@@ -27,26 +27,7 @@ public abstract class LayoutNode extends Layout {
     /**
      * Returns the starting x-coordinate of this LayoutNode
      */
-    public void renderCursor() throws IOException {
-        for(Layout l : children){
-            l.renderCursor();
-        }
-    }
-
-
-    /**
-     * Returns the starting x-coordinate of this LayoutNode
-     */
     public abstract int getStartX(Layout l, int terminalWidth, int terminalHeight);
-
-    /**
-     * Clears the content on the screen
-     */
-    public void clearContent() throws IOException {
-        for(Layout l : children){
-            l.clearContent();
-        }
-    }
 
     /**
      * Returns the starting y-coordinate of the group of layouts, connected to this Layout
@@ -80,84 +61,17 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Moves focus from the currently active Layout, to the neigbouring layout
-     * Which neighbour is decided by the dir argument
-     * If no neighbours left, the active Layout stays active
-     */
-    public void moveFocus(DIRECTION dir) throws RuntimeException {
-        for (Layout l : children) {
-            if (l.getContainsActiveView()) {
-                l.moveFocus(dir);
-                return;
-            }
-        }
-    }
-
-    /**
      * Moves the insertion point on the active FileBuffer
      */
-    @Override
-    public void moveCursor(char c) {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.moveCursor(c);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Enters text on the active FileBuffer
-     */
-    @Override
-    public void enterText(byte b) {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.enterText(b);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Enters a line seperator on the active FileBuffer
-     */
-    @Override
-    public void enterInsertionPoint() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.enterInsertionPoint();
-                return;
-            }
-        }
-    }
-
-    /**
-     * Saves the active FileBuffer to its connected FiledHolders file
-     */
-    @Override
-    public int saveActiveBuffer() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.saveActiveBuffer();
-                return 0;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Deletes the character before the insertionpoint on the active FileBuffer
-     */
-    @Override
-    public void deleteCharacter() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.deleteCharacter();
-                return;
-            }
-        }
-    }
+    //@Override
+    //public void moveCursor(char c) {
+    //    for (Layout l : children) {
+    //        if(l.getContainsActiveView()){
+    //            l.moveCursor(c);
+    //            return;
+    //        }
+    //    }
+    //}
 
     /**
      * Closes the active FileBuffer, its FileHolder,
@@ -165,10 +79,10 @@ public abstract class LayoutNode extends Layout {
      * It might cause a restructuring of the tree if the tree became invalid
      */
     @Override
-    public int closeActive(){
+    public int closeActive(int hashCode){
         for (Layout l : children) {
             if(l.getContainsActiveView()){
-                return l.closeActive();
+                return l.closeActive(hashCode);
             }
         }
         return 0;
@@ -195,10 +109,10 @@ public abstract class LayoutNode extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hashCode) throws RuntimeException {
         for (Layout l : children) {
             if (l.getContainsActiveView()) {
-                return l.rotateRelationshipNeighbor(rot_dir);
+                return l.rotateRelationshipNeighbor(rot_dir, hashCode);
             }
         }
         throw new RuntimeException("Contains no active leaf!");
@@ -256,62 +170,10 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.
-     */
-    protected void makeLeftmostLeafActive() {
-        this.containsActiveView = true;
-        children.get(0).makeLeftmostLeafActive();
-    }
-
-    /**
-     * Sets containsActive of the right leaf of the subtree with this as root and all the nodes inbetween to true.
-     */
-    protected void makeRightmostLeafActive() {
-        this.containsActiveView = true;
-        children.get(children.size() - 1).makeRightmostLeafActive();
-    }
-
-    /**
      * Returns a direct reference to the leftmost {@link LayoutLeaf} under this tree.
      */
     protected LayoutLeaf getLeftLeaf() {
         return children.get(0).getLeftLeaf();
-    }
-
-    /**
-     * Makes the leftmost leaf that is to the right of the given subtree active
-     * Requires passed layout to be a child of this.
-     */
-    protected void makeRightNeighbourActive(Layout layout) {
-        int index = children.indexOf(layout);
-        if (index < children.size() - 1) {
-            children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
-        } else {
-            if (parent != null) {
-                containsActiveView = false;
-                parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
-            } else {
-                makeRightmostLeafActive();
-            }
-        }
-    }
-
-    /**
-     * Makes the rightmost leaf that is to the left of the given subtree active
-     * Requires passed layout to be a child of this.
-     */
-    protected void makeLeftNeighbourActive(Layout layout) {
-        int index = children.indexOf(layout);
-        if (index > 0) {
-            children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
-        } else {
-            if (parent != null) {
-                containsActiveView = false;
-                parent.makeLeftNeighbourActive(this); //called when we need to backtrack one level up
-            } else {
-                makeLeftmostLeafActive();
-            }
-        }
     }
 
     /**
