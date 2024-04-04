@@ -2,16 +2,15 @@ package ui;
 
 import files.FileAnalyserUtil;
 import files.FileBuffer;
-
 import ui.InsertionPoint;
-
+import observer.FileBufferListener;
 import layouttree.LayoutLeaf;
 
 import io.github.btj.termios.Terminal;
 
 import java.io.IOException;
 
-public class FileBufferView extends View {
+public class FileBufferView extends View implements FileBufferListener {
 
     /**
      * Constructor for FileBufferView
@@ -24,7 +23,7 @@ public class FileBufferView extends View {
      */
     @Override
     public void render(FileBuffer containedFileBuffer, int hashCode, boolean active) throws IOException {
-        // super.setCorrectCoords(hashCode); //TODO
+        // super.setCorrectCoords(hashCode); //TODO => update from facade when rotating everything
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);

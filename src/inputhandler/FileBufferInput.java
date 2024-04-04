@@ -1,12 +1,18 @@
 package inputhandler;
 
+import java.io.IOException;
+import java.util.List;
+
 import files.FileBuffer;
+import observer.FileBufferListener;
 
 public class FileBufferInput extends InputHandler {
-	FileBuffer fb;
-	boolean surrogate;
+	private FileBuffer fb;
+	private boolean surrogate;
+	private List<FileBufferListener> listeners;
+	
 
-	public void FileBufferInput(String path) {
+	public void FileBufferInput(String path) throws IOException {
 		this.fb = new FileBuffer(path);
 	}
 
@@ -74,6 +80,6 @@ public class FileBufferInput extends InputHandler {
      * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
      */
   public void enterInsertionPoint(){
-    fb.enterinsertionPoint();
+    fb.enterInsertionPoint();
   }
 }

@@ -14,7 +14,8 @@ public class InspectContentsController extends UseCaseController {
 
     @Override
     public void handle(int b) throws IOException {
-      facade.passToActive(b);
+      facade.passToActive((byte) b);
+      /*
         switch(b) {
             case 8, 127, 10, 62:
                 coreControllerParent.rootLayout.deleteCharacter();
@@ -73,6 +74,7 @@ public class InspectContentsController extends UseCaseController {
                 coreControllerParent.rootLayout.enterText((Integer.valueOf(b)).byteValue());
                 break;
         }
+	*/
     }
 
     @Override
@@ -94,7 +96,7 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void clearContent() throws IOException {
-        coreControllerParent.rootLayout.clearContent();
+        facade.clearContent();
     }
 
 }
