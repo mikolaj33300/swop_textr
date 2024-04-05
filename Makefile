@@ -1,6 +1,6 @@
 include config.mk
 
-all: options diagrams $(DIAGS) $(termios) build
+all: options diagrams $(DIAGS) $(termios) build textr.jar
 
 options:
 	@echo OFORMAT: $(OFORMAT)
@@ -9,7 +9,7 @@ diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
 docs: diagrams $(DIAGS)
 
-build: textr.jar
+build: $(OBJ)
 
 jar: $(JAR)
 	mkdir -p $(BUILD_DIR)
@@ -17,9 +17,11 @@ jar: $(JAR)
 	cp -vr ./io ./build/io
 	cp -vr ./org ./build/org
 
-textr.jar:
+build/%.class: src/%.java
+	
+textr.jar: $(SRC)
 	mkdir -p $(BUILD_DIR)
-	@javac -Xlint:unchecked -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d $(BUILD_DIR) $(SRC)
+	@javac -Xlint:unchecked -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d ./build $^
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 test:
 	@javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)

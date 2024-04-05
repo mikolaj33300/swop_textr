@@ -11,13 +11,18 @@ import java.io.IOException;
 
 public class FileBufferView extends View implements FileBufferListener {
 
-  Terminal Terminal;
+  /*
+   * the hashcode of the rendered object
+   */
+    private final int hashCode;
+    Terminal Terminal;
 
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(Terminal Terminal) throws IOException {
+    public FileBufferView(Terminal Terminal, int hashCode) throws IOException {
       this.Terminal = Terminal;
+      this.hashCode = hashCode;
     }
 
     /**

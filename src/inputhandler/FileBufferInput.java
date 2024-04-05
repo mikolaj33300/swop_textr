@@ -16,25 +16,20 @@ public class FileBufferInput extends InputHandler {
 	}
 
 	public void Input(byte b) throws IOException {
-		switch(b) {
-			case 27:
-				this.surrogate = true;
-				break;
-			default:
-				if (this.surrogate){
-					surrogateKeysInput(b);
-					this.surrogate = false;
-				} else {
-					asciiInput(b);
-				}
-				break;
-		}
+    if (this.surrogate){
+      surrogateKeysInput(b);
+      this.surrogate = false;
+    } else if (b == 27) {
+      this.surrogate = true;
+    } else {
+      asciiInput(b);
+    }
 	}
 
     /*
      * handles normal input
      */
-	public void asciiInput(byte b) throws IOException {
+	void asciiInput(byte b) throws IOException {
 		switch(b) {
 		    case 8, 127, 10, 62:
 			    this.fb.deleteCharacter();
@@ -67,7 +62,7 @@ public class FileBufferInput extends InputHandler {
 	/*
 	 * handles surrogate input
 	 */
-	public void surrogateKeysInput(byte b) throws IOException {
+	void surrogateKeysInput(byte b) throws IOException {
 		switch((char) b) {
             // Right
             case 'C':

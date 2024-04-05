@@ -11,8 +11,10 @@ import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.DIRECTION;
 import layouttree.VerticalLayoutNode;
+
 import inputhandler.InputHandler;
 import inputhandler.FileBufferInput;
+
 import ui.View;
 import ui.FileBufferView;
 import ui.Render;
@@ -74,6 +76,9 @@ class ControllerFacade {
   }
 
   public int forceCloseActive() {
+    this.windows.remove(active);
+    if (this.windows.size() == 0)// return 2 if no more windows left
+      return 2;
     return 0;
   }
 

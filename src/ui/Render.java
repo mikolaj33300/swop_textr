@@ -10,7 +10,7 @@ public class Render {
     
   Render(int[] hashes, Terminal Terminal) throws IOException {
     for (int i = 0; i < hashes.length; i++) {
-        Views.add(new FileBufferView(Terminal));
+        Views.add(new FileBufferView(Terminal, hashes[i]));
     }
   }
 
