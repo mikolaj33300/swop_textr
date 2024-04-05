@@ -4,17 +4,18 @@ import java.io.IOException;
 import java.util.List;
 
 import files.FileBuffer;
+import observer.FileBufferListener;
 
 public class FileBufferInput extends InputHandler {
 	private FileBuffer fb;
 	private boolean surrogate;
 	
 
-	public void FileBufferInput(String path) throws IOException {
-		this.fb = new FileBuffer(path);
+	public void FileBufferInput(String path, FileBufferListener listener) throws IOException {
+		this.fb = new FileBuffer(path, listener);
 	}
 
-	public void Input(byte b) {
+	public void Input(byte b) throws IOException {
 		switch(b) {
 			case 27:
 				this.surrogate = true;
@@ -66,12 +67,25 @@ public class FileBufferInput extends InputHandler {
 	/*
 	 * handles surrogate input
 	 */
-	public void surrogateKeysInput(byte b) {
+	public void surrogateKeysInput(byte b) throws IOException {
 		switch((char) b) {
-                    case 'A', 'B', 'C', 'D':
-                        fb.moveCursor((char) b);
-                        break;
-		}
+            // Right
+            case 'C':
+                this.fb.moveCursorRight();
+                break;
+            // Left
+            case 'D':
+                this.fb.moveCursorLeft();
+                break;
+            // Up
+            case 'A':
+                this.fb.moveCursorUp();
+                break;
+            // Down
+            case 'B':
+                this.fb.moveCursorDown();
+                break;
+        }
 	}
 
     /**

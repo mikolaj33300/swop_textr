@@ -77,7 +77,7 @@ class ControllerFacade {
     return 0;
   }
 
-  public void passToActive(byte b) {
+  public void passToActive(byte b) throws IOException {
     this.windows.get(active).handler.Input(b);
   }
 

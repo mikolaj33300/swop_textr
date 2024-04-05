@@ -1,5 +1,7 @@
 package inputhandler;
 
+import java.io.IOException;
+
 /*
  * commands next
  */
@@ -8,7 +10,7 @@ abstract public class InputHandler{
 	/*
 	 * handles all input
 	 */
-	abstract public void Input(byte b);
+	abstract public void Input(byte b) throws IOException;
 
 	/*
 	 * handles general input
@@ -18,6 +20,6 @@ abstract public class InputHandler{
 	/*
 	 * handles surrogate input
 	 */
-	abstract void surrogateKeysInput(byte b);
+	abstract void surrogateKeysInput(byte b) throws IOException;
 	
 }

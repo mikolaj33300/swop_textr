@@ -2,14 +2,15 @@ package ui;
 
 import java.util.ArrayList;
 import java.io.IOException;
+import io.github.btj.termios.Terminal;
 
 
 public class Render {
     ArrayList<View> Views;
     
-  Render(int[] hashes) throws IOException {
+  Render(int[] hashes, Terminal Terminal) throws IOException {
     for (int i = 0; i < hashes.length; i++) {
-        Views.add(new FileBufferView());
+        Views.add(new FileBufferView(Terminal));
     }
   }
 
