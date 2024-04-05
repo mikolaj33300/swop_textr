@@ -19,6 +19,10 @@ public class BufferCursorContext {
 
     }
 
+    public BufferCursorContext(FileBuffer referredFileBuffer, int insertionPointByteIndex){
+
+    }
+
     /**
      * Deletes the character before the insertion pt and updates the cursor position
      */
@@ -147,5 +151,9 @@ public class BufferCursorContext {
 
     public boolean getDirty() {
         return containedFileBuffer.getDirty();
+    }
+
+    public BufferCursorContext deepClone(){
+        return new BufferCursorContext(containedFileBuffer.clone(), insertionPointByteIndex);
     }
 }

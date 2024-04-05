@@ -106,10 +106,10 @@ public class FileBufferView extends View {
         }
     }
     /**
-     * Returns a copy of the FileBuffer of this FileBufferView
+     * Returns a copy of the BufferContext of this FileBufferView
      */
-    public FileBuffer getContainedFileBuffer() {
-        return containedFileBuffer.clone();
+    public BufferCursorContext getContainedFileBuffer() {
+        return containedFileBuffer.deepClone();
     }
 
     /**
