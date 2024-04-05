@@ -15,10 +15,13 @@ termios = termios/_build/main/io.github.btj.termios.jar
 JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-jupiter-api.jar /usr/share/apiguardian-api/lib/apiguardian-api.jar
 #$(wildcard /usr/share/junit-5/lib/*.jar)
 
-SRC = $(wildcard ./src/**/*.java)
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+SRC = $(call rwildcard,src/,*.java)
+
 TEST = $(wildcard ./tests/**/*.java)
 
-OBJ = $(patsubst %.java,%.class,$(SRC))
+OBJ := $(patsubst %.java,%.class,$(SRC))
+OBJ := $(patsubst src/%,build/%,$(OBJ))
 BUILD_DIR = ./build
 
 #

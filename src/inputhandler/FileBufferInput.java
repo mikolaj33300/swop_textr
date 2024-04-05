@@ -1,71 +1,92 @@
 package inputhandler;
 
+import java.io.IOException;
+import java.util.List;
+
 import files.FileBuffer;
+import observer.FileBufferListener;
 
 public class FileBufferInput extends InputHandler {
-	FileBuffer fb;
-	boolean surrogate;
+	private FileBuffer fb;
+	private boolean surrogate;
+	
 
-	public void FileBufferInput(String path) {
-		this.fb = new FileBuffer(file);
+	public void FileBufferInput(String path, FileBufferListener listener) throws IOException {
+		this.fb = new FileBuffer(path, listener);
 	}
 
-	public void Input(byte b) {
-		switch(b) {
-			case 27:
-				this.surrogate = true;
-				break;
-			default:
-				if (this.surrogate){
-					surrogateKeysInput(b);
-					this.surrogate = false;
-				} else {
-					asciiInput(b);
-				}
-				break;
-		}
+	public void Input(byte b) throws IOException {
+    if (this.surrogate){
+      surrogateKeysInput(b);
+      this.surrogate = false;
+    } else if (b == 27) {
+      this.surrogate = true;
+    } else {
+      asciiInput(b);
+    }
 	}
 
     /*
      * handles normal input
      */
-	public void asciiInput(byte b) {
+	void asciiInput(byte b) throws IOException {
 		switch(b) {
 		    case 8, 127, 10, 62:
 			    this.fb.deleteCharacter();
 			break;
 		    // Control + S
 		    case 19:
-			this.fb.save();
+        this.fb.save();
 			break;
-		    // Control + P
+      // TODO where does this need to be handled => listner
+		    // Control + P => movefocus Left
 		    case 16:
 			break;
-		    // Control + N
+		    // Control + N => movefocus Right
 		    case 14:
 			break;
-		    // Control + R
+		    // Control + R => rot COUNTERCLOCKWISE
 		    case 18:
 			break;
-		    // Control + T
+		    // Control + T => rot clockwise
 		    case 20:
 			break;
-		    // Line separator
+		    // Line separator => enterInsertionPoint
 		    case 13:
 		    // Character input
 		    default:
-			this.fb.insert(b);
+			this.fb.write(b);
 			break;
 		}
 	}
 	/*
 	 * handles surrogate input
 	 */
-	public void surrogateKeysInput(byte b) {
+	void surrogateKeysInput(byte b) throws IOException {
 		switch((char) b) {
-                    case 'A', 'B', 'C', 'D':
-                        fb.moveCursor((char) c);
-                        break;
-		}
+            // Right
+            case 'C':
+                this.fb.moveCursorRight();
+                break;
+            // Left
+            case 'D':
+                this.fb.moveCursorLeft();
+                break;
+            // Up
+            case 'A':
+                this.fb.moveCursorUp();
+                break;
+            // Down
+            case 'B':
+                this.fb.moveCursorDown();
+                break;
+        }
 	}
+
+    /**
+     * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
+     */
+  public void enterInsertionPoint() throws IOException {
+    fb.enterInsertionPoint();
+  }
 }

@@ -1,16 +1,16 @@
 include config.mk
 
-all: options diagrams $(DIAGS) $(termios) build
+all: options diagrams $(DIAGS) $(termios) build textr.jar
 
 options:
 	@echo OFORMAT: $(OFORMAT)
-	@echo topack: $(TOPACK)
+	@echo OBJ: $(OBJ)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
 docs: diagrams $(DIAGS)
 
-build: textr.jar
+build: $(OBJ)
 
 jar: $(JAR)
 	mkdir -p $(BUILD_DIR)
@@ -18,12 +18,14 @@ jar: $(JAR)
 	cp -vr ./io ./build/io
 	cp -vr ./org ./build/org
 
-textr.jar:
+build/%.class: src/%.java
+	
+textr.jar: $(SRC)
 	mkdir -p $(BUILD_DIR)
-	javac -cp termios/_build/main/io.github.btj.termios.jar -d $(BUILD_DIR) $(SRC)
-	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) . ./libio_github_btj_termios.so
+	@javac -Xlint:unchecked -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d ./build $^
+	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 test:
-	javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
+	@javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
 	junit-platform-console --class-path ./build/ --scan-classpath ./build/
 
 clean:
@@ -47,3 +49,9 @@ group07.zip:
 	 cd /tmp; zip -r -b /tmp/ ./group07.zip ./group07/
 	 mv /tmp/group07.zip ./
 
+run:
+	java -jar ./textr.jar ./test || true
+	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+debug:
+	java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=4000,suspend=n -jar textr.jar test || true
+	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0

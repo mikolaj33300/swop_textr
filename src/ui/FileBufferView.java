@@ -2,32 +2,33 @@ package ui;
 
 import files.FileAnalyserUtil;
 import files.FileBuffer;
-import io.github.btj.termios.Terminal;
+import ui.InsertionPoint;
+import observer.FileBufferListener;
 import layouttree.LayoutLeaf;
 
+import io.github.btj.termios.Terminal;
 import java.io.IOException;
 
-public class FileBufferView extends View {
+public class FileBufferView extends View implements FileBufferListener {
 
-    /**
-     * Reference to the {@link FileBuffer} to retrieve display information
-     */
-    private final FileBuffer containedFileBuffer;
+  /*
+   * the hashcode of the rendered object
+   */
+    private final int hashCode;
 
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(String path, LayoutLeaf parent) throws IOException {
-        super.parent = parent;
-        containedFileBuffer = new FileBuffer(path);
+    public FileBufferView(int hashCode) throws IOException {
+      this.hashCode = hashCode;
     }
 
     /**
      * Handles the rendering of the whole {@link FileBuffer}
      */
     @Override
-    public void render() throws IOException {
-        super.setCorrectCoords();
+    public void render(FileBuffer containedFileBuffer, int hashCode, boolean active) throws IOException {
+        // super.setCorrectCoords(hashCode); //TODO => update from facade when rotating everything
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
@@ -48,15 +49,15 @@ public class FileBufferView extends View {
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            Terminal.printText(startY + height, startX + 1, this.getStatusbarString());
-        renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
+            Terminal.printText(startY + height, startX + 1, this.getStatusbarString(containedFileBuffer, active));
+        renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size(), containedFileBuffer);
 
     }
 
     /**
      * Generates the string that is used to display the statusbar.
      */
-    public String getStatusbarString() {
+    public String getStatusbarString(FileBuffer containedFileBuffer, boolean active) {
         String statusLine = containedFileBuffer.getFileHolder().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
@@ -73,15 +74,14 @@ public class FileBufferView extends View {
             statusLine += "Clean";
         statusLine += " ";
 
-        if(super.parent.getContainsActiveView())
-
+        if(active)
             statusLine += "Active";
         else
             statusLine += "Not Active";
         return statusLine;
     }
 
-    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
+    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight, FileBuffer containedFileBuffer){
         for(int i = 0; i<(super.height-1); i++){
             double visibleStartPercent = ((focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
             double visibleEndPercent = ((1+focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
@@ -95,77 +95,14 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Moves the cursor in a direction specified by the parameter
-     */
-    public void moveCursor(char c) {
-        containedFileBuffer.moveCursor(c);
-    }
-
-    /**
-     * Writes a specific byte to the {@link FileBuffer}
-     */
-    public void write(byte b) {
-        containedFileBuffer.write(b);
-    }
-
-    /**
-     * Saves the contents of the {@link FileBuffer} to {@link java.io.File}
-     */
-    public int save() {
-        return containedFileBuffer.save();
-    }
-
-    /**
-     * Enters an insertion point to the byte content. This method is separate from {@link FileBufferView#write(byte)} since of non-ASCII content
-     */
-    public void enterInsertionPoint() {
-        containedFileBuffer.enterInsertionPoint();
-    }
-
-    /**
-     * Closes this {@link FileBuffer}
-     *
-     * @return
-     */
-    public int close() {
-        return containedFileBuffer.close();
-    }
-
-    /**
-     * Determines if the given object is 'equal' to this object.
-     * Returns true if the {@link FileBufferView#containedFileBuffer} is {@link FileBuffer#equals(FileBuffer)} to parameter {@link FileBuffer}
-     */
-    public boolean equals(Object obj) {
-        if (obj instanceof FileBufferView fBufView) {
-            return fBufView.containedFileBuffer.equals(this.containedFileBuffer);
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Deletes the character before the insertion line in {@link FileBuffer}. Called when {@link core.TextR}
-     */
-    public void deleteCharacter() {
-        containedFileBuffer.deleteCharacter();
-    }
-
-    /**
-     * Returns a copy of the FileBuffer of this FileBufferView
-     */
-    public FileBuffer getContainedFileBuffer() {
-        return containedFileBuffer.clone();
-    }
-
-    /**
      * Handles printing the cursor in this view. Upon calling {@link View#setCorrectCoords()} is called to
      * retrieve the {@link View#startX}, {@link View#startY}, {@link View#width} and {@link View#height}
      */
-    public void renderCursor() throws IOException {
-        super.setCorrectCoords();
-        if (parent.getContainsActiveView()) {
-            int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
-            int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
+    public void renderCursor(InsertionPoint pt, int hashCode, boolean active) throws IOException {
+        //super.setCorrectCoords(hashCode); // TODO
+        if (active) {
+            int cursorXoffset = pt.col % (width-1);
+            int cursorYoffset = pt.row % (height-1);
             Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
         }
     }

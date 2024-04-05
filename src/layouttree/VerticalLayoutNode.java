@@ -18,14 +18,6 @@ public class VerticalLayoutNode extends LayoutNode{
      * Returns the starting x-coordinate of this VerticalLayoutNode
      */
     @Override
-    public void renderCursor() throws IOException {
-        super.renderCursor();
-    }
-
-    /**
-     * Returns the starting x-coordinate of this VerticalLayoutNode
-     */
-    @Override
     public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
         if(parent != null){
             return parent.getStartX(this, terminalWidth, terminalHeight);
