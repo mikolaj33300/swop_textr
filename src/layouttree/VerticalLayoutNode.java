@@ -94,7 +94,7 @@ public class VerticalLayoutNode extends LayoutNode{
         int yChild = uiCoords.startY;
         ArrayList<UICoords> resultList = new ArrayList<>();
         for (Layout child : children) {
-            resultList.addAll(child.getCoordsList(new UICoords(uiCoords.startX, yChild, uiCoords.width, heightChild)));
+            resultList.addAll(child.getCoordsList(new UICoords(uiCoords.startX, yChild, widthChild, uiCoords.height)));
             yChild = yChild + heightChild;
         }
         return resultList;

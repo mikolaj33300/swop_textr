@@ -2,30 +2,11 @@ package ui;
 
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
-import files.FileBuffer;
 
 import java.io.IOException;
 
 public abstract class View {
-    /**
-     * The lefmost point where this view starts
-     */
-    int startX;
-
-    /**
-     * The topmost point where this view starts
-     */
-    int startY;
-
-    /**
-     * The height of this window
-     */
-    int height;
-
-    /**
-     * The width of this window
-     */
-    int width;
+    UICoords coords;
 
     /**
      * The total width of the terminal
@@ -37,25 +18,12 @@ public abstract class View {
      */
     static int terminalHeight;
 
-    /**
-     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
-     * this will be set out of the render function which can get it out of the tree
-     * TODO
-    protected void setCorrectCoords(int hashCode) throws IOException {
-        retrieveDimensions();
-        startX = parent.getStartX(terminalWidth, terminalHeight, hashCode);
-        startY = parent.getStartY(terminalWidth, terminalHeight, hashCode);
-        width = parent.getWidth(terminalWidth, terminalHeight, hashCode);
-        height = parent.getHeight(terminalWidth, terminalHeight, hashCode);
-    }
-     */
 
     /**
-     * return this objects hashcode for our keys
-     * @return hash
+     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
      */
-    public int getHash() {
-	    return this.hashCode();
+    protected void setCoords(UICoords uiCoords) throws IOException {
+        this.coords = uiCoords;
     }
 
 
@@ -76,11 +44,15 @@ public abstract class View {
     /**
      * Render all the elements on the thid view
      */
-    public abstract void render(FileBuffer containedFileBuffer, int hashCode, boolean active) throws IOException;
+    public abstract void render() throws IOException;
+
+    /**
+     * Renders the cursor on the current view
+     */
+    public abstract void renderCursor() throws IOException;
 
     /**
      * <p>Calculates the dimensions of the terminal
-     * Credits to BTJ. This looks very clean and intuïtive.
      * Sets the fields {@link View#terminalWidth} and {@link View#terminalHeight}.</p>
      * <p>Method set to default for unit test access.</p>
      */
@@ -117,4 +89,9 @@ public abstract class View {
         View.terminalWidth = width;
         View.terminalHeight = height;
     }
+
+    /**
+     * Checks whether this View and the given object are the same type and have the same contents
+     */
+    public abstract boolean equals(Object o);
 }
