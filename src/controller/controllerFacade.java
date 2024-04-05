@@ -41,7 +41,7 @@ class ControllerFacade {
      * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
      * @throws IOException when the path is invalid
      */
-	public void ControllerFacade(String[] paths) throws IOException {
+	public ControllerFacade(String[] paths) throws IOException {
 		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
 
 		for (int i = 0; i < paths.length; i++) {
