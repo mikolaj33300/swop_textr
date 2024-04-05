@@ -39,7 +39,7 @@ class ControllerFacade {
 		for (int i = 0; i < paths.length; i++) {
 		    String checkPath = paths[i];
 			FileBufferInputHandler openedFileHandler = new FileBufferInputHandler(checkPath);
-		    this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferTransparent()), openedFileHandler));
+		    this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
 		    if (!Files.exists(Path.of(checkPath)))
 				//TODO: exception needs to be caught on level above
 				throw new IOException("Path not found");

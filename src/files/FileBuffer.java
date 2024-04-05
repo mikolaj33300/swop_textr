@@ -51,19 +51,37 @@ public class FileBuffer {
     /**
      * Inserting a line separator can only be done with bytes.
      */
-    public void enterInsertionPoint() {
-        insert(System.lineSeparator().getBytes());
-        moveCursorDown();
-        moveCursorToFront();
+    public void enterInsertionPoint(int byteArrIndex) {
+        insert(byteArrIndex, System.lineSeparator().getBytes());
+    }
+
+    /**
+     * Deletes the character before the insertion pt and updates the cursor position
+     */
+    public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
+        int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        if(insertionPointCol > 0 || insertionPointLine > 0) {
+            this.dirty = true;
+        }
+        if(insertionPointCol > 0) {
+            this.byteContent.remove(insertionPointByteIndex-1);
+        } else {
+            if(insertionPointLine!=0){
+                //shift left the amount of bytes that need to be deleted and delete them one by one
+                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
+                    this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
     }
 
     /**
      * Updates the content of the FileBuffer
      */
-    public void write(byte updatedContents) {
+    public void write(byte updatedContents, int byteArrIndex) {
         insert(updatedContents);
         dirty = true;
-        moveCursorRight();
     }
 
     /**
@@ -107,20 +125,6 @@ public class FileBuffer {
                 break;
         }
     }*/
-
-    /**
-     * Returns the Y coordinate where the insertion point should be rendered.
-     */
-    public int getInsertionPointLine() {
-        return insertionPointLine;
-    }
-
-    /**
-     * Returns the X coordinate where the insertion point should be rendered.
-     */
-    public int getInsertionPointCol() {
-        return insertionPointCol;
-    }
 
     /**
      * Returns a copy of the byteConent of this FileBuffer
@@ -189,13 +193,6 @@ public class FileBuffer {
     }
 
     /**
-     * Returns the insertion point.
-     */
-    public int getInsertionPoint() {
-        return insertionPointByteIndex;
-    }
-
-    /**
      * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
      */
     byte[] toArray(ArrayList<Byte> arrList) {
@@ -218,8 +215,8 @@ public class FileBuffer {
     /**
      * Inserts the byte values.
      */
-    private void insert(byte... data) {
-        byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
+    private void insert(int byteArrayIndex, byte... data) {
+        byteContent.addAll(byteArrayIndex,
                 Arrays.<Byte>asList(wrapEachByteElem(data)));
 
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
@@ -264,4 +261,13 @@ public class FileBuffer {
         }
     }
 
+    private int convertLineAndColToIndex(int line, int col) {
+        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
+        int byteArrIndex = 0;
+        for (int i = 0; i < line; i++) {
+            byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
+        }
+        byteArrIndex = byteArrIndex + col;
+        return byteArrIndex;
+    }
 }

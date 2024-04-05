@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public abstract class View {
     UICoords coords;
+    boolean containsActive;
 
     /**
      * The total width of the terminal
@@ -94,4 +95,8 @@ public abstract class View {
      * Checks whether this View and the given object are the same type and have the same contents
      */
     public abstract boolean equals(Object o);
+
+    protected boolean getContainsActiveView() {
+        return containsActive;
+    }
 }

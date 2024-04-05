@@ -1,5 +1,6 @@
 package ui;
 
+import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
 import inputhandler.FileBufferInputHandler;
@@ -12,9 +13,9 @@ public class FileBufferView extends View {
     /**
      * Reference to the {@link FileBuffer} to retrieve display information
      */
-    private final FileBuffer containedFileBuffer;
+    private final BufferCursorContext containedFileBuffer;
 
-    public FileBufferView(FileBuffer openedFile) {
+    public FileBufferView(BufferCursorContext openedFile) {
         this.containedFileBuffer=openedFile;
     }
 
@@ -112,12 +113,10 @@ public class FileBufferView extends View {
     }
 
     /**
-     * Handles printing the cursor in this view. Upon calling {@link View#setCorrectCoords()} is called to
-     * retrieve the {@link View#startX}, {@link View#startY}, {@link View#width} and {@link View#height}
+     * Handles printing the cursor in this view.
      */
     public void renderCursor() throws IOException {
-        super.setCorrectCoords();
-        if (parent.getContainsActiveView()) {
+        if (getContainsActiveView()) {
             int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (coords.width-1);
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (coords.height-1);
             Terminal.moveCursor(1 + coords.startY + cursorYoffset, 1 + coords.startX + cursorXoffset);

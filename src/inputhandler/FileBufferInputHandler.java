@@ -1,18 +1,18 @@
 package inputhandler;
 
-import files.FileBuffer;
+import files.BufferCursorContext;
 
 import java.io.IOException;
 
 public class FileBufferInputHandler implements InputHandler {
-	FileBuffer fb;
+	BufferCursorContext fb;
 	boolean surrogate;
 
 	public FileBufferInputHandler(String path) throws IOException {
-		this.fb = new FileBuffer(path);
+		this.fb = new BufferCursorContext(path);
 	}
 
-	public FileBuffer getFileBufferTransparent(){
+	public BufferCursorContext getFileBufferContextTransparent(){
 		return fb;
 	}
 
@@ -68,10 +68,23 @@ public class FileBufferInputHandler implements InputHandler {
 	 * handles surrogate input
 	 */
 	public void surrogateKeysInput(byte b) {
-		switch((char) b) {
-                    case 'A', 'B', 'C', 'D':
-                        fb.moveCursor((char) b);
-                        break;
+		switch (b) {
+			// Right
+			case 'C':
+				fb.moveCursorRight();
+				break;
+			// Left
+			case 'D':
+				fb.moveCursorLeft();
+				break;
+			// Up
+			case 'A':
+				fb.moveCursorUp();
+				break;
+			// Down
+			case 'B':
+				fb.moveCursorDown();
+				break;
 		}
 	}
 }
