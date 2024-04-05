@@ -34,7 +34,7 @@ public class FileBufferInput extends InputHandler {
     /*
      * handles normal input
      */
-	public void asciiInput(byte b) {
+	public void asciiInput(byte b) throws IOException {
 		switch(b) {
 		    case 8, 127, 10, 62:
 			    this.fb.deleteCharacter();
@@ -60,7 +60,7 @@ public class FileBufferInput extends InputHandler {
 		    case 13:
 		    // Character input
 		    default:
-			this.fb.insert(b);
+			this.fb.write(b);
 			break;
 		}
 	}
@@ -91,7 +91,7 @@ public class FileBufferInput extends InputHandler {
     /**
      * Line separator is non-ASCII, so cannot enter through {@link TextR#enterText(byte)}
      */
-  public void enterInsertionPoint(){
+  public void enterInsertionPoint() throws IOException {
     fb.enterInsertionPoint();
   }
 }

@@ -15,7 +15,7 @@ abstract public class InputHandler{
 	/*
 	 * handles general input
 	 */
-	abstract void asciiInput(byte b);
+	abstract void asciiInput(byte b) throws IOException;
 
 	/*
 	 * handles surrogate input

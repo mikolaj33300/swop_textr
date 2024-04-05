@@ -70,15 +70,20 @@ public class FileBuffer {
         insert(System.lineSeparator().getBytes());
         moveCursorDown();
         moveCursorToFront();
+        for (int i = 0; i < listeners.size(); i++)
+          listeners.get(i).render(this, 0, true);
     }
 
     /**
      * Updates the content of the FileBuffer
+     * is this used at all?
      */
     public void write(byte updatedContents) throws IOException {
         insert(updatedContents);
         dirty = true;
         moveCursorRight();
+        for (int i = 0; i < listeners.size(); i++)
+          listeners.get(i).render(this, 0, true);
     }
 
     /**
@@ -112,6 +117,7 @@ public class FileBuffer {
 
     /**
      * Returns a copy of the byteConent of this FileBuffer
+     * TODO: unchecked cast
      */
     public ArrayList<Byte> getByteContent(){
         return (ArrayList<Byte>) this.byteContent.clone();
@@ -152,6 +158,7 @@ public class FileBuffer {
                 }
             }
         }
+        //TODO: unchecked cast
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
         for (int i = 0; i < listeners.size(); i++)
           listeners.get(i).render(this, 0, true);// TODO how to get hash here? + maybe get active out of view itself
@@ -237,13 +244,11 @@ public class FileBuffer {
     /**
      * Inserts the byte values.
      */
-    public void insert(byte... data) throws IOException {
+    private void insert(byte... data) {
         byteContent.addAll(convertLineAndColToIndex(this.insertionPointLine, this.insertionPointCol),
                 Arrays.<Byte>asList(wrapEachByteElem(data)));
 
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
-        for (int i = 0; i < listeners.size(); i++)
-          listeners.get(i).render(this, 0, true);
     }
 
     /**
