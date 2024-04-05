@@ -17,7 +17,7 @@ public class TextR {
      */
     private static byte[] lineSeparatorArg = System.lineSeparator().getBytes();
     protected UseCaseController activeUseCaseController;
-    private final ControllerFacade facade;
+    public final ControllerFacade facade;
 
     /**
      * Creates a controller object.
@@ -25,7 +25,18 @@ public class TextR {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      */
     public TextR(String[] args) {
-      this.facade = new ControllerFacade(args);// TODO first remove flags?
+      ControllerFacade tmp;
+      try {
+         tmp = new ControllerFacade(args);// TODO first remove flags? + pass terminal as object in some magic way
+      } catch (IOException e) {
+        this.activeUseCaseController = new FileErrorPopupController(this);
+        System.out.println("wtf am I doing here?");
+        System.exit(1);
+        tmp = null;
+      }
+      System.out.println(tmp);
+      this.facade = tmp;
+      System.out.println(facade);
     }
 
     /**

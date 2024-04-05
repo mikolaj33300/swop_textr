@@ -7,6 +7,10 @@ import java.io.IOException;
  */
 abstract public class InputHandler{
 
+  public int getHash(){
+    return this.hashCode();
+  }
+
 	/*
 	 * handles all input
 	 */

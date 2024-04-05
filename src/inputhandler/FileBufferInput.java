@@ -39,19 +39,19 @@ public class FileBufferInput extends InputHandler {
         this.fb.save();
 			break;
       // TODO where does this need to be handled => listner
-		    // Control + P
+		    // Control + P => movefocus Left
 		    case 16:
 			break;
-		    // Control + N
+		    // Control + N => movefocus Right
 		    case 14:
 			break;
-		    // Control + R
+		    // Control + R => rot COUNTERCLOCKWISE
 		    case 18:
 			break;
-		    // Control + T
+		    // Control + T => rot clockwise
 		    case 20:
 			break;
-		    // Line separator
+		    // Line separator => enterInsertionPoint
 		    case 13:
 		    // Character input
 		    default:

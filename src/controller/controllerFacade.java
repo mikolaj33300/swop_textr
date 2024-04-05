@@ -1,5 +1,6 @@
 package controller;
 
+import io.github.btj.termios.Terminal;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.nio.file.Path;
@@ -42,20 +43,22 @@ class ControllerFacade {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      * @throws IOException when the path is invalid
      */
-	public void ControllerFacade(String[] paths) throws IOException {
+	public ControllerFacade(String[] paths) throws IOException {
 		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
+    this.windows = new ArrayList<Window>(paths.length);
+    this.render = new Render();
 
 		for (int i = 0; i < paths.length; i++) {
 		    this.active = 0;
 		    Path checkPath = Paths.get(paths[i]); 
 
 		    Window win = new Window(new InsertionPoint(0, 0), new FileBufferInput());
+        render.appendFileBufferView(win.handler.getHash());
         this.windows.add(win);
 		    if (!Files.exists(checkPath)) 
-			    //this.activeUseCaseController = new FileErrorPopupController(this); => throw error
           throw new IOException("File does not exist");
 		    else {
-          LayoutLeaf tmp = new LayoutLeaf(this.render.getHash(i));
+          LayoutLeaf tmp = new LayoutLeaf(this.windows.get(i).handler.getHash());
           leaves.add(tmp);
         }
 
@@ -113,6 +116,6 @@ class ControllerFacade {
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
     void rotateLayout(ROT_DIRECTION orientation){
-        rootLayout.rotateRelationshipNeighbor(orientation, render.getHash(active));
+        rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).handler.getHash());
     }
 }

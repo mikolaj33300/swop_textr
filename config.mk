@@ -15,7 +15,9 @@ termios = termios/_build/main/io.github.btj.termios.jar
 JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-jupiter-api.jar /usr/share/apiguardian-api/lib/apiguardian-api.jar
 #$(wildcard /usr/share/junit-5/lib/*.jar)
 
-SRC = src/controller/TextR.java src/controller/UseCaseController.java src/controller/controllerFacade.java src/controller/InspectContentsController.java src/controller/FileErrorPopupController.java src/controller/FailedSavePopupController.java src/controller/DirtyClosePromptController.java src/util/Debug.java src/files/FileHolder.java src/files/FileAnalyserUtil.java src/files/FileBuffer.java src/observer/FileBufferListener.java src/ui/InsertionPoint.java src/ui/View.java src/ui/FileBufferView.java src/ui/UserPopupBox.java src/ui/Render.java src/inputhandler/InputHandler.java src/inputhandler/FileBufferInput.java src/layouttree/HorizontalLayoutNode.java src/layouttree/DIRECTION.java src/layouttree/LayoutLeaf.java src/layouttree/ROT_DIRECTION.java src/layouttree/Layout.java src/layouttree/VerticalLayoutNode.java src/layouttree/LayoutNode.java
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+SRC = $(call rwildcard,src/,*.java)
+
 TEST = $(wildcard ./tests/**/*.java)
 
 OBJ := $(patsubst %.java,%.class,$(SRC))

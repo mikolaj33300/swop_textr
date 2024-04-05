@@ -20,7 +20,7 @@ public class DirtyClosePromptController extends UseCaseController {
                 break;
             // Y
             case 121:
-                int result = facade.forceCloseActive();
+                int result = coreControllerParent.facade.forceCloseActive();
                 if(result == 0){
                     coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
                 } else {

@@ -4,6 +4,7 @@ all: options diagrams $(DIAGS) $(termios) build textr.jar
 
 options:
 	@echo OFORMAT: $(OFORMAT)
+	@echo OBJ: $(OBJ)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
@@ -48,3 +49,9 @@ group07.zip:
 	 cd /tmp; zip -r -b /tmp/ ./group07.zip ./group07/
 	 mv /tmp/group07.zip ./
 
+run:
+	java -jar ./textr.jar ./test || true
+	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
+debug:
+	java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=4000,suspend=n -jar textr.jar test || true
+	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0

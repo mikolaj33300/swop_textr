@@ -15,13 +15,11 @@ public class FileBufferView extends View implements FileBufferListener {
    * the hashcode of the rendered object
    */
     private final int hashCode;
-    Terminal Terminal;
 
     /**
      * Constructor for FileBufferView
      */
-    public FileBufferView(Terminal Terminal, int hashCode) throws IOException {
-      this.Terminal = Terminal;
+    public FileBufferView(int hashCode) throws IOException {
       this.hashCode = hashCode;
     }
 
@@ -45,13 +43,13 @@ public class FileBufferView extends View implements FileBufferListener {
                 assert renderLineEndIndex <= lineString.length() && renderLineStartIndex <= lineString.length();
                 if(renderLineStartIndex <= lineString.length() || renderLineEndIndex <= lineString.length())
                     //System.out.println("end: " + renderLineEndIndex + ", start: " + renderLineStartIndex);
-                    this.Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+                    Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
             }
         }
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            this.Terminal.printText(startY + height, startX + 1, this.getStatusbarString(containedFileBuffer, active));
+            Terminal.printText(startY + height, startX + 1, this.getStatusbarString(containedFileBuffer, active));
         renderScrollbar(super.startX+super.width-1, super.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size(), containedFileBuffer);
 
     }
@@ -89,9 +87,9 @@ public class FileBufferView extends View implements FileBufferListener {
             double visibleEndPercent = ((1+focusedLine/(super.height-1))*(super.height-1))*1.0/containedFileBuffer.getLines().size();
 
             if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
-                this.Terminal.printText(1+startY+i, 1+scrollStartX, "+");
+                Terminal.printText(1+startY+i, 1+scrollStartX, "+");
             } else {
-                this.Terminal.printText(1+startY+i, 1+scrollStartX, "-");
+                Terminal.printText(1+startY+i, 1+scrollStartX, "-");
             }
         }
     }
@@ -105,7 +103,7 @@ public class FileBufferView extends View implements FileBufferListener {
         if (active) {
             int cursorXoffset = pt.col % (width-1);
             int cursorYoffset = pt.row % (height-1);
-            this.Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
+            Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
         }
     }
 }
