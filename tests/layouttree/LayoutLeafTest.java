@@ -54,42 +54,42 @@ class LayoutLeafTest {
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertTrue(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.LEFT);
+        ln.getNeighborsContainedHash(DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertTrue(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.LEFT);
+        ln.getNeighborsContainedHash(DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertTrue(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertTrue(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertTrue(children.get(2).getContainsActiveView());
 
-        ln.moveFocus(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
@@ -97,15 +97,15 @@ class LayoutLeafTest {
         assertTrue(children.get(2).getContainsActiveView());
 
         assertTrue(l3.getContainsActiveView());
-        l3.moveFocus(DIRECTION.RIGHT);
+        l3.getNeighborsContainedHash(DIRECTION.RIGHT);
         assertTrue(l3.getContainsActiveView());
-        l3.moveFocus(DIRECTION.LEFT);
+        l3.getNeighborsContainedHash(DIRECTION.LEFT);
         assertTrue(l3.getContainsActiveView());
 
         assertFalse(l4.getContainsActiveView());
-        l4.moveFocus(DIRECTION.RIGHT);
+        l4.getNeighborsContainedHash(DIRECTION.RIGHT);
         assertFalse(l4.getContainsActiveView());
-        l4.moveFocus(DIRECTION.LEFT);
+        l4.getNeighborsContainedHash(DIRECTION.LEFT);
         assertFalse(l4.getContainsActiveView());
     }
 
@@ -135,21 +135,21 @@ class LayoutLeafTest {
     @Test
     void testMakeLeftmostLeafActive(){
         assertTrue(l1.getContainsActiveView());
-        l1.makeLeftmostLeafActive();
+        l1.getLeftmostContainedHash();
         assertTrue(l1.getContainsActiveView());
 
         assertFalse(l2.getContainsActiveView());
-        l2.makeLeftmostLeafActive();
+        l2.getLeftmostContainedHash();
         assertTrue(l2.getContainsActiveView());
     }
     @Test
     void testMakeRightmostLeafActive(){
         assertTrue(l1.getContainsActiveView());
-        l1.makeRightmostLeafActive();
+        l1.getRightmostContainedHash();
         assertTrue(l1.getContainsActiveView());
 
         assertFalse(l2.getContainsActiveView());
-        l2.makeRightmostLeafActive();
+        l2.getRightmostContainedHash();
         assertTrue(l2.getContainsActiveView());
     }
     @Test
