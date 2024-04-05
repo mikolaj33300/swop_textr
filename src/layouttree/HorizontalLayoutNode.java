@@ -1,7 +1,10 @@
 package layouttree;
 
+import ui.UICoords;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HorizontalLayoutNode extends LayoutNode {
 
@@ -10,53 +13,6 @@ public class HorizontalLayoutNode extends LayoutNode {
      */
     public HorizontalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
-    }
-
-    /**
-     * Returns the starting x-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            int thisX = parent.getStartX(this, terminalWidth, terminalHeight);
-            int thisWidth = parent.getWidth(this, terminalWidth, terminalHeight);
-            return thisX+(thisWidth/ children.size())*children.indexOf(l);
-        }
-        return (terminalWidth/ children.size())*children.indexOf(l);
-    }
-
-    /**
-     * Returns the starting y-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getStartY(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the width y-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getWidth(this, terminalWidth, terminalHeight)/this.children.size();
-        }
-        return terminalWidth / children.size();
-    }
-
-    /**
-     * Returns the starting height of this HorizontalLayoutNode
-     */
-    @Override
-    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getHeight(this, terminalWidth, terminalHeight);
-        }
-        return terminalWidth;
-
     }
 
     /**
@@ -104,8 +60,19 @@ public class HorizontalLayoutNode extends LayoutNode {
             deepCopyList.add(l.clone());
         }
         HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
-        cloned.setContainsActiveView(this.getContainsActiveView());
         return cloned;
+    }
+
+    @Override
+    public List<UICoords> getCoordsList(UICoords uiCoords) {
+        int widthChild = uiCoords.width / children.size(); //rounds down
+        int xChild = uiCoords.startX;
+        ArrayList<UICoords> resultList = new ArrayList<>();
+        for (Layout child : children) {
+            resultList.addAll(child.getCoordsList(new UICoords(xChild, uiCoords.startY, widthChild, uiCoords.height)));
+            xChild = xChild + widthChild;
+        }
+        return resultList;
     }
 
     /**

@@ -1,8 +1,11 @@
 package layouttree;
 
+import ui.UICoords;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class VerticalLayoutNode extends LayoutNode{
 
@@ -12,52 +15,6 @@ public class VerticalLayoutNode extends LayoutNode{
      */
     public VerticalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
-    }
-
-    /**
-     * Returns the starting x-coordinate of this VerticalLayoutNode
-     */
-    @Override
-    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getStartX(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the starting y-coordinate of this VerticalLayoutNode
-     */
-    @Override
-    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            int thisY = parent.getStartY(this, terminalWidth, terminalHeight);
-            int thisHeight = parent.getHeight(this, terminalWidth, terminalHeight);
-            return (thisY+(thisHeight/ children.size())*children.indexOf(l));
-        }
-        return (terminalHeight/children.size())*children.indexOf(l);
-    }
-
-    /**
-     * Returns the width of this VerticalLayoutNode
-     */
-    @Override
-    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getWidth(this, terminalWidth, terminalHeight);
-        }
-        return terminalWidth;
-    }
-
-    /**
-     * Returns the height of this VerticalLayoutNode
-     */
-    @Override
-    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getHeight(this, terminalWidth, terminalHeight)/this.children.size();
-        }
-        return terminalHeight/(this.children.size());
     }
 
     /**
@@ -105,7 +62,6 @@ public class VerticalLayoutNode extends LayoutNode{
             deepCopyList.add(l.clone());
         }
         VerticalLayoutNode cloned = new VerticalLayoutNode(deepCopyList);
-        cloned.setContainsActiveView(this.getContainsActiveView());
         return cloned;
     }
 
@@ -130,5 +86,17 @@ public class VerticalLayoutNode extends LayoutNode{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<UICoords> getCoordsList(UICoords uiCoords) {
+        int heightChild = uiCoords.height / children.size(); //rounds down
+        int yChild = uiCoords.startY;
+        ArrayList<UICoords> resultList = new ArrayList<>();
+        for (Layout child : children) {
+            resultList.addAll(child.getCoordsList(new UICoords(uiCoords.startX, yChild, uiCoords.width, heightChild)));
+            yChild = yChild + heightChild;
+        }
+        return resultList;
     }
 }

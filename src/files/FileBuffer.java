@@ -2,7 +2,7 @@ package files;
 
 import controller.TextR;
 import ui.FileBufferView;
-import observer.FileBufferListener;
+
 
 import java.io.IOException;
 import java.util.*;
@@ -15,6 +15,8 @@ public class FileBuffer {
      * File reference
      */
     private FileHolder file;
+
+    private ArrayList<FileBufferContentChangedListener> listenersArrayList;
 
     /**
      * Determines if buffer has been modified
@@ -56,9 +58,6 @@ public class FileBuffer {
         this.file = new FileHolder(path);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
-        this.insertionPointCol = 0;
-        this.insertionPointLine = 0;
-        this.insertionPointByteIndex = 0;
     }
 
     // Implementation
@@ -102,6 +101,33 @@ public class FileBuffer {
     }
 
     /**
+     * Moves the cursor in a given direction.
+     * 'C': right
+     * 'D': left
+     * 'A': up
+     * 'B': down
+    public void moveCursor(char direction) {
+        switch (direction) {
+            // Right
+            case 'C':
+                moveCursorRight();
+                break;
+            // Left
+            case 'D':
+                moveCursorLeft();
+                break;
+            // Up
+            case 'A':
+                moveCursorUp();
+                break;
+            // Down
+            case 'B':
+                moveCursorDown();
+                break;
+        }
+    }*/
+
+    /**
      * Returns the Y coordinate where the insertion point should be rendered.
      */
     public int getInsertionPointLine() {
@@ -139,30 +165,7 @@ public class FileBuffer {
         return clonedLinesList;
     }
 
-    /**
-     * Deletes the character before the {@link FileBuffer#insertionPointByteIndex} and updates the cursor position
-     */
-    public void deleteCharacter() throws IOException {
-        if(this.insertionPointCol > 0 || this.insertionPointLine > 0) {
-            this.dirty = true;
-        }
-        if(insertionPointCol > 0) {
-            this.byteContent.remove(insertionPointByteIndex-1);
-            moveCursorLeft();
-        } else {
-            if(insertionPointLine!=0){
-                //shift left the amount of bytes that need to be deleted and delete them one by one
-                moveCursorLeft();
-                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
-                    this.byteContent.remove(insertionPointByteIndex);
-                }
-            }
-        }
-        //TODO: unchecked cast
-        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
-        for (int i = 0; i < listeners.size(); i++)
-          listeners.get(i).render(this, 0, true);// TODO how to get hash here? + maybe get active out of view itself
-    }
+
 
     // Default methods
 
@@ -228,15 +231,6 @@ public class FileBuffer {
      */
     public boolean getDirty() {
         return this.dirty;
-    }
-
-    /**
-     * Deletes the full array
-     */
-    void deleteLine() {
-        linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
-        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     // Private implementations
