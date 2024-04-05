@@ -2,6 +2,7 @@ package controller;
 
 import io.github.btj.termios.Terminal;
 import layouttree.*;
+import controller.ControllerFacade;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,16 +11,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class TextR {
+    private static boolean testMode_NoTerminal;
     /**
      * Holds the line separator for this application
      */
     private static byte[] lineSeparatorArg = System.lineSeparator().getBytes();
     protected UseCaseController activeUseCaseController;
-
-    /**
-     * Root layout
-     */
-    Layout rootLayout;
+    public final ControllerFacade facade;
 
     /**
      * Creates a controller object.
@@ -27,7 +25,18 @@ public class TextR {
      * its children {@link LayoutLeaf} will be assigned according to arguments given by {@link TextR#main(String[])}
      */
     public TextR(String[] args) {
-	// make facade??
+      ControllerFacade tmp;
+      try {
+         tmp = new ControllerFacade(args);// TODO first remove flags? + pass terminal as object in some magic way
+      } catch (IOException e) {
+        this.activeUseCaseController = new FileErrorPopupController(this);
+        System.out.println("wtf am I doing here?");
+        System.exit(1);
+        tmp = null;
+      }
+      System.out.println(tmp);
+      this.facade = tmp;
+      System.out.println(facade);
     }
 
     /**
@@ -84,6 +93,7 @@ public class TextR {
      */
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
+        if(!testMode_NoTerminal){
 
             Terminal.enterRawInputMode();
             activeUseCaseController.clearContent();
@@ -98,15 +108,10 @@ public class TextR {
                 // Flush stdIn & Recalculate dimensions
                 System.in.skipNBytes(System.in.available());
             }
+        }
     }
-    // Test functions
 
-    /**
-     * Returns the root layout {@link TextR#rootLayout}. Only for testing purposes (default access modifier)
-     */
-    Layout getRootLayout() {
-        return rootLayout.clone();
-    }
+    // Test functions
 
     static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))

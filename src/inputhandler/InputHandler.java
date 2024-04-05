@@ -1,23 +1,29 @@
 package inputhandler;
 
+import java.io.IOException;
+
 /*
  * commands next
  */
-public interface InputHandler{
+abstract public class InputHandler{
+
+  public int getHash(){
+    return this.hashCode();
+  }
 
 	/*
 	 * handles all input
 	 */
-	public void Input(byte b);
+	abstract public void Input(byte b) throws IOException;
 
 	/*
 	 * handles general input
 	 */
-	public void asciiInput(byte b);
+	abstract void asciiInput(byte b) throws IOException;
 
 	/*
 	 * handles surrogate input
 	 */
-	public void surrogateKeysInput(byte b);
+	abstract void surrogateKeysInput(byte b) throws IOException;
 	
 }

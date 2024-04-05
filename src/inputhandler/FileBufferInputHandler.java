@@ -4,7 +4,7 @@ import files.BufferCursorContext;
 
 import java.io.IOException;
 
-public class FileBufferInputHandler implements InputHandler {
+public class FileBufferInputHandler extends InputHandler {
 	BufferCursorContext fb;
 	boolean surrogate;
 

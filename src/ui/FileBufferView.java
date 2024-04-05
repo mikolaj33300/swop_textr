@@ -3,12 +3,21 @@ package ui;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
+import files.FileBufferContentChangedListener;
 import inputhandler.FileBufferInputHandler;
 import io.github.btj.termios.Terminal;
+import observer.FileBufferListener;
+import layouttree.LayoutLeaf;
 
+import io.github.btj.termios.Terminal;
 import java.io.IOException;
 
-public class FileBufferView extends View {
+public class FileBufferView extends View implements FileBufferContentChangedListener {
+
+  /*
+   * the hashcode of the rendered object
+   */
+    private final int hashCode;
 
     /**
      * Reference to the {@link FileBuffer} to retrieve display information
@@ -17,6 +26,7 @@ public class FileBufferView extends View {
 
     public FileBufferView(BufferCursorContext openedFile) {
         this.containedFileBuffer=openedFile;
+        this.hashCode = openedFile.hashCode();
     }
 
     /**
@@ -121,5 +131,10 @@ public class FileBufferView extends View {
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (coords.height-1);
             Terminal.moveCursor(1 + coords.startY + cursorYoffset, 1 + coords.startX + cursorXoffset);
         }
+    }
+
+    @Override
+    public void contentsChanged() throws IOException {
+        render();
     }
 }

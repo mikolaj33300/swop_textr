@@ -51,8 +51,10 @@ public class FileBuffer {
     /**
      * Inserting a line separator can only be done with bytes.
      */
-    public void enterInsertionPoint(int byteArrIndex) {
+    public void enterInsertionPoint(int byteArrIndex) throws IOException {
         insert(byteArrIndex, System.lineSeparator().getBytes());
+        for (int i = 0; i < listenersArrayList.size(); i++)
+            listenersArrayList.get(i).contentsChanged();
     }
 
     /**
@@ -80,7 +82,7 @@ public class FileBuffer {
      * Updates the content of the FileBuffer
      */
     public void write(byte updatedContents, int byteArrIndex) {
-        insert(updatedContents);
+        insert(byteArrIndex, updatedContents);
         dirty = true;
     }
 
@@ -128,6 +130,7 @@ public class FileBuffer {
 
     /**
      * Returns a copy of the byteConent of this FileBuffer
+     * TODO: unchecked cast
      */
     public ArrayList<Byte> getByteContent(){
         return (ArrayList<Byte>) this.byteContent.clone();
@@ -208,6 +211,15 @@ public class FileBuffer {
      */
     public boolean getDirty() {
         return this.dirty;
+    }
+
+    /**
+     * Deletes the full array
+     */
+    void deleteLine(int insertionPointLine) {
+        linesArrayList.remove(insertionPointLine);
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
+        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     // Private implementations
