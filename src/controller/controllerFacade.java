@@ -74,10 +74,40 @@ class ControllerFacade {
     windows.get(active).view.renderCursor();
   }
 
+  public int closeActive(){
+        int status = windows.get(active).handler.close();
+        if(status == 0){
+            //safe to do a force close since 0 == succesful close eg. clean buffer
+            return forceCloseActive();
+        } else {
+            return 1;
+        }
+  }
+
   public int forceCloseActive() {
-    this.windows.remove(active);
-    if (this.windows.size() == 0)// return 2 if no more windows left
-      return 2;
+    int oldHashCode = windows.get(active).view.hashCode();
+    int newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, windows.get(active).view.hashCode());
+    if(newHashCode == oldHashCode){
+        newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.LEFT, windows.get(active).view.hashCode());
+        if(oldHashCode == newHashCode){
+            //no left or right neighbor to focus
+            rootLayout = null;
+            return 2;
+        }
+    }
+    rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
+    windows.remove(active);
+    int newActive = -1;
+    for(int i = 0; i<windows.size(); i++){
+        if(windows.get(i).view.hashCode() == newHashCode){
+            newActive = i;
+        }
+    }
+    active = newActive;
+    if(active == -1){
+        throw new RuntimeException("Layout and collection of views inconsistent!");
+    }
+
     return 0;
   }
 

@@ -11,6 +11,8 @@ abstract public class InputHandler{
     return this.hashCode();
   }
 
+  public abstract int close();
+
 	/*
 	 * handles all input
 	 */

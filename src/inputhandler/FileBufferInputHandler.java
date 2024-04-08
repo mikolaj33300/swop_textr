@@ -87,4 +87,8 @@ public class FileBufferInputHandler extends InputHandler {
 				break;
 		}
 	}
+
+	public int close(){
+		return fb.close();
+	}
 }

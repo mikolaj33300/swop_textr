@@ -1,10 +1,8 @@
 package layouttree;
 
 import ui.Rectangle;
-import ui.UICoords;
 
 import java.util.HashMap;
-import java.util.List;
 
 public abstract class Layout implements Cloneable {
 
@@ -41,6 +39,8 @@ public abstract class Layout implements Cloneable {
      * Checks whether this layout is allowed to be added as a child of the given {@link LayoutNode}
      */
     protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
+
+    public abstract Layout delete(int hashToDelete);
 
     protected LayoutNode parent = null;
 

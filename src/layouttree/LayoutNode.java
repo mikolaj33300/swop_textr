@@ -4,6 +4,18 @@ import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
 
+    @Override
+    public Layout delete(int hashToDelete){
+        for(Layout l:children){
+            try{
+                return l.delete(hashToDelete);
+            } catch(HashNotMatchingException ignored){
+
+            }
+        }
+        throw new HashNotMatchingException();
+    }
+
     /**
      * The children of this LayoutNode in the layout-tree
      */
@@ -128,16 +140,20 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Deletes a child of this LayoutNode
+     * Deletes a child of this LayoutNode, returns new rootlayout
      */
-    protected void delete(Layout l) {
+    protected Layout delete(Layout l) {
         children.remove(l);
         if (this.children.size() == 1) {
             if (this.parent != null) {
                 this.parent.children.set(this.parent.children.indexOf(this), this.children.get(0));
                 this.children.get(0).setParent(this.parent);
+                return parent.getRootLayoutUncloned();
+            } else {
+                return this.children.get(0);
             }
         }
+        return this.getRootLayoutUncloned();
     }
 
     /**

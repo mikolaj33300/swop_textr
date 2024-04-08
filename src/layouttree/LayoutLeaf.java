@@ -2,7 +2,6 @@ package layouttree;
 
 import files.FileBuffer;
 import ui.Rectangle;
-import ui.UICoords;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -129,6 +128,18 @@ public class LayoutLeaf extends Layout {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public Layout delete(int hashToDelete) {
+        if(containedHashCode == hashToDelete){
+            if(parent != null){
+                return parent.delete(this);
+            } else {
+                return null;
+            }
+        }
+        throw new HashNotMatchingException();
     }
 
 

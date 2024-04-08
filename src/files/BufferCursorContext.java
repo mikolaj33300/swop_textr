@@ -120,6 +120,10 @@ public class BufferCursorContext {
         return byteArrIndex;
     }
 
+    public int close(){
+        return containedFileBuffer.close();
+    }
+
     public void save() {
         containedFileBuffer.save();
     }
