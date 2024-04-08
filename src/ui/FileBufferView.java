@@ -34,6 +34,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      */
     @Override
     public void render() throws IOException {
+        UICoords coords = super.getRealUICoordsFromScaled();
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (coords.height - 1)) * (coords.height - 1);
@@ -60,7 +61,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         assert coords.height > 0 && coords.startY > 0;
         if(coords.startY + coords.height > 0)
             Terminal.printText(coords.startY + coords.height, coords.startX + 1, this.getStatusbarString());
-        renderScrollbar(coords.startX+coords.width-1, coords.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
+        renderScrollbar(coords.startX+coords.width-1, coords.startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size(), getRealUICoordsFromScaled());
 
     }
 
@@ -91,10 +92,10 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         return statusLine;
     }
 
-    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
-        for(int i = 0; i<(super.coords.height-1); i++){
-            double visibleStartPercent = ((focusedLine/(super.coords.height-1))*(super.coords.height-1))*1.0/containedFileBuffer.getLines().size();
-            double visibleEndPercent = ((1+focusedLine/(super.coords.height-1))*(super.coords.height-1))*1.0/containedFileBuffer.getLines().size();
+    private void renderScrollbar(int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight, UICoords coords){
+        for(int i = 0; i<(coords.height-1); i++){
+            double visibleStartPercent = ((focusedLine/(coords.height-1))*(coords.height-1))*1.0/containedFileBuffer.getLines().size();
+            double visibleEndPercent = ((1+focusedLine/(coords.height-1))*(coords.height-1))*1.0/containedFileBuffer.getLines().size();
 
             if((i*1.0/(coords.height-1)>=visibleStartPercent) && (i*1.0/coords.height <= visibleEndPercent)){
                 Terminal.printText(1+startY+i, 1+scrollStartX, "+");
@@ -126,6 +127,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      * Handles printing the cursor in this view.
      */
     public void renderCursor() throws IOException {
+        UICoords coords = getRealUICoordsFromScaled();
         if (getContainsActiveView()) {
             int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (coords.width-1);
             int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (coords.height-1);

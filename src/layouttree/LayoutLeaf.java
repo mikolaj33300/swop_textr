@@ -1,11 +1,11 @@
 package layouttree;
 
 import files.FileBuffer;
+import ui.Rectangle;
 import ui.UICoords;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 
 /**
@@ -13,13 +13,13 @@ import java.util.List;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private final int hashCode;
+    private final int containedHashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
     public LayoutLeaf(int hash) throws IOException {
-	    this.hashCode = hash;
+	    this.containedHashCode = hash;
     }
 
 
@@ -54,11 +54,11 @@ public class LayoutLeaf extends Layout {
      * @return
      */
     private int getRightNeighborsContainedHash(int hash) throws HashNotMatchingException{
-        if(this.hashCode == hash){
+        if(this.containedHashCode == hash){
             if(parent != null){
                 return parent.getRightNeighbourContainedHash(this);
             } else {
-                return this.hashCode;
+                return this.containedHashCode;
             }
         } else {
             throw new HashNotMatchingException();
@@ -72,11 +72,11 @@ public class LayoutLeaf extends Layout {
      * @return
      */
     private int getLeftNeighborsContainedHash(int hash) {
-        if(this.hashCode == hash){
+        if(this.containedHashCode == hash){
             if(parent != null){
                 return parent.getLeftNeighbourContainedHash(this);
             } else {
-                return this.hashCode;
+                return this.containedHashCode;
             }
         } else {
             throw new HashNotMatchingException();
@@ -90,9 +90,9 @@ public class LayoutLeaf extends Layout {
      * active leaf and rotated then.
      */
     public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
-        if (parent != null && hash == this.hashCode) {
+        if (parent != null && hash == this.containedHashCode) {
             return parent.rotateWithRightSibling(rot_dir, this);
-        } else if (hash == this.hashCode) {
+        } else if (hash == this.containedHashCode) {
             System.out.print((char) 7); //sounds terminal bell
             return this;
         } else {
@@ -139,15 +139,17 @@ public class LayoutLeaf extends Layout {
     @Override
     public LayoutLeaf clone() {
         try {
-            return new LayoutLeaf(hashCode);
+            return new LayoutLeaf(containedHashCode);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<UICoords> getCoordsList(UICoords uiCoords) {
-        return Arrays.asList(uiCoords);
+    public HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        HashMap<int, Rectangle> mapToReturn = new HashMap<int, Rectangle>();
+        mapToReturn.put(this.containedHashCode, uiCoordsScaled);
+        return mapToReturn;
     }
 
     /**
@@ -156,7 +158,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected int getLeftmostContainedHash() {
-        return hashCode;
+        return containedHashCode;
     }
 
     /**
@@ -165,7 +167,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     protected int getRightmostContainedHash() {
-        return hashCode;
+        return containedHashCode;
     }
 
     /**

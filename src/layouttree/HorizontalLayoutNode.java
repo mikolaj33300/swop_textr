@@ -1,10 +1,11 @@
 package layouttree;
 
+import ui.Rectangle;
 import ui.UICoords;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 public class HorizontalLayoutNode extends LayoutNode {
 
@@ -64,15 +65,16 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     @Override
-    public List<UICoords> getCoordsList(UICoords uiCoords) {
-        int widthChild = uiCoords.width / children.size(); //rounds down
-        int xChild = uiCoords.startX;
-        ArrayList<UICoords> resultList = new ArrayList<>();
+    public HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double widthChild = uiCoordsScaled.width / children.size(); //rounds down
+        double xChild = uiCoordsScaled.startX;
+        HashMap<int, Rectangle> resultMap = new HashMap<int, Rectangle>();
         for (Layout child : children) {
-            resultList.addAll(child.getCoordsList(new UICoords(xChild, uiCoords.startY, widthChild, uiCoords.height)));
+            Object uiCoords;
+            resultMap.putAll(child.getCoordsList(new Rectangle(xChild, uiCoordsScaled.startY, widthChild, uiCoordsScaled.height)));
             xChild = xChild + widthChild;
         }
-        return resultList;
+        return resultMap;
     }
 
     /**

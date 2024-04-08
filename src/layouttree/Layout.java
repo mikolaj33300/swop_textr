@@ -1,7 +1,9 @@
 package layouttree;
 
+import ui.Rectangle;
 import ui.UICoords;
 
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Layout implements Cloneable {
@@ -101,5 +103,5 @@ public abstract class Layout implements Cloneable {
      */
     public abstract Layout clone();
 
-    public abstract List<UICoords> getCoordsList(UICoords uiCoords);
+    public abstract HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
 }

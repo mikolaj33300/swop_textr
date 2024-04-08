@@ -1,11 +1,11 @@
 package layouttree;
 
+import ui.Rectangle;
 import ui.UICoords;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 public class VerticalLayoutNode extends LayoutNode{
 
@@ -89,14 +89,14 @@ public class VerticalLayoutNode extends LayoutNode{
     }
 
     @Override
-    public List<UICoords> getCoordsList(UICoords uiCoords) {
-        int heightChild = uiCoords.height / children.size(); //rounds down
-        int yChild = uiCoords.startY;
-        ArrayList<UICoords> resultList = new ArrayList<>();
+    public HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double heightChild = uiCoordsScaled.height / children.size(); //rounds down
+        double yChild = uiCoordsScaled.startY;
+        HashMap<int, Rectangle> resultMap = new HashMap<int, Rectangle>();
         for (Layout child : children) {
-            resultList.addAll(child.getCoordsList(new UICoords(uiCoords.startX, yChild, heightChild, uiCoords.height)));
+            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, heightChild, uiCoordsScaled.height)));
             yChild = yChild + heightChild;
         }
-        return resultList;
+        return resultMap;
     }
 }

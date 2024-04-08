@@ -1,5 +1,6 @@
 package controller;
 
+import files.PathNotFoundException;
 import io.github.btj.termios.Terminal;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
 
 import inputhandler.FileBufferInputHandler;
 import layouttree.Layout;
@@ -16,8 +19,7 @@ import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.DIRECTION;
 import layouttree.VerticalLayoutNode;
-import ui.FileBufferView;
-import ui.View;
+import ui.*;
 import ui.FileBufferView;
 
 class Window {
@@ -34,6 +36,7 @@ class ControllerFacade {
 	private ArrayList<Window> windows;
 	private Layout rootLayout;
 	private int active;
+    UICoords screenUICoords;
 
     /**
      * Creates a ControllerFacade object.
@@ -41,18 +44,18 @@ class ControllerFacade {
      * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
      * @throws IOException when the path is invalid
      */
-	public ControllerFacade(String[] paths) throws IOException {
+	public ControllerFacade(String[] paths) throws PathNotFoundException, IOException {
 		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
-
 		for (int i = 0; i < paths.length; i++) {
 		    String checkPath = paths[i];
-			FileBufferInputHandler openedFileHandler = new FileBufferInputHandler(checkPath);
-		    this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
-		    if (!Files.exists(Path.of(checkPath)))
+			if (!Files.exists(Path.of(checkPath)))
 				//TODO: exception needs to be caught on level above
-				throw new IOException("Path not found");
-		    else
-				leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
+				throw new PathNotFoundException();
+		    else {
+                FileBufferInputHandler openedFileHandler = new FileBufferInputHandler(checkPath);
+                this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
+                leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
+            }
 		}
 
 		if(leaves.size() == 1)
@@ -62,11 +65,13 @@ class ControllerFacade {
 	}
 
   public void renderContent() throws IOException {
-    return;
+    for(int i = 0; i< windows.size(); i++){
+        windows.get(i).view.render();
+    };
   }
 
   public void renderCursor() throws IOException {
-    return;
+    windows.get(active).view.renderCursor();
   }
 
   public int forceCloseActive() {
@@ -105,7 +110,15 @@ class ControllerFacade {
     /**
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
-    void rotateLayout(ROT_DIRECTION orientation){
+    void rotateLayout(ROT_DIRECTION orientation) throws IOException {
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
+        updateViewCoordinates();
+    }
+
+    private void updateViewCoordinates() {
+        HashMap<int, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
+        for(Window w : windows){
+            w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
+        }
     }
 }
