@@ -83,17 +83,16 @@ class ControllerFacade {
     /**
      * Changes the focused {@link LayoutLeaf} to another.
      */
-    void moveFocus(DIRECTION dir) {
-      return;
-      /*
-        int newActive = this.rootLayout.getHashActiveNeighbour(dir, this.render.getHash(active));
+    public void moveFocus(DIRECTION dir) {
+
+        int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
         for (int i = 0; i < this.windows.size(); i++){
-          if (this.render.getHash(i) == newActive){
+          if (this.windows.get(i).view.hashCode() == newActive){
             this.active = i;
             break;
           }
         }
-        */
+
     }
 
     /**
@@ -107,6 +106,6 @@ class ControllerFacade {
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
     void rotateLayout(ROT_DIRECTION orientation){
-        rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).handler.getHash());
+        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
     }
 }

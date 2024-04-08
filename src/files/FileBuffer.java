@@ -102,33 +102,6 @@ public class FileBuffer {
     }
 
     /**
-     * Moves the cursor in a given direction.
-     * 'C': right
-     * 'D': left
-     * 'A': up
-     * 'B': down
-    public void moveCursor(char direction) {
-        switch (direction) {
-            // Right
-            case 'C':
-                moveCursorRight();
-                break;
-            // Left
-            case 'D':
-                moveCursorLeft();
-                break;
-            // Up
-            case 'A':
-                moveCursorUp();
-                break;
-            // Down
-            case 'B':
-                moveCursorDown();
-                break;
-        }
-    }*/
-
-    /**
      * Returns a copy of the byteConent of this FileBuffer
      * TODO: unchecked cast
      */
