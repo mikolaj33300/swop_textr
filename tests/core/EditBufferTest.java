@@ -1,5 +1,6 @@
 package core;
 
+import controller.TextR;
 import files.FileHolder;
 import layouttree.DIRECTION;
 import org.junit.jupiter.api.BeforeEach;

@@ -13,9 +13,11 @@ abstract public class InputHandler{
 
   public abstract int close();
 
+  public abstract void save();
+
 	/*
 	 * handles all input
 	 */
-	abstract public void Input(byte b) throws IOException;
+	abstract public void input(byte b) throws IOException;
 	
 }

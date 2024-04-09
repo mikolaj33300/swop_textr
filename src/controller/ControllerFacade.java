@@ -1,36 +1,21 @@
 package controller;
 
 import files.PathNotFoundException;
-import io.github.btj.termios.Terminal;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.List;
 
 import inputhandler.FileBufferInputHandler;
 import layouttree.Layout;
-import inputhandler.InputHandler;
 import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.DIRECTION;
 import layouttree.VerticalLayoutNode;
 import ui.*;
 import ui.FileBufferView;
-
-class Window {
-	public final View view;
-	public final InputHandler handler;
-
-	public Window(View v, InputHandler h){
-		this.view = v;
-		this.handler = h;
-	}
-}
 
 class ControllerFacade {
 	private ArrayList<Window> windows;
@@ -45,6 +30,7 @@ class ControllerFacade {
      * @throws IOException when the path is invalid
      */
 	public ControllerFacade(String[] paths) throws PathNotFoundException, IOException {
+        this.windows = new ArrayList<Window>();
 		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
 		for (int i = 0; i < paths.length; i++) {
 		    String checkPath = paths[i];
@@ -70,6 +56,10 @@ class ControllerFacade {
     };
   }
 
+  public void saveActive(){
+        windows.get(active).handler.save();
+  }
+
   public void renderCursor() throws IOException {
     windows.get(active).view.renderCursor();
   }
@@ -85,6 +75,7 @@ class ControllerFacade {
   }
 
   public int forceCloseActive() {
+        //checks which hash will be the next one after this is closed
     int oldHashCode = windows.get(active).view.hashCode();
     int newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, windows.get(active).view.hashCode());
     if(newHashCode == oldHashCode){
@@ -95,6 +86,8 @@ class ControllerFacade {
             return 2;
         }
     }
+
+    //deletes and sets new one as active
     rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
     windows.remove(active);
     int newActive = -1;
@@ -107,12 +100,11 @@ class ControllerFacade {
     if(active == -1){
         throw new RuntimeException("Layout and collection of views inconsistent!");
     }
-
     return 0;
   }
 
   public void passToActive(byte b) throws IOException {
-    this.windows.get(active).handler.Input(b);
+    this.windows.get(active).handler.input(b);
   }
 
     /**
@@ -146,7 +138,7 @@ class ControllerFacade {
     }
 
     private void updateViewCoordinates() {
-        HashMap<int, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
+        HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
         for(Window w : windows){
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
         }

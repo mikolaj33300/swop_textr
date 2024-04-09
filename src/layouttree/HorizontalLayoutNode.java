@@ -65,10 +65,10 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     @Override
-    public HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
         double widthChild = uiCoordsScaled.width / children.size(); //rounds down
         double xChild = uiCoordsScaled.startX;
-        HashMap<int, Rectangle> resultMap = new HashMap<int, Rectangle>();
+        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
         for (Layout child : children) {
             Object uiCoords;
             resultMap.putAll(child.getCoordsList(new Rectangle(xChild, uiCoordsScaled.startY, widthChild, uiCoordsScaled.height)));

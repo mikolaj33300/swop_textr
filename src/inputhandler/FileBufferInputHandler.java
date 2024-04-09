@@ -16,7 +16,7 @@ public class FileBufferInputHandler extends InputHandler {
 		return fb;
 	}
 
-	public void Input(byte b) {
+	public void input(byte b) {
 		switch(b) {
 			case 27:
 				this.surrogate = true;
@@ -91,4 +91,6 @@ public class FileBufferInputHandler extends InputHandler {
 	public int close(){
 		return fb.close();
 	}
+
+	public void save() {this.fb.save();};
 }

@@ -103,5 +103,5 @@ public abstract class Layout implements Cloneable {
      */
     public abstract Layout clone();
 
-    public abstract HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
+    public abstract HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
 }

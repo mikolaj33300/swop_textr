@@ -6,6 +6,7 @@ import layouttree.HorizontalLayoutNode;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import org.junit.jupiter.api.Test;
+import controller.TextR;
 
 import java.io.IOException;
 import java.util.ArrayList;

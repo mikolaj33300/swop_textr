@@ -114,7 +114,7 @@ public class TextR {
 
     // Test functions
 
-    static void setLineSeparatorFromArgs(String[] args) {
+    public static void setLineSeparatorFromArgs(String[] args) {
         if(args[0].equals("--lf"))
             TextR.lineSeparatorArg = new byte[]{0x0a};
         else if(args[0].equals("--crlf"))

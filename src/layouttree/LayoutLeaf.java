@@ -157,8 +157,8 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
-    public HashMap<int, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
-        HashMap<int, Rectangle> mapToReturn = new HashMap<int, Rectangle>();
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        HashMap<Integer, Rectangle> mapToReturn = new HashMap<Integer, Rectangle>();
         mapToReturn.put(this.containedHashCode, uiCoordsScaled);
         return mapToReturn;
     }
