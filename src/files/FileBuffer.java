@@ -20,6 +20,12 @@ public class FileBuffer {
     private ArrayList<FileBufferContentChangedListener> listenersArrayList;
 
     /**
+     * Undo stack
+     */
+    private ArrayList<Command> undoStack = new ArrayList<Command>();
+    private int nbUndone;
+
+    /**
      * Determines if buffer has been modified
      */
     private boolean dirty = false;
@@ -59,17 +65,36 @@ public class FileBuffer {
             listenersArrayList.get(i).contentsChanged();
     }
 
+    public void undo() {
+      if (undoStack.size() > nbUndone)
+        undoStack.get(undoStack.size() - ++nbUndone).undo();
+    }
+
+    public void redo() {
+      if (nbUndone > 0)
+        undoStack.get(undoStack.size() - nbUndone--).do();
+    }
+
+    private void execute(Command command) {
+      for (; nbUndone > 0; nbUndone--)
+        undoStack.remove(undoStack.size() - 1);
+      undoStack.add(command);
+      command.do();
+    }
+
     /**
      * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
      * when character is to be deleted.
      */
     public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
-        int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
-        if(insertionPointCol > 0 || insertionPointLine > 0) {
-            this.dirty = true;
-        }
-        if(insertionPointCol > 0) {
-            this.byteContent.remove(insertionPointByteIndex-1);
+      execute(new Command() {
+        private int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        public void do() {
+          if(insertionPointCol > 0 || insertionPointLine > 0) {
+              this.dirty = true;
+          }
+          if(insertionPointCol > 0) {
+              this.byteContent.remove(insertionPointByteIndex-1);
         } else {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
@@ -80,6 +105,10 @@ public class FileBuffer {
         }
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
+        public void undo(){
+
+        }
+      });
     }
 
     /**
