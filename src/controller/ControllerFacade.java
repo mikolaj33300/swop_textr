@@ -1,11 +1,11 @@
 package controller;
 
+import files.FileAnalyserUtil;
 import files.PathNotFoundException;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import inputhandler.FileBufferInputHandler;
@@ -18,10 +18,10 @@ import ui.*;
 import ui.FileBufferView;
 
 class ControllerFacade {
+    private byte[] lineSeparatorArg;
 	private ArrayList<Window> windows;
 	private Layout rootLayout;
 	private int active;
-    UICoords screenUICoords;
 
     /**
      * Creates a ControllerFacade object.
@@ -29,19 +29,27 @@ class ControllerFacade {
      * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
      * @throws IOException when the path is invalid
      */
-	public ControllerFacade(String[] paths) throws PathNotFoundException, IOException {
+	public ControllerFacade(String[] args) throws PathNotFoundException, IOException {
+        this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
+        String[] paths;
+        if(FileAnalyserUtil.isValidLineSeparatorString(args[0])){
+            paths = Arrays.copyOfRange(args, 1, args.length);
+        } else {
+            paths = args;
+        }
+
         this.windows = new ArrayList<Window>();
 		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
 		for (int i = 0; i < paths.length; i++) {
 		    String checkPath = paths[i];
-			if (!Files.exists(Path.of(checkPath)))
-				//TODO: exception needs to be caught on level above
-				throw new PathNotFoundException();
-		    else {
-                FileBufferInputHandler openedFileHandler = new FileBufferInputHandler(checkPath);
+            FileBufferInputHandler openedFileHandler;
+			try{
+                openedFileHandler = new FileBufferInputHandler(checkPath);
+            } catch (PathNotFoundException e){
+                throw e;
+            }
                 this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
                 leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
-            }
 		}
 
 		if(leaves.size() == 1)
@@ -51,9 +59,9 @@ class ControllerFacade {
 	}
 
   public void renderContent() throws IOException {
-    for(int i = 0; i< windows.size(); i++){
-        windows.get(i).view.render();
-    };
+      for (Window window : windows) {
+          window.view.render();
+      }
   }
 
   public void saveActive(){
@@ -65,9 +73,8 @@ class ControllerFacade {
   }
 
   public int closeActive(){
-        int status = windows.get(active).handler.close();
-        if(status == 0){
-            //safe to do a force close since 0 == succesful close eg. clean buffer
+        if(windows.get(active).handler.isSafeToClose()){
+            //safe to do a force close since clean buffer
             return forceCloseActive();
         } else {
             return 1;
@@ -76,18 +83,10 @@ class ControllerFacade {
 
   public int forceCloseActive() {
         //checks which hash will be the next one after this is closed
-    int oldHashCode = windows.get(active).view.hashCode();
-    int newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, windows.get(active).view.hashCode());
-    if(newHashCode == oldHashCode){
-        newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.LEFT, windows.get(active).view.hashCode());
-        if(oldHashCode == newHashCode){
-            //no left or right neighbor to focus
-            rootLayout = null;
-            return 2;
-        }
-    }
+      Integer newHashCode = getNewHashCode();
+      if (newHashCode == null) return 2;
 
-    //deletes and sets new one as active
+      //deletes and sets new one as active
     rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
     windows.remove(active);
     int newActive = -1;
@@ -103,9 +102,27 @@ class ControllerFacade {
     return 0;
   }
 
-  public void passToActive(byte b) throws IOException {
-    this.windows.get(active).handler.input(b);
-  }
+    /**
+     * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
+     * @return
+     */
+    private Integer getNewHashCode() {
+        int oldHashCode = windows.get(active).view.hashCode();
+        int newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, windows.get(active).view.hashCode());
+        if(newHashCode == oldHashCode){
+            newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.LEFT, windows.get(active).view.hashCode());
+            if(oldHashCode == newHashCode){
+                //no left or right neighbor to focus
+                rootLayout = null;
+                return null;
+            }
+        }
+        return newHashCode;
+    }
+
+    public void passToActive(byte b) throws IOException {
+        this.windows.get(active).handler.input(b);
+    }
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
@@ -132,7 +149,7 @@ class ControllerFacade {
     /**
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
-    void rotateLayout(ROT_DIRECTION orientation) throws IOException {
+    public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
         updateViewCoordinates();
     }
@@ -142,5 +159,25 @@ class ControllerFacade {
         for(Window w : windows){
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
         }
+    }
+
+    public void handleArrowRight(){
+        this.windows.get(active).handler.handleArrowRight();
+    }
+
+    public void handleArrowLeft(){
+        this.windows.get(active).handler.handleArrowLeft();
+    }
+
+    public void handleArrowDown(){
+        this.windows.get(active).handler.handleArrowDown();
+    }
+
+    public void handleArrowUp(){
+        this.windows.get(active).handler.handleArrowUp();
+    }
+
+    public void handleSeparator(){
+        this.windows.get(active).handler.handleSeparator();
     }
 }

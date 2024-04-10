@@ -12,8 +12,7 @@ import java.util.Formatter;
  *  andere functie dan buffer
  */
 public class FileHolder {
-
-    public static byte[] lineSeparator = TextR.getLineSeparatorArg();
+    private byte[] lineSeparator;
     private final String path;
 
     private final File fd;
@@ -21,9 +20,14 @@ public class FileHolder {
     /**
      * Creates File object with given path
      */
-    public FileHolder(String path) {
+    public FileHolder(String path, byte[] lineSeparator) {
         this.fd = new File(path);
+        this.lineSeparator = lineSeparator.clone();
         this.path = path;
+    }
+
+    public byte[] getLineSeparator() {
+        return lineSeparator;
     }
 
     public String getPath() {
@@ -80,7 +84,7 @@ public class FileHolder {
      * Return a copy of this FileHolder, without the reference to it
      */
     public FileHolder clone() {
-        return new FileHolder(new String(this.path));
+        return new FileHolder(new String(this.path), this.lineSeparator);
     }
 
     /**

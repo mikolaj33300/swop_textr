@@ -4,7 +4,7 @@ import files.BufferCursorContext;
 
 import java.io.IOException;
 
-public class FileBufferInputHandler extends InputHandler {
+public class FileBufferInputHandler extends InputHandlingElement {
 	BufferCursorContext fb;
 	boolean surrogate;
 
@@ -32,7 +32,12 @@ public class FileBufferInputHandler extends InputHandler {
 		}
 	}
 
-    /*
+	@Override
+	public boolean isSafeToClose() {
+		return !fb.getDirty();
+	}
+
+	/*
      * handles normal input
      */
 	public void asciiInput(byte b) {
@@ -88,9 +93,34 @@ public class FileBufferInputHandler extends InputHandler {
 		}
 	}
 
+	@Override
+	public void handleArrowRight(){
+
+	}
+
+	@Override
+	public void handleArrowLeft(){
+
+	}
+
+	@Override
+	public void handleArrowDown(){
+
+	}
+
+	@Override
+	public void handleArrowUp(){
+
+	}
+
+	@Override
+	public void handleSeparator(){
+
+	}
+
 	public int close(){
 		return fb.close();
 	}
 
-	public void save() {this.fb.save();};
+	public void save() {this.fb.save();}
 }

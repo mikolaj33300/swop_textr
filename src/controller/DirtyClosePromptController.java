@@ -31,7 +31,7 @@ public class DirtyClosePromptController extends UseCaseController {
     }
 
     @Override
-    public void render() throws IOException {
+    public void paintScreen() throws IOException {
         userPopupBox.render();
     }
 

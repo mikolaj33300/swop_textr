@@ -18,13 +18,19 @@ public abstract class UseCaseController {
      * @param b
      * @throws IOException
      */
-    public abstract void handle(int b) throws IOException;
+    public void handle(int b) throws IOException{
+
+    };
+
+    public void handleSurrogate(int first, int second){
+
+    };
 
     /**
      * Prints contents on a screen
      * @throws IOException
      */
-    public abstract void render() throws IOException;
+    public abstract void paintScreen() throws IOException;
 
     /**
      * Clears contents from screen entirely

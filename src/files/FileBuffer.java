@@ -40,10 +40,10 @@ public class FileBuffer {
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
      */
-    public FileBuffer(String path) throws IOException {
-        this.file = new FileHolder(path);
+    public FileBuffer(String path, byte[] lineSeparator) throws IOException {
+        this.file = new FileHolder(path, lineSeparator);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
-        this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent());
+        this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
     }
 
     // Implementation
@@ -70,12 +70,12 @@ public class FileBuffer {
         } else {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
-                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
+                for(int i = 0; i< file.getLineSeparator().length ; i++) {
                     this.byteContent.remove(insertionPointByteIndex);
                 }
             }
         }
-        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()), this.getLineSeparator());
     }
 
     /**
@@ -111,7 +111,7 @@ public class FileBuffer {
 
     /**
      * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
-     * another array by a line separator specified in {@link TextR#getLineSeparatorArg()}.
+     * another array by a line separator specified.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
         ArrayList<ArrayList<Byte>> clonedLinesList = new ArrayList<ArrayList<Byte>>();
@@ -191,7 +191,7 @@ public class FileBuffer {
      */
     void deleteLine(int insertionPointLine) {
         linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent), this.getLineSeparator());
         // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
@@ -204,7 +204,7 @@ public class FileBuffer {
         byteContent.addAll(byteArrayIndex,
                 Arrays.<Byte>asList(wrapEachByteElem(data)));
 
-        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes());
+        linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes(), this.getLineSeparator());
     }
 
     // Base methods
@@ -215,7 +215,7 @@ public class FileBuffer {
     public FileBuffer clone() {
         FileBuffer copy = null;
         try {
-            copy = new FileBuffer(this.file.getPath());
+            copy = new FileBuffer(this.file.getPath(), file.getLineSeparator());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -247,12 +247,16 @@ public class FileBuffer {
     }
 
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
+        int byteLengthSeparatorLen = file.getLineSeparator().length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + linesArrayList.get(i).size() + byteLengthSeparatorLen;
         }
         byteArrIndex = byteArrIndex + col;
         return byteArrIndex;
+    }
+
+    public byte[] getLineSeparator() {
+        return file.getLineSeparator();
     }
 }

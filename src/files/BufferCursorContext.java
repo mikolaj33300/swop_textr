@@ -111,7 +111,7 @@ public class BufferCursorContext {
      * value of the insertionPointByteIndex </p>
      */
     private int convertLineAndColToIndex(int line, int col) {
-        int byteLengthSeparatorLen = FileHolder.lineSeparator.length;
+        int byteLengthSeparatorLen = containedFileBuffer.getLineSeparator().length;
         int byteArrIndex = 0;
         for (int i = 0; i < line; i++) {
             byteArrIndex = byteArrIndex + containedFileBuffer.getLines().get(i).size() + byteLengthSeparatorLen;

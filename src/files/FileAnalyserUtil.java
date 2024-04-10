@@ -8,14 +8,26 @@ import java.util.Formatter;
 
 public class FileAnalyserUtil {
 
+    public static byte[] setLineSeparatorFromArgs(String arg) {
+        if(arg.equals("--lf"))
+            return new byte[]{0x0a};
+        else if(arg.equals("--crlf"))
+            return new byte[]{0x0d, 0x0a};
+        else return System.lineSeparator().getBytes();
+    }
+
+    public static boolean isValidLineSeparatorString(String arg){
+        return arg.equals("--lf") || arg.equals("--crlf");
+    }
+
 
     /**
      * Subdivides the given byte array into lines
      * @param byteContents
      * @return
      */
-    public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents) {
-        int lineSepLength = FileHolder.lineSeparator.length;
+    public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents, byte[] lineSeparator) {
+        int lineSepLength = lineSeparator.length;
         int startOfCurrentLine = 0;
         ArrayList<ArrayList<Byte>> linesArrList = new ArrayList<>();
 
@@ -23,7 +35,7 @@ public class FileAnalyserUtil {
         int i = 0;
         while (i < byteContents.length) {
             //if separator encountered
-            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), FileHolder.lineSeparator)){
+            if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), lineSeparator)){
                 linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
                 i += lineSepLength;
                 startOfCurrentLine = i;
