@@ -119,32 +119,32 @@ public class FileBuffer {
         return res;
     }
 
+    /**
+     * removed some checks
+     * this should be ok since this is only used in an undo at the moment
+     */
     public byte deleteCharacterWithIndex(int insertionPointByteIndex) {
         byte res = 0;
 
-        if(insertionPointCol > 0 || insertionPointLine > 0) {
+        if (insertionPointByteIndex > 0) {
             this.dirty = true;
         }
-        if(insertionPointCol > 0) {
-            res = this.byteContent.remove(insertionPointByteIndex-1);
-        } else {
-            if(insertionPointLine!=0){
-                //shift left the amount of bytes that need to be deleted and delete them one by one
-                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
-                    res = this.byteContent.remove(insertionPointByteIndex);
-                }
-            }
+        //shift left the amount of bytes that need to be deleted and delete them one by one
+        for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
+            res = this.byteContent.remove(insertionPointByteIndex);
         }
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
         return res;
     }
 
     public void writeCmd(byte updatedContents, int byteArrIndex) {
-      private byte uC = updatedContents;
-      private int bArrIndex = byteArrIndex;
+      execute(new Command() {
+        private byte uC = updatedContents;
+        private int bArrIndex = byteArrIndex;
 
-      void execute() { write(updatedContents, byteArrIndex); }
-      void undo() { deleteCharacterWithIndex(byteArrIndex); }
+        public void execute() { write(updatedContents, byteArrIndex); }
+        public void undo() { deleteCharacterWithIndex(byteArrIndex); }
+      });
 
     }
 
@@ -254,6 +254,15 @@ public class FileBuffer {
      */
     public boolean getDirty() {
         return this.dirty;
+    }
+
+    /**
+     * Deletes the full array
+     */
+    void deleteLine(int insertionPointLine) {
+        linesArrayList.remove(insertionPointLine);
+        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent));
+        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     // Private implementations
