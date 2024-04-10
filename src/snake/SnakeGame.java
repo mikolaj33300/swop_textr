@@ -91,7 +91,7 @@ public class SnakeGame {
 
     /**
      * Determines if the game is won.
-     * @return
+     * @return boolean
      */
     public boolean isWon() {
         return gameState == 1;
@@ -114,7 +114,7 @@ public class SnakeGame {
 
     /**
      * Retrieves the list of positions
-     * @return
+     * @return list of {@link Fruit} objects
      */
     public List<Fruit> getFruits() {
         // Map each Fruit to its position cloned.
@@ -183,7 +183,7 @@ public class SnakeGame {
 
     /**
      * Returns the score of the game.
-     * @return
+     * @return the score of the game
      */
     int getScore() {
         return this.score;

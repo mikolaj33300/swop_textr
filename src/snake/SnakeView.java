@@ -10,7 +10,6 @@ import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 public class SnakeView extends View {
-
     private SnakeGame game;
 
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
@@ -72,18 +71,18 @@ public class SnakeView extends View {
 
         for(int i = segments.length-1; i >= 0; i--) {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
-            if(s.equals("")) s = a.split("")[a.length()-1];
+            if(s.isEmpty()) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
                     s, true);
         }
 
 
         List<Fruit> fruits = game.getFruits();
-        for(int i = 0; i < fruits.size(); i++)
+        for (Fruit fruit : fruits)
             Terminal.printText(
-                    1+fruits.get(i).getPosition().y()+startY,
-                    1+fruits.get(i).getPosition().x()+startX,
-                    fruits.get(i).getCharacter());
+                    1 + fruit.getPosition().y() + startY,
+                    1 + fruit.getPosition().x() + startX,
+                    fruit.getCharacter());
 
     }
 
