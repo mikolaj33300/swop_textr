@@ -44,7 +44,7 @@ class ControllerFacade {
 		    String checkPath = paths[i];
             FileBufferInputHandler openedFileHandler;
 			try{
-                openedFileHandler = new FileBufferInputHandler(checkPath);
+                openedFileHandler = new FileBufferInputHandler(checkPath, lineSeparatorArg);
             } catch (PathNotFoundException e){
                 throw e;
             }
@@ -56,6 +56,8 @@ class ControllerFacade {
 		    this.rootLayout = leaves.get(0);
 		else
 		    this.rootLayout = new VerticalLayoutNode(leaves);
+
+        this.updateViewCoordinates();
 	}
 
   public void renderContent() throws IOException {

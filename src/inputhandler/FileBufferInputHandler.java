@@ -8,8 +8,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	BufferCursorContext fb;
 	boolean surrogate;
 
-	public FileBufferInputHandler(String path) throws IOException {
-		this.fb = new BufferCursorContext(path);
+	public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
+		this.fb = new BufferCursorContext(path, lineSeparator);
 	}
 
 	public BufferCursorContext getFileBufferContextTransparent(){

@@ -1,5 +1,6 @@
 package files;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class BufferCursorContext {
@@ -11,8 +12,8 @@ public class BufferCursorContext {
      */
     private int insertionPointCol, insertionPointLine, insertionPointByteIndex;
     FileBuffer containedFileBuffer;
-    public BufferCursorContext(String path){
-
+    public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
+        this.containedFileBuffer = new FileBuffer(path, lineSeparator);
     }
 
     public BufferCursorContext(FileBuffer referredFileBuffer){
