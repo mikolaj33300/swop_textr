@@ -261,15 +261,6 @@ public class FileBuffer {
         return this.dirty;
     }
 
-    /**
-     * Deletes the full array
-     */
-    void deleteLine(int insertionPointLine) {
-        linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent), this.getLineSeparator());
-        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
-    }
-
     // Private implementations
 
     /**
