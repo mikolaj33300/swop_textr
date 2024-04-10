@@ -3,7 +3,7 @@ package files;
 import controller.TextR;
 import layouttree.LayoutLeaf;
 import ui.FileBufferView;
-
+import command.Command;
 
 import java.io.IOException;
 import java.util.*;
@@ -72,29 +72,43 @@ public class FileBuffer {
 
     public void redo() {
       if (nbUndone > 0)
-        undoStack.get(undoStack.size() - nbUndone--).do();
+        undoStack.get(undoStack.size() - nbUndone--).execute();
     }
 
     private void execute(Command command) {
       for (; nbUndone > 0; nbUndone--)
         undoStack.remove(undoStack.size() - 1);
       undoStack.add(command);
-      command.do();
+      command.execute();
+    }
+
+    public void delCmd(int insertionPointCol, int insertionPointLine){
+      execute(new Command() {
+        private int iCol = insertionPointCol;
+        private int iLine = insertionPointLine;
+        private byte deleted;
+        public void execute() {
+          deleted = deleteCharacter(iCol, iLine);
+        }
+        public void undo() {
+          insert(convertLineAndColToIndex(iCol, iLine), deleted);
+        }
+      });
     }
 
     /**
      * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
      * when character is to be deleted.
      */
-    public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
-      execute(new Command() {
-        private int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
-        public void do() {
-          if(insertionPointCol > 0 || insertionPointLine > 0) {
-              this.dirty = true;
-          }
-          if(insertionPointCol > 0) {
-              this.byteContent.remove(insertionPointByteIndex-1);
+    public byte deleteCharacter(int insertionPointCol, int insertionPointLine) {
+        int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        byte res = 0;
+
+        if(insertionPointCol > 0 || insertionPointLine > 0) {
+            this.dirty = true;
+        }
+        if(insertionPointCol > 0) {
+            res = this.byteContent.remove(insertionPointByteIndex-1);
         } else {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
@@ -105,10 +119,7 @@ public class FileBuffer {
         }
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
-        public void undo(){
-
-        }
-      });
+        return res;
     }
 
     /**

@@ -1,6 +1,6 @@
 package command;
 
-interface Command{
+public interface Command{
   void undo();
-  void do();
+  void execute();
 }
