@@ -82,11 +82,12 @@ public class FileBuffer {
       command.execute();
     }
 
-    public void delCmd(int insertionPointCol, int insertionPointLine){
+    public void deleteCharacterCmd(int insertionPointCol, int insertionPointLine){
       execute(new Command() {
         private int iCol = insertionPointCol;
         private int iLine = insertionPointLine;
         private byte deleted;
+
         public void execute() {
           deleted = deleteCharacter(iCol, iLine);
         }
@@ -120,6 +121,35 @@ public class FileBuffer {
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
         return res;
+    }
+
+    public byte deleteCharacterWithIndex(int insertionPointByteIndex) {
+        byte res = 0;
+
+        if(insertionPointCol > 0 || insertionPointLine > 0) {
+            this.dirty = true;
+        }
+        if(insertionPointCol > 0) {
+            res = this.byteContent.remove(insertionPointByteIndex-1);
+        } else {
+            if(insertionPointLine!=0){
+                //shift left the amount of bytes that need to be deleted and delete them one by one
+                for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
+                    res = this.byteContent.remove(insertionPointByteIndex);
+                }
+            }
+        }
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+        return res;
+    }
+
+    public void writeCmd(byte updatedContents, int byteArrIndex) {
+      private byte uC = updatedContents;
+      private int bArrIndex = byteArrIndex;
+
+      void execute() { write(updatedContents, byteArrIndex); }
+      void undo() { deleteCharacterWithIndex(byteArrIndex); }
+
     }
 
     /**
