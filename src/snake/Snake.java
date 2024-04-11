@@ -57,12 +57,16 @@ public abstract class Snake {
      * @return returns the updated position
      */
     protected Pos getNext(Pos reference) {
-        return switch (this.direction) {
-            case UP -> new Pos(reference.x(), reference.y() - 1);
-            case DOWN -> new Pos(reference.x(), reference.y() + 1);
-            case RIGHT -> new Pos(reference.x() + 1, reference.y());
-            default -> new Pos(reference.x() - 1, reference.y());
-        };
+        switch(this.direction) {
+            case UP:
+                return new Pos(reference.x(), reference.y()-1);
+            case DOWN:
+                return new Pos(reference.x(), reference.y()+1);
+            case RIGHT:
+                return new Pos(reference.x()+1, reference.y());
+            default:
+                return new Pos(reference.x()-1, reference.y());
+        }
     }
 
     public MoveDirection getDirection() {

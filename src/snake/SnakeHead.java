@@ -1,5 +1,7 @@
 package snake;
 
+import io.github.btj.termios.Terminal;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -74,7 +76,7 @@ public class SnakeHead extends Snake {
 
     /**
      * Returns the segments of this snake. Used for rendering
-     * @return an array of {@link Snake} objects
+     * @return a list of {@link Snake} objects
      */
     public SnakeSegment[] getSegments() {
         return this.segments.clone();
@@ -104,12 +106,17 @@ public class SnakeHead extends Snake {
      * @return the head of the snake character
      */
     public String getHeadString() {
-        return switch (getDirection()) {
-            case UP -> "^";
-            case DOWN -> "v";
-            case RIGHT -> ">";
-            case LEFT -> "<";
-        };
+        switch(getDirection()) {
+            case UP:
+                return "^";
+            case DOWN:
+                return "v";
+            case RIGHT:
+                return ">";
+            case LEFT:
+                return "<";
+        }
+        return "^";
     }
 
     // Internal usage:

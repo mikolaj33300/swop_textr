@@ -10,6 +10,7 @@ import java.util.OptionalInt;
 import java.util.stream.Collectors;
 
 public class SnakeView extends View {
+
     private SnakeGame game;
 
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
@@ -59,30 +60,33 @@ public class SnakeView extends View {
         // Print score
         Terminal.printText(this.startY+height,this.startX + width/2, "Score: " + game.getScore());
 
-        // Print lost/won
-        if(!this.game.canContinue())
-            if(this.game.isWon()) printBox(5, "You won", "Press enter to try again");
-            else printBox(5, "You lost", "Press enter to try again");
-
-        // Print
+        // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
+        a = game.getSnake().getHeadString() + "-hello_mister_i_mogged_snake";
+
         int skip = 0;
         skip = printLine(head.getEnd(), head.getStart(), Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining()), false);
 
         for(int i = segments.length-1; i >= 0; i--) {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
-            if(s.isEmpty()) s = a.split("")[a.length()-1];
+            if(s.equals("")) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
                     s, true);
         }
 
 
         List<Fruit> fruits = game.getFruits();
-        for (Fruit fruit : fruits)
+        for(int i = 0; i < fruits.size(); i++)
             Terminal.printText(
-                    1 + fruit.getPosition().y() + startY,
-                    1 + fruit.getPosition().x() + startX,
-                    fruit.getCharacter());
+                    1+fruits.get(i).getPosition().y()+startY,
+                    1+fruits.get(i).getPosition().x()+startX,
+                    fruits.get(i).getCharacter());
+
+        // Print lost/won
+        if(!this.game.canContinue())
+            if(this.game.isWon()) printBox(5, "You won", "Press enter to try again");
+            else printBox(5, "You lost", "Press enter to try again");
+
 
     }
 
