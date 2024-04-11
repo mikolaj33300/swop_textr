@@ -81,8 +81,10 @@ public class SnakeGame {
         // Checks for invalid positions
         if(Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd()))
            || this.snake.getEnd().x() <= 0 || this.snake.getEnd().x() >= maxX
-           || this.snake.getEnd().y() <= 0 || this.snake.getEnd().y() >= maxY)
+           || this.snake.getEnd().y() <= 0 || this.snake.getEnd().y() >= maxY) {
             gameState = -1;
+            SnakeHead.log(">>>>>>Hello: " + Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd())));
+        }
 
         // Checks if the maximum length has been reached.
         if(snake.getLength() == maxX * maxY) gameState = 1;

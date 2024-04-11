@@ -20,7 +20,6 @@ public class SnakeView extends View {
     }
 
     public void tick() {
-        SnakeHead.log("Ticking");
         if(game.canContinue())
             this.game.tick();
     }
@@ -62,7 +61,7 @@ public class SnakeView extends View {
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
-        a = game.getSnake().getHeadString() + "-hello_mister_i_mogged_snake";
+        a = game.getSnake().getHeadString() + "borys_mikolai_is_polish";
 
         int skip = 0;
         skip = printLine(head.getEnd(), head.getStart(), Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining()), false);
