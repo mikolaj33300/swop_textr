@@ -7,4 +7,4 @@ build:
         - jar xvf ./*.jar
         - cp -vr ./io ./build/
         - javac --version
-        - javac -d ./build ./src/*/*.java
+        - javac -d ./build ./src/*/*.java ./src/*/*/*.java
