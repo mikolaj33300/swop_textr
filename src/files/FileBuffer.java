@@ -44,6 +44,7 @@ public class FileBuffer {
         this.file = new FileHolder(path, lineSeparator);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
+        this.listenersArrayList = new ArrayList<>();
     }
 
     // Implementation
