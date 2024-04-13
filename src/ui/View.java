@@ -6,25 +6,8 @@ import layouttree.LayoutLeaf;
 import java.io.IOException;
 
 public abstract class View {
-    /**
-     * The lefmost point where this view starts
-     */
-    int startX;
-
-    /**
-     * The topmost point where this view starts
-     */
-    int startY;
-
-    /**
-     * The height of this window
-     */
-    int height;
-
-    /**
-     * The width of this window
-     */
-    int width;
+    Rectangle uiCoordsScaled;
+    boolean containsActive;
 
     /**
      * The total width of the terminal
@@ -37,23 +20,19 @@ public abstract class View {
     static int terminalHeight;
 
     /**
-     * The leaf to which this view belongs
-     */
-    protected LayoutLeaf parent;
-
-    public LayoutLeaf getParent(){
-        return parent.clone();
-    }
-
-    /**
      * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
      */
-    protected void setCorrectCoords() throws IOException {
-        retrieveDimensions();
-        startX = parent.getStartX(terminalWidth, terminalHeight);
-        startY = parent.getStartY(terminalWidth, terminalHeight);
-        width = parent.getWidth(terminalWidth, terminalHeight);
-        height = parent.getHeight(terminalWidth, terminalHeight);
+    public void setScaledCoords(Rectangle uiCoordsScaled) {
+        this.uiCoordsScaled = uiCoordsScaled;
+    }
+
+    UICoords getRealUICoordsFromScaled() throws IOException {
+        UICoords screenDimensions = ScreenUIUtil.retrieveDimensionsTerminal();
+        return new UICoords(
+                (int) Math.floor(screenDimensions.startX* uiCoordsScaled.startX),
+                (int) Math.floor(screenDimensions.startY* uiCoordsScaled.startY),
+                (int) Math.floor(screenDimensions.width* uiCoordsScaled.width),
+                (int) Math.floor(screenDimensions.height* uiCoordsScaled.height));
     }
 
 
@@ -82,47 +61,11 @@ public abstract class View {
     public abstract void renderCursor() throws IOException;
 
     /**
-     * <p>Calculates the dimensions of the terminal
-     * Credits to BTJ. This looks very clean and intuïtive.
-     * Sets the fields {@link View#terminalWidth} and {@link View#terminalHeight}.</p>
-     * <p>Method set to default for unit test access.</p>
-     */
-    private void retrieveDimensions() throws IOException {
-
-        Terminal.reportTextAreaSize();
-        for(int i = 0; i < 4; i++)
-            Terminal.readByte();
-
-        int c = Terminal.readByte();
-        int height = c - '0';
-        int tempByte = Terminal.readByte();
-
-        for(;;) {
-            if(tempByte < '0' || '9' < tempByte)
-                break;
-            if (height > (Integer.MAX_VALUE - (c - '0')) / 10)
-                break;
-            height = height * 10 + (tempByte - '0');
-            tempByte = Terminal.readByte();
-        }
-        c = Terminal.readByte();
-        int width = c - '0';
-        tempByte = Terminal.readByte();
-
-        for(;;) {
-            if(tempByte < '0' || '9' < tempByte)
-                break;
-            if (width > (Integer.MAX_VALUE - (c - '0')) / 10)
-                break;
-            width = width * 10 + (tempByte - '0');
-            tempByte = Terminal.readByte();
-        }
-        View.terminalWidth = width;
-        View.terminalHeight = height;
-    }
-
-    /**
      * Checks whether this View and the given object are the same type and have the same contents
      */
     public abstract boolean equals(Object o);
+
+    protected boolean getContainsActiveView() {
+        return containsActive;
+    }
 }

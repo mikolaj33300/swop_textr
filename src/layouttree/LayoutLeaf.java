@@ -1,9 +1,10 @@
 package layouttree;
 
 import files.FileBuffer;
-import ui.FileBufferView;
+import ui.Rectangle;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 
 /**
@@ -11,67 +12,21 @@ import java.io.IOException;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private FileBufferView containedFileBufferView;
+    private final int containedHashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(String path, boolean active) throws IOException {
-        this.containedFileBufferView = new FileBufferView(path, this);
-        this.setContainsActiveView(active);
+    public LayoutLeaf(int hash) throws IOException {
+	    this.containedHashCode = hash;
     }
 
-    /**
-     * Returns the x coordinate of this leaf by traversing to the root, providing info about terminal from below.
-     */
-    public int getStartX(int terminalWidth, int terminalHeight){
-        if(parent != null){
-            return parent.getStartX(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
-     */
-    public void clearContent() throws IOException {
-        containedFileBufferView.clearContent();
-    }
-
-    /**
-     * Returns the y coordinate of this leaf by traversing to the root, providing info about terminal from below.
-     */
-    public int getStartY(int terminalWidth, int terminalHeight){
-        if(parent != null){
-            return parent.getStartY(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the height of this leaf by traversing to the root, providing info about terminal from below.
-     */
-    public int getHeight(int terminalWidth, int terminalHeight){
-        if(parent != null){
-            return parent.getHeight(this, terminalWidth, terminalHeight);
-        }
-        return terminalHeight;
-    }
-
-    /**
-     * Returns the width of this leaf by traversing to the root, providing info about terminal from below.
-     */
-    public int getWidth(int terminalWidth, int terminalHeight){
-        if(parent != null){
-            return parent.getWidth(this, terminalWidth, terminalHeight);
-        }
-        return terminalWidth;
-    }
 
     /**
      * Deletes the mostleft this leaf's parent
      * Since the parent function found this leaf as leftmost, it will be removed
      */
+    @Override
     protected void deleteLeftLeaf() {
         if (super.parent != null) {
             super.parent.delete(this);
@@ -83,64 +38,47 @@ public class LayoutLeaf extends Layout {
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public void moveFocus(MOVE_DIRECTION dir) {
-        if (dir == MOVE_DIRECTION.RIGHT) {
-            moveFocusRight();
+    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) {
+        if(dir==MOVE_DIRECTION.RIGHT){
+            return this.getRightNeighborsContainedHash(hash);
         } else {
-            moveFocusLeft();
+            return this.getLeftNeighborsContainedHash(hash);
         }
-    }
-
-    /**
-     * Calls moveCursor() on the contained active {@link ui.FileBufferView}(s).
-     */
-    @Override
-    public void moveCursor(char c) {
-        containedFileBufferView.moveCursor(c);
-    }
-
-    /**
-     * Calls enterText() on the contained {@link ui.FileBufferView}.
-     */
-    @Override
-    public void enterText(byte b) {
-        containedFileBufferView.write(b);
-    }
-
-    /**
-     * Calls save() on the contained {@link ui.FileBufferView}.
-     *
-     * @return
-     */
-    @Override
-    public int saveActiveBuffer() {
-        return containedFileBufferView.save();
-    }
-
-    @Override
-    public void enterInsertionPoint() {
-        containedFileBufferView.enterInsertionPoint();
     }
 
     /**
      * Moves focus from the currently active Layout, to the rightneigbouring layout
      * If no neighbours right, the active Layout stays active
+     *
+     * @return
      */
-    private void moveFocusRight() {
-        if (parent != null) {
-            this.setContainsActiveView(false);
-            parent.makeRightNeighbourActive(this);
+    private int getRightNeighborsContainedHash(int hash) throws HashNotMatchingException{
+        if(this.containedHashCode == hash){
+            if(parent != null){
+                return parent.getRightNeighbourContainedHash(this);
+            } else {
+                return this.containedHashCode;
+            }
+        } else {
+            throw new HashNotMatchingException();
         }
     }
 
     /**
      * Moves focus from the currently active Layout, to the leftneigbouring layout
      * If no neighbours left, the active Layout stays active
+     *
+     * @return
      */
-    private void moveFocusLeft() {
-        if (parent != null) {
-            this.setContainsActiveView(false);
-            parent.makeLeftNeighbourActive(this);
+    private int getLeftNeighborsContainedHash(int hash) {
+        if(this.containedHashCode == hash){
+            if(parent != null){
+                return parent.getLeftNeighbourContainedHash(this);
+            } else {
+                return this.containedHashCode;
+            }
+        } else {
+            throw new HashNotMatchingException();
         }
     }
 
@@ -150,65 +88,20 @@ public class LayoutLeaf extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) {
-        if (parent != null) {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
+        if (parent != null && hash == this.containedHashCode) {
             return parent.rotateWithRightSibling(rot_dir, this);
-        } else {
+        } else if (hash == this.containedHashCode) {
             System.out.print((char) 7); //sounds terminal bell
             return this;
-        }
-    }
-
-    /**
-      * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
-      * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
-     */
-    @Override
-    public int closeActive() {
-        if (containsActiveView) {
-            if(containedFileBufferView.close()==0){
-                if(parent != null){
-                    //should be replaced by hasrightneighbour
-                    if(parent.children.indexOf(this)<parent.children.size()-1){
-                        parent.makeRightNeighbourActive(this);
-                    } else {
-                        parent.makeLeftNeighbourActive(this);
-                    }
-                    parent.delete(this);
-                    return 0;
-                }
-                else return 2;
-            } else {
-                return 1;
-            }
         } else {
-            return 0;
+            throw new HashNotMatchingException();
         }
     }
 
-    /**
-     * Calls renderContent() on the contained {@link ui.FileBufferView}(s).
-     */
     @Override
-    public void renderContent() throws IOException {
-        containedFileBufferView.render();
-    }
-
-    /**
-     * Calls forcedCloseActive() on the contained {@link ui.FileBufferView} if it's active.
-     * Returns 0 if close was succesful and 2 if close was succesful but there are no more other children.
-     */
-    @Override
-    public int forcedCloseActive() {
-        if (containsActiveView) {
-            if(parent != null){
-                parent.makeRightNeighbourActive(this);
-                parent.delete(this);
-                return 0;
-            }
-
-        }
-        return 0;
+    protected LayoutLeaf getLeftLeaf() {
+        return null;
     }
 
     /**
@@ -218,7 +111,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof LayoutLeaf leaf) {
-            return leaf.containedFileBufferView.equals(this.containedFileBufferView) && (this.getContainsActiveView() == leaf.getContainsActiveView());
+            return (this.getContainsActiveView() == leaf.getContainsActiveView());
         } else {
             return false;
         }
@@ -237,13 +130,18 @@ public class LayoutLeaf extends Layout {
         }
     }
 
-    /**
-     * Calls deleteCharacter on the {@link ui.FileBufferView} contained in the active {@link LayoutLeaf} under this node, if there is one.
-     */
     @Override
-    public void deleteCharacter() {
-        containedFileBufferView.deleteCharacter();
+    public Layout delete(int hashToDelete) {
+        if(containedHashCode == hashToDelete){
+            if(parent != null){
+                return parent.delete(this);
+            } else {
+                return null;
+            }
+        }
+        throw new HashNotMatchingException();
     }
+
 
     /**
      * Makes a deepcopy of LayoutLeaf
@@ -252,10 +150,17 @@ public class LayoutLeaf extends Layout {
     @Override
     public LayoutLeaf clone() {
         try {
-            return new LayoutLeaf(this.containedFileBufferView.getContainedFileBuffer().getFileHolder().getPath(), getContainsActiveView());
+            return new LayoutLeaf(containedHashCode);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        HashMap<Integer, Rectangle> mapToReturn = new HashMap<Integer, Rectangle>();
+        mapToReturn.put(this.containedHashCode, uiCoordsScaled);
+        return mapToReturn;
     }
 
     /**
@@ -263,8 +168,8 @@ public class LayoutLeaf extends Layout {
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
     @Override
-    protected void makeLeftmostLeafActive() {
-        setContainsActiveView(true);
+    protected int getLeftmostContainedHash() {
+        return containedHashCode;
     }
 
     /**
@@ -272,19 +177,8 @@ public class LayoutLeaf extends Layout {
      * This is a leaf of the layout-structure, so it doesn't have any children, so this leaf should be madea active
      */
     @Override
-    protected void makeRightmostLeafActive() {
-        setContainsActiveView(true);
-    }
-
-    /**
-     * Calls renderCursor() on the contained {@link ui.FileBufferView} if it's active.
-     * Should be called after all the Termios prints are done to ensure a correct cursor position.
-     */
-    @Override
-    public void renderCursor() throws IOException {
-        if(super.containsActiveView){
-            containedFileBufferView.renderCursor();
-        }
+    protected int getRightmostContainedHash() {
+        return containedHashCode;
     }
 
     /**
@@ -292,7 +186,7 @@ public class LayoutLeaf extends Layout {
      * As this a leaf of the layout-structure,
      * it does not have any children and will return a copy of itself
      */
-    protected LayoutLeaf getLeftLeaf() {
+    protected LayoutLeaf getLeftLeaf(int hash) {
         return this;
     }
 

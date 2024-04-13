@@ -1,4 +1,4 @@
-package core;
+package controller;
 
 import ui.UserPopupBox;
 
@@ -20,7 +20,7 @@ public class DirtyClosePromptController extends UseCaseController {
                 break;
             // Y
             case 121:
-                int result = coreControllerParent.rootLayout.forcedCloseActive();
+                int result = coreControllerParent.facade.forceCloseActive();
                 if(result == 0){
                     coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
                 } else {
@@ -31,7 +31,7 @@ public class DirtyClosePromptController extends UseCaseController {
     }
 
     @Override
-    public void render() throws IOException {
+    public void paintScreen() throws IOException {
         userPopupBox.render();
     }
 
