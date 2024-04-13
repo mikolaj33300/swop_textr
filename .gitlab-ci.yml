@@ -1,5 +1,5 @@
 image: openjdk:21
-downloadTermios:
+build:
     stage: build
     script:
         - mkdir build
@@ -7,4 +7,9 @@ downloadTermios:
         - jar xvf ./*.jar
         - cp -vr ./io ./build/
         - javac --version
-        - javac -d ./build ./src/*/*.java
+        - javac -d ./build ./src/*/*.java ./tests/*/*.java
+
+test:
+    stage: test
+    script:
+        - junit-platform-console --class-path ./build/ --scan-classpath ./build/
