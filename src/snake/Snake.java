@@ -29,7 +29,7 @@ public abstract class Snake {
     /**
      * Function that implements the behaviour that the snake should execute every 'tick'
      */
-    protected abstract void progress();
+    protected abstract void tick();
 
     /**
      * Updates the start position of the snake, used for moving the snake.

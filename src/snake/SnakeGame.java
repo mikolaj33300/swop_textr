@@ -33,8 +33,8 @@ public class SnakeGame {
     /**
      * Settings of the game.
      */
-    final int MAX_FRUITS = 3, maxX, maxY;
-    private int score = 0, delay = 0, gameState = 0;
+    final int MAX_FRUITS = 3, maxX, maxY, STARVE_COUNTER = 5, WIN_LENGTH = 100;
+    private int score = 0, delay = 0, gameState = 0, starver = 0;
 
     /**
      * Represents the max X and Y coordinates of the snake game width. Used to generate fruits inside map bounds
@@ -62,9 +62,10 @@ public class SnakeGame {
      */
     public void tick() {
 
+        // 1. Tick the game
         snake.tick();
 
-        // Test if any of the fruits' positions match with the snake head.
+        // 2. Test if any of the fruits' positions match with the snake head.
         if(this.fruits.stream().anyMatch((x) -> x.getPosition().equals(snake.getEnd()))) {
             // We can assume that the amount of matches is 1, because the generation restricts two fruits on the same position
             Fruit collidedFruit = fruits.stream()
@@ -75,19 +76,34 @@ public class SnakeGame {
             this.snake.grow(collidedFruit.getGrowAmount());
             this.score += collidedFruit.getScore();
             this.delay += collidedFruit.millisecondDecrease();
+            this.starver = 0;
             initializeFruits();
-        } else this.score += 1;
+        } else {
+            this.score += 1;
+            this.starver += 1;
+        }
 
-        // Checks for invalid positions
+        // 3. Starve the snake
+        if(this.starver >= this.STARVE_COUNTER) {
+            this.starver = 0;
+            this.snake.grow(-1);
+        }
+
+        // 4. Check for invalid positions
         if(Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd()))
            || this.snake.getEnd().x() <= 0 || this.snake.getEnd().x() >= maxX
            || this.snake.getEnd().y() <= 0 || this.snake.getEnd().y() >= maxY) {
             gameState = -1;
+            SnakeHead.log("Testing for segment collision with head: " +
+                    Arrays.stream(this.snake.getSegments())
+                            .anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd())));
+
             SnakeHead.log(">>>>>>Hello: " + Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd())));
         }
 
-        // Checks if the maximum length has been reached.
-        if(snake.getLength() == maxX * maxY) gameState = 1;
+        // 5. Checks if the maximum length has been reached.
+        if(snake.getLength() == WIN_LENGTH) gameState = 1;
+        else if(snake.getLength() <= 0) gameState = -1;
 
     }
 

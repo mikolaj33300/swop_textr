@@ -61,20 +61,6 @@ public class SnakeHead extends Snake {
     }
 
     /**
-     * Ticks the snake. Makes sure that the snake progresses each tick & handles the
-     * {@link SnakeHead#segments} array.
-     */
-    public void tick() {
-
-        progress();
-
-        // We delete a segment from the list if its start has reached its end
-        if(this.segments.length > 0 && this.segments[0].canDelete())
-            popSegment();
-
-    }
-
-    /**
      * Returns the segments of this snake. Used for rendering
      * @return a list of {@link Snake} objects
      */
@@ -83,22 +69,26 @@ public class SnakeHead extends Snake {
     }
 
     @Override
-    public void progress() {
+    public void tick() {
         // We move the snake head.
         this.updateEnd(getNext(getEnd()));
 
-        // If the snake has eaten recently, we don't update the start position so the snake becomes longer
-        if(growState != 0)
+        // If the snake has eaten recently, we don't update the last segment
+        if(growState > 0)
             growState--;
-        // If the snake hasn't eaten we just update the head & its 'first' segment
-        else {
-            // Update the end of the snake (if there is no segment)
-            if (this.segments.length == 0)
-                this.updateStart(getNext(getStart()));
-            else
-            // If there is a segment, we can just call progress() on that Snake object
-                this.segments[0].progress();
+        // Starve mechanic
+        else if(growState < 0) {
+            updateTail();
+            checkSegments();
+            updateTail();
+            growState++;
         }
+        // If the snake hasn't eaten we just update the head & its last segment
+        else {
+            updateTail();
+        }
+
+        checkSegments();
     }
 
     /**
@@ -117,6 +107,26 @@ public class SnakeHead extends Snake {
                 return "<";
         }
         return "^";
+    }
+
+    /**
+     * Checks the segments progress and deletes finished tails
+     */
+    void checkSegments() {
+        if(this.segments.length > 0 && this.segments[0].canDelete())
+            popSegment();
+    }
+
+    /**
+     * Updates the tail of the snake. This can be a {@link SnakeSegment} or the {@link SnakeHead} itself.
+     */
+    void updateTail() {
+        // Update the end of the snake (if there is no segment)
+        if (this.segments.length == 0)
+            this.updateStart(getNext(getStart()));
+        else
+            // If there is a segment, we can just call progress() on that Snake object
+            this.segments[0].tick();
     }
 
     // Internal usage:

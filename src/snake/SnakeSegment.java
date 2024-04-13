@@ -7,7 +7,7 @@ class SnakeSegment extends Snake {
     }
 
     @Override
-    protected void progress() {
+    protected void tick() {
         this.updateStart(getNext(getStart()));
     }
 

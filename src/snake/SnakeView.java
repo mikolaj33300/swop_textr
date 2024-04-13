@@ -16,7 +16,7 @@ public class SnakeView extends View {
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
     // between [0, width] and [0, height]
     public SnakeView() {
-        this.game = new SnakeGame(20, 80-2, 24-2);
+        this.game = new SnakeGame(6, 80-2, 24-2);
     }
 
     public void tick() {
@@ -61,7 +61,7 @@ public class SnakeView extends View {
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
-        a = game.getSnake().getHeadString() + "borys_mikolai_is_polish";
+        a = game.getSnake().getHeadString() + "abcdefghijklmnopqrstuvwxyz";
 
         int skip = 0;
         skip = printLine(head.getEnd(), head.getStart(), Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining()), false);
