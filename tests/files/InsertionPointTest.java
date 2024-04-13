@@ -9,7 +9,7 @@ public class InsertionPointTest {
     @BeforeEach
     void setUp() throws IOException {
         String path1 = "testresources/test.txt";
-        FileBuffer fb1 = new FileBuffer(path1);
+        FileBuffer fb1 = new FileBuffer(path1, System.lineSeparator().getBytes());
     }
     @Test
     void testGetLines(){
