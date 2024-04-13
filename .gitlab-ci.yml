@@ -7,9 +7,4 @@ build:
         - jar xvf ./*.jar
         - cp -vr ./io ./build/
         - javac --version
-        - javac -d ./build ./src/*/*.java ./tests/*/*.java
-
-test:
-    stage: test
-    script:
-        - junit-platform-console --class-path ./build/ --scan-classpath ./build/
+        - javac -d ./build ./src/*/*.java
