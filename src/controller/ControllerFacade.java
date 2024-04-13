@@ -12,7 +12,7 @@ import inputhandler.FileBufferInputHandler;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
-import layouttree.DIRECTION;
+import layouttree.MOVE_DIRECTION;
 import layouttree.VerticalLayoutNode;
 import ui.*;
 import ui.FileBufferView;
@@ -110,9 +110,9 @@ class ControllerFacade {
      */
     private Integer getNewHashCode() {
         int oldHashCode = windows.get(active).view.hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, windows.get(active).view.hashCode());
+        int newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT, windows.get(active).view.hashCode());
         if(newHashCode == oldHashCode){
-            newHashCode = rootLayout.getNeighborsContainedHash(DIRECTION.LEFT, windows.get(active).view.hashCode());
+            newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.LEFT, windows.get(active).view.hashCode());
             if(oldHashCode == newHashCode){
                 //no left or right neighbor to focus
                 rootLayout = null;
@@ -129,7 +129,7 @@ class ControllerFacade {
     /**
      * Changes the focused {@link LayoutLeaf} to another.
      */
-    public void moveFocus(DIRECTION dir) {
+    public void moveFocus(MOVE_DIRECTION dir) {
 
         int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
         for (int i = 0; i < this.windows.size(); i++){

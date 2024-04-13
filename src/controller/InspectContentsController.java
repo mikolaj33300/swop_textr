@@ -1,6 +1,6 @@
 package controller;
 
-import layouttree.DIRECTION;
+import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
 
 import java.io.IOException;
@@ -23,11 +23,11 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Control + P
             case 16:
-                coreControllerParent.facade.moveFocus(DIRECTION.LEFT);
+                coreControllerParent.facade.moveFocus(MOVE_DIRECTION.LEFT);
                 break;
             // Control + N
             case 14:
-                coreControllerParent.facade.moveFocus(DIRECTION.RIGHT);
+                coreControllerParent.facade.moveFocus(MOVE_DIRECTION.RIGHT);
                 break;
             // Control + R
             case 18:

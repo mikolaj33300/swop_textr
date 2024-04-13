@@ -2,7 +2,7 @@ package core;
 
 import controller.TextR;
 import files.FileHolder;
-import layouttree.DIRECTION;
+import layouttree.MOVE_DIRECTION;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Debug;
@@ -44,12 +44,12 @@ public class SaveBufferTest {
         c.rootLayout.saveActiveBuffer();
 
         b = (Integer.valueOf(98)).byteValue();
-        c.moveFocus(DIRECTION.RIGHT);
+        c.moveFocus(MOVE_DIRECTION.RIGHT);
         c.enterText(b);
         c.rootLayout.saveActiveBuffer();
 
         b = (Integer.valueOf(99)).byteValue();
-        c.moveFocus(DIRECTION.RIGHT);
+        c.moveFocus(MOVE_DIRECTION.RIGHT);
         c.enterText(b);
         c.rootLayout.saveActiveBuffer();
 

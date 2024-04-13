@@ -1,7 +1,7 @@
 package layouttree;
 
 
-public enum DIRECTION {
+public enum MOVE_DIRECTION {
     LEFT,
     RIGHT
 }

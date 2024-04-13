@@ -58,7 +58,7 @@ public abstract class LayoutNode extends Layout {
      * If no neighbours left, the active Layout stays active
      */
     @Override
-    public int getNeighborsContainedHash(DIRECTION dir, int hash) throws RuntimeException {
+    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) throws RuntimeException {
         for (Layout l : children) {
             try{
                 return l.getNeighborsContainedHash(dir, hash);

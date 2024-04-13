@@ -54,42 +54,42 @@ class LayoutLeafTest {
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertTrue(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.LEFT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertTrue(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.LEFT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertTrue(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertTrue(children.get(1).getContainsActiveView());
         assertFalse(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
         assertFalse(children.get(1).getContainsActiveView());
         assertTrue(children.get(2).getContainsActiveView());
 
-        ln.getNeighborsContainedHash(DIRECTION.RIGHT);
+        ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         children = ln.getDirectChildren();
         assertTrue(ln.getContainsActiveView());
         assertFalse(children.get(0).getContainsActiveView());
@@ -97,15 +97,15 @@ class LayoutLeafTest {
         assertTrue(children.get(2).getContainsActiveView());
 
         assertTrue(l3.getContainsActiveView());
-        l3.getNeighborsContainedHash(DIRECTION.RIGHT);
+        l3.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         assertTrue(l3.getContainsActiveView());
-        l3.getNeighborsContainedHash(DIRECTION.LEFT);
+        l3.getNeighborsContainedHash(MOVE_DIRECTION.LEFT);
         assertTrue(l3.getContainsActiveView());
 
         assertFalse(l4.getContainsActiveView());
-        l4.getNeighborsContainedHash(DIRECTION.RIGHT);
+        l4.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT);
         assertFalse(l4.getContainsActiveView());
-        l4.getNeighborsContainedHash(DIRECTION.LEFT);
+        l4.getNeighborsContainedHash(MOVE_DIRECTION.LEFT);
         assertFalse(l4.getContainsActiveView());
     }
 

@@ -38,8 +38,8 @@ public class LayoutLeaf extends Layout {
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public int getNeighborsContainedHash(DIRECTION dir, int hash) {
-        if(dir==DIRECTION.RIGHT){
+    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) {
+        if(dir==MOVE_DIRECTION.RIGHT){
             return this.getRightNeighborsContainedHash(hash);
         } else {
             return this.getLeftNeighborsContainedHash(hash);

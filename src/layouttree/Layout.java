@@ -67,7 +67,7 @@ public abstract class Layout implements Cloneable {
     /**
      * Makes next/previous view in the structure active according to dir (left/right).
      */
-    public abstract int getNeighborsContainedHash(DIRECTION dir, int hash) throws RuntimeException;
+    public abstract int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) throws RuntimeException;
 
     /**
      * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.
