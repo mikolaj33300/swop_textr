@@ -17,7 +17,7 @@ public class LayoutLeaf extends Layout {
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
      */
-    public LayoutLeaf(int hash) throws IOException {
+    public LayoutLeaf(int hash) {
 	    this.containedHashCode = hash;
     }
 
@@ -149,11 +149,7 @@ public class LayoutLeaf extends Layout {
      */
     @Override
     public LayoutLeaf clone() {
-        try {
             return new LayoutLeaf(containedHashCode);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

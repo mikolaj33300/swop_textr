@@ -1,6 +1,12 @@
 package files;
 
+import layouttree.Layout;
+import layouttree.LayoutLeaf;
+import layouttree.VerticalLayoutNode;
 import org.junit.jupiter.api.Test;
+import ui.FileBufferView;
+import ui.Rectangle;
+import ui.View;
 import util.Debug;
 
 import java.io.File;
@@ -8,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -208,6 +215,28 @@ public class FileBufferTest {
         Debug.write("testresources/test.txt", "hello kaas\nmister");
 
         buffer.save();
+
+    }
+
+    @Test
+    public void testLayoutScaledCoords() throws IOException {
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        LayoutLeaf l2 = new LayoutLeaf(2);
+        LayoutLeaf l3 = new LayoutLeaf(3);
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(l1);
+        toAdd.add(l2);
+        VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
+
+        HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
+        assertEquals(coordsList.get(1).height, 0.5);
+        assertEquals(coordsList.get(1).startY, 0);
+
+        assertEquals(coordsList.get(2).height, 0.5);
+        assertEquals(coordsList.get(2).startY, 0.5);
+
+        View v = new FileBufferView(new BufferCursorContext("testresources/test.txt", System.lineSeparator().getBytes()));
+        v.setScaledCoords(coordsList.get(2));
 
     }
 
