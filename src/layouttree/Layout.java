@@ -35,11 +35,6 @@ public abstract class Layout implements Cloneable {
         return parent.clone();
     }
 
-    /**
-     * Checks whether this layout is allowed to be added as a child of the given {@link LayoutNode}
-     */
-    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
-
     public abstract Layout delete(int hashToDelete);
 
     protected LayoutNode parent = null;
