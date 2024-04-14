@@ -111,7 +111,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof LayoutLeaf leaf) {
-            return (this.getContainsActiveView() == leaf.getContainsActiveView());
+            return (this.containedHashCode == leaf.containedHashCode);
         } else {
             return false;
         }
