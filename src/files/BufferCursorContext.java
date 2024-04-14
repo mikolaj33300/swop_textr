@@ -14,6 +14,9 @@ public class BufferCursorContext {
     FileBuffer containedFileBuffer;
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new FileBuffer(path, lineSeparator);
+        this.insertionPointCol=0;
+        this.insertionPointLine=0;
+        this.insertionPointByteIndex=0;
     }
 
     public BufferCursorContext(FileBuffer referredFileBuffer){
@@ -28,8 +31,10 @@ public class BufferCursorContext {
      * Deletes the character before the insertion pt and updates the cursor position
      */
     public void deleteCharacter() {
+        int previousLine = insertionPointLine;
+        int previousCol = insertionPointCol;
         moveCursorLeft();
-        containedFileBuffer.deleteCharacter(insertionPointCol, insertionPointLine);
+        containedFileBuffer.deleteCharacter(previousCol, previousLine);
     }
 
     /**
@@ -153,6 +158,8 @@ public class BufferCursorContext {
     public FileHolder getFileHolder() {
         return containedFileBuffer.getFileHolder();
     }
+
+    public FileBuffer getFileBuffer() { return containedFileBuffer;}
 
     public boolean getDirty() {
         return containedFileBuffer.getDirty();

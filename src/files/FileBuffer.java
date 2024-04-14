@@ -59,7 +59,8 @@ public class FileBuffer {
     }
 
     /**
-     * Deletes the character before the insertion pt and updates the cursor position
+     * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
+     * when character is to be deleted.
      */
     public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
@@ -72,7 +73,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 for(int i = 0; i< file.getLineSeparator().length ; i++) {
-                    this.byteContent.remove(insertionPointByteIndex);
+                    this.byteContent.remove(insertionPointByteIndex-getLineSeparator().length);
                 }
             }
         }
@@ -140,7 +141,7 @@ public class FileBuffer {
     /**
      * Returns copy of this buffers' content.
      */
-    byte[] getBytes() {
+    public byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
     }
 
