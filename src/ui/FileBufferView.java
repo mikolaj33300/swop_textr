@@ -69,7 +69,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      * Generates the string that is used to display the statusbar.
      */
     public String getStatusbarString() {
-        String statusLine = containedFileBuffer.getFileHolder().getPath();
+        String statusLine = containedFileBuffer.getFileBuffer().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
         statusLine += " #Chars:";
@@ -115,12 +115,6 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         } else {
             return false;
         }
-    }
-    /**
-     * Returns a copy of the BufferContext of this FileBufferView
-     */
-    public BufferCursorContext getContainedFileBuffer() {
-        return containedFileBuffer.deepClone();
     }
 
     /**

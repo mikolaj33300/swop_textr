@@ -1,6 +1,7 @@
 package files;
 
 import controller.TextR;
+import layouttree.LayoutLeaf;
 import ui.FileBufferView;
 
 
@@ -230,8 +231,13 @@ public class FileBuffer {
      * Checks if the given {@link FileBuffer} references the same {@link FileHolder}
      * and temporarily, if the content, and dirty boolean match.
      */
-    public boolean equals(FileBuffer buffer) {
-        return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FileBuffer buffer) {
+            return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -260,5 +266,9 @@ public class FileBuffer {
 
     public byte[] getLineSeparator() {
         return file.getLineSeparator();
+    }
+
+    public String getPath() {
+        return file.getPath();
     }
 }
