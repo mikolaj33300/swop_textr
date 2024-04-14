@@ -71,10 +71,6 @@ public class VerticalLayoutNode extends LayoutNode{
     @Override
     public boolean equals(Object node) {
         if(node instanceof VerticalLayoutNode layoutNode) {
-            //Check objects for same activity-status
-            if(this.getContainsActiveView() != layoutNode.getContainsActiveView()){
-                return false;
-            }
             // Return early when the amount of children don't match.
             if(layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both

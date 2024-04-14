@@ -31,8 +31,7 @@ public abstract class LayoutNode extends Layout {
 
         this.children = new ArrayList<>();
         for (Layout l : newChildren)
-            if (l.isAllowedToBeChildOf(this))
-                this.insertDirectChild(l.clone());
+            this.insertDirectChild(l.clone());
     }
 
 
@@ -78,9 +77,6 @@ public abstract class LayoutNode extends Layout {
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
-            if (cloneOfInsert.getContainsActiveView()) {
-                this.containsActiveView = true;
-            }
         }
     }
 
