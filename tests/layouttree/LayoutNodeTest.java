@@ -1,9 +1,6 @@
 package layouttree;
 
-<<<<<<< HEAD
 import controller.TextR;
-=======
->>>>>>> 4311e7a
 import files.FileBuffer;
 import org.junit.jupiter.api.*;
 
