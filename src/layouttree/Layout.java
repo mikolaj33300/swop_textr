@@ -44,8 +44,6 @@ public abstract class Layout implements Cloneable {
 
     protected LayoutNode parent = null;
 
-    protected boolean containsActiveView;
-
     /**
      * Deletes the leftmost {@link LayoutLeaf}from the underlying structure. In composite Layouts it is relayed to the leftmost child. If this is a leaf, it itself deletes itself from the parent.
      */
@@ -55,13 +53,6 @@ public abstract class Layout implements Cloneable {
      */
     protected void setParent(LayoutNode layoutNode){
         this.parent = layoutNode;
-    }
-
-    /**
-     * Returns whether this layout contains an active view somewhere under it, either directly or as a child deeper.
-     */
-    public boolean getContainsActiveView(){
-        return containsActiveView;
     }
 
     /**
