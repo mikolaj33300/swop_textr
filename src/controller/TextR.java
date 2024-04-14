@@ -60,6 +60,7 @@ public class TextR {
         for ( ; ; ) {
             int b = Terminal.readByte();
             if(b == 27){
+                Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
             } else {
                 activeUseCaseController.handle(b);

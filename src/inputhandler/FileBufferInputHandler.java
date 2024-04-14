@@ -95,27 +95,28 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
 	@Override
 	public void handleArrowRight(){
-
+		fb.moveCursorRight();
 	}
 
 	@Override
 	public void handleArrowLeft(){
-
+		fb.moveCursorLeft();
 	}
 
 	@Override
 	public void handleArrowDown(){
-
+		fb.moveCursorDown();
 	}
 
 	@Override
 	public void handleArrowUp(){
-
+		fb.moveCursorUp();
 	}
 
 	@Override
-	public void handleSeparator(){
-
+	public void handleSeparator() throws IOException {
+		fb.enterSeparator();
+		fb.moveCursorRight();
 	}
 
 	public int close(){

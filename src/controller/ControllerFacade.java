@@ -179,7 +179,7 @@ class ControllerFacade {
         this.windows.get(active).handler.handleArrowUp();
     }
 
-    public void handleSeparator(){
+    public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
     }
 }

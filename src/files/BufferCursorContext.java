@@ -175,4 +175,8 @@ public class BufferCursorContext {
     public BufferCursorContext deepClone() {
         return new BufferCursorContext(this.containedFileBuffer, this.insertionPointCol, this.insertionPointLine);
     }
+
+    public void enterSeparator() throws IOException {
+        containedFileBuffer.enterInsertionPoint(insertionPointByteIndex);
+    }
 }
