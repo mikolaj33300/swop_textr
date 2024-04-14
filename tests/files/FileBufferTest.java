@@ -222,22 +222,15 @@ public class FileBufferTest {
     public void testLayoutScaledCoords() throws IOException {
         LayoutLeaf l1 = new LayoutLeaf(1);
         LayoutLeaf l2 = new LayoutLeaf(2);
-        LayoutLeaf l3 = new LayoutLeaf(3);
         ArrayList<Layout> toAdd = new ArrayList<>();
         toAdd.add(l1);
         toAdd.add(l2);
         VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
 
         HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
-        assertEquals(coordsList.get(1).height, 0.5);
-        assertEquals(coordsList.get(1).startY, 0);
+        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,1, 0.5)));
 
-        assertEquals(coordsList.get(2).height, 0.5);
-        assertEquals(coordsList.get(2).startY, 0.5);
-
-        View v = new FileBufferView(new BufferCursorContext("testresources/test.txt", System.lineSeparator().getBytes()));
-        v.setScaledCoords(coordsList.get(2));
-
+        assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
     }
 
 }
