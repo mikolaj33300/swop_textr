@@ -90,11 +90,11 @@ public class VerticalLayoutNode extends LayoutNode{
 
     @Override
     public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
-        double heightChild = uiCoordsScaled.height / children.size(); //rounds down
+        double heightChild = uiCoordsScaled.height / ((double) children.size()); //rounds down
         double yChild = uiCoordsScaled.startY;
         HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
         for (Layout child : children) {
-            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, heightChild, uiCoordsScaled.height)));
+            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, uiCoordsScaled.width, heightChild)));
             yChild = yChild + heightChild;
         }
         return resultMap;

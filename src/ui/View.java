@@ -29,10 +29,10 @@ public abstract class View {
     UICoords getRealUICoordsFromScaled() throws IOException {
         UICoords screenDimensions = ScreenUIUtil.retrieveDimensionsTerminal();
         return new UICoords(
-                (int) Math.floor(screenDimensions.startX* uiCoordsScaled.startX),
-                (int) Math.floor(screenDimensions.startY* uiCoordsScaled.startY),
-                (int) Math.floor(screenDimensions.width* uiCoordsScaled.width),
-                (int) Math.floor(screenDimensions.height* uiCoordsScaled.height));
+                (int) Math.floor(((double) screenDimensions.startX)* uiCoordsScaled.startX),
+                (int) Math.floor(((double) screenDimensions.startY)* uiCoordsScaled.startY),
+                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.width),
+                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.height));
     }
 
 
