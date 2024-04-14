@@ -111,22 +111,9 @@ public class LayoutLeaf extends Layout {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof LayoutLeaf leaf) {
-            return (this.getContainsActiveView() == leaf.getContainsActiveView());
+            return (this.containedHashCode == leaf.containedHashCode);
         } else {
             return false;
-        }
-    }
-
-    /**
-     * Checks if a this LayoutLeaf is allowed to be a child of the given LayoutNode
-     * Two children of a LayoutNode are not allowed to be active at the same time
-     */
-    @Override
-    protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
-        if (getContainsActiveView() && futureParent.getContainsActiveView()) {
-            throw new RuntimeException("Invalid child: more than two active");
-        } else {
-            return true;
         }
     }
 

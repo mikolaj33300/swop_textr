@@ -60,8 +60,7 @@ public class HorizontalLayoutNode extends LayoutNode {
         for (Layout l : children) {
             deepCopyList.add(l.clone());
         }
-        HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
-        return cloned;
+        return new HorizontalLayoutNode(deepCopyList);
     }
 
     @Override
@@ -83,10 +82,6 @@ public class HorizontalLayoutNode extends LayoutNode {
     @Override
     public boolean equals(Object node) {
         if (node instanceof HorizontalLayoutNode layoutNode) {
-            //Check objects for same activity-status
-            if (this.getContainsActiveView() != layoutNode.getContainsActiveView()) {
-                return false;
-            }
             // Return early when the amount of children don't match.
             if (layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both

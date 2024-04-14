@@ -31,8 +31,7 @@ public abstract class LayoutNode extends Layout {
 
         this.children = new ArrayList<>();
         for (Layout l : newChildren)
-            if (l.isAllowedToBeChildOf(this))
-                this.insertDirectChild(l.clone());
+            this.insertDirectChild(l.clone());
     }
 
 
@@ -70,18 +69,27 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
+     * Checks whether this layout is allowed to be added as a child of the given {@link LayoutNode}
+     */
+    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
+
+
+    /**
      * Inserts a Layout as a child to this LayoutNode
      * The reference to the given Layout will be lost
      */
     public void insertDirectChild(Layout toInsert){
-        if(toInsert.isAllowedToBeChildOf(this)){
+        if(toInsert instanceof LayoutNode node)
+            if(node.isAllowedToBeChildOf(this)){
+            Layout cloneOfInsert = node.clone();
+            cloneOfInsert.setParent(this);
+            this.children.add(cloneOfInsert);
+        }
+        else{
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
-            if (cloneOfInsert.getContainsActiveView()) {
-                this.containsActiveView = true;
             }
-        }
     }
 
     /**
