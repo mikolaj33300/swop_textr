@@ -61,8 +61,7 @@ public class VerticalLayoutNode extends LayoutNode{
         for(Layout l : children){
             deepCopyList.add(l.clone());
         }
-        VerticalLayoutNode cloned = new VerticalLayoutNode(deepCopyList);
-        return cloned;
+        return new VerticalLayoutNode(deepCopyList);
     }
 
     /**
