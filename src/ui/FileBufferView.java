@@ -14,19 +14,14 @@ import java.io.IOException;
 
 public class FileBufferView extends View implements FileBufferContentChangedListener {
 
-  /*
-   * the hashcode of the rendered object
-   */
-    private final int hashCode;
-
     /**
      * Reference to the {@link FileBuffer} to retrieve display information
      */
     private final BufferCursorContext containedFileBuffer;
 
     public FileBufferView(BufferCursorContext openedFile) {
+        super(openedFile.hashCode());
         this.containedFileBuffer=openedFile;
-        this.hashCode = openedFile.hashCode();
     }
 
     /**
@@ -82,7 +77,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         else
             statusLine += "Clean";
         statusLine += " ";
-        if(this.hashCode == activeHash)
+        if(this.getHashCode() == activeHash)
             statusLine += "Active";
         else
             statusLine += "Not Active";
