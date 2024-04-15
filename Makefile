@@ -26,7 +26,7 @@ textr.jar: $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 
 test:
-	@javac -Xlint:unchecked -Xmaxerrs 5 -Xmaxwarns 5 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:/usr/share/apiguardian-api/lib/apiguardian-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
+	@javac -Xlint:unchecked -Xdiags:verbose -Xmaxerrs 5 -Xmaxwarns 5 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:/usr/share/apiguardian-api/lib/apiguardian-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
 	junit-platform-console --class-path ./build/ --scan-classpath ./build/
 
 clean:
