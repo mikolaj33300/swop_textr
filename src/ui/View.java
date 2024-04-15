@@ -51,7 +51,7 @@ public abstract class View {
     }
 
     /**
-     * Render all the elements on the thid view
+     * Render all the elements on the this view
      */
     public abstract void render(int activeHash) throws IOException;
 
