@@ -104,7 +104,7 @@ public class LayoutLeaf extends Layout {
 
     @Override
     protected LayoutLeaf getLeftLeaf() {
-        return this.clone();
+        return this;
     }
 
     /**
