@@ -24,6 +24,7 @@ textr.jar: $(SRC)
 	mkdir -p $(BUILD_DIR)
 	@javac -Xlint:unchecked -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d ./build $^
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
+
 test:
 	@javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
 	junit-platform-console --class-path ./build/ --scan-classpath ./build/
