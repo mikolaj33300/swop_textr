@@ -78,7 +78,8 @@ public class FileBuffer {
                 }
             }
         }
-        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()), this.getLineSeparator());
+        ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
     }
 
     /**
@@ -109,7 +110,8 @@ public class FileBuffer {
      * TODO: unchecked cast
      */
     public ArrayList<Byte> getByteContent(){
-        return (ArrayList<Byte>) this.byteContent.clone();
+      ArrayList<Byte> res = new ArrayList<Byte>(this.byteContent);
+        return res;
     }
 
     /**

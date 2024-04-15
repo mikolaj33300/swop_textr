@@ -18,7 +18,7 @@ JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 SRC = $(call rwildcard,src/,*.java)
 
-TEST = $(wildcard ./tests/**/*.java)
+TEST = $(call rwildcard,tests/,*.java)
 
 OBJ := $(patsubst %.java,%.class,$(SRC))
 OBJ := $(patsubst src/%,build/%,$(OBJ))
