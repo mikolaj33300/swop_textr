@@ -33,7 +33,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      * Handles the rendering of the whole {@link FileBuffer}
      */
     @Override
-    public void render() throws IOException {
+    public void render(int activeHash) throws IOException {
         UICoords coords = super.getRealUICoordsFromScaled();
         int height = coords.height;
         int width = coords.width;
@@ -59,14 +59,14 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            Terminal.printText(startY + height, startX + 1, this.getStatusbarString());
+            Terminal.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
         renderScrollbar(height, startX+width-1, startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
     }
 
     /**
      * Generates the string that is used to display the statusbar.
      */
-    public String getStatusbarString() {
+    public String getStatusbarString(int activeHash) {
         String statusLine = containedFileBuffer.getFileBuffer().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());
@@ -82,8 +82,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         else
             statusLine += "Clean";
         statusLine += " ";
-
-        if(super.getContainsActiveView())
+        if(this.hashCode == activeHash)
             statusLine += "Active";
         else
             statusLine += "Not Active";
