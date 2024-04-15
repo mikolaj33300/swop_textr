@@ -101,6 +101,7 @@ class ControllerFacade {
     if(active == -1){
         throw new RuntimeException("Layout and collection of views inconsistent!");
     }
+    updateViewCoordinates();
     return 0;
   }
 
