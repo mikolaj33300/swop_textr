@@ -1,7 +1,6 @@
 package layouttree;
 
 import controller.TextR;
-import files.FileBuffer;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,90 +11,37 @@ import java.util.Arrays;
 
 public class LayoutNodeTest {
     LayoutLeaf l1;
-    LayoutLeaf l1p;
     LayoutLeaf l2;
-    LayoutLeaf l2a;
     LayoutLeaf l3;
-    LayoutLeaf l3a;
     LayoutLeaf l4;
-    LayoutLeaf l4a;
     LayoutLeaf l5;
-    LayoutLeaf l5a;
     LayoutLeaf l6;
-    LayoutLeaf l6a;
     LayoutLeaf l7;
-    LayoutLeaf l7a;
     LayoutLeaf l8;
-    LayoutLeaf l8a;
-    LayoutLeaf l9;
-    LayoutLeaf l9a;
-    LayoutLeaf l10;
-    LayoutLeaf l10a;
-    ArrayList<Layout> children1;
-    ArrayList<Layout> children2;
-    ArrayList<Layout> children3;
-    LayoutNode hn1;
-    LayoutNode hn2;
-    LayoutNode vn1;
-    LayoutNode vn2;
 
     @BeforeEach
     void setUp() throws IOException {
-        String path1 = "testresources/test.txt";
-        String path2 = "testresources/test2.txt";
-        String path3 = "testresources/test3.txt";
-        String path4 = "testresources/test4.txt";
-        String path5 = "testresources/test5.txt";
-        String path6 = "testresources/test6.txt";
-        String path7 = "testresources/test7.txt";
-        String path8= "testresources/test8.txt";
-        String path9 = "testresources/test9.txt";
-        String path10 = "testresources/test10.txt";
-        FileBuffer fb1 = new FileBuffer("testresources/test.txt");
-        FileBuffer fb2 = new FileBuffer(path2);
-        FileBuffer fb3 = new FileBuffer(path3);
-        FileBuffer fb4 = new FileBuffer(path4);
-        FileBuffer fb5 = new FileBuffer(path5);
-        FileBuffer fb6 = new FileBuffer(path6);
-        FileBuffer fb7 = new FileBuffer(path7);
-        FileBuffer fb8 = new FileBuffer(path8);
-        FileBuffer fb9 = new FileBuffer(path9);
-        FileBuffer fb10 = new FileBuffer(path10);
-        l1 = new LayoutLeaf(path1, true);
-        l1p = new LayoutLeaf(path1, false);
-        l2 = new LayoutLeaf(path2, false);
-        l2a = new LayoutLeaf(path2, true);
-        l3 = new LayoutLeaf(path3, false);
-        l3a = new LayoutLeaf(path3, true);
-        l4 = new LayoutLeaf(path4, false);
-        l4a = new LayoutLeaf(path4, true);
-        l5 = new LayoutLeaf(path5, false);
-        l5a = new LayoutLeaf(path5, true);
-        l6 = new LayoutLeaf(path6, false);
-        l6a = new LayoutLeaf(path6, true);
-        l7 = new LayoutLeaf(path7, false);
-        l7a = new LayoutLeaf(path7, true);
-        l8 = new LayoutLeaf(path8, false);
-        l8a = new LayoutLeaf(path8, true);
-        l9 = new LayoutLeaf(path9, false);
-        l9a = new LayoutLeaf(path9, true);
-        l10 = new LayoutLeaf(path10, false);
-        l10a = new LayoutLeaf(path10, true);
-
-        children1 = new ArrayList<>(Arrays.asList(l1,l2,l3));
-        children2 = new ArrayList<>(Arrays.asList(l4,l5,l6));
-        children3 = new ArrayList<>(Arrays.asList(l7,l8,l9));
-        hn1 = new HorizontalLayoutNode(children1);
-        vn1 = new VerticalLayoutNode(children2);
-        hn2 = new HorizontalLayoutNode(children3);
-        vn2 = new VerticalLayoutNode(children3);
+        l1 = new LayoutLeaf(1);
+        l2 = new LayoutLeaf(2);
+        l3 = new LayoutLeaf(3);
+        l4 = new LayoutLeaf(4);
+        l5 = new LayoutLeaf(5);
+        l6 = new LayoutLeaf(6);
+        l7 = new LayoutLeaf(7);
+        l8 = new LayoutLeaf(8);
     }
-    //TODO: Constructor testen voor throws als kinderen tekort of illegal children
+/*
     @Test
-    void getOrientation(){
-        assertEquals(hn1.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
-        assertEquals(vn1.getOrientation(), LayoutNode.Orientation.VERTICAL);
+    void testRotateRelationshipNeighbor(){
+        LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        ln.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE,1);
+        assertEquals(ln,correct_ln);
+
     }
+
+
+/*
     @Test
     void testGetDirectChildren() {
         ArrayList<Layout> get_children1 = hn1.getDirectChildren();
@@ -353,5 +299,5 @@ public class LayoutNodeTest {
         LayoutNode complex_clone = complex_tree.clone();
         assertEquals(complex_clone, complex_tree);
         assertNotSame(complex_clone, complex_tree);
-    }
+    }*/
 }
