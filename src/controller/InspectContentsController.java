@@ -1,5 +1,6 @@
 package controller;
 
+import io.github.btj.termios.Terminal;
 import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
 
@@ -77,6 +78,8 @@ public class InspectContentsController extends UseCaseController {
                         if (result == 1) { //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if (result == 2) {
+                            //TODO Delegate clearing to more specialized class, idem in dirty close
+                            Terminal.clearScreen();
                             System.exit(0);
                         }
                         break;
