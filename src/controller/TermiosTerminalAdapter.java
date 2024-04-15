@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.IOException;
+
 public interface TermiosTerminalAdapter {
     public void clearScreen();
 
@@ -11,9 +13,9 @@ public interface TermiosTerminalAdapter {
 
     public void printText(int row, int column, String text);
 
-    public int readByte();
+    public int readByte() throws IOException;
 
-    public int readByte(long deadline);
+    public int readByte(long deadline) throws IOException;
 
     public void reportTextAreaSize();
 

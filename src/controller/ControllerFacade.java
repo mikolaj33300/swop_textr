@@ -103,6 +103,7 @@ class ControllerFacade {
     }
 
     updateViewCoordinates();
+    updateViewCoordinates();
     return 0;
   }
 
