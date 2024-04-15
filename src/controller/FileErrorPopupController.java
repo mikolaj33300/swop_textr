@@ -1,4 +1,4 @@
-package core;
+package controller;
 
 import ui.UserPopupBox;
 
@@ -17,7 +17,7 @@ public class FileErrorPopupController extends UseCaseController {
     }
 
     @Override
-    public void render() throws IOException {
+    public void paintScreen() throws IOException {
         userPopupBox.render();
     }
 

@@ -1,5 +1,6 @@
 package core;
 
+import controller.TextR;
 import files.FileBuffer;
 import org.junit.jupiter.api.*;
 import util.Debug;

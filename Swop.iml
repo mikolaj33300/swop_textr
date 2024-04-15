@@ -4,8 +4,10 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/testresources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/files" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/core" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/layouttree" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -45,6 +47,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="io.github.btj.termios-0.7" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="323c5d31-1f97-4fbd-8ed4-19c5879a8fa8" />

@@ -1,15 +1,14 @@
 package files;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
 
 public class FileHolderTest {
-    FileHolder f1 = new FileHolder("testresources/test.txt");
-    FileHolder f1_ = new FileHolder("testresources/test.txt");
-    FileHolder f2 = new FileHolder("testresources/test2.txt");
+    FileHolder f1 = new FileHolder("testresources/test.txt", System.lineSeparator().getBytes());
+    FileHolder f1_ = new FileHolder("testresources/test.txt", System.lineSeparator().getBytes());
+    FileHolder f2 = new FileHolder("testresources/test2.txt", System.lineSeparator().getBytes());
 
     @Test
     void testGetPath() {

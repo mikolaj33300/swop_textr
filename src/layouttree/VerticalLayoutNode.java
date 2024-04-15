@@ -1,8 +1,11 @@
 package layouttree;
 
-import java.io.IOException;
+import ui.Rectangle;
+import ui.UICoords;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class VerticalLayoutNode extends LayoutNode{
 
@@ -12,60 +15,6 @@ public class VerticalLayoutNode extends LayoutNode{
      */
     public VerticalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
-    }
-
-    /**
-     * Returns the starting x-coordinate of this VerticalLayoutNode
-     */
-    @Override
-    public void renderCursor() throws IOException {
-        super.renderCursor();
-    }
-
-    /**
-     * Returns the starting x-coordinate of this VerticalLayoutNode
-     */
-    @Override
-    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getStartX(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the starting y-coordinate of this VerticalLayoutNode
-     */
-    @Override
-    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            int thisY = parent.getStartY(this, terminalWidth, terminalHeight);
-            int thisHeight = parent.getHeight(this, terminalWidth, terminalHeight);
-            return (thisY+(thisHeight/ children.size())*children.indexOf(l));
-        }
-        return (terminalHeight/children.size())*children.indexOf(l);
-    }
-
-    /**
-     * Returns the width of this VerticalLayoutNode
-     */
-    @Override
-    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getWidth(this, terminalWidth, terminalHeight);
-        }
-        return terminalWidth;
-    }
-
-    /**
-     * Returns the height of this VerticalLayoutNode
-     */
-    @Override
-    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getHeight(this, terminalWidth, terminalHeight)/this.children.size();
-        }
-        return terminalHeight/(this.children.size());
     }
 
     /**
@@ -112,9 +61,7 @@ public class VerticalLayoutNode extends LayoutNode{
         for(Layout l : children){
             deepCopyList.add(l.clone());
         }
-        VerticalLayoutNode cloned = new VerticalLayoutNode(deepCopyList);
-        cloned.setContainsActiveView(this.getContainsActiveView());
-        return cloned;
+        return new VerticalLayoutNode(deepCopyList);
     }
 
     /**
@@ -123,10 +70,6 @@ public class VerticalLayoutNode extends LayoutNode{
     @Override
     public boolean equals(Object node) {
         if(node instanceof VerticalLayoutNode layoutNode) {
-            //Check objects for same activity-status
-            if(this.getContainsActiveView() != layoutNode.getContainsActiveView()){
-                return false;
-            }
             // Return early when the amount of children don't match.
             if(layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both
@@ -138,5 +81,17 @@ public class VerticalLayoutNode extends LayoutNode{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double heightChild = uiCoordsScaled.height / ((double) children.size()); //rounds down
+        double yChild = uiCoordsScaled.startY;
+        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
+        for (Layout child : children) {
+            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, uiCoordsScaled.width, heightChild)));
+            yChild = yChild + heightChild;
+        }
+        return resultMap;
     }
 }

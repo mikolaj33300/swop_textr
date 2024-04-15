@@ -1,9 +1,20 @@
 package layouttree;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
+
+    @Override
+    public Layout delete(int hashToDelete){
+        for(Layout l:children){
+            try{
+                return l.delete(hashToDelete);
+            } catch(HashNotMatchingException ignored){
+
+            }
+        }
+        throw new HashNotMatchingException();
+    }
 
     /**
      * The children of this LayoutNode in the layout-tree
@@ -20,57 +31,9 @@ public abstract class LayoutNode extends Layout {
 
         this.children = new ArrayList<>();
         for (Layout l : newChildren)
-            if (l.isAllowedToBeChildOf(this))
-                this.insertDirectChild(l.clone());
+            this.insertDirectChild(l.clone());
     }
 
-    /**
-     * Renders the context of this LayoutNode
-     */
-    public void renderContent() throws IOException {
-        for(Layout l : children){
-            l.renderContent();
-        }
-    }
-
-    /**
-     * Returns the starting x-coordinate of this LayoutNode
-     */
-    public void renderCursor() throws IOException {
-        for(Layout l : children){
-            l.renderCursor();
-        }
-    }
-
-
-    /**
-     * Returns the starting x-coordinate of this LayoutNode
-     */
-    public abstract int getStartX(Layout l, int terminalWidth, int terminalHeight);
-
-    /**
-     * Clears the content on the screen
-     */
-    public void clearContent() throws IOException {
-        for(Layout l : children){
-            l.clearContent();
-        }
-    }
-
-    /**
-     * Returns the starting y-coordinate of the group of layouts, connected to this Layout
-     */
-    public abstract int getStartY(Layout l, int terminalWidth, int terminalHeight);
-
-    /**
-     * Returns the width of the group of layouts, connected to this Layout
-     */
-    public abstract int getWidth(Layout l, int terminalWidth, int terminalHeight);
-
-    /**
-     * Returns the height of the group of layouts, connected to this Layout
-     */
-    public abstract int getHeight(Layout l, int terminalWidth, int terminalHeight);
 
     /**
      * Returns the orientation of the LayoutNode
@@ -93,126 +56,40 @@ public abstract class LayoutNode extends Layout {
      * Which neighbour is decided by the dir argument
      * If no neighbours left, the active Layout stays active
      */
-    public void moveFocus(MOVE_DIRECTION dir) throws RuntimeException {
+    @Override
+    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) throws RuntimeException {
         for (Layout l : children) {
-            if (l.getContainsActiveView()) {
-                l.moveFocus(dir);
-                return;
+            try{
+                return l.getNeighborsContainedHash(dir, hash);
+            } catch(HashNotMatchingException ignored){
+
             }
         }
+        throw new HashNotMatchingException();
     }
 
     /**
-     * Moves the insertion point on the active FileBuffer
+     * Checks whether this layout is allowed to be added as a child of the given {@link LayoutNode}
      */
-    @Override
-    public void moveCursor(char c) {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.moveCursor(c);
-                return;
-            }
-        }
-    }
+    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
 
-    /**
-     * Enters text on the active FileBuffer
-     */
-    @Override
-    public void enterText(byte b) {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.enterText(b);
-                return;
-            }
-        }
-    }
-
-    /**
-     * Enters a line seperator on the active FileBuffer
-     */
-    @Override
-    public void enterInsertionPoint() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.enterInsertionPoint();
-                return;
-            }
-        }
-    }
-
-    /**
-     * Saves the active FileBuffer to its connected FiledHolders file
-     */
-    @Override
-    public int saveActiveBuffer() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.saveActiveBuffer();
-                return 0;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Deletes the character before the insertionpoint on the active FileBuffer
-     */
-    @Override
-    public void deleteCharacter() {
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.deleteCharacter();
-                return;
-            }
-        }
-    }
-
-    /**
-     * Closes the active FileBuffer, its FileHolder,
-     * its File and the LayoutLeaf it's in
-     * It might cause a restructuring of the tree if the tree became invalid
-     */
-    @Override
-    public int closeActive(){
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                return l.closeActive();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Forcecloses the active FileBuffer, its FileHolder,
-     * its File and the LayoutLeaf it's in
-     * It might cause a restructuring of the tree if the tree became invalid
-     * No checks for save closure will be done
-     */
-    @Override
-    public int forcedCloseActive(){
-        for (Layout l : children) {
-            if(l.getContainsActiveView()){
-                l.forcedCloseActive();
-                return 0;
-            }
-        }
-        return 0;
-    }
 
     /**
      * Inserts a Layout as a child to this LayoutNode
      * The reference to the given Layout will be lost
      */
     public void insertDirectChild(Layout toInsert){
-        if(toInsert.isAllowedToBeChildOf(this)){
+        if(toInsert instanceof LayoutNode node)
+            if(node.isAllowedToBeChildOf(this)){
+            Layout cloneOfInsert = node.clone();
+            cloneOfInsert.setParent(this);
+            this.children.add(cloneOfInsert);
+        }
+        else{
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
-            if (cloneOfInsert.getContainsActiveView()) {
-                this.containsActiveView = true;
             }
-        }
     }
 
     /**
@@ -221,13 +98,15 @@ public abstract class LayoutNode extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir) throws RuntimeException {
+    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) throws RuntimeException {
         for (Layout l : children) {
-            if (l.getContainsActiveView()) {
-                return l.rotateRelationshipNeighbor(rot_dir);
+            try{
+                return l.rotateRelationshipNeighbor(rot_dir, hash);
+            } catch(HashNotMatchingException ignored){
+
             }
         }
-        throw new RuntimeException("Contains no active leaf!");
+        throw new HashNotMatchingException();
     }
 
     /**
@@ -269,32 +148,34 @@ public abstract class LayoutNode extends Layout {
     }
 
     /**
-     * Deletes a child of this LayoutNode
+     * Deletes a child of this LayoutNode, returns new rootlayout
      */
-    protected void delete(Layout l) {
+    protected Layout delete(Layout l) {
         children.remove(l);
         if (this.children.size() == 1) {
             if (this.parent != null) {
                 this.parent.children.set(this.parent.children.indexOf(this), this.children.get(0));
                 this.children.get(0).setParent(this.parent);
+                return parent.getRootLayoutUncloned();
+            } else {
+                return this.children.get(0);
             }
         }
+        return this.getRootLayoutUncloned();
     }
 
     /**
      * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.
      */
-    protected void makeLeftmostLeafActive() {
-        this.containsActiveView = true;
-        children.get(0).makeLeftmostLeafActive();
+    protected int getLeftmostContainedHash() {
+        return children.get(0).getLeftmostContainedHash();
     }
 
     /**
      * Sets containsActive of the right leaf of the subtree with this as root and all the nodes inbetween to true.
      */
-    protected void makeRightmostLeafActive() {
-        this.containsActiveView = true;
-        children.get(children.size() - 1).makeRightmostLeafActive();
+    protected int getRightmostContainedHash() {
+        return children.get(children.size() - 1).getRightmostContainedHash();
     }
 
     /**
@@ -307,17 +188,18 @@ public abstract class LayoutNode extends Layout {
     /**
      * Makes the leftmost leaf that is to the right of the given subtree active
      * Requires passed layout to be a child of this.
+     *
+     * @return
      */
-    protected void makeRightNeighbourActive(Layout layout) {
+    protected int getRightNeighbourContainedHash(Layout layout) {
         int index = children.indexOf(layout);
         if (index < children.size() - 1) {
-            children.get(index + 1).makeLeftmostLeafActive(); // Called when we can make child of current node the active one.
+            return children.get(index + 1).getLeftmostContainedHash(); // Called when we can make child of current node the active one.
         } else {
             if (parent != null) {
-                containsActiveView = false;
-                parent.makeRightNeighbourActive(this); //called when we need to backtrack one level up
+                return parent.getRightNeighbourContainedHash(this); //called when we need to backtrack one level up
             } else {
-                makeRightmostLeafActive();
+                return getRightmostContainedHash();
             }
         }
     }
@@ -325,17 +207,18 @@ public abstract class LayoutNode extends Layout {
     /**
      * Makes the rightmost leaf that is to the left of the given subtree active
      * Requires passed layout to be a child of this.
+     *
+     * @return
      */
-    protected void makeLeftNeighbourActive(Layout layout) {
+    protected int getLeftNeighbourContainedHash(Layout layout) {
         int index = children.indexOf(layout);
         if (index > 0) {
-            children.get(index - 1).makeRightmostLeafActive(); // Called when we can make child of current node the active one.
+            return children.get(index - 1).getRightmostContainedHash(); // Called when we can make child of current node the active one.
         } else {
             if (parent != null) {
-                containsActiveView = false;
-                parent.makeLeftNeighbourActive(this); //called when we need to backtrack one level up
+                return parent.getLeftNeighbourContainedHash(this); //called when we need to backtrack one level up
             } else {
-                makeLeftmostLeafActive();
+                return getLeftmostContainedHash();
             }
         }
     }

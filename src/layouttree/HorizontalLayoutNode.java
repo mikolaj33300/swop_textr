@@ -1,7 +1,11 @@
 package layouttree;
 
+import ui.Rectangle;
+import ui.UICoords;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class HorizontalLayoutNode extends LayoutNode {
 
@@ -10,53 +14,6 @@ public class HorizontalLayoutNode extends LayoutNode {
      */
     public HorizontalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
-    }
-
-    /**
-     * Returns the starting x-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getStartX(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            int thisX = parent.getStartX(this, terminalWidth, terminalHeight);
-            int thisWidth = parent.getWidth(this, terminalWidth, terminalHeight);
-            return thisX+(thisWidth/ children.size())*children.indexOf(l);
-        }
-        return (terminalWidth/ children.size())*children.indexOf(l);
-    }
-
-    /**
-     * Returns the starting y-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getStartY(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getStartY(this, terminalWidth, terminalHeight);
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the width y-coordinate of this HorizontalLayoutNode
-     */
-    @Override
-    public int getWidth(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getWidth(this, terminalWidth, terminalHeight)/this.children.size();
-        }
-        return terminalWidth / children.size();
-    }
-
-    /**
-     * Returns the starting height of this HorizontalLayoutNode
-     */
-    @Override
-    public int getHeight(Layout l, int terminalWidth, int terminalHeight) {
-        if(parent != null){
-            return parent.getHeight(this, terminalWidth, terminalHeight);
-        }
-        return terminalWidth;
-
     }
 
     /**
@@ -103,9 +60,20 @@ public class HorizontalLayoutNode extends LayoutNode {
         for (Layout l : children) {
             deepCopyList.add(l.clone());
         }
-        HorizontalLayoutNode cloned = new HorizontalLayoutNode(deepCopyList);
-        cloned.setContainsActiveView(this.getContainsActiveView());
-        return cloned;
+        return new HorizontalLayoutNode(deepCopyList);
+    }
+
+    @Override
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double widthChild = uiCoordsScaled.width / ((double) children.size()); //rounds down
+        double xChild = uiCoordsScaled.startX;
+        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
+        for (Layout child : children) {
+            Object uiCoords;
+            resultMap.putAll(child.getCoordsList(new Rectangle(xChild, uiCoordsScaled.startY, widthChild, uiCoordsScaled.height)));
+            xChild = xChild + widthChild;
+        }
+        return resultMap;
     }
 
     /**
@@ -114,10 +82,6 @@ public class HorizontalLayoutNode extends LayoutNode {
     @Override
     public boolean equals(Object node) {
         if (node instanceof HorizontalLayoutNode layoutNode) {
-            //Check objects for same activity-status
-            if (this.getContainsActiveView() != layoutNode.getContainsActiveView()) {
-                return false;
-            }
             // Return early when the amount of children don't match.
             if (layoutNode.children.size() != this.children.size()) return false;
             // Loop over the children of both
