@@ -45,7 +45,7 @@ public class BufferCursorContext {
         int previousLine = insertionPointLine;
         int previousCol = insertionPointCol;
         moveCursorLeft();
-        containedFileBuffer.deleteCharacter(previousCol, previousLine);
+        containedFileBuffer.deleteCharacterCmd(previousCol, previousLine);
     }
 
     /**
@@ -146,8 +146,16 @@ public class BufferCursorContext {
     }
 
     public void write(byte b) {
-        containedFileBuffer.write(b, insertionPointByteIndex);
+        containedFileBuffer.writeCmd(b, insertionPointByteIndex);
         moveCursorRight();
+    }
+
+    public void undo() {
+      containedFileBuffer.undo();
+    }
+
+    public void redo() {
+      containedFileBuffer.redo();
     }
 
     public int getInsertionPointLine() {

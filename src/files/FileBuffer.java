@@ -3,7 +3,7 @@ package files;
 import controller.TextR;
 import layouttree.LayoutLeaf;
 import ui.FileBufferView;
-
+import command.Command;
 
 import java.io.IOException;
 import java.util.*;
@@ -18,6 +18,12 @@ public class FileBuffer {
     private FileHolder file;
 
     private ArrayList<FileBufferContentChangedListener> listenersArrayList;
+
+    /**
+     * Undo stack
+     */
+    private ArrayList<Command> undoStack = new ArrayList<Command>();
+    private int nbUndone;
 
     /**
      * Determines if buffer has been modified
@@ -59,17 +65,51 @@ public class FileBuffer {
             listenersArrayList.get(i).contentsChanged();
     }
 
+    public void undo() {
+      if (undoStack.size() > nbUndone)
+        undoStack.get(undoStack.size() - ++nbUndone).undo();
+    }
+
+    public void redo() {
+      if (nbUndone > 0)
+        undoStack.get(undoStack.size() - nbUndone--).execute();
+    }
+
+    private void execute(Command command) {
+      for (; nbUndone > 0; nbUndone--)
+        undoStack.remove(undoStack.size() - 1);
+      undoStack.add(command);
+      command.execute();
+    }
+
+    public void deleteCharacterCmd(int insertionPointCol, int insertionPointLine){
+      execute(new Command() {
+        private int iCol = insertionPointCol;
+        private int iLine = insertionPointLine;
+        private byte deleted;
+
+        public void execute() {
+          deleted = deleteCharacter(iCol, iLine);
+        }
+        public void undo() {
+          insert(convertLineAndColToIndex(iCol, iLine), deleted);
+        }
+      });
+    }
+
     /**
      * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
      * when character is to be deleted.
      */
-    public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
+    public byte deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        byte res = 0;
+
         if(insertionPointCol > 0 || insertionPointLine > 0) {
             this.dirty = true;
         }
         if(insertionPointCol > 0) {
-            this.byteContent.remove(insertionPointByteIndex-1);
+            res = this.byteContent.remove(insertionPointByteIndex-1);
         } else {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
@@ -80,6 +120,37 @@ public class FileBuffer {
         }
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
+        return res;
+    }
+
+    /**
+     * removed some checks
+     * this should be ok since this is only used in an undo at the moment
+     */
+    public byte deleteCharacterWithIndex(int insertionPointByteIndex) {
+        byte res = 0;
+
+        if (insertionPointByteIndex > 0) {
+            this.dirty = true;
+        }
+        //shift left the amount of bytes that need to be deleted and delete them one by one
+        for(int i = 0; i< file.getLineSeparator().length; i++) {
+            res = this.byteContent.remove(insertionPointByteIndex);
+        }
+        ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
+        return res;
+    }
+
+    public void writeCmd(byte updatedContents, int byteArrIndex) {
+      execute(new Command() {
+        private byte uC = updatedContents;
+        private int bArrIndex = byteArrIndex;
+
+        public void execute() { write(updatedContents, byteArrIndex); }
+        public void undo() { deleteCharacterWithIndex(byteArrIndex); }
+      });
+
     }
 
     /**
@@ -189,15 +260,6 @@ public class FileBuffer {
      */
     public boolean getDirty() {
         return this.dirty;
-    }
-
-    /**
-     * Deletes the full array
-     */
-    void deleteLine(int insertionPointLine) {
-        linesArrayList.remove(insertionPointLine);
-        this.linesArrayList = FileAnalyserUtil.getContentLines(FileAnalyserUtil.toArray(this.byteContent), this.getLineSeparator());
-        // TODO column verplaatsen wanneer verwijderde lijn meer columns had dan de vorige
     }
 
     // Private implementations
