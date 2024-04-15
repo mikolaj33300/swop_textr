@@ -85,6 +85,7 @@ public class FileBufferTest {
         buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
         assertEquals(2, buff.getLines().size());
 
+
 /*        // MOve cursor to after 'maker'
         buff.moveCursor('B');
         assertEquals(1, buff.getInsertionPointLine());
@@ -233,4 +234,38 @@ public class FileBufferTest {
         assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
     }
 
+    @Test
+    public void testUndo() throws IOException {
+        // Test if the function write correctly adds strings to the content.
+        String text = "";
+        String path = "testresources/test.txt";
+        String result = "";
+
+        Debug.write(path, "");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+        assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
+
+        buffer.writeCmd("t".getBytes()[0], 0);
+        buffer.writeCmd("e".getBytes()[0], 1);
+        buffer.writeCmd("s".getBytes()[0], 2);
+        buffer.writeCmd("t".getBytes()[0], 3);
+
+	buffer.undo();// I can undo
+        assertEquals("tes", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("te", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("t", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("", new String(buffer.getBytes()));
+	buffer.undo();// if we undo too much we don't do nothing
+        assertEquals("", new String(buffer.getBytes()));
+	buffer.redo();
+        assertEquals("t", new String(buffer.getBytes()));
+        buffer.writeCmd("u".getBytes()[0], 1);
+	buffer.redo();// if we redo too much we don't do nothing
+        assertEquals("tu", new String(buffer.getBytes()));
+	buffer.redo();
+        assertEquals("tu", new String(buffer.getBytes()));
+    }
 }

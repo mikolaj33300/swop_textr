@@ -27,7 +27,7 @@ textr.jar: $(SRC)
 
 test:
 	@javac -Xlint:unchecked -Xdiags:verbose -Xmaxerrs 5 -Xmaxwarns 5 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:/usr/share/apiguardian-api/lib/apiguardian-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
-	junit-platform-console --class-path ./build/ --scan-classpath ./build/
+	junit-platform-console --disable-banner --fail-if-no-tests --class-path ./build/ --scan-classpath ./build/
 
 clean:
 	rm -r \
