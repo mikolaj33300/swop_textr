@@ -79,7 +79,7 @@ public class FileAnalyserUtil {
             }
             return byteArr;
         }*/
-    private static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
+    public static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
         return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
     }
 

@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.Objects;
+
 public class Rectangle {
     public final double startX;
     public final double startY;
@@ -10,5 +12,17 @@ public class Rectangle {
         this.startY = startY;
         this.width = width;
         this.height = height;
+    }
+
+    public Rectangle clone(){
+        return new Rectangle(startX, startY, width, height);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rectangle rectangle = (Rectangle) o;
+        return Double.compare(startX, rectangle.startX) == 0 && Double.compare(startY, rectangle.startY) == 0 && Double.compare(width, rectangle.width) == 0 && Double.compare(height, rectangle.height) == 0;
     }
 }

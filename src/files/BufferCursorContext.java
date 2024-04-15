@@ -14,22 +14,38 @@ public class BufferCursorContext {
     FileBuffer containedFileBuffer;
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new FileBuffer(path, lineSeparator);
+        this.insertionPointCol=0;
+        this.insertionPointLine=0;
+        this.insertionPointByteIndex=0;
     }
 
-    public BufferCursorContext(FileBuffer referredFileBuffer){
-
+    private BufferCursorContext(FileBuffer fb, int insertionPointCol, int insertionPointLine) {
+        this.containedFileBuffer = fb.clone();
+        this.insertionPointCol=insertionPointCol;
+        this.insertionPointLine=insertionPointLine;
+        this.insertionPointByteIndex=convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-    public BufferCursorContext(FileBuffer referredFileBuffer, int insertionPointByteIndex){
-
+    /**
+     * Shallow copy constructor
+     * @param bfc
+     */
+    public BufferCursorContext(BufferCursorContext bfc){
+        this.containedFileBuffer = bfc.containedFileBuffer;
+        this.insertionPointByteIndex = bfc.insertionPointByteIndex;
+        this.insertionPointLine = bfc.insertionPointLine;
+        this.insertionPointCol = bfc.insertionPointCol;
+        //TODO add listener
     }
 
     /**
      * Deletes the character before the insertion pt and updates the cursor position
      */
     public void deleteCharacter() {
+        int previousLine = insertionPointLine;
+        int previousCol = insertionPointCol;
         moveCursorLeft();
-        containedFileBuffer.deleteCharacter(insertionPointCol, insertionPointLine);
+        containedFileBuffer.deleteCharacter(previousCol, previousLine);
     }
 
     /**
@@ -76,15 +92,15 @@ public class BufferCursorContext {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-    /**
+/*    *//**
      * Makes the calculation to move the cursor to the start of the line. Modifies the {@link BufferCursorContext#insertionPointCol} and {@link BufferCursorContext#insertionPointLine} accordingly.
-     */
+     *//*
     private void moveCursorToFront() {
         if (insertionPointCol > 0){
             insertionPointCol = 0;
         }
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
-    }
+    }*/
 
     /**
      * Makes the calculation to move the cursor right. Modifies the {@link BufferCursorContext#insertionPointCol} and {@link BufferCursorContext#insertionPointLine} accordingly.
@@ -150,15 +166,17 @@ public class BufferCursorContext {
         return containedFileBuffer.getByteContent();
     }
 
-    public FileHolder getFileHolder() {
-        return containedFileBuffer.getFileHolder();
-    }
+    public FileBuffer getFileBuffer() { return containedFileBuffer.clone();}
 
     public boolean getDirty() {
         return containedFileBuffer.getDirty();
     }
 
-    public BufferCursorContext deepClone(){
-        return new BufferCursorContext(containedFileBuffer.clone(), insertionPointByteIndex);
+    public BufferCursorContext deepClone() {
+        return new BufferCursorContext(this.containedFileBuffer, this.insertionPointCol, this.insertionPointLine);
+    }
+
+    public void enterSeparator() throws IOException {
+        containedFileBuffer.enterInsertionPoint(insertionPointByteIndex);
     }
 }

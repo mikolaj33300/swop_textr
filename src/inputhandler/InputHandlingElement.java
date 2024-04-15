@@ -27,5 +27,5 @@ abstract public class InputHandlingElement {
     public abstract void handleArrowDown();
     public abstract void handleArrowUp();
 
-    public abstract void handleSeparator();
+    public abstract void handleSeparator() throws IOException;
 }

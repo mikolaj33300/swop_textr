@@ -2,6 +2,7 @@ package ui;
 
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
+import util.Debug;
 
 import java.io.IOException;
 
@@ -26,13 +27,13 @@ public abstract class View {
         this.uiCoordsScaled = uiCoordsScaled;
     }
 
-    UICoords getRealUICoordsFromScaled() throws IOException {
+    public UICoords getRealUICoordsFromScaled() throws IOException {
         UICoords screenDimensions = ScreenUIUtil.retrieveDimensionsTerminal();
         return new UICoords(
-                (int) Math.floor(screenDimensions.startX* uiCoordsScaled.startX),
-                (int) Math.floor(screenDimensions.startY* uiCoordsScaled.startY),
-                (int) Math.floor(screenDimensions.width* uiCoordsScaled.width),
-                (int) Math.floor(screenDimensions.height* uiCoordsScaled.height));
+                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.startX),
+                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.startY),
+                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.width),
+                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.height));
     }
 
 

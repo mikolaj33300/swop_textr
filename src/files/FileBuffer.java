@@ -1,6 +1,7 @@
 package files;
 
 import controller.TextR;
+import layouttree.LayoutLeaf;
 import ui.FileBufferView;
 
 
@@ -44,6 +45,7 @@ public class FileBuffer {
         this.file = new FileHolder(path, lineSeparator);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
+        this.listenersArrayList = new ArrayList<>();
     }
 
     // Implementation
@@ -58,7 +60,8 @@ public class FileBuffer {
     }
 
     /**
-     * Deletes the character before the insertion pt and updates the cursor position
+     * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
+     * when character is to be deleted.
      */
     public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
@@ -71,7 +74,7 @@ public class FileBuffer {
             if(insertionPointLine!=0){
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 for(int i = 0; i< file.getLineSeparator().length ; i++) {
-                    this.byteContent.remove(insertionPointByteIndex);
+                    this.byteContent.remove(insertionPointByteIndex-getLineSeparator().length);
                 }
             }
         }
@@ -139,7 +142,7 @@ public class FileBuffer {
     /**
      * Returns copy of this buffers' content.
      */
-    byte[] getBytes() {
+    public byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
     }
 
@@ -228,8 +231,13 @@ public class FileBuffer {
      * Checks if the given {@link FileBuffer} references the same {@link FileHolder}
      * and temporarily, if the content, and dirty boolean match.
      */
-    public boolean equals(FileBuffer buffer) {
-        return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof FileBuffer buffer) {
+            return this.dirty == buffer.dirty && this.contentsEqual(buffer.byteContent) && this.file.getPath().equals(buffer.file.getPath());
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -258,5 +266,9 @@ public class FileBuffer {
 
     public byte[] getLineSeparator() {
         return file.getLineSeparator();
+    }
+
+    public String getPath() {
+        return file.getPath();
     }
 }

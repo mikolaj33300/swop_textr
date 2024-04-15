@@ -53,18 +53,19 @@ public class TextR {
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         Terminal.enterRawInputMode();
-        activeUseCaseController.clearContent();
+        Terminal.clearScreen();
         // Reading terminal dimensions for correct rendering
         activeUseCaseController.paintScreen();
         // Main loop
         for ( ; ; ) {
             int b = Terminal.readByte();
             if(b == 27){
+                Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
             } else {
                 activeUseCaseController.handle(b);
             }
-            activeUseCaseController.clearContent();
+            Terminal.clearScreen();
             activeUseCaseController.paintScreen();
             // Flush stdIn & Recalculate dimensions
             System.in.skipNBytes(System.in.available());
