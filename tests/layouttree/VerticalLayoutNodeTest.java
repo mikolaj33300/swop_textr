@@ -100,13 +100,6 @@ public class VerticalLayoutNodeTest {
 
         assertNotEquals(ln1, ln2);
     }
-/*
-    @Test
-    void testReturnedCoordY(){
-        LayoutLeaf realChild = (LayoutLeaf) vn1.children.get(1);
-        int obtainedHeight = realChild.getStartY(10, 10);
-        assertEquals(obtainedHeight, 5);
-    }*/
 }
 
 
