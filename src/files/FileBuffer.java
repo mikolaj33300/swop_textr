@@ -134,10 +134,11 @@ public class FileBuffer {
             this.dirty = true;
         }
         //shift left the amount of bytes that need to be deleted and delete them one by one
-        for(int i = 0; i< FileHolder.lineSeparator.length ; i++) {
+        for(int i = 0; i< file.getLineSeparator().length; i++) {
             res = this.byteContent.remove(insertionPointByteIndex);
         }
-        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) this.byteContent.clone()));
+        ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
+        linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
         return res;
     }
 
