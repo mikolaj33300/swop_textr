@@ -21,6 +21,9 @@ public class LayoutLeaf extends Layout {
 	    this.containedHashCode = hash;
     }
 
+    public int getContainedHashCode(){
+        return  this.containedHashCode;
+    }
 
     /**
      * Deletes the mostleft this leaf's parent
@@ -101,7 +104,7 @@ public class LayoutLeaf extends Layout {
 
     @Override
     protected LayoutLeaf getLeftLeaf() {
-        return null;
+        return this.clone();
     }
 
     /**
