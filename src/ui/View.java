@@ -7,6 +7,12 @@ import util.Debug;
 import java.io.IOException;
 
 public abstract class View {
+
+    /*
+     * the hashcode of the rendered object
+     */
+    private final int hashCode;
+
     Rectangle uiCoordsScaled;
 
     /**
@@ -18,6 +24,14 @@ public abstract class View {
      * The total height of the terminal
      */
     static int terminalHeight;
+
+    public View(int hashCode){
+        this.hashCode = hashCode;
+    }
+
+    public int getHashCode(){
+        return this.hashCode;
+    }
 
     /**
      * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}

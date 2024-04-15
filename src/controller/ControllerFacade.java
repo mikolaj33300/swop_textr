@@ -62,7 +62,7 @@ class ControllerFacade {
 
   public void renderContent() throws IOException {
       for (Window window : windows) {
-          window.view.render(this.active);
+          window.view.render(windows.get(active).view.getHashCode());
       }
   }
 
