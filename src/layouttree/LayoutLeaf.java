@@ -117,6 +117,15 @@ public class LayoutLeaf extends Layout {
         }
     }
 
+    /**
+     * Checks if a this LayoutLeaf is allowed to be a child of the given LayoutNode
+     * Two children of a LayoutNode are not allowed to be active at the same time
+     */
+    @Override
+    protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
+        return true;
+    }
+
     @Override
     public Layout delete(int hashToDelete) {
         if(containedHashCode == hashToDelete){
