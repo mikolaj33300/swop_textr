@@ -26,7 +26,7 @@ textr.jar: $(SRC)
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 
 test:
-	@javac -Xlint:unchecked -Xmaxwarns 200 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:/usr/share/apiguardian-api/lib/apiguardian-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
+	@javac -Xlint:unchecked -Xmaxerrs 5 -Xmaxwarns 5 -cp /usr/share/junit-5/lib/junit-jupiter-api.jar:/usr/share/apiguardian-api/lib/apiguardian-api.jar:$(BUILD_DIR) -d $(BUILD_DIR) $(SRC) $(TEST)
 	junit-platform-console --class-path ./build/ --scan-classpath ./build/
 
 clean:
@@ -51,7 +51,7 @@ group07.zip:
 	 mv /tmp/group07.zip ./
 
 run:
-	java -jar ./textr.jar ./test || true
+	java -jar ./textr.jar ./config.mk || true
 	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
 debug:
 	java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=4000,suspend=n -jar textr.jar test || true
