@@ -175,15 +175,5 @@ public class LayoutLeaf extends Layout {
     protected int getRightmostContainedHash() {
         return containedHashCode;
     }
-
-    /**
-     * Returns the leftmost leaf of the current layout-level
-     * As this a leaf of the layout-structure,
-     * it does not have any children and will return a copy of itself
-     */
-    protected LayoutLeaf getLeftLeaf(int hash) {
-        return this;
-    }
-
 }
 
