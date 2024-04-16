@@ -235,7 +235,6 @@ public class FileBufferTest {
 
     @Test
     public void testWriteUndo() throws IOException {
-        // Test if the function write correctly adds strings to the content.
         String path = "testresources/test.txt";
 
         Debug.write(path, "");
@@ -267,7 +266,6 @@ public class FileBufferTest {
 
     @Test
     public void testDeleteUndo() throws IOException {
-        // Test if the function write correctly adds strings to the content.
         String path = "testresources/test.txt";
 
         Debug.write(path, "");
@@ -277,6 +275,7 @@ public class FileBufferTest {
         buffer.writeCmd("e".getBytes()[0], 1);
         buffer.writeCmd("s".getBytes()[0], 2);
         buffer.writeCmd("t".getBytes()[0], 3);
+
 	buffer.deleteCharacterCmd(2, 0);
         assertEquals("tst", new String(buffer.getBytes()));
 	buffer.undo();

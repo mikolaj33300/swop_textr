@@ -188,6 +188,8 @@ public class FileBuffer {
 
     /**
      * Updates the content of the FileBuffer
+     * @param updatedContents the byte to insert
+     * @param byteArrIndex the index of that byte
      */
     public void write(byte updatedContents, int byteArrIndex) {
         insert(byteArrIndex, updatedContents);
@@ -196,6 +198,7 @@ public class FileBuffer {
 
     /**
      * Saves the buffer contents to disk
+     * @return if the save was successful
      */
     public final int save() {
         if (!dirty) return 0;
@@ -210,8 +213,7 @@ public class FileBuffer {
     }
 
     /**
-     * Returns a copy of the byteConent of this FileBuffer
-     * TODO: unchecked cast
+     * @return a copy of the byteContent of this FileBuffer
      */
     public ArrayList<Byte> getByteContent(){
       ArrayList<Byte> res = new ArrayList<Byte>(this.byteContent);
@@ -219,7 +221,7 @@ public class FileBuffer {
     }
 
     /**
-     * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
+     * @return an array of byte arrays. Each array represents an array of bytes which is separated by
      * another array by a line separator specified.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
@@ -239,21 +241,21 @@ public class FileBuffer {
     // Default methods
 
     /**
-     * Returns the FileHolder object file (for testing purposes)
+     * @return the FileHolder object file (for testing purposes)
      */
     public FileHolder getFileHolder() {
         return this.file.clone();
     }
 
     /**
-     * Returns copy of this buffers' content.
+     * @return copy of this buffers' content.
      */
     public byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
     }
 
     /**
-     *  Returns the amount of chars in the buffercontent
+     *  @return the amount of chars in the buffercontent
      */
     public int getAmountChars(){
         return this.byteContent.size();
@@ -261,6 +263,8 @@ public class FileBuffer {
 
     /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
+     * @param compare the byte list to compare to
+     * @return if this byte list is equal to the compare list
      */
     boolean contentsEqual(ArrayList<Byte> compare) {
         if (compare.size() != byteContent.size()) return false;
@@ -270,7 +274,7 @@ public class FileBuffer {
     }
 
     /**
-     * Clones the byte array
+     * @return Clone of the byte array
      */
     ArrayList<Byte> cloneByteArrList() {
         ArrayList<Byte> copy = new ArrayList<>(byteContent);
@@ -279,6 +283,8 @@ public class FileBuffer {
 
     /**
      * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
+     * @param arrList the ArrayList<Byte> to convert
+     * @return array of our ArrayList<Byte>
      */
     byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
@@ -290,6 +296,7 @@ public class FileBuffer {
 
     /**
      * Determines if the buffer has been modified.
+     * @return if this FileBuffer is dirty
      */
     public boolean getDirty() {
         return this.dirty;
