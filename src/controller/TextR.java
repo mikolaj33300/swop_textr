@@ -21,6 +21,7 @@ public class TextR {
             this.activeUseCaseController = new FileErrorPopupController(this);
             System.out.println("wtf am I doing here?");
             containedAppFacade = null;
+            Terminal.clearScreen();
             System.exit(1);
         }
         this.facade = containedAppFacade;

@@ -1,5 +1,6 @@
 package controller;
 
+import io.github.btj.termios.Terminal;
 import ui.UserPopupBox;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class DirtyClosePromptController extends UseCaseController {
                 if(result == 0){
                     coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
                 } else {
+                    Terminal.clearScreen();
                     System.exit(0);
                 }
                 break;

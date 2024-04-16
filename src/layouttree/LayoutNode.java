@@ -79,13 +79,7 @@ public abstract class LayoutNode extends Layout {
      * The reference to the given Layout will be lost
      */
     public void insertDirectChild(Layout toInsert){
-        if(toInsert instanceof LayoutNode node)
-            if(node.isAllowedToBeChildOf(this)){
-            Layout cloneOfInsert = node.clone();
-            cloneOfInsert.setParent(this);
-            this.children.add(cloneOfInsert);
-        }
-        else{
+        if(toInsert.isAllowedToBeChildOf(this)){
             Layout cloneOfInsert = toInsert.clone();
             cloneOfInsert.setParent(this);
             this.children.add(cloneOfInsert);
