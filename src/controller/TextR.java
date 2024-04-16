@@ -59,6 +59,11 @@ public class TextR {
             }
             if (b == -1)
                 activeUseCaseController.handleIdle();
+            if(b == Integer.MIN_VALUE){
+                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
+                from above in the future*/
+                break;
+            }
             else {
                 activeUseCaseController.handle(b);
                 Terminal.clearScreen();

@@ -6,7 +6,13 @@ import java.io.IOException;
 
 public class ScreenUIUtil {
 
-        public static UICoords retrieveDimensionsTerminal() throws IOException {
+    /**
+     * Returns the coords of the text area of terminal. Is not tested since it's assumed is correct,
+     * just like the termios methods themselves. Source: termios tests.
+     * @return
+     * @throws IOException
+     */
+    public static UICoords retrieveDimensionsTerminal() throws IOException {
             Terminal.reportTextAreaSize();
             for(int i = 0; i < 4; i++)
                 Terminal.readByte();
