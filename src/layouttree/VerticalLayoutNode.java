@@ -94,4 +94,10 @@ public class VerticalLayoutNode extends LayoutNode{
         }
         return resultMap;
     }
+
+    @Override
+    public void changeHash(int target, int newHash) {
+        super.changeHash(target, newHash);
+    }
+    
 }
