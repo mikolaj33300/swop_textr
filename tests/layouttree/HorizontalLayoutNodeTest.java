@@ -126,6 +126,19 @@ public class HorizontalLayoutNodeTest {
 
         assertEquals(coordsList.get(2), new Rectangle(0.5, 0, 0.5, 1));
     }
+
+    @Test
+    void testInsertToRight(){
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(new LayoutLeaf(1));
+        toAdd.add(new LayoutLeaf(3));
+        Layout v1 = new VerticalLayoutNode(toAdd);
+
+        Layout v2 = v1.insertRightOfSpecified(1, 2);
+
+        toAdd.add(1, new LayoutLeaf(2));
+        assertEquals(v1, new VerticalLayoutNode(toAdd));
+    }
 }
 
 

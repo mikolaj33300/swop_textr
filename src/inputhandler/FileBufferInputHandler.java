@@ -51,6 +51,16 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		    case 8, 127, 10, 62:
 			    this.fb.deleteCharacter();
 				break;
+
+			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
+			// Control + Z
+			case 1:
+				fb.undo();
+				break;
+				//Control + U
+			case 21:
+				fb.redo();
+				break;
 		    // Control + S
 		    case 19:
 			this.fb.save();
