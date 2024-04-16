@@ -1,6 +1,7 @@
 package layouttree;
 
 import files.FileBuffer;
+import snake.SnakeHead;
 import ui.Rectangle;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private final int containedHashCode;
+    private int containedHashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
@@ -154,6 +155,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
         HashMap<Integer, Rectangle> mapToReturn = new HashMap<Integer, Rectangle>();
+        SnakeHead.log("> getCoordsList: puttig hash " + this.getContainedHashCode());
         mapToReturn.put(this.containedHashCode, uiCoordsScaled);
         return mapToReturn;
     }
@@ -183,6 +185,13 @@ public class LayoutLeaf extends Layout {
      */
     protected LayoutLeaf getLeftLeaf(int hash) {
         return this;
+    }
+
+    @Override
+    public void changeHash(int target, int newHash) {
+        if(this.containedHashCode == target)
+            this.containedHashCode = newHash;
+
     }
 
 }
