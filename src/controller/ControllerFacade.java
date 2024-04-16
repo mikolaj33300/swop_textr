@@ -222,4 +222,6 @@ class ControllerFacade {
         active = this.windows.size() - 1;
     }
 
+    public void duplicateActive() {
+    }
 }
