@@ -1,6 +1,5 @@
 package inputhandler;
 
-import controller.SnakeController;
 import snake.MoveDirection;
 import snake.SnakeGame;
 import ui.Rectangle;
@@ -71,8 +70,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     /**
-     * Called from {@link inputhandler.SnakeInputHandler#input(byte)} which is in turn called by
-     * {@link SnakeController#handleIdle()}. That method is called each millisecond in {@link controller.TextR}.
+     * Called from {@link inputhandler.SnakeInputHandler#input(byte)}
      *
      * We calculate here if the snake game should be ticked {@link SnakeGame#tick()} by calculating the
      * wait time: {@link SnakeInputHandler#currentWait} + {@link SnakeGame#getRemovedDelay()} >= {@link SnakeInputHandler#MILLISECOND_BASE}
