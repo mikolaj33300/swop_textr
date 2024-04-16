@@ -19,7 +19,19 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 SRC = $(call rwildcard,src/,*.java)
 
 #TEST = $(call rwildcard,tests/,*.java)
-TEST = tests/files/FileBufferTest.java
+TEST = tests/files/FileBufferTest.java ./tests/files/BufferCursorContextTest.java ./tests/files/InsertionPointTest.java ./tests/files/FileAnalyserUtilTest.java ./tests/files/FileHolderTest.java ./tests/controller/RearrangeLayoutTest.java ./tests/controller/CloseBufferTest.java ./tests/layouttree/HorizontalLayoutNodeTest.java  ./tests/ui/ViewTest.java
+
+#TODO
+#./tests/controller/SaveBufferTest.java
+#./tests/controller/EditBufferTest.java
+#./tests/controller/ControllerTest.java
+#./tests/controller/InspectBufferTest.java
+#./tests/controller/LaunchTextrTest.java
+#./tests/layouttree/VerticalLayoutNodeTest.java
+#./tests/layouttree/LayoutNodeTest.java
+#./tests/layouttree/LayoutTest.java
+#./tests/ui/FileBufferViewTest.java
+#./tests/layouttree/LayoutLeafTest.java
 
 OBJ := $(patsubst %.java,%.class,$(SRC))
 OBJ := $(patsubst src/%,build/%,$(OBJ))
