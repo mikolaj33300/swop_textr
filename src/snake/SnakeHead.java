@@ -168,7 +168,7 @@ public class SnakeHead extends Snake {
      * @return length integer
      */
     int getLength() {
-        if(this.segments.length == 0) return Math.abs(getStart().distanceX(getEnd()));
+        if(this.segments.length == 0) return getDirection() == UP || getDirection() == DOWN ? Math.abs(getStart().distanceY(getEnd())) : Math.abs(getStart().distanceX(getEnd()));
         else {
             int length = getDirection() == UP || getDirection() == DOWN ? Math.abs(getStart().distanceY(getEnd())) : Math.abs(getStart().distanceX(getEnd()));
             for(int i = segments.length-1; i >= 0; i--) {

@@ -95,13 +95,16 @@ public class SnakeGame {
            || this.snake.getEnd().y()+1 < 0 || this.snake.getEnd().y() >= maxY-1) {
             // maxX-1 because maxX IS the border of the game and thus invalid
             // snake positions are
-            //SnakeHead.log("Position : " + snake.getEnd().getPrint() + " invalid...?");
+            SnakeHead.log("Position : " + snake.getEnd().getPrint() + " invaliddssdf...?");
             gameState = -1;
         }
 
         // 5. Checks if the maximum length has been reached.
         if(snake.getLength() == WIN_LENGTH) gameState = 1;
-        else if(snake.getLength() <= 0) gameState = -1;
+        else if(snake.getLength() <= 0) {
+            SnakeHead.log("Length <= 0");
+            gameState = -1;
+        }
 
     }
 
