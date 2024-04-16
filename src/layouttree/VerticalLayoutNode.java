@@ -8,16 +8,17 @@ import java.util.HashMap;
 
 public class VerticalLayoutNode extends LayoutNode{
 
-
     /**
-     * Constructor for VerticalLayoutNode, clones its arguments to prevent representation exposure
+     * Constructor for VerticalLayoutNode
+     * The given newChildren will  be cloned before setting the children of this HorizontalLayoutNode
+     * There must be atleast 2 Layouts in newChildren for the VerticalLayoutNode to be instantiated correctly
      */
     public VerticalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
     }
 
     /**
-     * Returns the orientation of the VerticalLayoutNode
+     * Returns the VERTICAL orientation since this is a VerticalLayoutNode
      */
     @Override
     public Orientation getOrientation() {
@@ -25,7 +26,8 @@ public class VerticalLayoutNode extends LayoutNode{
     }
 
     /**
-     * Rotates the VerticalLayoutNode's child and its neighbour on the right
+     * Returns a LayoutNode in which the given newSibling LayoutLeaf will be rotated around the given child-layout
+     * clockwise or counterclockwise, based on the given rotdir
      */
     @Override
     protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
@@ -51,8 +53,27 @@ public class VerticalLayoutNode extends LayoutNode{
     }
 
     /**
-     Makes a deepcopy of VerticalLayoutNode
-     The references to this object and its contents will be removed
+     * Returns HashMap of coords connected to the containedHashCodes of the LayoutLeafs
+     * The rectangle defines which part of the terminal, this LayoutLeaf will fill up
+     * The result is scaled by the given rectangle uiCoordsScaled
+     */
+    @Override
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double heightChild = uiCoordsScaled.height / ((double) children.size()); //rounds down
+        double yChild = uiCoordsScaled.startY;
+        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
+        for (Layout child : children) {
+            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, uiCoordsScaled.width, heightChild)));
+            yChild = yChild + heightChild;
+        }
+        return resultMap;
+    }
+
+    /**
+     * Returns a deepcopy of this VerticalLayoutNode
+     * The reference to this VerticalLayoutNode will be lost and
+     * Every Layout-child of this VerticalLayoutNode will also be cloned
+     * The parent of this VerticalLayoutNode will not be brought over to the clone
      */
     @Override
     public VerticalLayoutNode clone() {
@@ -64,7 +85,9 @@ public class VerticalLayoutNode extends LayoutNode{
     }
 
     /**
-     * Returns whether this HorizontalLayoutNode and the given object are equals in contents
+     * Returns true if this VerticalLayoutNode and the given Object are equal content-wise, false otherwise
+     * They are equal content-wise when the object is a VerticalLayoutNode and the equals-function succeeds for each
+     * of their children
      */
     @Override
     public boolean equals(Object node) {
@@ -80,17 +103,5 @@ public class VerticalLayoutNode extends LayoutNode{
             return true;
         }
         return false;
-    }
-
-    @Override
-    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
-        double heightChild = uiCoordsScaled.height / ((double) children.size()); //rounds down
-        double yChild = uiCoordsScaled.startY;
-        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
-        for (Layout child : children) {
-            resultMap.putAll(child.getCoordsList(new Rectangle(uiCoordsScaled.startX, yChild, uiCoordsScaled.width, heightChild)));
-            yChild = yChild + heightChild;
-        }
-        return resultMap;
     }
 }

@@ -87,7 +87,7 @@ public abstract class Layout implements Cloneable {
     public abstract HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
 
     /**
-     * Returns the layouttree, with a new LayoutLeaf inserted with containedHashCode equal to hashToAdd
+     * Returns this Layout, with a new LayoutLeaf inserted with containedHashCode equal to hashToAdd
      * The LayoutLeaf will be inserted directly right of a LayoutLeaf with containedHashCode equal to hashSpecified
      */
     public abstract Layout insertRightOfSpecified(int hashSpecified, int hashToAdd);

@@ -1,7 +1,6 @@
 package layouttree;
 
 import ui.Rectangle;
-import ui.UICoords;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,14 +9,16 @@ import java.util.HashMap;
 public class HorizontalLayoutNode extends LayoutNode {
 
     /**
-     * Constructor for HorizontalLayoutNode, clones its arguments to prevent representation exposure
+     * Constructor for HorizontalLayoutNode
+     * The given newChildren will thus be cloned before setting the children of this HorizontalLayoutNode
+     * There must be atleast 2 Layouts in newChildren for the HorizontalLayoutNode to be instantiated correctly
      */
     public HorizontalLayoutNode(ArrayList<Layout> newChildren) {
         super(newChildren);
     }
 
     /**
-     * Returns the orientation of the HorizontalLayoutNode
+     * Returns the HORIZONTAL orientation since this is a HorizontalLayoutNode
      */
     @Override
     public Orientation getOrientation() {
@@ -25,7 +26,8 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     * Rotates the HorizontalLayoutNode's child and its neighbour on the right
+     * Returns a LayoutNode in which the given newSibling LayoutLeaf will be rotated around the given child-layout
+     * clockwise or counterclockwise, based on the given rotdir
      */
     @Override
     protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
@@ -50,9 +52,29 @@ public class HorizontalLayoutNode extends LayoutNode {
         return layoutNode.getOrientation() != Orientation.HORIZONTAL;
     }
 
+
     /**
-     * Makes a deepcopy of HorizontalLayoutNode
-     * The references to this object and its contents will be removed
+     * Returns HashMap of coords connected to the containedHashCodes of the LayoutLeafs
+     * The rectangle defines which part of the terminal, this LayoutLeaf will fill up
+     * The result is scaled by the given rectangle uiCoordsScaled
+     */
+    @Override
+    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
+        double widthChild = uiCoordsScaled.width / ((double) children.size()); //rounds down
+        double xChild = uiCoordsScaled.startX;
+        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
+        for (Layout child : children) {
+            resultMap.putAll(child.getCoordsList(new Rectangle(xChild, uiCoordsScaled.startY, widthChild, uiCoordsScaled.height)));
+            xChild = xChild + widthChild;
+        }
+        return resultMap;
+    }
+
+    /**
+     * Returns a deepcopy of this HorizontalLayoutNode
+     * The reference to this HorizontalLayoutNode will be lost and
+     * Every Layout-child of this HorizontalLayoutNode will also be cloned
+     * The parent of this HorizontalLayoutNode will not be brought over to the clone
      */
     @Override
     public HorizontalLayoutNode clone() {
@@ -63,21 +85,10 @@ public class HorizontalLayoutNode extends LayoutNode {
         return new HorizontalLayoutNode(deepCopyList);
     }
 
-    @Override
-    public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
-        double widthChild = uiCoordsScaled.width / ((double) children.size()); //rounds down
-        double xChild = uiCoordsScaled.startX;
-        HashMap<Integer, Rectangle> resultMap = new HashMap<Integer, Rectangle>();
-        for (Layout child : children) {
-            Object uiCoords;
-            resultMap.putAll(child.getCoordsList(new Rectangle(xChild, uiCoordsScaled.startY, widthChild, uiCoordsScaled.height)));
-            xChild = xChild + widthChild;
-        }
-        return resultMap;
-    }
-
     /**
-     * Returns whether this HorizontalLayoutNode and the given object are equals in contents
+     * Returns true if this HorizontalLayoutNode and the given Object are equal content-wise, false otherwise
+     * They are equal content-wise when the object is a HorizontalLayoutNode and the equals-function succeeds for each
+     * of their children
      */
     @Override
     public boolean equals(Object node) {
@@ -93,11 +104,6 @@ public class HorizontalLayoutNode extends LayoutNode {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void changeHash(int target, int newHash) {
-        super.changeHash(target, newHash);
     }
 
 }
