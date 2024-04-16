@@ -61,20 +61,20 @@ public class TextR {
                 Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
             }
-            if (b == -1)
+            if (b == -1) {
                 activeUseCaseController.handleIdle();
-            if(b == Integer.MIN_VALUE){
-                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
-                from above in the future*/
-                break;
-            }
-            else {
+            } else {
                 activeUseCaseController.handle(b);
                 Terminal.clearScreen();
                 activeUseCaseController.paintScreen();
             }
             // Flush stdIn & Recalculate dimensions
             if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
+            if(b == -2){
+                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
+                from above in the future*/
+                break;
+            }
         }
     }
 }
