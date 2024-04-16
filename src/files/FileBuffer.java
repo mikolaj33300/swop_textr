@@ -92,7 +92,9 @@ public class FileBuffer {
           deleted = deleteCharacter(iCol, iLine);
         }
         public void undo() {
-          insert(convertLineAndColToIndex(iCol, iLine), deleted);
+	  int pos = convertLineAndColToIndex(iLine, iCol)-1;
+	  if (pos > 0)
+          write(deleted, pos);
         }
       });
     }

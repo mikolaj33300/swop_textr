@@ -12,8 +12,7 @@ import util.Debug;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.ArrayList; import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -235,15 +234,12 @@ public class FileBufferTest {
     }
 
     @Test
-    public void testUndo() throws IOException {
+    public void testWriteUndo() throws IOException {
         // Test if the function write correctly adds strings to the content.
-        String text = "";
         String path = "testresources/test.txt";
-        String result = "";
 
         Debug.write(path, "");
         FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-        assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
 
         buffer.writeCmd("t".getBytes()[0], 0);
         buffer.writeCmd("e".getBytes()[0], 1);
@@ -267,5 +263,27 @@ public class FileBufferTest {
         assertEquals("tu", new String(buffer.getBytes()));
 	buffer.redo();
         assertEquals("tu", new String(buffer.getBytes()));
+    }
+
+    @Test
+    public void testDeleteUndo() throws IOException {
+        // Test if the function write correctly adds strings to the content.
+        String path = "testresources/test.txt";
+
+        Debug.write(path, "");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+
+        buffer.writeCmd("t".getBytes()[0], 0);
+        buffer.writeCmd("e".getBytes()[0], 1);
+        buffer.writeCmd("s".getBytes()[0], 2);
+        buffer.writeCmd("t".getBytes()[0], 3);
+	buffer.deleteCharacterCmd(2, 0);
+        assertEquals("tst", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("test", new String(buffer.getBytes()));
+	buffer.deleteCharacterCmd(0, 0);// if we delete at the first char we don't do nothing
+        assertEquals("test", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("test", new String(buffer.getBytes()));
     }
 }
