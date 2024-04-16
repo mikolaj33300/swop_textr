@@ -1,15 +1,13 @@
-package command;
-
-import files.FileBuffer;
+package files;
 
 import java.util.Arrays;
 
-public class BufferDeleteCharacterCommand implements Command{
-        private int iCol;
-        private int iLine;
+public class BufferDeleteCharacterCommand implements Command {
+        private final int iCol;
+        private final int iLine;
         private byte[] deleted;
 
-        private FileBuffer containedFb;
+        private final FileBuffer containedFb;
 
         public void execute() {
             if(iCol == 0 && iLine != 0){

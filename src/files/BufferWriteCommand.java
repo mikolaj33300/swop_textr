@@ -1,16 +1,14 @@
-package command;
+package files;
 
-import files.FileBuffer;
-
-public class BufferWriteCommand implements Command{
-    private byte uC;
-    private int bArrLine;
-    private int bArrCol;
+public class BufferWriteCommand implements Command {
+    private final byte writtenByte;
+    private final int bArrLine;
+    private final int bArrCol;
 
     private FileBuffer affectedBuffer;
 
     public void execute() {
-        affectedBuffer.write(uC, bArrLine, bArrCol);
+        affectedBuffer.write(writtenByte, bArrLine, bArrCol);
     }
 
     public void undo() {
@@ -18,7 +16,7 @@ public class BufferWriteCommand implements Command{
     }
 
     public BufferWriteCommand(byte uC, int bArrCol, int bArrLine, FileBuffer affectedBuffer){
-        this.uC = uC;
+        this.writtenByte = uC;
         this.bArrCol = bArrCol;
         this.bArrLine = bArrLine;
         this.affectedBuffer = affectedBuffer;

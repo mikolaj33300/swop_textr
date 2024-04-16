@@ -73,6 +73,17 @@ class LayoutLeafTest {
         assertNotSame(l1,l1_copy);
         assertEquals(l1,l1_copy);
     }
+
+    @Test
+    void testInsertToRight(){
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        Layout v1 = l1.insertRightOfSpecified(1, 2);
+
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(new LayoutLeaf(1));
+        toAdd.add(new LayoutLeaf(2));
+        assertEquals(v1, new VerticalLayoutNode(toAdd));
+    }
 }
 
 

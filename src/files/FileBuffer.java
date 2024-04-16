@@ -1,11 +1,6 @@
 package files;
 
-import command.BufferDeleteCharacterCommand;
-import command.BufferWriteCommand;
-import controller.TextR;
-import layouttree.LayoutLeaf;
 import ui.FileBufferView;
-import command.Command;
 
 import java.io.IOException;
 import java.util.*;
@@ -71,7 +66,7 @@ public class FileBuffer {
      *
      * @param byteArrIndex the index where the enter character needs to go
      */
-    public void enterInsertionPoint(int byteArrIndex) {
+    protected void enterInsertionPoint(int byteArrIndex) {
         insert(byteArrIndex, System.lineSeparator().getBytes());
         for (int i = 0; i < listenersArrayList.size(); i++)
             listenersArrayList.get(i).contentsChanged();
@@ -129,7 +124,7 @@ public class FileBuffer {
      * @param insertionPointLine the row of the deleted character
      * @return the character delted
      */
-    public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
+    protected void deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
 
         if (insertionPointCol > 0 || insertionPointLine > 0) {
@@ -182,7 +177,7 @@ public class FileBuffer {
      * @param insertionPointLine    the line of that byte
      * @param insertionPointCol    the line of that byte
      */
-    public void write(byte updatedContents, int insertionPointLine, int insertionPointCol) {
+    protected void write(byte updatedContents, int insertionPointLine, int insertionPointCol) {
         insert(convertLineAndColToIndex(insertionPointLine, insertionPointCol), updatedContents);
         dirty = true;
     }
