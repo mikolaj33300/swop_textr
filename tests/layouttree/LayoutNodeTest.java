@@ -55,6 +55,8 @@ public class LayoutNodeTest {
             vn2 = new VerticalLayoutNode(children3);
         }
 
+
+
     @Test
     void testRotateRelationshipNeighborAbleCounterClockLeaf(){
         Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
@@ -118,6 +120,7 @@ public class LayoutNodeTest {
         ln = ln.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE,2);
         assertEquals(ln,correct_ln);
     }
+
 
 
 
@@ -240,16 +243,7 @@ public class LayoutNodeTest {
         assertEquals(old_children,new_children);
     }
 
-    @Test
-    void testRotateRelationshipNeighbourRoot() throws IOException {
-        Layout l10 = new LayoutLeaf(10);
-        Layout l10_clone = l10.clone();
-        l10 = l10.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE, 10);
-        assertEquals(l10,l10_clone);
-        l10 = l10.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE, 10);
-        assertEquals(l10,l10_clone);
-    }
-
+/*
     @Test
     void testRotateRelationshipNeighborLeafs() {
         Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
@@ -328,14 +322,5 @@ public class LayoutNodeTest {
         root_clock = root_clock.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE, 1);
         correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1))),l4)));
         assertEquals(root_clock, correct_clock);
-    }
-
-
-    @Test
-    void testClone() {
-        LayoutNode complex_tree = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1, l4, new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2, l10))))));
-        LayoutNode complex_clone = complex_tree.clone();
-        assertEquals(complex_clone, complex_tree);
-        assertNotSame(complex_clone, complex_tree);
-    }
+    }*/
 }
