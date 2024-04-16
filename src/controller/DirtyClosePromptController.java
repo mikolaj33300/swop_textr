@@ -39,4 +39,9 @@ public class DirtyClosePromptController extends UseCaseController {
     public void clearContent() throws IOException {
         userPopupBox.clearContent();
     }
+
+    @Override
+    public void handleIdle() {
+
+    }
 }

@@ -25,7 +25,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     private final BufferCursorContext containedFileBuffer;
 
     public FileBufferView(BufferCursorContext openedFile) {
-        this.containedFileBuffer=openedFile;
+        this.containedFileBuffer = openedFile;
         this.hashCode = openedFile.hashCode();
     }
 
@@ -42,13 +42,13 @@ public class FileBufferView extends View implements FileBufferContentChangedList
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = (containedFileBuffer.getInsertionPointLine() / (height - 1)) * (height - 1);
-        //Renders either all the lines until the end, or the next height-2 lines
+        //Renders either all the lines until the end, or the next height-2 lines (i<height-1)
         for (int i = 0; i < Math.min(height - 1, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
             String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex + i)));
-            //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
+            // For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
             int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
             int renderLineEndIndex = Math.min(renderLineStartIndex + width - 1, lineString.length());
-            //endindex -1 to make space for vertical bar
+            // endindex -1 to make space for vertical bar
             if (renderLineStartIndex < lineString.length()) {
                 assert renderLineEndIndex <= lineString.length() && renderLineStartIndex <= lineString.length();
                 if(renderLineStartIndex <= lineString.length() || renderLineEndIndex <= lineString.length())
@@ -66,7 +66,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     /**
      * Generates the string that is used to display the statusbar.
      */
-    public String getStatusbarString(int activeHash) {
+    private String getStatusbarString(int activeHash) {
         String statusLine = containedFileBuffer.getFileBuffer().getPath();
         statusLine += " #Lines:";
         statusLine += String.valueOf(containedFileBuffer.getLines().size());

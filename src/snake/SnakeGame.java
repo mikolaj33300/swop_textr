@@ -1,9 +1,11 @@
 package snake;
 
+import controller.SnakeController;
 import snake.fruits.Banana;
 import snake.fruits.Apple;
 import snake.fruits.Fruit;
 import snake.fruits.MogFruit;
+import ui.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +35,8 @@ public class SnakeGame {
     /**
      * Settings of the game.
      */
-    final int MAX_FRUITS = 3, maxX, maxY, STARVE_COUNTER = 5, WIN_LENGTH = 100;
-    private int score = 0, delay = 0, gameState = 0, starver = 0;
+    final int MAX_FRUITS = 3, STARVE_COUNTER = 5, WIN_LENGTH = 100;
+    private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY;
 
     /**
      * Represents the max X and Y coordinates of the snake game width. Used to generate fruits inside map bounds
@@ -109,7 +111,7 @@ public class SnakeGame {
 
     /**
      * Determines if the game is won.
-     * @return
+     * @return boolean determining if the game is won
      */
     public boolean isWon() {
         return gameState == 1;
@@ -132,7 +134,7 @@ public class SnakeGame {
 
     /**
      * Retrieves the list of positions
-     * @return
+     * @return list of the available fruits
      */
     public List<Fruit> getFruits() {
         // Map each Fruit to its position cloned.
@@ -144,6 +146,40 @@ public class SnakeGame {
      */
     public int getRemovedDelay() {
         return this.delay;
+    }
+
+    /**
+     * Returns the score of the game.
+     * @return
+     */
+    public int getScore() {
+        return this.score;
+    }
+
+    /**
+     * Modifies the {@link SnakeGame#maxX} and {@link SnakeGame#maxY} fields. And scales
+     * all game elements to the new field
+     * @param newPlayfield the rectangle of the new playing field
+     */
+    public void modifyPlayfield(Rectangle newPlayfield) {
+        int newMaxX = (int) newPlayfield.width;
+        int newMaxY = (int) newPlayfield.height;
+
+
+    }
+
+    /**
+     * Given a certain position, determines if that position is valid to spawn a fruit
+     * @return boolean determining if a position is valid for usage on the board
+     */
+    boolean isPosInvalid(Pos pos) {
+        // If the position overlaps with one of the segments
+        return Arrays.stream(this.snake.getSegments())
+                .anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), pos))
+                ||
+                // Or the position is already occupied by one of the fruits
+                this.fruits.stream().anyMatch((fruit) -> fruit.getPosition().equals(pos))
+                ;
     }
 
     /**
@@ -185,26 +221,16 @@ public class SnakeGame {
         return new Pos(rand.nextInt(maxX), rand.nextInt(maxY));
     }
 
-    /**
-     * Given a certain position, determines if that position is valid to spawn a fruit
-     * @return boolean determining if a position is valid for usage on the board
-     */
-    boolean isPosInvalid(Pos pos) {
-        // If the position overlaps with one of the segments
-        return Arrays.stream(this.snake.getSegments())
-                .anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), pos))
-                ||
-        // Or the position is already occupied by one of the fruits
-                this.fruits.stream().anyMatch((fruit) -> fruit.getPosition().equals(pos))
-                ;
-    }
-
-    /**
-     * Returns the score of the game.
-     * @return
-     */
-    int getScore() {
-        return this.score;
+    @Override
+    public SnakeGame clone() {
+        SnakeGame game = new SnakeGame(5, this.maxX, this.maxY);
+        game.snake = this.snake.clone();
+        game.fruits = this.fruits.stream().map((fruit) -> fruit.clone()).toList();
+        game.score = this.score;
+        game.starver = this.starver;
+        game.delay = this.delay;
+        game.gameState = this.gameState;
+        return game;
     }
 
 }

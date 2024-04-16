@@ -37,6 +37,9 @@ public class InspectContentsController extends UseCaseController {
             case 20:
                 coreControllerParent.facade.rotateLayout(ROT_DIRECTION.CLOCKWISE);
                 break;
+            // Control + D
+            case 4:
+                coreControllerParent.facade.openSnakeGame();
             // Line separator
             case 13:
                 coreControllerParent.facade.handleSeparator();
@@ -105,6 +108,11 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void clearContent() throws IOException {
         coreControllerParent.facade.clearContent();
+    }
+
+    @Override
+    public void handleIdle() throws IOException {
+
     }
 
 }

@@ -9,111 +9,115 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import inputhandler.FileBufferInputHandler;
+import inputhandler.SnakeInputHandler;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.MOVE_DIRECTION;
 import layouttree.VerticalLayoutNode;
+import ui.SnakeView;
 import ui.*;
 import ui.FileBufferView;
 
 class ControllerFacade {
     private byte[] lineSeparatorArg;
-	private ArrayList<Window> windows;
-	private Layout rootLayout;
-	private int active;
+    private ArrayList<Window> windows;
+    private Layout rootLayout;
+    private int active;
 
     /**
      * Creates a ControllerFacade object.
      * Creates a {@link Layout} object which represents the root layout.
      * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
+     *
      * @throws IOException when the path is invalid
      */
-	public ControllerFacade(String[] args) throws PathNotFoundException, IOException {
+    public ControllerFacade(String[] args) throws PathNotFoundException, IOException {
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
         String[] paths;
-        if(FileAnalyserUtil.isValidLineSeparatorString(args[0])){
+        if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
             paths = Arrays.copyOfRange(args, 1, args.length);
         } else {
             paths = args;
         }
 
         this.windows = new ArrayList<Window>();
-		ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
-		for (int i = 0; i < paths.length; i++) {
-		    String checkPath = paths[i];
+        ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
+        for (int i = 0; i < paths.length; i++) {
+            String checkPath = paths[i];
             FileBufferInputHandler openedFileHandler;
-			try{
+            try {
                 openedFileHandler = new FileBufferInputHandler(checkPath, lineSeparatorArg);
-            } catch (PathNotFoundException e){
+            } catch (PathNotFoundException e) {
                 throw e;
             }
-                this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
-                leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
-		}
+            this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
+            leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
+        }
 
-		if(leaves.size() == 1)
-		    this.rootLayout = leaves.get(0);
-		else
-		    this.rootLayout = new VerticalLayoutNode(leaves);
+        if (leaves.size() == 1)
+            this.rootLayout = leaves.get(0);
+        else
+            this.rootLayout = new VerticalLayoutNode(leaves);
 
         this.updateViewCoordinates();
-	}
+    }
 
-  public void renderContent() throws IOException {
-      for (Window window : windows) {
-          window.view.render(this.active);
-      }
-  }
+    public void renderContent() throws IOException {
+        for (Window window : windows) {
+            window.view.render(this.active);
+        }
+    }
 
-  public void saveActive(){
+    public void saveActive() {
         windows.get(active).handler.save();
-  }
+    }
 
-  public void renderCursor() throws IOException {
-    windows.get(active).view.renderCursor();
-  }
+    public void renderCursor() throws IOException {
+        windows.get(active).view.renderCursor();
+    }
 
-  public int closeActive(){
-        if(windows.get(active).handler.isSafeToClose()){
+    public int closeActive() {
+        if (windows.get(active).handler.isSafeToClose()) {
             //safe to do a force close since clean buffer
             return forceCloseActive();
         } else {
             return 1;
         }
-  }
+    }
 
-  public int forceCloseActive() {
+    public int forceCloseActive() {
         //checks which hash will be the next one after this is closed
-      Integer newHashCode = getNewHashCode();
-      if (newHashCode == null) return 2;
+        Integer newHashCode = getNewHashCode();
+        if (newHashCode == null) return 2;
 
-      //deletes and sets new one as active
-    rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
-    windows.remove(active);
-    int newActive = -1;
-    for(int i = 0; i<windows.size(); i++){
-        if(windows.get(i).view.hashCode() == newHashCode){
-            newActive = i;
+        //deletes and sets new one as active
+        rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
+        windows.remove(active);
+        int newActive = -1;
+        for (int i = 0; i < windows.size(); i++) {
+            if (windows.get(i).view.hashCode() == newHashCode) {
+                newActive = i;
+            }
         }
+        active = newActive;
+        if (active == -1) {
+            throw new RuntimeException("Layout and collection of views inconsistent!");
+        }
+        return 0;
     }
-    active = newActive;
-    if(active == -1){
-        throw new RuntimeException("Layout and collection of views inconsistent!");
-    }
-    return 0;
-  }
 
     /**
      * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
+     *
      * @return
      */
     private Integer getNewHashCode() {
         int oldHashCode = windows.get(active).view.hashCode();
         int newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT, windows.get(active).view.hashCode());
-        if(newHashCode == oldHashCode){
+        if (newHashCode == oldHashCode) {
             newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.LEFT, windows.get(active).view.hashCode());
-            if(oldHashCode == newHashCode){
+            if (oldHashCode == newHashCode) {
                 //no left or right neighbor to focus
                 rootLayout = null;
                 return null;
@@ -132,11 +136,11 @@ class ControllerFacade {
     public void moveFocus(MOVE_DIRECTION dir) {
 
         int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
-        for (int i = 0; i < this.windows.size(); i++){
-          if (this.windows.get(i).view.hashCode() == newActive){
-            this.active = i;
-            break;
-          }
+        for (int i = 0; i < this.windows.size(); i++) {
+            if (this.windows.get(i).view.hashCode() == newActive) {
+                this.active = i;
+                break;
+            }
         }
 
     }
@@ -144,8 +148,8 @@ class ControllerFacade {
     /**
      * Calls clearContent on the contained {@link ui.FileBufferView}(s).
      */
-    public void clearContent() throws IOException{
-      return;
+    public void clearContent() throws IOException {
+        return;
     }
 
     /**
@@ -158,28 +162,46 @@ class ControllerFacade {
 
     private void updateViewCoordinates() {
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
-        for(Window w : windows){
+        for (Window w : windows) {
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
         }
     }
 
-    public void handleArrowRight(){
+    public void handleArrowRight() {
         this.windows.get(active).handler.handleArrowRight();
     }
 
-    public void handleArrowLeft(){
+    public void handleArrowLeft() {
         this.windows.get(active).handler.handleArrowLeft();
     }
 
-    public void handleArrowDown(){
+    public void handleArrowDown() {
         this.windows.get(active).handler.handleArrowDown();
     }
 
-    public void handleArrowUp(){
+    public void handleArrowUp() {
         this.windows.get(active).handler.handleArrowUp();
     }
 
     public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
     }
+
+    /**
+     * Opens the snake game by doing overwriting the active {@link ControllerFacade#windows}'s
+     * {@link inputhandler.InputHandlingElement} to {@link SnakeInputHandler} and {@link View}
+     * to {@link SnakeView}. We delete the active window and add a new window to the list.
+     */
+    public void openSnakeGame() throws IOException {
+        UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled();
+        SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
+        this.windows.remove(this.windows.get(active));
+        this.windows.add(
+                new Window(
+                    new SnakeView(handler.getSnakeGame()),
+                    handler
+                )
+        );
+    }
+
 }

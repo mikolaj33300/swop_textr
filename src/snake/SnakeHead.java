@@ -4,6 +4,7 @@ import io.github.btj.termios.Terminal;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static snake.MoveDirection.DOWN;
 import static snake.MoveDirection.UP;
@@ -36,6 +37,10 @@ public class SnakeHead extends Snake {
     public SnakeHead(int length, int startX, int startY) {
         super(MoveDirection.RIGHT, new Pos(startX - length, startY), new Pos(startX, startY));
         this.segments = new SnakeSegment[] {};
+    }
+
+    private SnakeHead(MoveDirection direction, Pos start, Pos end) {
+        super(direction, start, end);
     }
 
     /**
@@ -184,6 +189,16 @@ public class SnakeHead extends Snake {
             }
                 return length;
         }
+    }
+
+    /**
+     * Clones the object
+     * @return the clone
+     */
+    public SnakeHead clone() {
+        SnakeHead head = new SnakeHead(this.getDirection(), this.getStart(), this.getEnd());
+        head.segments = getSegments().clone();
+        return head;
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.HashMap;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
+
     private final int containedHashCode;
 
     /**
@@ -20,7 +21,6 @@ public class LayoutLeaf extends Layout {
     public LayoutLeaf(int hash) {
 	    this.containedHashCode = hash;
     }
-
 
     /**
      * Deletes the mostleft this leaf's parent
@@ -39,11 +39,10 @@ public class LayoutLeaf extends Layout {
      * If no neighbours left, the active Layout stays active
      */
     public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) {
-        if(dir==MOVE_DIRECTION.RIGHT){
+        if(dir == MOVE_DIRECTION.RIGHT)
             return this.getRightNeighborsContainedHash(hash);
-        } else {
+        else
             return this.getLeftNeighborsContainedHash(hash);
-        }
     }
 
     /**
@@ -52,7 +51,7 @@ public class LayoutLeaf extends Layout {
      *
      * @return
      */
-    private int getRightNeighborsContainedHash(int hash) throws HashNotMatchingException{
+    private int getRightNeighborsContainedHash(int hash) throws HashNotMatchingException {
         if(this.containedHashCode == hash){
             if(parent != null){
                 return parent.getRightNeighbourContainedHash(this);

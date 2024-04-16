@@ -1,7 +1,12 @@
-package snake;
+package ui;
 
 import io.github.btj.termios.Terminal;
+import snake.Pos;
+import snake.Snake;
+import snake.SnakeGame;
 import snake.fruits.Fruit;
+import ui.UICoords;
+import ui.View;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -11,53 +16,42 @@ import java.util.stream.Collectors;
 
 public class SnakeView extends View {
 
-    private SnakeGame game;
+    private final SnakeGame game;
+    private int startX, startY, width, height;
 
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
     // between [0, width] and [0, height]
-    public SnakeView() {
-        this.game = new SnakeGame(6, 80-2, 24-2);
+    public SnakeView(SnakeGame game) {
+        this.game = game;
     }
 
-    public void tick() {
-        if(game.canContinue())
-            this.game.tick();
-    }
-
-    public void move(char code) throws IOException {
-        switch (code) {
-            // Up
-            case 'A':
-                this.game.move(MoveDirection.UP);
-                break;
-            // Down
-            case 'B':
-                this.game.move(MoveDirection.DOWN);
-                break;
-            // Right
-            case 'C':
-                this.game.move(MoveDirection.RIGHT);
-                break;
-            // Left
-            case 'D':
-                this.game.move(MoveDirection.LEFT);
-                break;
+    private void setLocalCoordinates() {
+        try {
+            UICoords coords = super.getRealUICoordsFromScaled();
+            this.startX = coords.startX;
+            this.startY = coords.startY;
+            this.width = coords.width;
+            this.height = coords.height;
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void render() throws IOException {
+    public void render(int activeHash) throws IOException {
+        // Retrieve coordinates from superclass (set by ControllerFacade by going through tree)
+        setLocalCoordinates();
 
-        super.setCorrectCoords();
+        // Retrieve information from the snake game.
         Snake[] segments = game.getSnake().getSegments();
         Snake head = game.getSnake();
 
         // Print border
-        printLine(new Pos(this.startX+width, this.startY), new Pos(this.startX+width, this.startY+height), "I", false);
-        printLine(new Pos(this.startX, this.startY+height), new Pos(this.startX+width, this.startY+height), "-", false);
+        printLine(new Pos(startX+width, startY), new Pos(startX+width, startY+height), "I", false);
+        printLine(new Pos(startX, startY+height), new Pos(startX+width, startY+height), "-", false);
 
         // Print score
-        Terminal.printText(this.startY+height,this.startX + width/2, "Score: " + game.getScore());
+        Terminal.printText(startY+height,startX + width/2, "Score: " + game.getScore());
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
@@ -108,6 +102,8 @@ public class SnakeView extends View {
      * @return the amount of steps were taken to print this line.
      */
     private int printLine(Pos start, Pos end, String character, boolean isEqual) {
+        setLocalCoordinates();
+
         int dX = -(start.x() - end.x());
         int dY = -(start.y() - end.y());
         int stepX = dX != 0 ? dX / Math.abs(dX) : 0;
@@ -116,19 +112,19 @@ public class SnakeView extends View {
         for(int i = 0;
             i < Math.abs(dX) || (isEqual && i <= Math.abs(dX));
             i++) {
-            Terminal.printText(1 + this.startY + start.y(), 1 + this.startX + start.x() + (i*stepX), getCharacter(character, i*stepX));
+            Terminal.printText(1 + startY + start.y(), 1 + startX + start.x() + (i*stepX), getCharacter(character, i*stepX));
         }
         for(int i = 0;
             i < Math.abs(dY) || (isEqual && i <= Math.abs(dY));
             i++) {
-            Terminal.printText(1 + this.startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
+            Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
         }
 
         return Math.max(Math.abs(dX), Math.abs(dY));
     }
 
     /**
-     * Gets the character at offset 'step'. Used to render characters on the snake.
+     * Gets the character at offset 'step'. Used to render skins on the snake.
      * @param character the string to get offset from
      * @param step the index
      * @return the character string at index i
@@ -148,38 +144,44 @@ public class SnakeView extends View {
      * @param text the array of text that should be printed in the box.
      */
     private void printBox(int y, String... text) {
+        setLocalCoordinates();
         // Determine the length of the longest string in text
         OptionalInt optInt = Arrays.stream(text).mapToInt((s) -> s.length()).max();
         int maxLength = optInt.isPresent() ? optInt.getAsInt() : 10;
 
         // Determine the width of the box with that information
         int width = (maxLength) % 2 == 0 ?
-                -2+(this.width / 2) - (maxLength / 2) :
-                -2+(this.width / 2) - ((maxLength-1)/2);
+                -2 + (this.width / 2) - (maxLength / 2) :
+                -2 + (this.width / 2) - ((maxLength - 1) / 2);
 
         // Print the 4 corners of the box
-        Terminal.printText(1+this.startY+y, 1+this.startX+this.width-width, "+");
-        Terminal.printText(1+this.startY+y, 1+this.startX+width, "+");
-        Terminal.printText(1+this.startY+y+text.length+1, 1+this.startX+this.width-width, "+");
-        Terminal.printText(1+this.startY+y+text.length+1, 1+this.startX+width, "+");
+        Terminal.printText(1 + this.startY + y, 1 + this.startX + this.width - width, "+");
+        Terminal.printText(1 + this.startY + y, 1 + this.startX + width, "+");
+        Terminal.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + this.width - width, "+");
+        Terminal.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + width, "+");
 
         // For each line in 'text', we creat the vertical borders
-        for(int i = 0; i < text.length; i++) {
+        for (int i = 0; i < text.length; i++) {
             Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + this.width - width, "I");
             Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width, "I");
         }
 
         // We also put the horizontal borders, but these are always static..
-        printLine(new Pos(width+1, y), new Pos(this.width-width, y), "-", false);
-        printLine(new Pos(width+1, y+1+text.length), new Pos(this.width-width, y+2), "-", false);
+        printLine(new Pos(width + 1, y), new Pos(this.width - width, y), "-", false);
+        printLine(new Pos(width + 1, y + 1 + text.length), new Pos(this.width - width, y + 2), "-", false);
 
         // Then we fill the box with our text
-        for(int i = 0; i < text.length; i++) {
+        for (int i = 0; i < text.length; i++) {
             width = (text[i].length()) % 2 == 0 ?
-                    -2+(this.width / 2) - (text[i].length() / 2) :
-                    -2+(this.width / 2) - ((text[i].length()-1)/2);
+                    -2 + (this.width / 2) - (text[i].length() / 2) :
+                    -2 + (this.width / 2) - ((text[i].length() - 1) / 2);
             Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width + 2, text[i]);
         }
     }
 
+    @Override
+    public void setScaledCoords(Rectangle uiCoordsScaled) {
+        super.setScaledCoords(uiCoordsScaled);
+        this.game.modifyPlayfield(uiCoordsScaled);
+    }
 }

@@ -7,6 +7,7 @@ import util.Debug;
 import java.io.IOException;
 
 public abstract class View {
+
     Rectangle uiCoordsScaled;
 
     /**

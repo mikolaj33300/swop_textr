@@ -3,6 +3,7 @@ package controller;
 import io.github.btj.termios.Terminal;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
 
 public class TextR {
     protected UseCaseController activeUseCaseController;
@@ -58,13 +59,19 @@ public class TextR {
         activeUseCaseController.paintScreen();
         // Main loop
         for ( ; ; ) {
-            int b = Terminal.readByte();
-            if(b == 27){
+            int b = -1;
+            try {
+                b = Terminal.readByte(1);
+            } catch(TimeoutException e) {
+                // Do nothing
+            }
+            if(b == 27) {
                 Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
-            } else {
-                activeUseCaseController.handle(b);
             }
+            if(b == -1)
+                activeUseCaseController.handleIdle();
+            else activeUseCaseController.handle(b);
             Terminal.clearScreen();
             activeUseCaseController.paintScreen();
             // Flush stdIn & Recalculate dimensions
