@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -323,4 +324,41 @@ public class LayoutNodeTest {
         correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1))),l4)));
         assertEquals(root_clock, correct_clock);
     }
+
+    @Test
+    public void testChangeHashNoTarget(){
+        VerticalLayoutNode og_vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+
+        vln.changeHash(0,0);
+        assertEquals(vln,og_vln);
+    }
+
+    @Test
+    public void testChangeHashDirectChild(){
+        VerticalLayoutNode og_vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l3,l2)));
+        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+
+        vln.changeHash(1,3);
+        assertEquals(vln,og_vln);
+    }
+
+    @Test
+    public void testChangeHashInDirectChild(){
+        VerticalLayoutNode og_vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l4))))));
+        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
+
+        vln.changeHash(3,4);
+        assertEquals(vln,og_vln);
+    }
 }
+
+
+
+
+
+
+
+
+
+

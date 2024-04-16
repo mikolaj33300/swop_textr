@@ -6,21 +6,37 @@ import java.util.HashMap;
 
 public abstract class Layout implements Cloneable {
 
-    public abstract Layout insertRightOfSpecified(int hashSpecified, int hashToAdd);
+    /**
+     * The parent LayoutNode of this parent
+     * Its initial value is null
+     */
+    protected LayoutNode parent = null;
 
     /**
-     * Gets an uncloned reference to the root of this, this makes some protected class methods faster.
+     * Returns a clone of this Layouts parent.
      */
-    protected Layout getRootLayoutUncloned() {
-        if(this.parent != null){
-            return parent.getRootLayoutUncloned();
-        } else {
-            return this;
-        }
+    public LayoutNode getParent(){
+        if(this.parent != null)
+            return parent.clone();
+        else
+            return null;
     }
 
     /**
-     * Returns a clone of the root layout by following the parent field from this layout.
+     * Sets parent field of this to provided node.
+     */
+    protected void setParent(LayoutNode layoutNode){
+        this.parent = layoutNode;
+    }
+
+    /**
+     * Sets a new HashCode for the LayoutLeaf connected to the target HashCode in the underlying layouttree
+     */
+    public abstract void changeHash(int target, int newHash);
+
+    /**
+     * Returns a clone of the root layout
+     * The root is the highest parent in the layouttree that doesn't have a parent itself
      */
     public Layout getRootLayout() {
         if(this.parent != null){
@@ -31,73 +47,82 @@ public abstract class Layout implements Cloneable {
     }
 
     /**
-     * Returns a clone of this parent.
+     * Returns an uncloned reference to the root of this Layout
+     * The root is the highest parent in the layouttree that doesn't have a parent itself
      */
-    public LayoutNode getParent(){
-        if(this.parent != null)
-            return parent.clone();
-        else
-            return null;
-    }
-
-    public abstract Layout delete(int hashToDelete);
-
-    protected LayoutNode parent = null;
-
-    /**
-     * Deletes the leftmost {@link LayoutLeaf}from the underlying structure. In composite Layouts it is relayed to the leftmost child. If this is a leaf, it itself deletes itself from the parent.
-     */
-    protected abstract void deleteLeftLeaf();
-    /**
-     * Sets parent field of this to provided node.
-     */
-    protected void setParent(LayoutNode layoutNode){
-        this.parent = layoutNode;
+    protected Layout getRootLayoutUncloned() {
+        if(this.parent != null){
+            return parent.getRootLayoutUncloned();
+        } else {
+            return this;
+        }
     }
 
     /**
-     * Makes next/previous view in the structure active according to dir (left/right).
+     * Returns the containedHashCode of the neighbor of the LayoutLeaf with a containedHashCode equal to targetHashCode
+     * Which neighbour is decided by the dir argument
      */
-    public abstract int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) throws RuntimeException;
+    public abstract int getNeighborsContainedHash(MOVE_DIRECTION dir, int targetHashCode) throws RuntimeException;
 
     /**
-     * Sets containsActive of the left leaf of the subtree with this as root and all the nodes inbetween to true.
+     * Returns the containedHashCode of the leftmost LayoutLeaf in the underlying layouttree
      */
     protected abstract int getLeftmostContainedHash();
 
     /**
-     * Sets containsActive of the right leaf of the subtree with this as root and all the nodes inbetween to true.
+     * Returns the containedHashCode of the rightmost LayoutLeaf in the underlying layouttree
      */
     protected abstract int getRightmostContainedHash();
 
-
     /**
-     * Rotates the active layoutLeaf under this structure if there is one with its right neighbor if there is one,
-     * clockwise or counterclockwise according to rotdir. If the right neighbor is a direct sibling it rotates to stand
-     * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
-     * active leaf and rotated then.
-     */
-    public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir, int hash);
-
-    /**
-     * Returns a direct reference to the leftmost {@link LayoutLeaf} under this tree.
+     * Returns a direct reference to the leftmost LayoutLeaf in this part of the layouttree
      */
     protected abstract LayoutLeaf getLeftLeaf();
 
     /**
-     * Returns whether this Layout and the given object are equals in contents
+     * Returns HashMap of coords connected to the containedHashCodes of the LayoutLeafs
+     * The rectangle defines which part of the terminal, this LayoutLeaf will fill up
+     * The result is scaled by the given rectangle uiCoordsScaled
      */
-    public abstract boolean equals(Object obj);
+    public abstract HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
 
     /**
-     * Returns a clone of this Layout, without any references to it
+     * Returns this Layout, with a new LayoutLeaf inserted with containedHashCode equal to hashToAdd
+     * The LayoutLeaf will be inserted directly right of a LayoutLeaf with containedHashCode equal to hashSpecified
+     */
+    public abstract Layout insertRightOfSpecified(int hashSpecified, int hashToAdd);
+
+    /**
+     * Rotates a LayoutLeaf with containedHashCode equal to the given targetHashcode int the layouttree under this Layout
+     * with its right neighbor if it exists; if it doesn't, a bell-sound will be sounded
+     * The rotation happens clockwise or counterclockwise according to rotdir.
+     */
+    public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir, int targetHashCode);
+
+    /**
+     * Returns true if the given LayoutNode is allowed to be a child of this Layout
+     */
+    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
+
+    /**
+     * Deletes the leftmost LayoutLeaf of this part of the layouttree
+     */
+    protected abstract void deleteLeftLeaf();
+
+    /**
+     * Returns the current layout, but without the LayoutLeaf with a containedHashCode equal to hashToDelete
+     */
+    public abstract Layout delete(int hashToDelete);
+
+    /**
+     * Returns a deepcopy of this Layout
+     * The references to this object and its contents will be removed
+     * The parent of this Layout will not be brought over to the clone
      */
     public abstract Layout clone();
 
-    public abstract HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
-
-    protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
-
-    public abstract void changeHash(int target, int newHash);
-
+    /**
+     * Returns true if this Layout and the given Object are equal content-wise, otherwise it returns false
+     */
+    public abstract boolean equals(Object obj);
 }
