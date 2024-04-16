@@ -1,8 +1,22 @@
 package layouttree;
 
+import snake.SnakeHead;
+
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
+
+    @Override
+    public Layout insertRightOfSpecified(int hashSpecified, int hashToAdd){
+        for(Layout l:children){
+            try{
+                return l.insertRightOfSpecified(hashSpecified, hashToAdd);
+            } catch(HashNotMatchingException ignored){
+
+            }
+        }
+        throw new HashNotMatchingException();
+    }
 
     @Override
     public Layout delete(int hashToDelete){
@@ -303,6 +317,12 @@ public abstract class LayoutNode extends Layout {
      */
     @Override
     public abstract LayoutNode clone();
+
+    @Override
+    public void changeHash(int target, int newHash) {
+        for(Layout child : this.children)
+            child.changeHash(target, newHash);
+    }
 
     /**
      * Enumerator that represents whether the Layouts inside this Layout

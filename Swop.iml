@@ -6,12 +6,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/testresources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/tests/files" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/layouttree" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tests/core" />
-      <excludeFolder url="file://$MODULE_DIR$/tests/layouttree" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="main" exported="" />
     <orderEntry type="module-library" exported="" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -41,15 +40,14 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/io.github.btj.termios-0.7.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/io.github.btj.termios-0.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="io.github.btj.termios-0.7" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="323c5d31-1f97-4fbd-8ed4-19c5879a8fa8" />
+    <option name="uniqueId" value="62e9a897-f775-4a97-9400-00b1458c0017" />
   </component>
 </module>

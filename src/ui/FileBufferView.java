@@ -20,7 +20,6 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     private final BufferCursorContext containedFileBuffer;
 
     public FileBufferView(BufferCursorContext openedFile) {
-        super(openedFile.hashCode());
         this.containedFileBuffer=openedFile;
     }
 
@@ -77,7 +76,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         else
             statusLine += "Clean";
         statusLine += " ";
-        if(this.getHashCode() == activeHash)
+        if(this.hashCode() == activeHash)
             statusLine += "Active";
         else
             statusLine += "Not Active";

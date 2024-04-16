@@ -1,9 +1,11 @@
 package layouttree;
 
 import files.FileBuffer;
+import snake.SnakeHead;
 import ui.Rectangle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -12,7 +14,7 @@ import java.util.HashMap;
  * LayoutLeaf inherets from Layout
  */
 public class LayoutLeaf extends Layout {
-    private final int containedHashCode;
+    private int containedHashCode;
 
     /**
      * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
@@ -130,6 +132,24 @@ public class LayoutLeaf extends Layout {
     }
 
     @Override
+    public Layout insertRightOfSpecified(int hashSpecified, int hashToAdd) {
+        //TODO: Check if hashToAdd already exists
+        if(this.containedHashCode != hashSpecified){
+            throw new HashNotMatchingException();
+        } else {
+            if(parent != null){
+                parent.children.add(parent.children.indexOf(this)+1, new LayoutLeaf(hashToAdd));
+                return this.getRootLayoutUncloned();
+            } else {
+                ArrayList<Layout> newChildrenArrList = new ArrayList<>();
+                newChildrenArrList.add(this);
+                newChildrenArrList.add(new LayoutLeaf(hashToAdd));
+                return new VerticalLayoutNode(newChildrenArrList);
+            }
+        }
+    }
+
+    @Override
     public Layout delete(int hashToDelete) {
         if(containedHashCode == hashToDelete){
             if(parent != null){
@@ -154,6 +174,7 @@ public class LayoutLeaf extends Layout {
     @Override
     public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
         HashMap<Integer, Rectangle> mapToReturn = new HashMap<Integer, Rectangle>();
+        SnakeHead.log("> getCoordsList: puttig hash " + this.getContainedHashCode());
         mapToReturn.put(this.containedHashCode, uiCoordsScaled);
         return mapToReturn;
     }
@@ -175,5 +196,22 @@ public class LayoutLeaf extends Layout {
     protected int getRightmostContainedHash() {
         return containedHashCode;
     }
+
+    /**
+     * Returns the leftmost leaf of the current layout-level
+     * As this a leaf of the layout-structure,
+     * it does not have any children and will return a copy of itself
+     */
+    protected LayoutLeaf getLeftLeaf(int hash) {
+        return this;
+    }
+
+    @Override
+    public void changeHash(int target, int newHash) {
+        if(this.containedHashCode == target)
+            this.containedHashCode = newHash;
+
+    }
+
 }
 
