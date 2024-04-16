@@ -8,7 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="io.github.btj.termios-0.8" level="project" />
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library" exported="" scope="TEST">
       <library name="JUnit5.8.1">
         <CLASSES>
           <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar!/" />
@@ -24,5 +24,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+  </component>
+  <component name="SonarLintModuleSettings">
+    <option name="uniqueId" value="935e7ed1-9c44-4efb-9f89-0edfd6d8e386" />
   </component>
 </module>
