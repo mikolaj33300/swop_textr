@@ -24,8 +24,6 @@ public class VerticalLayoutNodeTest {
         l4 = new LayoutLeaf(4);
     }
 
-    //TODO: als nieuwe functies in deze klasse, dan ook nog testen toe te voegen --> zie in laatste week of nodig
-
     @Test
     void testConstructor(){
         ArrayList<Layout> children = new ArrayList<>(Arrays.asList(l1,l2));
@@ -81,6 +79,14 @@ public class VerticalLayoutNodeTest {
     }
 
     @Test
+    void testEqualsSameOrientationSimilarChildren(){
+        VerticalLayoutNode ln1 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        VerticalLayoutNode ln2 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1.clone(),l2.clone())));
+
+        assertEquals(ln1, ln2);
+    }
+
+    @Test
     void testEqualsDifferentOrientation(){
         VerticalLayoutNode ln1 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
@@ -103,9 +109,6 @@ public class VerticalLayoutNodeTest {
         assertNotEquals(ln1, ln2);
     }
 
-
-
-
     @Test
     public void testLayoutScaledCoords() throws IOException {
         LayoutLeaf l1 = new LayoutLeaf(1);
@@ -116,9 +119,9 @@ public class VerticalLayoutNodeTest {
         VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
 
         HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
-        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,1, 0.5)));
+        assertEquals(coordsList.get(1), new Rectangle(0, 0, 1, 0.5));
 
-        assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
+        assertEquals(coordsList.get(2), new Rectangle(0, 0.5, 1, 0.5));
     }
 }
 
