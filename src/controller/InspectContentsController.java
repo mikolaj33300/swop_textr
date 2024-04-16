@@ -44,9 +44,11 @@ public class InspectContentsController extends UseCaseController {
             // Control + G
             case 7:
                 coreControllerParent.facade.openSnakeGame();
+                break;
                 // Control + D
             case 4:
                 coreControllerParent.facade.duplicateActive();
+                break;
             // Line separator
             case 13:
                 coreControllerParent.facade.handleSeparator();

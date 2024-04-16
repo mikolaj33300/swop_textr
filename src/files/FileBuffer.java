@@ -1,6 +1,7 @@
 package files;
 
 import ui.FileBufferView;
+import util.Debug;
 
 import java.io.IOException;
 import java.util.*;
@@ -67,6 +68,7 @@ public class FileBuffer {
      * @param byteArrIndex the index where the enter character needs to go
      */
     protected void enterInsertionPoint(int byteArrIndex) {
+        Debug.write("tessstresources/tesdddddddddt.txt", "We get into the 26 case");
         insert(byteArrIndex, System.lineSeparator().getBytes());
         for (int i = 0; i < listenersArrayList.size(); i++)
             listenersArrayList.get(i).contentsChanged();
