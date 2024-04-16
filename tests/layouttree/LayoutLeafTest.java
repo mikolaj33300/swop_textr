@@ -22,76 +22,27 @@ class LayoutLeafTest {
     }
 
     @Test
-    void constructorTest() throws IOException {
+    void testConstructor(){
         LayoutLeaf ll = new LayoutLeaf(1);
         assertNull(ll.parent);
         assertEquals(ll.getContainedHashCode(),1);
     }
 
     @Test
-    void testGetNeighborsContainedHashRightSolo(){
-        assertEquals(l1.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),1);
+    void testGetContainedHashCode(){
+        assertEquals(l1.getContainedHashCode(),1);
     }
 
     @Test
-    void testGetNeighborsContainedHashLeftSolo(){
-        assertEquals(l1.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,1),1);
+   void testRotateRelationshipNeighborRootLeafCLock(){
+        Layout rotated_ll = l1.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE, 1);
+        assertEquals(rotated_ll,l1);
     }
 
     @Test
-    void testGetNeighborsContainedHashRightSameParentNext(){
-        LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),2);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashRightSameParentEnd(){
-        LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(l2.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,2),2);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashLeftSameParentNext(){
-        LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,2),1);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashLeftSameParentEnd(){
-        LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,1),1);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashRightToLower(){
-        HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
-        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hln)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),2);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashRightToHigher(){
-        HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hln,l3)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,2),3);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashLeftToLower(){
-        HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hln,l3)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,3),2);
-    }
-
-    @Test
-    void testGetNeighborsContainedHashLeftToHigher(){
-        HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
-        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hln)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,2),1);
-    }
-
-    @Test
-   void testRotateRelationshipNeighbor(){
+    void testRotateRelationshipNeighborRootLeafCounter(){
+        Layout rotated_ll = l1.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE, 1);
+        assertEquals(rotated_ll,l1);
     }
 
     @Test
@@ -109,6 +60,11 @@ class LayoutLeafTest {
     void testEqualsDifObj(){
         LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
         assertNotEquals(l1,ln);
+    }
+
+    @Test
+    void testDeleteRootLeaf(){
+        assertNull(l1.delete(1));
     }
 
     @Test

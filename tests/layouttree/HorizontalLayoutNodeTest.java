@@ -24,8 +24,6 @@ public class HorizontalLayoutNodeTest {
         l4 = new LayoutLeaf(4);
     }
 
-    //TODO: als nieuwe functies in deze klasse, dan ook nog testen toe te voegen --> zie in laatste week of nodig
-
     @Test
     void testConstructor(){
         ArrayList<Layout> children = new ArrayList<>(Arrays.asList(l1,l2));
@@ -69,12 +67,24 @@ public class HorizontalLayoutNodeTest {
 
         assertEquals(og_ln,clone_ln);
         assertNotSame(og_ln,clone_ln);
+        for(int i = 0; i <og_ln.children.size(); i++){
+            assertEquals(og_ln.children.get(i),clone_ln.children.get(i));
+            assertNotSame(og_ln.children.get(i),clone_ln.children.get(i));
+        }
     }
 
     @Test
     void testEqualsSameOrientationSameChildren(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+
+        assertEquals(ln1, ln2);
+    }
+
+    @Test
+    void testEqualsSameOrientationSimilarChildren(){
+        HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1.clone(),l2.clone())));
 
         assertEquals(ln1, ln2);
     }
@@ -102,8 +112,6 @@ public class HorizontalLayoutNodeTest {
         assertNotEquals(ln1, ln2);
     }
 
-
-
     @Test
     public void testLayoutScaledCoords() throws IOException {
         LayoutLeaf l1 = new LayoutLeaf(1);
@@ -114,9 +122,9 @@ public class HorizontalLayoutNodeTest {
         HorizontalLayoutNode v1 = new HorizontalLayoutNode(toAdd);
 
         HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
-        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,0.5, 1)));
+        assertEquals(coordsList.get(1), new Rectangle(0, 0, 0.5, 1));
 
-        assertTrue(coordsList.get(2).equals(new Rectangle(0.5,0,0.5, 1)));
+        assertEquals(coordsList.get(2), new Rectangle(0.5, 0, 0.5, 1));
     }
 }
 

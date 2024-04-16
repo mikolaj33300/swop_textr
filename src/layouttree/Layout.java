@@ -34,7 +34,10 @@ public abstract class Layout implements Cloneable {
      * Returns a clone of this parent.
      */
     public LayoutNode getParent(){
-        return parent.clone();
+        if(this.parent != null)
+            return parent.clone();
+        else
+            return null;
     }
 
     public abstract Layout delete(int hashToDelete);
