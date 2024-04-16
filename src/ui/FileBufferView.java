@@ -124,7 +124,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     }
 
     @Override
-    public void contentsChanged() throws IOException {
+    public void contentsChanged() {
         //render();
     }
 }

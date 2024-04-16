@@ -146,7 +146,7 @@ public class BufferCursorContext {
     }
 
     public void write(byte b) {
-        containedFileBuffer.writeCmd(b, insertionPointByteIndex);
+        containedFileBuffer.writeCmd(b, insertionPointLine, insertionPointCol);
         moveCursorRight();
     }
 

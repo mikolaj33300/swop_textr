@@ -57,7 +57,7 @@ public class FileBufferTest {
         FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
         assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
 
-        buffer.write("b".getBytes()[0], 0);
+        buffer.write("b".getBytes()[0], 0,0);
         String result = "bi love termios ; long live kaas";
 
         assertTrue(buffer.getDirty());
@@ -83,102 +83,7 @@ public class FileBufferTest {
         Debug.write("testresources/test.txt", "i"+System.lineSeparator()+"b");
         buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
         assertEquals(2, buff.getLines().size());
-
-
-/*        // MOve cursor to after 'maker'
-        buff.moveCursor('B');
-        assertEquals(1, buff.getInsertionPointLine());
-        for(int i = 0; i < 15; i++)
-            buff.moveCursor('C');
-
-        buff.enterInsertionPoint();
-        for (byte b : "kaas\n".getBytes()) {
-            buff.write(b);
-        }
-        buff.enterInsertionPoint();
-        assertEquals(4, buff.getLines().size());*/
     }
-
-/*    @Test
-    public void testDeleteLine() throws IOException {
-
-        Debug.write("testresources/test.txt", "everyone likes kaas\nkaas is the founder of termios\none of the best terminal applications");
-        FileBuffer buffer = new FileBuffer("testresources/test.txt");
-
-        buffer.moveCursor('B');
-        buffer.deleteLine();
-        assertEquals(1, buffer.getInsertionPointLine());
-
-        assertEquals(3, buffer.getLines().size());
-        assertEquals("kaas is the founder of termios", new String(FileAnalyserUtil.toArray(buffer.getLines().get(1))));
-
-    }*/
-
-/*    @Test
-    public void testMoveCursor() throws IOException {
-        String insert = "i love kaas <3";
-        Debug.write("testresources/test.txt", insert);
-        FileBuffer buff = new FileBuffer("testresources/test.txt");
-
-        // Testing movement in one line
-        // Down
-        buff.moveCursor('B');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(0, buff.getInsertionPointCol());
-        assertEquals(0, buff.getInsertionPoint());
-
-        // Right
-        buff.moveCursor('C');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(1, buff.getInsertionPointCol());
-        assertEquals(1, buff.getInsertionPoint());
-
-        for (int i = 0; i < insert.length(); i++)
-            buff.moveCursor('C');
-        assertEquals(insert.length(), buff.getInsertionPointCol());
-
-        // Left
-        buff.moveCursor('D');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
-
-        // Up
-        buff.moveCursor('A');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
-
-        // Testing movement in more lines
-        Debug.write("testresources/test.txt", "i love kaas <3\n and also termios");
-        buff = new FileBuffer("testresources/test.txt");
-
-        // Move cursor down
-        buff.moveCursor('B');
-        assertEquals(1, buff.getInsertionPointLine());
-        assertEquals(0, buff.getInsertionPointCol());
-
-        buff.moveCursor('D');
-        assertEquals(0, buff.getInsertionPointLine());
-        buff.moveCursor('C');
-
-        // Up to line 0
-        buff.moveCursor('A');
-        assertEquals(0, buff.getInsertionPointLine());
-        // Up again
-        buff.moveCursor('A');
-        assertEquals(0, buff.getInsertionPointLine());
-
-        // Try going to next line by going right
-        for (int i = 0; i < 13; i++)
-            buff.moveCursor('C');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(13, buff.getInsertionPointCol());
-
-        // Test go back to previous line
-        buff.moveCursor('D');
-        assertEquals(0, buff.getInsertionPointLine());
-        assertEquals(insert.length() - 1, buff.getInsertionPointCol());
-
-    }*/
 
     @Test
     public void testAmountChar() throws IOException {
@@ -188,7 +93,7 @@ public class FileBufferTest {
 
         assertEquals(buffer.getAmountChars(), 4);
 
-        buffer.write("a".getBytes()[0], 3);
+        buffer.write("a".getBytes()[0], 0,3);
 
         assertEquals(buffer.getAmountChars(),5);
     }
@@ -209,28 +114,10 @@ public class FileBufferTest {
                         )
                 );
 
-    /*    assertTrue(buffer.getInsertionPointCol() == 0);*/
-
-
         Debug.write("testresources/test.txt", "hello kaas\nmister");
 
         buffer.save();
 
-    }
-
-    @Test
-    public void testLayoutScaledCoords() throws IOException {
-        LayoutLeaf l1 = new LayoutLeaf(1);
-        LayoutLeaf l2 = new LayoutLeaf(2);
-        ArrayList<Layout> toAdd = new ArrayList<>();
-        toAdd.add(l1);
-        toAdd.add(l2);
-        VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
-
-        HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
-        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,1, 0.5)));
-
-        assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
     }
 
     @Test
@@ -240,10 +127,10 @@ public class FileBufferTest {
         Debug.write(path, "");
         FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
 
-        buffer.writeCmd("t".getBytes()[0], 0);
-        buffer.writeCmd("e".getBytes()[0], 1);
-        buffer.writeCmd("s".getBytes()[0], 2);
-        buffer.writeCmd("t".getBytes()[0], 3);
+        buffer.writeCmd("t".getBytes()[0], 0, 0);
+        buffer.writeCmd("e".getBytes()[0], 0,1);
+        buffer.writeCmd("s".getBytes()[0], 0,2);
+        buffer.writeCmd("t".getBytes()[0], 0,3);
 
 	buffer.undo();// I can undo
         assertEquals("tes", new String(buffer.getBytes()));
@@ -257,7 +144,7 @@ public class FileBufferTest {
         assertEquals("", new String(buffer.getBytes()));
 	buffer.redo();
         assertEquals("t", new String(buffer.getBytes()));
-        buffer.writeCmd("u".getBytes()[0], 1);
+        buffer.writeCmd("u".getBytes()[0], 0,1);
 	buffer.redo();// if we redo too much we don't do nothing
         assertEquals("tu", new String(buffer.getBytes()));
 	buffer.redo();
@@ -271,10 +158,10 @@ public class FileBufferTest {
         Debug.write(path, "");
         FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
 
-        buffer.writeCmd("t".getBytes()[0], 0);
-        buffer.writeCmd("e".getBytes()[0], 1);
-        buffer.writeCmd("s".getBytes()[0], 2);
-        buffer.writeCmd("t".getBytes()[0], 3);
+        buffer.writeCmd("t".getBytes()[0], 0,0);
+        buffer.writeCmd("e".getBytes()[0], 0,1);
+        buffer.writeCmd("s".getBytes()[0], 0,2);
+        buffer.writeCmd("t".getBytes()[0], 0,3);
 
 	buffer.deleteCharacterCmd(2, 0);
         assertEquals("tst", new String(buffer.getBytes()));
