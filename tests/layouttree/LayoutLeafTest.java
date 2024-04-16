@@ -73,6 +73,18 @@ class LayoutLeafTest {
         assertNotSame(l1,l1_copy);
         assertEquals(l1,l1_copy);
     }
+
+    @Test
+    void testChangeHashRightTarget(){
+        l1.changeHash(1,2);
+        assertEquals(l1.getContainedHashCode(),2);
+    }
+
+    @Test
+    void testChangeHashWrongTarget(){
+        l1.changeHash(2,3);
+        assertEquals(l1.getContainedHashCode(),1);
+    }
 }
 
 

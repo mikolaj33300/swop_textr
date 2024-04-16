@@ -1,7 +1,6 @@
 package layouttree;
 
 import ui.Rectangle;
-import ui.UICoords;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,10 +93,4 @@ public class VerticalLayoutNode extends LayoutNode{
         }
         return resultMap;
     }
-
-    @Override
-    public void changeHash(int target, int newHash) {
-        super.changeHash(target, newHash);
-    }
-    
 }

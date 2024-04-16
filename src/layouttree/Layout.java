@@ -98,6 +98,9 @@ public abstract class Layout implements Cloneable {
 
     protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
 
+    /**
+     * Sets a new HashCode for the LayoutLeaf connected to the target HashCode
+     */
     public abstract void changeHash(int target, int newHash);
 
 }

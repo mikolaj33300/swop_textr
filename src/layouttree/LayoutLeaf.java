@@ -1,7 +1,6 @@
 package layouttree;
 
 import files.FileBuffer;
-import snake.SnakeHead;
 import ui.Rectangle;
 
 import java.util.ArrayList;
@@ -9,26 +8,34 @@ import java.util.HashMap;
 
 
 /**
- * LayoutLeaf represents the leaf layout-structure
- * LayoutLeaf inherets from Layout
+ * LayoutLeaf represents a leaf layout-structure
+ * LayoutLeaf extends from Layout
  */
 public class LayoutLeaf extends Layout {
+
+    /**
+     * Then hashCode that links this LayoutLeaf to the ControllerFacade
+     */
     private int containedHashCode;
 
     /**
-     * Constructor for {@link LayoutLeaf}, clones its arguments to prevent representation exposure
+     * Constructor for LayoutLeaf
+     * Takes an integer hashCode as input
      */
-    public LayoutLeaf(int hash) {
-	    this.containedHashCode = hash;
+    public LayoutLeaf(int hashCode) {
+	    this.containedHashCode = hashCode;
     }
 
+
+    /**
+     * Returns the hashCode contained in this LayoutLeaf
+     */
     public int getContainedHashCode(){
         return  this.containedHashCode;
     }
 
     /**
-     * Deletes the mostleft this leaf's parent
-     * Since the parent function found this leaf as leftmost, it will be removed
+     * Deletes this LayoutLeaf from its parent list of children if it has a parent
      */
     @Override
     protected void deleteLeftLeaf() {
@@ -38,23 +45,19 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Moves focus from the currently active Layout, to the neigbouring layout
-     * Which neighbour is decided by the dir argument
-     * If no neighbours left, the active Layout stays active
+     * Returns the hashCode of the neighbor of this LayoutLeaf in the layouttree
+     * Which of the neighbors will be chosen, is based of the MOVE_DIRECTION argument
      */
-    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) {
+    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hashCode) {
         if(dir==MOVE_DIRECTION.RIGHT){
-            return this.getRightNeighborsContainedHash(hash);
+            return this.getRightNeighborsContainedHash(hashCode);
         } else {
-            return this.getLeftNeighborsContainedHash(hash);
+            return this.getLeftNeighborsContainedHash(hashCode);
         }
     }
 
     /**
-     * Moves focus from the currently active Layout, to the rightneigbouring layout
-     * If no neighbours right, the active Layout stays active
-     *
-     * @return
+     * Returns the hashCode of the neighbor to the right of this LayoutLeaf in the layouttree
      */
     private int getRightNeighborsContainedHash(int hash) throws HashNotMatchingException{
         if(this.containedHashCode == hash){
@@ -69,10 +72,7 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Moves focus from the currently active Layout, to the leftneigbouring layout
-     * If no neighbours left, the active Layout stays active
-     *
-     * @return
+     * Returns the hashCode of the neighbor to the left of this LayoutLeaf in the layouttree
      */
     private int getLeftNeighborsContainedHash(int hash) {
         if(this.containedHashCode == hash){
@@ -87,7 +87,7 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Rotates the active layoutLeaf under this structure if there is one with its right neighbor if there is one,
+     * Rotates the layoutLeaf under this structure if there is one with its right neighbor if there is one,
      * clockwise or counterclockwise according to rotdir. If the right neighbor is a direct sibling it rotates to stand
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
@@ -196,20 +196,13 @@ public class LayoutLeaf extends Layout {
     }
 
     /**
-     * Returns the leftmost leaf of the current layout-level
-     * As this a leaf of the layout-structure,
-     * it does not have any children and will return a copy of itself
+     * Sets a new HashCode for the LayoutLeaf connected to the target HashCode
      */
-    protected LayoutLeaf getLeftLeaf(int hash) {
-        return this;
-    }
-
     @Override
-    public void changeHash(int target, int newHash) {
+    public void changeHash(int target, int newHashCode) {
         if(this.containedHashCode == target)
-            this.containedHashCode = newHash;
+            this.containedHashCode = newHashCode;
 
     }
-
 }
 
