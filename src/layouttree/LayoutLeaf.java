@@ -132,7 +132,9 @@ public class LayoutLeaf extends Layout {
             throw new HashNotMatchingException();
         } else {
             if(parent != null){
-                parent.children.add(parent.children.indexOf(this)+1, new LayoutLeaf(hashToAdd));
+                LayoutLeaf toAdd = new LayoutLeaf(hashToAdd);
+                parent.children.add(parent.children.indexOf(this)+1, toAdd);
+                toAdd.setParent(parent);
                 return this.getRootLayoutUncloned();
             } else {
                 ArrayList<Layout> newChildrenArrList = new ArrayList<>();

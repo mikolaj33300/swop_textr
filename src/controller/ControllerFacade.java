@@ -226,7 +226,7 @@ class ControllerFacade {
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
             FileBufferView newView = new FileBufferView(dupedContext);
             Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
-            windows.add(windowToAdd);
+            windows.add(windows.size(), windowToAdd);
 
             rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
             updateViewCoordinates();

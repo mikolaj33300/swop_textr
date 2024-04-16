@@ -75,15 +75,14 @@ class LayoutLeafTest {
     }
 
     @Test
-    void testChangeHashRightTarget(){
-        l1.changeHash(1,2);
-        assertEquals(l1.getContainedHashCode(),2);
-    }
+    void testInsertToRight(){
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        Layout v1 = l1.insertRightOfSpecified(1, 2);
 
-    @Test
-    void testChangeHashWrongTarget(){
-        l1.changeHash(2,3);
-        assertEquals(l1.getContainedHashCode(),1);
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(new LayoutLeaf(1));
+        toAdd.add(new LayoutLeaf(2));
+        assertEquals(v1, new VerticalLayoutNode(toAdd));
     }
 }
 
