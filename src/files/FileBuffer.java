@@ -71,7 +71,7 @@ public class FileBuffer {
      *
      * @param byteArrIndex the index where the enter character needs to go
      */
-    public void enterInsertionPoint(int byteArrIndex) throws IOException {
+    public void enterInsertionPoint(int byteArrIndex) {
         insert(byteArrIndex, System.lineSeparator().getBytes());
         for (int i = 0; i < listenersArrayList.size(); i++)
             listenersArrayList.get(i).contentsChanged();
@@ -129,15 +129,14 @@ public class FileBuffer {
      * @param insertionPointLine the row of the deleted character
      * @return the character delted
      */
-    public byte deleteCharacter(int insertionPointCol, int insertionPointLine) {
+    public void deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
-        byte res = 0;
 
         if (insertionPointCol > 0 || insertionPointLine > 0) {
             this.dirty = true;
         }
         if (insertionPointCol > 0) {
-            res = this.byteContent.remove(insertionPointByteIndex - 1);
+            this.byteContent.remove(insertionPointByteIndex - 1);
         } else {
             if (insertionPointLine != 0) {
                 //shift left the amount of bytes that need to be deleted and delete them one by one
@@ -148,7 +147,6 @@ public class FileBuffer {
         }
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
         linesArrayList = FileAnalyserUtil.getContentLines(toArray((ArrayList<Byte>) tmp), this.getLineSeparator());
-        return res;
     }
 
     /**

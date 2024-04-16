@@ -2,21 +2,35 @@ package command;
 
 import files.FileBuffer;
 
+import java.util.Arrays;
+
 public class BufferDeleteCharacterCommand implements Command{
         private int iCol;
         private int iLine;
-        private byte deleted;
+        private byte[] deleted;
 
         private FileBuffer containedFb;
 
         public void execute() {
-            deleted = containedFb.deleteCharacter(iCol, iLine);
+            if(iCol == 0 && iLine != 0){
+                deleted = containedFb.getLineSeparator();
+            } else if (iCol!=0){
+                deleted = new byte[]{containedFb.getLines().get(iLine).get(iCol-1).byteValue()};
+            } else {
+                deleted = null;
+            }
+            containedFb.deleteCharacter(iCol, iLine);
         }
 
         public void undo() {
-            int pos = containedFb.convertLineAndColToIndex(iLine, iCol) - 1;
-            if (pos > 0)
-                containedFb.write(deleted, iLine, iCol-1);
+            if(Arrays.equals(containedFb.getLineSeparator(), deleted)){
+                containedFb.enterInsertionPoint(containedFb.convertLineAndColToIndex(iLine, iCol));
+            } else {
+                if(deleted != null){
+                    //We deleted a normal character
+                    containedFb.write(deleted[0], iLine, iCol-1);
+                }
+            }
         }
 
         public BufferDeleteCharacterCommand(int iCol, int iLine, FileBuffer containedFb){
