@@ -3,6 +3,7 @@ package controller;
 import io.github.btj.termios.Terminal;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 public class TextR {
@@ -12,11 +13,11 @@ public class TextR {
     /**
      * Creates a controller object.
      */
-    public TextR(String[] args) {
+    public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) {
         ControllerFacade containedAppFacade;
         try {
             String[] paths = Arrays.copyOfRange(args, 1, args.length);
-            containedAppFacade = new ControllerFacade(args);// TODO first remove flags? + pass terminal as object in some magic way
+            containedAppFacade = new ControllerFacade(args, termiosTerminalAdapter);// TODO first remove flags? + pass terminal as object in some magic way
         } catch (IOException e) {
             this.activeUseCaseController = new FileErrorPopupController(this);
             System.out.println("wtf am I doing here?");
@@ -31,9 +32,12 @@ public class TextR {
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException, RuntimeException {
-        TextR textR = new TextR(args);
+        TextR textR;
+        textR = new TextR(args, new RealTermiosTerminalAdapter());
+
         textR.activeUseCaseController = new InspectContentsController(textR);
         textR.loop();
+
     }
 
     /**
@@ -57,20 +61,20 @@ public class TextR {
                 Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
             }
-            if (b == -1)
+            if (b == -1) {
                 activeUseCaseController.handleIdle();
-            if(b == Integer.MIN_VALUE){
-                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
-                from above in the future*/
-                break;
-            }
-            else {
+            } else {
                 activeUseCaseController.handle(b);
                 Terminal.clearScreen();
                 activeUseCaseController.paintScreen();
             }
             // Flush stdIn & Recalculate dimensions
             if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
+            if(b == -2){
+                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
+                from above in the future*/
+                break;
+            }
         }
     }
 }

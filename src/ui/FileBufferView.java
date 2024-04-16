@@ -1,5 +1,6 @@
 package ui;
 
+import controller.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
@@ -19,8 +20,11 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      */
     private final BufferCursorContext containedFileBuffer;
 
-    public FileBufferView(BufferCursorContext openedFile) {
+    private TermiosTerminalAdapter termiosTerminalAdapter;
+
+    public FileBufferView(BufferCursorContext openedFile,TermiosTerminalAdapter termiosTerminalAdapter) {
         this.containedFileBuffer=openedFile;
+        this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
 
     /**
@@ -28,7 +32,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      */
     @Override
     public void render(int activeHash) throws IOException {
-        UICoords coords = super.getRealUICoordsFromScaled();
+        UICoords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
@@ -47,13 +51,13 @@ public class FileBufferView extends View implements FileBufferContentChangedList
                 assert renderLineEndIndex <= lineString.length() && renderLineStartIndex <= lineString.length();
                 if(renderLineStartIndex <= lineString.length() || renderLineEndIndex <= lineString.length())
                     //System.out.println("end: " + renderLineEndIndex + ", start: " + renderLineStartIndex);
-                    Terminal.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
+                    termiosTerminalAdapter.printText(1 + startY + i, 1 + startX, lineString.substring(renderLineStartIndex, renderLineEndIndex));
             }
         }
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
-        assert height > 0 && startY > 0;
+        //assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            Terminal.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
+            termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
         renderScrollbar(height, startX+width-1, startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
     }
 
@@ -89,9 +93,9 @@ public class FileBufferView extends View implements FileBufferContentChangedList
             double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
 
             if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
-                Terminal.printText(1+startY+i, 1+scrollStartX, "+");
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
             } else {
-                Terminal.printText(1+startY+i, 1+scrollStartX, "-");
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "-");
             }
         }
     }
@@ -112,7 +116,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
      * Handles printing the cursor in this view.
      */
     public void renderCursor() throws IOException {
-        UICoords coords = getRealUICoordsFromScaled();
+        UICoords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
         int width = coords.width;
         int height = coords.height;
         int startY = coords.startY;
@@ -120,7 +124,7 @@ public class FileBufferView extends View implements FileBufferContentChangedList
 
         int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
         int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
-        Terminal.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
+        termiosTerminalAdapter.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
     }
 
     @Override

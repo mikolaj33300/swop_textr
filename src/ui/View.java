@@ -1,5 +1,6 @@
 package ui;
 
+import controller.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import layouttree.LayoutLeaf;
 import util.Debug;
@@ -28,8 +29,8 @@ public abstract class View {
         this.uiCoordsScaled = uiCoordsScaled;
     }
 
-    public UICoords getRealUICoordsFromScaled() throws IOException {
-        UICoords screenDimensions = ScreenUIUtil.retrieveDimensionsTerminal();
+    public UICoords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
+        UICoords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
         return new UICoords(
                 (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.startX),
                 (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.startY),

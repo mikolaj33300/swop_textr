@@ -1,5 +1,6 @@
 package ui;
 
+import controller.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
@@ -17,15 +18,17 @@ public class SnakeView extends View {
     private final SnakeGame game;
     private int startX, startY, width, height;
 
+    private TermiosTerminalAdapter termiosTerminalAdapter;
+
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
     // between [0, width] and [0, height]
-    public SnakeView(SnakeGame game) {
+    public SnakeView(SnakeGame game, TermiosTerminalAdapter termiosTerminalAdapter) {
         this.game = game;
     }
 
     private void setLocalCoordinates() {
         try {
-            UICoords coords = super.getRealUICoordsFromScaled();
+            UICoords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
             this.startX = coords.startX;
             this.startY = coords.startY;
             this.width = coords.width;

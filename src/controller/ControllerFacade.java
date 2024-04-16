@@ -25,6 +25,8 @@ class ControllerFacade {
     private Layout rootLayout;
     private int active;
 
+    private TermiosTerminalAdapter termiosTerminalAdapter;
+
     /**
      * Creates a ControllerFacade object.
      * Creates a {@link Layout} object which represents the root layout.
@@ -32,7 +34,8 @@ class ControllerFacade {
      *
      * @throws IOException when the path is invalid
      */
-    public ControllerFacade(String[] args) throws PathNotFoundException, IOException {
+    public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
+        this.termiosTerminalAdapter = termiosTerminalAdapter;
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
         String[] paths;
         if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
@@ -51,7 +54,7 @@ class ControllerFacade {
             } catch (PathNotFoundException e) {
                 throw e;
             }
-            this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent()), openedFileHandler));
+            this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter), openedFileHandler));
             leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
         }
 
@@ -197,12 +200,12 @@ class ControllerFacade {
      */
     public void openSnakeGame() throws IOException {
         // Get UI coords of current window to initialize snake view's playfield
-        UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled();
+        UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
         SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
 
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
         int hashActive = this.windows.get(active).view.hashCode();
-        SnakeView view = new SnakeView(handler.getSnakeGame());
+        SnakeView view = new SnakeView(handler.getSnakeGame(), termiosTerminalAdapter);
 
         // Remove the window & add the snake window.
         this.windows.remove(this.windows.get(active));
@@ -224,7 +227,7 @@ class ControllerFacade {
     public void duplicateActive() throws IOException {
         if(windows.get(active).handler instanceof FileBufferInputHandler fbh){
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-            FileBufferView newView = new FileBufferView(dupedContext);
+            FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
             Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
             windows.add(windows.size(), windowToAdd);
 
