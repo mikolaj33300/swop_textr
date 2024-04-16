@@ -1,8 +1,10 @@
 package layouttree;
 
 import files.FileBuffer;
+import snake.SnakeHead;
 import ui.Rectangle;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -126,6 +128,24 @@ public class LayoutLeaf extends Layout {
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode futureParent) {
         return true;
+    }
+
+    @Override
+    public Layout insertRightOfSpecified(int hashSpecified, int hashToAdd) {
+        //TODO: Check if hashToAdd already exists
+        if(this.containedHashCode != hashSpecified){
+            throw new HashNotMatchingException();
+        } else {
+            if(parent != null){
+                parent.children.add(parent.children.indexOf(this)+1, new LayoutLeaf(hashToAdd));
+                return this.getRootLayoutUncloned();
+            } else {
+                ArrayList<Layout> newChildrenArrList = new ArrayList<>();
+                newChildrenArrList.add(this);
+                newChildrenArrList.add(new LayoutLeaf(hashToAdd));
+                return new VerticalLayoutNode(newChildrenArrList);
+            }
+        }
     }
 
     @Override

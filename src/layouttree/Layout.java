@@ -6,6 +6,8 @@ import java.util.HashMap;
 
 public abstract class Layout implements Cloneable {
 
+    public abstract Layout insertRightOfSpecified(int hashSpecified, int hashToAdd);
+
     /**
      * Gets an uncloned reference to the root of this, this makes some protected class methods faster.
      */

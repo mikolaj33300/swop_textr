@@ -38,7 +38,11 @@ public class InspectContentsController extends UseCaseController {
             case 20:
                 coreControllerParent.facade.rotateLayout(ROT_DIRECTION.CLOCKWISE);
                 break;
-            // Control + D
+            // Control + G
+            case 7:
+                coreControllerParent.facade.openSnakeGame();
+
+                // Control + D
             case 4:
                 coreControllerParent.facade.openSnakeGame();
                 coreControllerParent.activeUseCaseController = new SnakeController(coreControllerParent);

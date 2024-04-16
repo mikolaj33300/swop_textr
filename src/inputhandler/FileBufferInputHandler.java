@@ -14,6 +14,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		this.fb = new BufferCursorContext(path, lineSeparator);
 	}
 
+	public FileBufferInputHandler(BufferCursorContext dupedContext) {
+		this.fb = dupedContext;
+	}
+
 	public BufferCursorContext getFileBufferContextTransparent(){
 		return fb;
 	}

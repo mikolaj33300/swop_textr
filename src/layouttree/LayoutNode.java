@@ -7,6 +7,18 @@ import java.util.ArrayList;
 public abstract class LayoutNode extends Layout {
 
     @Override
+    public Layout insertRightOfSpecified(int hashSpecified, int hashToAdd){
+        for(Layout l:children){
+            try{
+                return l.insertRightOfSpecified(hashSpecified, hashToAdd);
+            } catch(HashNotMatchingException ignored){
+
+            }
+        }
+        throw new HashNotMatchingException();
+    }
+
+    @Override
     public Layout delete(int hashToDelete){
         for(Layout l:children){
             try{
