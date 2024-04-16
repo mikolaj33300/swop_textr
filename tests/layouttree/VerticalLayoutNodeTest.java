@@ -1,10 +1,12 @@
 package layouttree;
 
 import org.junit.jupiter.api.*;
+import ui.Rectangle;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,11 +103,22 @@ public class VerticalLayoutNodeTest {
         assertNotEquals(ln1, ln2);
     }
 
+
+
+
     @Test
-    void testReturnedCoordY(){
-        LayoutLeaf realChild = (LayoutLeaf) vn1.children.get(1);
-        int obtainedHeight = realChild.getStartY(10, 10);
-        assertEquals(obtainedHeight, 5);
+    public void testLayoutScaledCoords() throws IOException {
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        LayoutLeaf l2 = new LayoutLeaf(2);
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(l1);
+        toAdd.add(l2);
+        VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
+
+        HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
+        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,1, 0.5)));
+
+        assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
     }
 }
 
