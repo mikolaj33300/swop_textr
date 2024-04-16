@@ -102,7 +102,6 @@ public class SnakeGame {
         // 5. Checks if the maximum length has been reached.
         if(snake.getLength() == WIN_LENGTH) gameState = 1;
         else if(snake.getLength() <= 0) {
-            SnakeHead.log("Length <= 0");
             gameState = -1;
         }
 
