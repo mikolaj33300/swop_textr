@@ -4,7 +4,6 @@ import files.FileBuffer;
 import snake.SnakeHead;
 import ui.Rectangle;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -174,7 +173,6 @@ public class LayoutLeaf extends Layout {
     @Override
     public HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled) {
         HashMap<Integer, Rectangle> mapToReturn = new HashMap<Integer, Rectangle>();
-        SnakeHead.log("> getCoordsList: puttig hash " + this.getContainedHashCode());
         mapToReturn.put(this.containedHashCode, uiCoordsScaled);
         return mapToReturn;
     }

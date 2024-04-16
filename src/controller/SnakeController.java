@@ -1,8 +1,5 @@
 package controller;
 
-import layouttree.MOVE_DIRECTION;
-import layouttree.ROT_DIRECTION;
-
 import java.io.IOException;
 
 public class SnakeController extends InspectContentsController {

@@ -1,6 +1,5 @@
 package snake;
 
-import controller.SnakeController;
 import snake.fruits.Banana;
 import snake.fruits.Apple;
 import snake.fruits.Fruit;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Tasks:
@@ -35,7 +33,7 @@ public class SnakeGame {
     /**
      * Settings of the game.
      */
-    final int MAX_FRUITS = 3, STARVE_COUNTER = 5, WIN_LENGTH = 100;
+    final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 100;
     private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY;
 
     /**
@@ -93,19 +91,19 @@ public class SnakeGame {
 
         // 4. Check for invalid positions
         if(Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd()))
-           || this.snake.getEnd().x() <= 0 || this.snake.getEnd().x() >= maxX
-           || this.snake.getEnd().y() <= 0 || this.snake.getEnd().y() >= maxY) {
+           || this.snake.getEnd().x()+1 < 0 || this.snake.getEnd().x() >= maxX-1
+           || this.snake.getEnd().y()+1 < 0 || this.snake.getEnd().y() >= maxY-1) {
+            // maxX-1 because maxX IS the border of the game and thus invalid
+            // snake positions are
+            SnakeHead.log("Position : " + snake.getEnd().getPrint() + " invaliddssdf...?");
             gameState = -1;
-            SnakeHead.log("Testing for segment collision with head: " +
-                    Arrays.stream(this.snake.getSegments())
-                            .anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd())));
-
-            SnakeHead.log(">>>>>>Hello: " + Arrays.stream(this.snake.getSegments()).anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), snake.getEnd())));
         }
 
         // 5. Checks if the maximum length has been reached.
         if(snake.getLength() == WIN_LENGTH) gameState = 1;
-        else if(snake.getLength() <= 0) gameState = -1;
+        else if(snake.getLength() <= 0) {
+            gameState = -1;
+        }
 
     }
 
@@ -150,7 +148,7 @@ public class SnakeGame {
 
     /**
      * Returns the score of the game.
-     * @return
+     * @return the score of the game
      */
     public int getScore() {
         return this.score;
@@ -164,6 +162,9 @@ public class SnakeGame {
     public void modifyPlayfield(Rectangle newPlayfield) {
         int newMaxX = (int) newPlayfield.width;
         int newMaxY = (int) newPlayfield.height;
+        int startX = (int) newPlayfield.startX;
+        int startY = (int) newPlayfield.startY;
+
     }
 
     /**
@@ -192,11 +193,8 @@ public class SnakeGame {
 
             // We generate a position & retry each time the generated position already has a fruit
             Pos position = generatePosition();
-            int i = 100;
             while(isPosInvalid(position)) {
-                if(i < 0) SnakeHead.log("--Looping pos");
                 position = generatePosition();
-                i--;
             }
 
             // We check which fruit to add
@@ -205,9 +203,6 @@ public class SnakeGame {
             else this.fruits.add(new Banana(position));
         }
 
-        SnakeHead.log("Fruit at " +         fruits.stream()
-                .map((x) -> x.getPosition().getPrint())
-                .collect(Collectors.joining()));
     }
 
     /**

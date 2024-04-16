@@ -5,8 +5,6 @@ import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
 import snake.fruits.Fruit;
-import ui.UICoords;
-import ui.View;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -47,11 +45,11 @@ public class SnakeView extends View {
         Snake head = game.getSnake();
 
         // Print border
-        printLine(new Pos(startX+width, startY), new Pos(startX+width, startY+height), "I", false);
-        printLine(new Pos(startX, startY+height), new Pos(startX+width, startY+height), "-", false);
+        printLine(new Pos(width, 0), new Pos(width, height), "I", false);
+        printLine(new Pos(0, height-1), new Pos(width, height-1), "-", false);
 
         // Print score
-        Terminal.printText(startY+height,startX + width/2, "Score: " + game.getScore());
+        Terminal.printText(height,width/2 -1, "Score: " + game.getScore());
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
@@ -64,7 +62,7 @@ public class SnakeView extends View {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
             if(s.equals("")) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
-                    s, true);
+                    s, i != segments.length-1);
         }
 
 

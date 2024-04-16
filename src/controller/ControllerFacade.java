@@ -16,7 +16,6 @@ import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.MOVE_DIRECTION;
 import layouttree.VerticalLayoutNode;
-import snake.SnakeHead;
 import ui.*;
 import ui.FileBufferView;
 
@@ -167,7 +166,6 @@ class ControllerFacade {
     private void updateViewCoordinates() {
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
         for (Window w : windows) {
-            SnakeHead.log("Setting scaled coords for view with hash " + w.view.hashCode());
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
         }
     }

@@ -31,22 +31,9 @@ public class TextR {
      * A beautiful start for a beautiful project
      */
     public static void main(String[] args) throws IOException, RuntimeException {
-        // If no arguments given
-        if(args.length == 0 ||
-                (
-                        // Or --lf || --crlf is given
-                        (args[0].equals("--lf") || (args[0].equals("--crlf")))
-                                // But amount of args is 1
-                                && args.length == 1
-                )
-        ) { // Then no path is specified, and we cannot open
-            throw new RuntimeException("TextR needs at least one specified file");
-        }
-
         TextR textR = new TextR(args);
         textR.activeUseCaseController = new InspectContentsController(textR);
         textR.loop();
-
     }
 
     /**
@@ -62,15 +49,15 @@ public class TextR {
         for ( ; ; ) {
             int b = -1;
             try {
-                b = Terminal.readByte(1);
-            } catch(TimeoutException e) {
+                b = Terminal.readByte(System.currentTimeMillis()+1);
+            } catch (TimeoutException e) {
                 // Do nothing
             }
-            if(b == 27) {
+            if (b == 27) {
                 Terminal.readByte();
                 activeUseCaseController.handleSurrogate(b, Terminal.readByte());
             }
-            if(b == -1)
+            if (b == -1)
                 activeUseCaseController.handleIdle();
             else {
                 activeUseCaseController.handle(b);
@@ -78,7 +65,7 @@ public class TextR {
                 activeUseCaseController.paintScreen();
             }
             // Flush stdIn & Recalculate dimensions
-            if(System.in.available() != 0) System.in.skipNBytes(System.in.available());
+            if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
         }
     }
 }
