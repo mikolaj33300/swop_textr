@@ -4,21 +4,23 @@ import files.FileBuffer;
 
 public class BufferWriteCommand implements Command{
     private byte uC;
-    private int bArrIndex;
+    private int bArrLine;
+    private int bArrCol;
 
     private FileBuffer affectedBuffer;
 
     public void execute() {
-        affectedBuffer.write(uC, bArrIndex);
+        affectedBuffer.write(uC, bArrLine, bArrCol);
     }
 
     public void undo() {
-        affectedBuffer.deleteCharacterWithIndex(bArrIndex);
+        affectedBuffer.deleteCharacter(bArrCol+1, bArrLine);
     }
 
-    public BufferWriteCommand(byte uC, int bArrIndex, FileBuffer affectedBuffer){
+    public BufferWriteCommand(byte uC, int bArrCol, int bArrLine, FileBuffer affectedBuffer){
         this.uC = uC;
-        this.bArrIndex = bArrIndex;
+        this.bArrCol = bArrCol;
+        this.bArrLine = bArrLine;
         this.affectedBuffer = affectedBuffer;
     }
 }

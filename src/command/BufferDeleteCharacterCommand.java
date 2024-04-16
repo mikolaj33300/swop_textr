@@ -16,7 +16,7 @@ public class BufferDeleteCharacterCommand implements Command{
         public void undo() {
             int pos = containedFb.convertLineAndColToIndex(iLine, iCol) - 1;
             if (pos > 0)
-                containedFb.write(deleted, pos);
+                containedFb.write(deleted, iLine, iCol-1);
         }
 
         public BufferDeleteCharacterCommand(int iCol, int iLine, FileBuffer containedFb){

@@ -172,8 +172,8 @@ public class FileBuffer {
         return res;
     }
 
-    public void writeCmd(byte updatedContents, int byteArrIndex) {
-        execute(new BufferWriteCommand(updatedContents, byteArrIndex, this));
+    public void writeCmd(byte updatedContents, int insertionPointLine, int insertionPointCol) {
+        execute(new BufferWriteCommand(updatedContents, insertionPointCol, insertionPointLine, this));
 
     }
 
@@ -181,10 +181,11 @@ public class FileBuffer {
      * Updates the content of the FileBuffer
      *
      * @param updatedContents the byte to insert
-     * @param byteArrIndex    the index of that byte
+     * @param insertionPointLine    the line of that byte
+     * @param insertionPointCol    the line of that byte
      */
-    public void write(byte updatedContents, int byteArrIndex) {
-        insert(byteArrIndex, updatedContents);
+    public void write(byte updatedContents, int insertionPointLine, int insertionPointCol) {
+        insert(convertLineAndColToIndex(insertionPointLine, insertionPointCol), updatedContents);
         dirty = true;
     }
 
