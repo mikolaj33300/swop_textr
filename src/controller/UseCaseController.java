@@ -38,4 +38,6 @@ public abstract class UseCaseController {
      */
     public abstract void clearContent() throws IOException;
 
+    public abstract void handleIdle() throws IOException;
+
 }
