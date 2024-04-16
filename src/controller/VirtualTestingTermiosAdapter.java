@@ -8,14 +8,26 @@ import java.util.Arrays;
 import java.util.concurrent.TimeoutException;
 
 public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
-    public ArrayList<Integer> inputStream;
+    private ArrayList<Integer> inputStream;
 
-    public ArrayList<ArrayList<Character>> virtualScreen;
+    private ArrayList<ArrayList<Character>> virtualScreen;
     int screenHeight;
     int screenWidth;
 
     int cursorX;
     int cursorY;
+
+    public ArrayList<char[]> getVirtualScreen(){
+        ArrayList<char[]> clonedVirtualScreen = new ArrayList<>();
+        for (int i = 0; i < virtualScreen.size(); i++) {
+            char[] clonedLine = new char[screenWidth];
+            for(int j = 0; j<screenWidth; j++){
+                clonedLine[j] = virtualScreen.get(i).get(j);
+            }
+            clonedVirtualScreen.add(clonedLine);
+        }
+        return clonedVirtualScreen;
+    }
 
     /**
      * Initial stream is a stream of values that read byte must return followed by INTEGER.MIN_VALUE that terminates the list
@@ -26,6 +38,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      * @param initialInputStream
      */
     public VirtualTestingTermiosAdapter(int screenWidth, int screenHeight, ArrayList<Integer> initialInputStream){
+        virtualScreen = new ArrayList<>();
         for(int i = 0; i<screenHeight; i++){
             virtualScreen.add(createInitialLine(screenWidth));
         }
@@ -90,8 +103,10 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
         }
 
         char[] charArray = text.toCharArray();
+        int i = 0;
         for(char c : charArray){
-            virtualScreen.get(row-1).set(column-1, c);
+            virtualScreen.get(row-1).set(column-1+i, c);
+            i++;
         }
 
 
