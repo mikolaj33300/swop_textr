@@ -23,6 +23,11 @@ public class FileBuffer {
      * Undo stack
      */
     private ArrayList<Command> undoStack = new ArrayList<Command>();
+
+    /**
+     * the amount of commands undone 
+     * the end of the command stack - this is the command to be redone
+     */
     private int nbUndone;
 
     /**
@@ -46,6 +51,8 @@ public class FileBuffer {
     /**
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
+     * @param path the path of the file to be opened
+     * @param lineSeparator the separator we use
      */
     public FileBuffer(String path, byte[] lineSeparator) throws IOException {
         this.file = new FileHolder(path, lineSeparator);
@@ -58,6 +65,7 @@ public class FileBuffer {
 
     /**
      * Inserting a line separator can only be done with bytes.
+     * @param byteArrIndex the index where the enter character needs to go
      */
     public void enterInsertionPoint(int byteArrIndex) throws IOException {
         insert(byteArrIndex, System.lineSeparator().getBytes());
@@ -65,16 +73,30 @@ public class FileBuffer {
             listenersArrayList.get(i).contentsChanged();
     }
 
+    /**
+     * undo the command nbUndone points to
+     * @return void
+     */
     public void undo() {
       if (undoStack.size() > nbUndone)
         undoStack.get(undoStack.size() - ++nbUndone).undo();
     }
 
+    /**
+     * redo the command nbUndone points to
+     * @return void
+     */
     public void redo() {
       if (nbUndone > 0)
         undoStack.get(undoStack.size() - nbUndone--).execute();
     }
 
+    /**
+     * add a command to the stack and execute it
+     * clears the command stack from nbUndone
+     * @param command the command to add and execute
+     * @return void
+     */
     private void execute(Command command) {
       for (; nbUndone > 0; nbUndone--)
         undoStack.remove(undoStack.size() - 1);
@@ -82,6 +104,12 @@ public class FileBuffer {
       command.execute();
     }
 
+    /**
+     * delete the character at the column and row and pushes it undo stack
+     * @param insertionPointCol the column of the deleted character
+     * @param insertionPointLine the row of the deleted character
+     * @return void
+     */
     public void deleteCharacterCmd(int insertionPointCol, int insertionPointLine){
       execute(new Command() {
         private int iCol = insertionPointCol;
@@ -92,14 +120,18 @@ public class FileBuffer {
           deleted = deleteCharacter(iCol, iLine);
         }
         public void undo() {
-          insert(convertLineAndColToIndex(iCol, iLine), deleted);
+	  int pos = convertLineAndColToIndex(iLine, iCol)-1;
+	  if (pos > 0)
+          write(deleted, pos);
         }
       });
     }
 
     /**
-     * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
-     * when character is to be deleted.
+     * delete the character at the column and row
+     * @param insertionPointCol the column of the deleted character
+     * @param insertionPointLine the row of the deleted character
+     * @return the character delted
      */
     public byte deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
@@ -124,13 +156,14 @@ public class FileBuffer {
     }
 
     /**
-     * removed some checks
-     * this should be ok since this is only used in an undo at the moment
+     * delete the character at the index 
+     * @param insertionPointByteIndex
+     * @return the character delted
      */
     public byte deleteCharacterWithIndex(int insertionPointByteIndex) {
         byte res = 0;
 
-        if (insertionPointByteIndex > 0) {
+        if (insertionPointByteIndex > 0) {// this means newlines can be deleted
             this.dirty = true;
         }
         //shift left the amount of bytes that need to be deleted and delete them one by one
@@ -155,6 +188,8 @@ public class FileBuffer {
 
     /**
      * Updates the content of the FileBuffer
+     * @param updatedContents the byte to insert
+     * @param byteArrIndex the index of that byte
      */
     public void write(byte updatedContents, int byteArrIndex) {
         insert(byteArrIndex, updatedContents);
@@ -163,6 +198,7 @@ public class FileBuffer {
 
     /**
      * Saves the buffer contents to disk
+     * @return if the save was successful
      */
     public final int save() {
         if (!dirty) return 0;
@@ -177,8 +213,7 @@ public class FileBuffer {
     }
 
     /**
-     * Returns a copy of the byteConent of this FileBuffer
-     * TODO: unchecked cast
+     * @return a copy of the byteContent of this FileBuffer
      */
     public ArrayList<Byte> getByteContent(){
       ArrayList<Byte> res = new ArrayList<Byte>(this.byteContent);
@@ -186,7 +221,7 @@ public class FileBuffer {
     }
 
     /**
-     * Returns an array of byte arrays. Each array represents an array of bytes which is separated by
+     * @return an array of byte arrays. Each array represents an array of bytes which is separated by
      * another array by a line separator specified.
      */
     public ArrayList<ArrayList<Byte>> getLines() {
@@ -206,21 +241,21 @@ public class FileBuffer {
     // Default methods
 
     /**
-     * Returns the FileHolder object file (for testing purposes)
+     * @return the FileHolder object file (for testing purposes)
      */
     public FileHolder getFileHolder() {
         return this.file.clone();
     }
 
     /**
-     * Returns copy of this buffers' content.
+     * @return copy of this buffers' content.
      */
     public byte[] getBytes() {
         return FileAnalyserUtil.toArray(byteContent);
     }
 
     /**
-     *  Returns the amount of chars in the buffercontent
+     *  @return the amount of chars in the buffercontent
      */
     public int getAmountChars(){
         return this.byteContent.size();
@@ -228,6 +263,8 @@ public class FileBuffer {
 
     /**
      * Determines if a given byte[] is the same as this buffer's {@link FileBuffer#byteContent}
+     * @param compare the byte list to compare to
+     * @return if this byte list is equal to the compare list
      */
     boolean contentsEqual(ArrayList<Byte> compare) {
         if (compare.size() != byteContent.size()) return false;
@@ -237,7 +274,7 @@ public class FileBuffer {
     }
 
     /**
-     * Clones the byte array
+     * @return Clone of the byte array
      */
     ArrayList<Byte> cloneByteArrList() {
         ArrayList<Byte> copy = new ArrayList<>(byteContent);
@@ -246,6 +283,8 @@ public class FileBuffer {
 
     /**
      * Puts all elements from {@link FileBuffer#byteContent} in a byte[]
+     * @param arrList the ArrayList<Byte> to convert
+     * @return array of our ArrayList<Byte>
      */
     byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
@@ -257,6 +296,7 @@ public class FileBuffer {
 
     /**
      * Determines if the buffer has been modified.
+     * @return if this FileBuffer is dirty
      */
     public boolean getDirty() {
         return this.dirty;

@@ -12,8 +12,7 @@ import util.Debug;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.ArrayList; import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,6 +83,7 @@ public class FileBufferTest {
         Debug.write("testresources/test.txt", "i"+System.lineSeparator()+"b");
         buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
         assertEquals(2, buff.getLines().size());
+
 
 /*        // MOve cursor to after 'maker'
         buff.moveCursor('B');
@@ -218,4 +218,71 @@ public class FileBufferTest {
 
     }
 
+    @Test
+    public void testLayoutScaledCoords() throws IOException {
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        LayoutLeaf l2 = new LayoutLeaf(2);
+        ArrayList<Layout> toAdd = new ArrayList<>();
+        toAdd.add(l1);
+        toAdd.add(l2);
+        VerticalLayoutNode v1 = new VerticalLayoutNode(toAdd);
+
+        HashMap<Integer, Rectangle> coordsList = v1.getCoordsList(new Rectangle(0, 0, 1, 1));
+        assertTrue(coordsList.get(1).equals(new Rectangle(0,0,1, 0.5)));
+
+        assertTrue(coordsList.get(2).equals(new Rectangle(0,0.5,1, 0.5)));
+    }
+
+    @Test
+    public void testWriteUndo() throws IOException {
+        String path = "testresources/test.txt";
+
+        Debug.write(path, "");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+
+        buffer.writeCmd("t".getBytes()[0], 0);
+        buffer.writeCmd("e".getBytes()[0], 1);
+        buffer.writeCmd("s".getBytes()[0], 2);
+        buffer.writeCmd("t".getBytes()[0], 3);
+
+	buffer.undo();// I can undo
+        assertEquals("tes", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("te", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("t", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("", new String(buffer.getBytes()));
+	buffer.undo();// if we undo too much we don't do nothing
+        assertEquals("", new String(buffer.getBytes()));
+	buffer.redo();
+        assertEquals("t", new String(buffer.getBytes()));
+        buffer.writeCmd("u".getBytes()[0], 1);
+	buffer.redo();// if we redo too much we don't do nothing
+        assertEquals("tu", new String(buffer.getBytes()));
+	buffer.redo();
+        assertEquals("tu", new String(buffer.getBytes()));
+    }
+
+    @Test
+    public void testDeleteUndo() throws IOException {
+        String path = "testresources/test.txt";
+
+        Debug.write(path, "");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+
+        buffer.writeCmd("t".getBytes()[0], 0);
+        buffer.writeCmd("e".getBytes()[0], 1);
+        buffer.writeCmd("s".getBytes()[0], 2);
+        buffer.writeCmd("t".getBytes()[0], 3);
+
+	buffer.deleteCharacterCmd(2, 0);
+        assertEquals("tst", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("test", new String(buffer.getBytes()));
+	buffer.deleteCharacterCmd(0, 0);// if we delete at the first char we don't do nothing
+        assertEquals("test", new String(buffer.getBytes()));
+	buffer.undo();
+        assertEquals("test", new String(buffer.getBytes()));
+    }
 }
