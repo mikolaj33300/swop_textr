@@ -161,13 +161,13 @@ public class SnakeHead extends Snake {
     // Debug
     public static void log(String log) {
 
-        try {
+/*        try {
             FileWriter writer = new FileWriter("test/test.txt", true);
             writer.write("\n" + log);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
     }
 
