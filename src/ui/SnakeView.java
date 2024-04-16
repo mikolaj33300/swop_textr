@@ -23,7 +23,7 @@ public class SnakeView extends View {
     // Note: we pass max width & max height of the view. So Snake works with relative coordinates
     // between [0, width] and [0, height]
     public SnakeView(SnakeGame game, TermiosTerminalAdapter termiosTerminalAdapter) {
-        this.game = game;
+        this.game = game; this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
 
     private void setLocalCoordinates() {
