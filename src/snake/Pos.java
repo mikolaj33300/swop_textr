@@ -57,12 +57,14 @@ public class Pos {
     public static boolean isBetween1D(Pos start, Pos end, Pos test) {
         // Start & End is horizontal
         if(start.x() == end.x() && start.x() == test.x()) {
-            SnakeHead.log("X Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " + test.getPrint());
+            /*SnakeHead.log("X Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " + test.getPrint()
+            + " -> bool: " + (start.y <= test.y && end.y >= test.y));*/
             return start.y <= test.y && end.y >= test.y;
             // Start & End is vertical
         }
         else if(start.y() == end.y() && start.y() == test.y()) {
-            SnakeHead.log("Y Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " + test.getPrint());
+            /*SnakeHead.log("Y Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " +
+                    test.getPrint() + " return: " + (start.x <= test.x && end.x >= test.x));*/
             return start.x <= test.x && end.x >= test.x;
         }
         return false;

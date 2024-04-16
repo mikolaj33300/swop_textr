@@ -1,10 +1,7 @@
 package snake;
 
-import io.github.btj.termios.Terminal;
-
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static snake.MoveDirection.DOWN;
 import static snake.MoveDirection.UP;
@@ -67,7 +64,7 @@ public class SnakeHead extends Snake {
 
     /**
      * Returns the segments of this snake. Used for rendering
-     * @return a list of {@link Snake} objects
+     * @return an array of {@link Snake} objects
      */
     public SnakeSegment[] getSegments() {
         return this.segments.clone();
@@ -101,17 +98,12 @@ public class SnakeHead extends Snake {
      * @return the head of the snake character
      */
     public String getHeadString() {
-        switch(getDirection()) {
-            case UP:
-                return "^";
-            case DOWN:
-                return "v";
-            case RIGHT:
-                return ">";
-            case LEFT:
-                return "<";
-        }
-        return "^";
+        return switch (getDirection()) {
+            case UP -> "^";
+            case DOWN -> "v";
+            case RIGHT -> ">";
+            case LEFT -> "<";
+        };
     }
 
     /**
@@ -138,7 +130,7 @@ public class SnakeHead extends Snake {
 
     /**
      * Inserts a segment at the end of the array
-     * @param segment
+     * @param segment the snake segment to be inserted
      */
     private void insertSegment(SnakeSegment segment) {
         SnakeSegment[] segments = new SnakeSegment[this.segments.length+1];
@@ -161,13 +153,13 @@ public class SnakeHead extends Snake {
     // Debug
     public static void log(String log) {
 
-/*        try {
+       try {
             FileWriter writer = new FileWriter("test/test.txt", true);
             writer.write("\n" + log);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }*/
+        }
 
     }
 
