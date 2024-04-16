@@ -1,5 +1,6 @@
 package controller;
 
+import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.PathNotFoundException;
 
@@ -222,6 +223,15 @@ class ControllerFacade {
         active = this.windows.size() - 1;
     }
 
-    public void duplicateActive() {
+    public void duplicateActive() throws IOException {
+        if(windows.get(active).handler instanceof FileBufferInputHandler fbh){
+            BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
+            FileBufferView newView = new FileBufferView(dupedContext);
+            Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
+            windows.add(windowToAdd);
+
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
+            updateViewCoordinates();
+        }
     }
 }
