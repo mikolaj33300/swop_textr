@@ -243,7 +243,7 @@ public class LayoutNodeTest {
         assertEquals(old_children,new_children);
     }
 
-/*
+
     @Test
     void testRotateRelationshipNeighborLeafs() {
         Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
@@ -322,5 +322,5 @@ public class LayoutNodeTest {
         root_clock = root_clock.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE, 1);
         correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1))),l4)));
         assertEquals(root_clock, correct_clock);
-    }*/
+    }
 }
