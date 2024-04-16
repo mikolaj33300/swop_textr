@@ -41,15 +41,14 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/io.github.btj.termios-0.7.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/io.github.btj.termios-0.8.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="io.github.btj.termios-0.7" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="323c5d31-1f97-4fbd-8ed4-19c5879a8fa8" />
+    <option name="uniqueId" value="86ee11b9-71eb-484e-8d04-80faee633478" />
   </component>
 </module>

@@ -3,6 +3,7 @@ package controller;
 import io.github.btj.termios.Terminal;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     @Override
@@ -36,9 +37,9 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     }
 
     @Override
-    public int readByte(long deadline) throws IOException {
+    public int readByte(long deadline) throws IOException, TimeoutException {
         //TODO Update to newest termios
-        return Terminal.readByte();
+        return Terminal.readByte(deadline);
     }
 
     @Override
