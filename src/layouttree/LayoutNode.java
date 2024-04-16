@@ -1,5 +1,7 @@
 package layouttree;
 
+import snake.SnakeHead;
+
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
@@ -303,6 +305,12 @@ public abstract class LayoutNode extends Layout {
      */
     @Override
     public abstract LayoutNode clone();
+
+    @Override
+    public void changeHash(int target, int newHash) {
+        for(Layout child : this.children)
+            child.changeHash(target, newHash);
+    }
 
     /**
      * Enumerator that represents whether the Layouts inside this Layout

@@ -164,8 +164,6 @@ public class SnakeGame {
     public void modifyPlayfield(Rectangle newPlayfield) {
         int newMaxX = (int) newPlayfield.width;
         int newMaxY = (int) newPlayfield.height;
-
-
     }
 
     /**

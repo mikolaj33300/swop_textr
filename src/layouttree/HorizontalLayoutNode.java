@@ -95,4 +95,9 @@ public class HorizontalLayoutNode extends LayoutNode {
         return false;
     }
 
+    @Override
+    public void changeHash(int target, int newHash) {
+        super.changeHash(target, newHash);
+    }
+
 }

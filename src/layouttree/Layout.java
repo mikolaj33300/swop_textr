@@ -92,4 +92,7 @@ public abstract class Layout implements Cloneable {
     public abstract HashMap<Integer, Rectangle> getCoordsList(Rectangle uiCoordsScaled);
 
     protected abstract boolean isAllowedToBeChildOf(LayoutNode layoutNode);
+
+    public abstract void changeHash(int target, int newHash);
+
 }

@@ -3,6 +3,7 @@ package inputhandler;
 import controller.SnakeController;
 import snake.MoveDirection;
 import snake.SnakeGame;
+import snake.SnakeHead;
 import ui.Rectangle;
 
 import java.io.IOException;
@@ -81,6 +82,7 @@ public class SnakeInputHandler extends InputHandlingElement {
         this.currentWait++;
         // We add one millisecond to our current wait time.
         currentWait++;
+        SnakeHead.log("Waiting for " + currentWait + " milliseconds ");
 
         // We check if our current wait time minus our removed delay exceeded the wait time to tick the game
         if(this.currentWait + this.game.getRemovedDelay() >= this.MILLISECOND_BASE) {

@@ -15,6 +15,7 @@ import layouttree.LayoutLeaf;
 import layouttree.ROT_DIRECTION;
 import layouttree.MOVE_DIRECTION;
 import layouttree.VerticalLayoutNode;
+import snake.SnakeHead;
 import ui.*;
 import ui.FileBufferView;
 
@@ -165,6 +166,7 @@ class ControllerFacade {
     private void updateViewCoordinates() {
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
         for (Window w : windows) {
+            SnakeHead.log("Setting scaled coords for view with hash " + w.view.hashCode());
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
         }
     }
@@ -195,16 +197,28 @@ class ControllerFacade {
      * to {@link SnakeView}. We delete the active window and add a new window to the list.
      */
     public void openSnakeGame() throws IOException {
+        // Get UI coords of current window to initialize snake view's playfield
         UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled();
         SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
+
+        // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
+        int hashActive = this.windows.get(active).view.hashCode();
+        SnakeView view = new SnakeView(handler.getSnakeGame());
+
+        // Remove the window & add the snake window.
         this.windows.remove(this.windows.get(active));
         this.windows.add(
                 new Window(
-                        new SnakeView(handler.getSnakeGame()),
+                        view,
                         handler
                 )
         );
+
+        // Change hash code & update the view coordinates
+        rootLayout.changeHash(hashActive, view.hashCode());
         this.updateViewCoordinates();
+
+        // Set the active view to the snake view
         active = this.windows.size() - 1;
     }
 
