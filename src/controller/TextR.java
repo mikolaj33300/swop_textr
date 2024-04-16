@@ -72,11 +72,13 @@ public class TextR {
             }
             if(b == -1)
                 activeUseCaseController.handleIdle();
-            else activeUseCaseController.handle(b);
-            Terminal.clearScreen();
-            activeUseCaseController.paintScreen();
+            else {
+                activeUseCaseController.handle(b);
+                Terminal.clearScreen();
+                activeUseCaseController.paintScreen();
+            }
             // Flush stdIn & Recalculate dimensions
-            System.in.skipNBytes(System.in.available());
+            if(System.in.available() != 0) System.in.skipNBytes(System.in.available());
         }
     }
 }
