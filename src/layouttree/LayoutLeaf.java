@@ -1,6 +1,5 @@
 package layouttree;
 
-import files.FileBuffer;
 import ui.Rectangle;
 
 import java.util.ArrayList;
