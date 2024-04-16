@@ -25,4 +25,9 @@ public class FileErrorPopupController extends UseCaseController {
     public void clearContent() throws IOException {
         userPopupBox.clearContent();
     }
+
+    @Override
+    public void handleIdle() {
+
+    }
 }

@@ -1,10 +1,12 @@
 package inputhandler;
 
 import files.BufferCursorContext;
+import ui.Rectangle;
 
 import java.io.IOException;
 
 public class FileBufferInputHandler extends InputHandlingElement {
+
 	BufferCursorContext fb;
 	boolean surrogate;
 
@@ -44,29 +46,29 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		switch(b) {
 		    case 8, 127, 10, 62:
 			    this.fb.deleteCharacter();
-			break;
+				break;
 		    // Control + S
 		    case 19:
 			this.fb.save();
-			break;
+				break;
 		    // Control + P
 		    case 16:
-			break;
+				break;
 		    // Control + N
 		    case 14:
-			break;
+				break;
 		    // Control + R
 		    case 18:
-			break;
+				break;
 		    // Control + T
 		    case 20:
-			break;
+				break;
 		    // Line separator
 		    case 13:
 		    // Character input
-		    default:
-			this.fb.write(b);
-			break;
+			default:
+				this.fb.write(b);
+				break;
 		}
 	}
 	/*
@@ -119,9 +121,12 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		fb.moveCursorRight();
 	}
 
+	@Override
 	public int close(){
 		return fb.close();
 	}
 
-	public void save() {this.fb.save();}
+	@Override
+	public void save() {this.fb.save(); }
+
 }

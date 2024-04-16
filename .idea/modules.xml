@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Swop.iml" filepath="$PROJECT_DIR$/Swop.iml" />
-      <module fileurl="file://$PROJECT_DIR$/termios/src/main/main.iml" filepath="$PROJECT_DIR$/termios/src/main/main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/termios/src/test/test.iml" filepath="$PROJECT_DIR$/termios/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Swop_Gitlab1.iml" filepath="$PROJECT_DIR$/Swop_Gitlab1.iml" />
     </modules>
   </component>
 </project>
