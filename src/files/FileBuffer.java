@@ -23,6 +23,11 @@ public class FileBuffer {
      * Undo stack
      */
     private ArrayList<Command> undoStack = new ArrayList<Command>();
+
+    /**
+     * the amount of commands undone 
+     * the end of the command stack - this is the command to be redone
+     */
     private int nbUndone;
 
     /**
@@ -46,6 +51,8 @@ public class FileBuffer {
     /**
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
+     * @param path the path of the file to be opened
+     * @param lineSeparator the separator we use
      */
     public FileBuffer(String path, byte[] lineSeparator) throws IOException {
         this.file = new FileHolder(path, lineSeparator);
@@ -58,6 +65,7 @@ public class FileBuffer {
 
     /**
      * Inserting a line separator can only be done with bytes.
+     * @param byteArrIndex the index where the enter character needs to go
      */
     public void enterInsertionPoint(int byteArrIndex) throws IOException {
         insert(byteArrIndex, System.lineSeparator().getBytes());
@@ -65,16 +73,30 @@ public class FileBuffer {
             listenersArrayList.get(i).contentsChanged();
     }
 
+    /**
+     * undo the command nbUndone points to
+     * @return void
+     */
     public void undo() {
       if (undoStack.size() > nbUndone)
         undoStack.get(undoStack.size() - ++nbUndone).undo();
     }
 
+    /**
+     * redo the command nbUndone points to
+     * @return void
+     */
     public void redo() {
       if (nbUndone > 0)
         undoStack.get(undoStack.size() - nbUndone--).execute();
     }
 
+    /**
+     * add a command to the stack and execute it
+     * clears the command stack from nbUndone
+     * @param command the command to add and execute
+     * @return void
+     */
     private void execute(Command command) {
       for (; nbUndone > 0; nbUndone--)
         undoStack.remove(undoStack.size() - 1);
@@ -82,6 +104,12 @@ public class FileBuffer {
       command.execute();
     }
 
+    /**
+     * delete the character at the column and row and pushes it undo stack
+     * @param insertionPointCol the column of the deleted character
+     * @param insertionPointLine the row of the deleted character
+     * @return void
+     */
     public void deleteCharacterCmd(int insertionPointCol, int insertionPointLine){
       execute(new Command() {
         private int iCol = insertionPointCol;
@@ -100,8 +128,10 @@ public class FileBuffer {
     }
 
     /**
-     * Deletes the character before the insertion pt and updates the cursor position, given coords of cursor
-     * when character is to be deleted.
+     * delete the character at the column and row
+     * @param insertionPointCol the column of the deleted character
+     * @param insertionPointLine the row of the deleted character
+     * @return the character delted
      */
     public byte deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
@@ -126,13 +156,14 @@ public class FileBuffer {
     }
 
     /**
-     * removed some checks
-     * this should be ok since this is only used in an undo at the moment
+     * delete the character at the index 
+     * @param insertionPointByteIndex
+     * @return the character delted
      */
     public byte deleteCharacterWithIndex(int insertionPointByteIndex) {
         byte res = 0;
 
-        if (insertionPointByteIndex > 0) {
+        if (insertionPointByteIndex > 0) {// this means newlines can be deleted
             this.dirty = true;
         }
         //shift left the amount of bytes that need to be deleted and delete them one by one
