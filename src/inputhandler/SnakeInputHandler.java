@@ -18,20 +18,32 @@ public class SnakeInputHandler extends InputHandlingElement {
         this.game = new SnakeGame(5, maxX, maxY);
     }
 
+    /**
+     * @return the enclosed snakegame
+     */
     public SnakeGame getSnakeGame() {
         return game;
     }
 
+    /**
+     * @return not closable
+     */
     @Override
     public int close() {
         return 1;
     }
 
+    /**
+     * @return snake can't be saved at the moment
+     */
     @Override
     public void save() {
         return;
     }
 
+    /**
+     * @param b the input to be handled by snake
+     */
     @Override
     public void input(byte b) throws IOException {
         // Called on idle
@@ -39,31 +51,49 @@ public class SnakeInputHandler extends InputHandlingElement {
         return;
     }
 
+    /**
+     * @return snake is safe to close
+     */
     @Override
     public boolean isSafeToClose() {
         return true;
     }
 
+    /**
+     * handle the right arrow
+     */
     @Override
     public void handleArrowRight() {
         this.move(MoveDirection.RIGHT);
     }
 
+    /**
+     * handle the left arrow
+     */
     @Override
     public void handleArrowLeft() {
         this.move(MoveDirection.LEFT);
     }
 
+    /**
+     * handle the down arrow
+     */
     @Override
     public void handleArrowDown() {
         this.move(MoveDirection.DOWN);
     }
 
+    /**
+     * handle the up arrow
+     */
     @Override
     public void handleArrowUp() {
         this.move(MoveDirection.UP);
     }
 
+    /**
+     * handle the separator
+     */
     @Override
     public void handleSeparator() throws IOException {
         if(!this.game.canContinue()) this.game = new SnakeGame(5, (int) this.playField.height, (int) this.playField.width);
@@ -87,6 +117,9 @@ public class SnakeInputHandler extends InputHandlingElement {
         }
     }
 
+    /**
+     * @param dir the new direction for snake
+     */
     private void move(MoveDirection dir) {
         this.game.move(dir);
         this.game.tick();

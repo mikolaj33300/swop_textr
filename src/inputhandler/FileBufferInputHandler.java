@@ -10,14 +10,26 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	BufferCursorContext fb;
 	boolean surrogate;
 
+	/**
+	 * constructor
+	 * @param path the path of our file
+	 * @param lineSeparator the separator to insert for newlines (dos/linux)
+	 */
 	public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
 		this.fb = new BufferCursorContext(path, lineSeparator);
 	}
 
+	/**
+	 * constructor
+	 * @param dupedContext the cursorContext to use for this inputhandler
+	 */
 	public FileBufferInputHandler(BufferCursorContext dupedContext) {
 		this.fb = dupedContext;
 	}
 
+	/**
+	 * @return the current buffercontext
+	 */
 	public BufferCursorContext getFileBufferContextTransparent(){
 		return fb;
 	}
@@ -26,20 +38,20 @@ public class FileBufferInputHandler extends InputHandlingElement {
    * handle input
    * @param b the input
    */
-	public void input(byte b) {
-		switch(b) {
-			case 27:
-				this.surrogate = true;
-				break;
-			default:
-				if (this.surrogate){
-					surrogateKeysInput(b);
-					this.surrogate = false;
-				} else {
-					asciiInput(b);
-				}
-				break;
-		}
+    public void input(byte b) {
+	    switch(b) {
+		    case 27:
+			    this.surrogate = true;
+			    break;
+		    default:
+			    if (this.surrogate){
+				    surrogateKeysInput(b);
+				    this.surrogate = false;
+			    } else {
+				    asciiInput(b);
+			    }
+			    break;
+	    }
 	}
 
   /**
