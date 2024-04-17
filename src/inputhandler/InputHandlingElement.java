@@ -1,13 +1,13 @@
 package inputhandler;
 
-import ui.Rectangle;
-
 import java.io.IOException;
 
 /*
  * commands next
  */
 abstract public class InputHandlingElement {
+
+    boolean needsRerender = false;
 
     public int getHash() {
         return this.hashCode();
@@ -33,5 +33,20 @@ abstract public class InputHandlingElement {
     public abstract void handleArrowUp();
 
     public abstract void handleSeparator() throws IOException;
+
+    /**
+     * Determines if this element needs to be rerendered
+     * @return boolean
+     */
+    public boolean needsRerender() {
+        return this.needsRerender;
+    }
+
+    /**
+     * Turns the boolean for rerender to false. Use after rendering
+     */
+    public void toggleRerender() {
+        needsRerender = false;
+    }
 
 }
