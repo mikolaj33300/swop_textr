@@ -34,12 +34,12 @@ public class DirtyClosePromptController extends UseCaseController {
 
     @Override
     public void paintScreen() throws IOException {
+        clearContent();
         userPopupBox.render();
     }
 
-    @Override
     public void clearContent() throws IOException {
-        userPopupBox.clearContent();
+        coreControllerParent.adapter.clearScreen();
     }
 
     @Override

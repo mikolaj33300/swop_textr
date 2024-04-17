@@ -62,25 +62,19 @@ public class TextR {
             if (b == 27) {
                 adapter.readByte();
                 activeUseCaseController.handleSurrogate(b, adapter.readByte());
-            }
-            if (b == -1)
+            } else if (b == -1){
                 activeUseCaseController.handleIdle();
-            else
-                activeUseCaseController.handle(b);
-
-            if(this.facade.getWindows().stream().anyMatch((window) -> window.handler.needsRerender())) {
-                this.adapter.clearScreen();
-                this.activeUseCaseController.paintScreen();
-                this.facade.getWindows().forEach((window) -> window.handler.toggleRerender());
-            }
-
-            // Flush stdIn & Recalculate dimensions
-            if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
-            if(b == -2) {
+            } else if(b == -2) {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
                 from above in the future*/
                 break;
+            }else {
+                activeUseCaseController.handle(b);
             }
+            this.activeUseCaseController.paintScreen();
+
+            // Flush stdIn & Recalculate dimensions
+            if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
         }
     }
 }

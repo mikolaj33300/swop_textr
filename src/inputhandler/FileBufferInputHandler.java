@@ -55,8 +55,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				break;
 
 			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
-			// Control + Z
-			case 1:
+			// Control + Z or Control + A
+			case 26, 1:
 				fb.undo();
 				break;
 				//Control + U
@@ -86,7 +86,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				this.fb.write(b);
 				break;
 		}
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 	/*
 	 * handles surrogate input
@@ -110,38 +110,38 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				fb.moveCursorDown();
 				break;
 		}
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
 	public void handleArrowRight(){
 		fb.moveCursorRight();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
 	public void handleArrowLeft(){
 		fb.moveCursorLeft();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
 	public void handleArrowDown(){
 		fb.moveCursorDown();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
 	public void handleArrowUp(){
 		fb.moveCursorUp();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
 	public void handleSeparator() throws IOException {
 		fb.enterSeparator();
 		fb.moveCursorRight();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	@Override
 	public void save() {
 		this.fb.save();
-		needsRerender = true;
+		contentsChangedSinceRender = true;
 	}
 
 }

@@ -33,12 +33,6 @@ public abstract class UseCaseController {
      */
     public abstract void paintScreen() throws IOException;
 
-    /**
-     * Clears contents from screen entirely
-     * @throws IOException
-     */
-    public abstract void clearContent() throws IOException;
-
     public abstract void handleIdle() throws IOException;
 
 }

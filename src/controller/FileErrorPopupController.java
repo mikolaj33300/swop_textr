@@ -18,12 +18,12 @@ public class FileErrorPopupController extends UseCaseController {
 
     @Override
     public void paintScreen() throws IOException {
+        coreControllerParent.adapter.clearScreen();
         userPopupBox.render();
     }
 
-    @Override
     public void clearContent() throws IOException {
-        userPopupBox.clearContent();
+        coreControllerParent.adapter.clearScreen();
     }
 
     @Override
