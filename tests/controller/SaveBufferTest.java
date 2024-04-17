@@ -27,7 +27,7 @@ public class SaveBufferTest {
         Files.write(a, "i am a mister\n ; but you can call me mister TEE".getBytes());
         Path b = path2.resolve("test2.txt");
         Files.write(b, "i love eating kaas\n ; kaas is my favourite\n; also using termios on a daily basis".getBytes());
-        textr1 = new TextR(new String[] {"--crlf", a.toString()}, adapter);
+        textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter);
         textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter);
     }
