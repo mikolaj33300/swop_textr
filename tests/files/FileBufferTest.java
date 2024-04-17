@@ -273,4 +273,39 @@ public class FileBufferTest {
                 )
         );
     }
+
+    @Test
+    public void testEnterInsertionPoint() {
+
+        buffer1.enterInsertionCmd(0,0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+
+    }
+
+    @Test
+    public void testEnterInsertionPoint112() {
+
+        buffer1.enterInsertionCmd(0,0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+        buffer1.undo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+
+    }
+
+
 }

@@ -213,7 +213,7 @@ class ControllerFacade {
 
     /**
      * Returns the array of windows
-     * @return array of window objects
+     * @return list of window objects
      */
     ArrayList<Window> getWindows() {
         return this.windows;

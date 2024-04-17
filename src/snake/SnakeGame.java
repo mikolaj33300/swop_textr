@@ -47,17 +47,6 @@ public class SnakeGame {
     }
 
     /**
-     * Idles the game
-     */
-    public void idle() {
-        currentWait++;
-        if(currentWait + delay >= MILLISECOND_THRESHOLD) {
-            tick();
-            currentWait = 0;
-        }
-    }
-
-    /**
      * Returns the head of the snake.
      * @return {@link SnakeHead} object
      */

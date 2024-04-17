@@ -16,6 +16,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     public SnakeInputHandler(int maxX, int maxY) {
         this.playField = new Rectangle(0,0, maxX, maxY);
         this.game = new SnakeGame(5, maxX, maxY);
+        this.needsRerender = true;
     }
 
     public SnakeGame getSnakeGame() {
@@ -34,8 +35,12 @@ public class SnakeInputHandler extends InputHandlingElement {
 
     @Override
     public void input(byte b) throws IOException {
-        // Called on idle
-        idle();
+        currentWait++;
+        if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE) {
+            game.tick();
+            currentWait = 0;
+            needsRerender = true;
+        }
         return;
     }
 
@@ -69,28 +74,11 @@ public class SnakeInputHandler extends InputHandlingElement {
         if(!this.game.canContinue()) this.game = new SnakeGame(5, (int) this.playField.height, (int) this.playField.width);
     }
 
-    /**
-     * Called from {@link inputhandler.SnakeInputHandler#input(byte)}
-     *
-     * We calculate here if the snake game should be ticked {@link SnakeGame#tick()} by calculating the
-     * wait time: {@link SnakeInputHandler#currentWait} + {@link SnakeGame#getRemovedDelay()} >= {@link SnakeInputHandler#MILLISECOND_BASE}
-     */
-    private void idle() {
-        this.currentWait++;
-        // We add one millisecond to our current wait time.
-        currentWait++;
-
-        // We check if our current wait time minus our removed delay exceeded the wait time to tick the game
-        if(this.currentWait + this.game.getRemovedDelay() >= this.MILLISECOND_BASE) {
-            this.game.tick();
-            currentWait = 0;
-        }
-    }
-
     private void move(MoveDirection dir) {
         this.game.move(dir);
         this.game.tick();
         this.currentWait = 0;
+        this.needsRerender = true;
     }
 
 }
