@@ -8,6 +8,12 @@ public class Fruit {
     private final String character;
     private final Pos pos;
 
+    /**
+     * constructor for fruit
+     * @param pos Fruit position
+     * @param growAmount the amount the snake grows when eating the fruit
+     * @param character the character representing the fruit
+     */
     public Fruit(String character, int growAmount, int score, Pos pos) {
         this.character = character;
         this.growAmount = growAmount;
@@ -55,11 +61,18 @@ public class Fruit {
         return 10;
     }
 
+    /**
+     * @return Fruit a clone of this object
+     */
     @Override
     public Fruit clone() {
         return new Fruit(new String(this.character), growAmount, score, this.pos.clone());
     }
 
+    /**
+     * @param o the object to compare this to
+     * @return boolean if the object o equals this
+     */
     @Override
     public boolean equals(Object o) {
         if(o instanceof Fruit f)
