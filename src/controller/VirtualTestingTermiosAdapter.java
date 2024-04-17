@@ -4,7 +4,6 @@ import ui.UICoords;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.TimeoutException;
 
 public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
@@ -85,8 +84,8 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
         if(row<1 || column < 1 ||row>screenHeight || column>screenWidth){
             throw new IllegalArgumentException();
         }
-        cursorX = row;
-        cursorY = column;
+        cursorX = column;
+        cursorY = row;
     }
 
 
@@ -98,7 +97,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      */
     @Override
     public void printText(int row, int column, String text) {
-        if(row<1 ||column<1 || column+text.length()-1>screenWidth){
+        if(row<1 ||column<1 || column+text.length()-1 > screenWidth){
             throw new IllegalArgumentException();
         }
 
@@ -161,5 +160,29 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
     @Override
     public UICoords getTextAreaSize() throws IOException {
         return new UICoords(0, 0, screenWidth, screenHeight);
+    }
+
+    /**
+     * Adds an integer to the inputstream
+     * @param i the integer for the input stream <3
+     */
+    public void putByte(int i) {
+        this.inputStream.add(i);
+    }
+
+    /**
+     * For testing purposes: gets the cursor X position
+     * @return
+     */
+    public int getCursorX() {
+        return cursorX;
+    }
+
+    /**
+     * For testing purposes: gets the cursor Y position
+     * @return
+     */
+    public int getCursorY() {
+        return cursorY;
     }
 }

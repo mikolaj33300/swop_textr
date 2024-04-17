@@ -33,8 +33,8 @@ public class SnakeGame {
     /**
      * Settings of the game.
      */
-    final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 100;
-    private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY;
+    final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 100, MILLISECOND_THRESHOLD = 1000;
+    private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY, currentWait = 0;
 
     /**
      * Represents the max X and Y coordinates of the snake game width. Used to generate fruits inside map bounds
@@ -44,6 +44,17 @@ public class SnakeGame {
         this.maxX = maxX;
         this.maxY = maxY;
         initializeFruits();
+    }
+
+    /**
+     * Idles the game
+     */
+    public void idle() {
+        currentWait++;
+        if(currentWait + delay >= MILLISECOND_THRESHOLD) {
+            tick();
+            currentWait = 0;
+        }
     }
 
     /**

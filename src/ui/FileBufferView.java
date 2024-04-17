@@ -5,12 +5,7 @@ import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
 import files.FileBufferContentChangedListener;
-import inputhandler.FileBufferInputHandler;
-import io.github.btj.termios.Terminal;
-import observer.FileBufferListener;
-import layouttree.LayoutLeaf;
 
-import io.github.btj.termios.Terminal;
 import java.io.IOException;
 
 public class FileBufferView extends View implements FileBufferContentChangedListener {
@@ -131,4 +126,13 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     public void contentsChanged() {
         //render();
     }
+
+    /**
+     * Returns the {@link BufferCursorContext} object of this view
+     * @return buffer cursor context
+     */
+    public BufferCursorContext cursorContext() {
+        return this.containedFileBuffer.deepClone();
+    }
+
 }
