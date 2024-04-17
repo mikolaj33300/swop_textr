@@ -10,7 +10,7 @@ public class HorizontalLayoutNode extends LayoutNode {
 
     /**
      * Constructor for HorizontalLayoutNode
-     * The given newChildren will thus be cloned before setting the children of this HorizontalLayoutNode
+     * @param newChildren will thus be cloned before setting the children of this HorizontalLayoutNode
      * There must be atleast 2 Layouts in newChildren for the HorizontalLayoutNode to be instantiated correctly
      */
     public HorizontalLayoutNode(ArrayList<Layout> newChildren) {
@@ -18,7 +18,7 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     * Returns the HORIZONTAL orientation since this is a HorizontalLayoutNode
+     * @return the HORIZONTAL orientation since this is a HorizontalLayoutNode
      */
     @Override
     public Orientation getOrientation() {
@@ -26,8 +26,10 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     * Returns a LayoutNode in which the given newSibling LayoutLeaf will be rotated around the given child-layout
-     * clockwise or counterclockwise, based on the given rotdir
+     * @return a LayoutNode in which the given newSibling LayoutLeaf will be rotated around the given child-layout
+     * @param rotdir clockwise or counterclockwise
+     * @param child the new child
+     * @param newsibling the new layoutnode sibling
      */
     @Override
     protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
@@ -46,6 +48,7 @@ public class HorizontalLayoutNode extends LayoutNode {
     /**
      * Checks a given LayoutNode can be a child of this HorizontalLayoutNode
      * A child should have a different orientation than its parent
+     * @return if the given layoutnode can be child of this
      */
     @Override
     protected boolean isAllowedToBeChildOf(LayoutNode layoutNode) {
@@ -71,7 +74,7 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     * Returns a deepcopy of this HorizontalLayoutNode
+     * @return a deepcopy of this HorizontalLayoutNode
      * The reference to this HorizontalLayoutNode will be lost and
      * Every Layout-child of this HorizontalLayoutNode will also be cloned
      * The parent of this HorizontalLayoutNode will not be brought over to the clone
@@ -86,7 +89,7 @@ public class HorizontalLayoutNode extends LayoutNode {
     }
 
     /**
-     * Returns true if this HorizontalLayoutNode and the given Object are equal content-wise, false otherwise
+     * @return true if this HorizontalLayoutNode and the given Object are equal content-wise, false otherwise
      * They are equal content-wise when the object is a HorizontalLayoutNode and the equals-function succeeds for each
      * of their children
      */
