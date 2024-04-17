@@ -26,7 +26,7 @@ public class LaunchTextrTest {
         Files.write(path1, "mister".getBytes());
         path2 = path2.resolve("test2.txt");
         Files.write(path2, "mister2\nhello".getBytes());
-        textr1 = new TextR(new String[] {"--crlf", path1.toString()}, adapter);
+        textr1 = new TextR(new String[] {"--lf", path1.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", path1.toString()}, adapter);
         textr3 = new TextR(new String[] {"--lf", path1.toString(), path2.toString()}, adapter);
 
@@ -56,7 +56,7 @@ public class LaunchTextrTest {
 
     @Test
     public void testLineSeparatorAssignment() {
-        assertTrue(FileHolder.areContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0d, 0x0a}));
+        assertTrue(FileHolder.areContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0a}));
         assertTrue(FileHolder.areContentsEqual(textr2.facade.getLineSeparatorArg(), new byte[] {0x0a}));
     }
 

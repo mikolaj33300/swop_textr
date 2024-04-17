@@ -25,8 +25,8 @@ public class CloseBufferTest {
         Files.write(path1, "i am a mister\n ; but you can call me mister TEE".getBytes());
         path2 = path2.resolve("test2.txt");
         Files.write(path2, "i love eating kaas\n ; kaas is my favourite\n; also using termios on a daily basis".getBytes());
-        textr1 = new TextR(new String[] {path1.toString()}, adapter);
-        textr2 = new TextR(new String[] {path1.toString(), path2.toString()}, adapter);
+        textr1 = new TextR(new String[] {"--lf",path1.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf",path1.toString(), path2.toString()}, adapter);
     }
 
     @Test

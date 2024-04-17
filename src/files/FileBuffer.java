@@ -79,7 +79,7 @@ public class FileBuffer {
      */
     protected void enterInsertionPoint(int iLine, int iCol) {
         int byteArrIndex = convertLineAndColToIndex(iLine, iCol);
-        insert(byteArrIndex, System.lineSeparator().getBytes());
+        insert(byteArrIndex, getLineSeparator());
 
         //TODO: Make safer according to PDF on toledo
         for (int i = 0; i < enteredInsertionPointListeners.size(); i++){
