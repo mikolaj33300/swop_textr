@@ -87,6 +87,12 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         return statusLine;
     }
 
+    /**
+     * @param height the height of our view
+     * @param scrollStartX the x coordinate for the scrollbar
+     * @param focussedLine the number of the focussed line
+     * @param fileBufferTotalHeight the amount of lines of the filebuffer
+     */
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
         for(int i = 0; i<(height-1); i++){
             double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
@@ -101,8 +107,9 @@ public class FileBufferView extends View implements FileBufferContentChangedList
     }
 
     /**
+     * @param obj the object to compare this to
      * Determines if the given object is 'equal' to this object.
-     * Returns true if the {@link FileBufferView#containedFileBuffer} is to parameter {@link FileBuffer}
+     * @return true if the {@link FileBufferView#containedFileBuffer} is to parameter {@link FileBuffer}
      */
     public boolean equals(Object obj) {
         if (obj instanceof FileBufferView fBufView) {
