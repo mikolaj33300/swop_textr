@@ -22,6 +22,9 @@ public class Debug {
             this.type = type;
         }
 
+	/**
+	 * print an array
+	 */
         public void print() {
             String s = "[";
             for(int i = 0; i < type.length; i++) {
