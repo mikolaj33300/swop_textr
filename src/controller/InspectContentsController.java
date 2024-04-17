@@ -18,7 +18,7 @@ public class InspectContentsController extends UseCaseController {
         //Debug.write("testresources/test.txt", "We get into the 26 case");
         switch(b) {
 
-            case 8, 127, 10, 62, 1, 21:
+            case 8, 127, 10, 62, 26, 21:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
             // Control + S

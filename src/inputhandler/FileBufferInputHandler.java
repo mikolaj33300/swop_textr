@@ -54,7 +54,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
 			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
 			// Control + Z
-			case 1:
+			case 26:
 				fb.undo();
 				break;
 				//Control + U
