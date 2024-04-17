@@ -210,7 +210,7 @@ public class SnakeGame {
      */
     private Pos generatePosition() {
         Random rand = new Random();
-        return new Pos(rand.nextInt(maxX), rand.nextInt(maxY));
+        return new Pos(rand.nextInt(maxX-1), rand.nextInt(maxY-1));
     }
 
     @Override
