@@ -2,17 +2,17 @@ package snake.fruit;
 
 import org.junit.jupiter.api.Test;
 import snake.Pos;
-import snake.fruits.Fruit;
+import snake.food.Food;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-public class TestFruit {
+public class TestFood {
 
 
     @Test
     public void testGetters() {
-        Fruit f = new Fruit("a", 1, 1, new Pos(1,1));
+        Food f = new Food("a", 1, 1, new Pos(1,1));
         assertEquals(f.getCharacter(), "a");
         assertEquals(f.getPosition(), new Pos(1,1));
         assertEquals(f.getScore(), 1);
@@ -21,15 +21,15 @@ public class TestFruit {
 
     @Test
     public void testClone() {
-        Fruit f = new Fruit("b", 2, 4, new Pos(1, -1));
-        Fruit b = f.clone();
+        Food f = new Food("b", 2, 4, new Pos(1, -1));
+        Food b = f.clone();
         assertNotSame(f, b);
     }
 
     @Test
     public void testEquals() {
-        Fruit f = new Fruit("b", 2, 4, new Pos(1, -1));
-        Fruit b = f.clone();
+        Food f = new Food("b", 2, 4, new Pos(1, -1));
+        Food b = f.clone();
         assertEquals(f, b);
     }
 

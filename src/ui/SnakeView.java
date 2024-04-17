@@ -5,7 +5,7 @@ import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
-import snake.fruits.Fruit;
+import snake.food.Food;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -47,9 +47,10 @@ public class SnakeView extends View {
         Snake[] segments = game.getSnake().getSegments();
         Snake head = game.getSnake();
 
-        // Print border
-        printLine(new Pos(width, 0), new Pos(width, height), "I", false);
-        printLine(new Pos(0, height-1), new Pos(width, height-1), "-", false);
+        // Print border + plus sign in the corner
+        printLine(new Pos(width, 0), new Pos(width, height-1), "|", false);
+        printLine(new Pos(0, height-1), new Pos(width-1, height-1), "-", false);
+        Terminal.printText(1 + startY + height, 1 + this.startX + width, "+");
 
         // Print score
         Terminal.printText(height,width/2 -1, "Score: " + game.getScore());
@@ -69,7 +70,7 @@ public class SnakeView extends View {
         }
 
 
-        List<Fruit> fruits = game.getFruits();
+        List<Food> fruits = game.getFruits();
         for(int i = 0; i < fruits.size(); i++)
             Terminal.printText(
                     1+fruits.get(i).getPosition().y()+startY,
