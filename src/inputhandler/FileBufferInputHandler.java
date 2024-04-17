@@ -49,40 +49,38 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	public void asciiInput(byte b) {
 		switch(b) {
 		    case 8, 127, 10, 62:
-			    this.fb.deleteCharacter();
-				break;
-
-			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
-			// Control + Z
-			case 1:
-				fb.undo();
-				break;
-				//Control + U
-			case 21:
-				fb.redo();
-				break;
+			this.fb.deleteCharacter();
+			break;
+		    // Control + P
+		    case 16:
+			break;
+		    // Control + N
+		    case 14:
+			break;
+		    // Control + R
+		    case 18:
+			break;
 		    // Control + S
 		    case 19:
 			this.fb.save();
-				break;
-		    // Control + P
-		    case 16:
-				break;
-		    // Control + N
-		    case 14:
-				break;
-		    // Control + R
-		    case 18:
-				break;
+			break;
 		    // Control + T
 		    case 20:
-				break;
+			break;
+		    // Control + Z
+		    case 26:
+			fb.undo();
+			break;
+			    //Control + U
+		    case 25:
+			fb.redo();
+			break;
 		    // Line separator
 		    case 13:
 		    // Character input
-			default:
-				this.fb.write(b);
-				break;
+		    default:
+			this.fb.write(b);
+			break;
 		}
 	}
 	/*
