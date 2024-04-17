@@ -79,6 +79,11 @@ public class FileAnalyserUtil {
             }
             return byteArr;
         }*/
+
+    /**
+     * @param bArr an array of bytes
+     * @return make arrayList from byte array
+     */
     public static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
         return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
     }

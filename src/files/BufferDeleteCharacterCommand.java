@@ -9,6 +9,9 @@ public class BufferDeleteCharacterCommand implements Command {
 
         private final FileBuffer containedFb;
 
+	/**
+	 * execute a command to delete in the contained filebuffer
+	 */
         public void execute() {
             if(iCol == 0 && iLine != 0){
                 deleted = containedFb.getLineSeparator();
@@ -20,6 +23,9 @@ public class BufferDeleteCharacterCommand implements Command {
             containedFb.deleteCharacter(iCol, iLine);
         }
 
+	/**
+	 * undo the deletion in the contained filebuffer
+	 */
         public void undo() {
             if(Arrays.equals(containedFb.getLineSeparator(), deleted)){
                 containedFb.enterInsertionPoint(containedFb.convertLineAndColToIndex(iLine, iCol));
@@ -31,6 +37,9 @@ public class BufferDeleteCharacterCommand implements Command {
             }
         }
 
+	/**
+	 * ?
+	 */
         public BufferDeleteCharacterCommand(int iCol, int iLine, FileBuffer containedFb){
             this.containedFb = containedFb;
             this.iCol = iCol;

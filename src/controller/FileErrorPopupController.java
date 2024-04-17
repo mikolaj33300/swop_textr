@@ -11,16 +11,29 @@ public class FileErrorPopupController extends UseCaseController {
         super(coreControllerParent);
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param b the int input
+     * @throws IOException
+     */
     @Override
     public void handle(int b) throws IOException {
         Runtime.getRuntime().halt(1);
     }
 
+    /**
+     * render the popup
+     * @throws IOException
+     */
     @Override
     public void paintScreen() throws IOException {
         userPopupBox.render();
     }
 
+    /**
+     * remove the popup
+     * @throws IOException
+     */
     @Override
     public void clearContent() throws IOException {
         userPopupBox.clearContent();

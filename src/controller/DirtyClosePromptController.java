@@ -8,10 +8,18 @@ import java.io.IOException;
 public class DirtyClosePromptController extends UseCaseController {
     UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)");
 
+    /**
+     * @param coreControllerParent
+     */
     protected DirtyClosePromptController(TextR coreControllerParent) {
         super(coreControllerParent);
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param b the int input
+     * @throws IOException
+     */
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
@@ -32,11 +40,19 @@ public class DirtyClosePromptController extends UseCaseController {
         }
     }
 
+    /**
+     * render the popup
+     * @throws IOException
+     */
     @Override
     public void paintScreen() throws IOException {
         userPopupBox.render();
     }
 
+    /**
+     * remove the popup
+     * @throws IOException
+     */
     @Override
     public void clearContent() throws IOException {
         userPopupBox.clearContent();

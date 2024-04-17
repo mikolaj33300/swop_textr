@@ -13,6 +13,11 @@ public class InspectContentsController extends UseCaseController {
         super(coreControllerParent);
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param b the int input
+     * @throws IOException
+     */
     @Override
     public void handle(int b) throws IOException {
         //Debug.write("testresources/test.txt", "We get into the 26 case");
@@ -62,6 +67,11 @@ public class InspectContentsController extends UseCaseController {
         }
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param first the surrogate type
+     * @param second the character after the surrogate
+     */
     @Override
     public void handleSurrogate(int first, int second){
         // Surrogate keys

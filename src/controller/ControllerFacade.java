@@ -66,20 +66,33 @@ class ControllerFacade {
         this.updateViewCoordinates();
     }
 
+/**
+ * render the active window
+ */
   public void renderContent() throws IOException {
       for (Window window : windows) {
           window.view.render(windows.get(active).view.hashCode());
       }
   }
 
+  /**
+   * save the active filebuffer
+   */
     public void saveActive() {
         windows.get(active).handler.save();
     }
 
+    /**
+     * render the cursor in the active view
+     */
     public void renderCursor() throws IOException {
         windows.get(active).view.renderCursor();
     }
 
+    /**
+     * closes the active window
+     * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
+     */
     public int closeActive() {
         if (windows.get(active).handler.isSafeToClose()) {
             //safe to do a force close since clean buffer
@@ -89,6 +102,9 @@ class ControllerFacade {
         }
     }
 
+    /**
+     * @return 0 if we closed the active window 2 if we can't close it
+     */
     public int forceCloseActive() {
         //checks which hash will be the next one after this is closed
         Integer newHashCode = getNewHashCode();
@@ -114,9 +130,7 @@ class ControllerFacade {
     }
 
     /**
-     * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
-     *
-     * @return
+     * @return the hashcode of the new active node after the current one is closed, returns null if no other node left
      */
     private Integer getNewHashCode() {
         int oldHashCode = windows.get(active).view.hashCode();
@@ -138,6 +152,7 @@ class ControllerFacade {
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
+     * @param dir the direction to move the active view
      */
     public void moveFocus(MOVE_DIRECTION dir) {
 
@@ -159,13 +174,17 @@ class ControllerFacade {
     }
 
     /**
-     * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
+     * Rearranges the Layouts, depending on the argument given
+     * @param orientation clockwise or counterclockwise
      */
     public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
         updateViewCoordinates();
     }
 
+    /**
+     * update all window coordinates out of the layout tree
+     */
     private void updateViewCoordinates() {
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
         for (Window w : windows) {
@@ -173,22 +192,37 @@ class ControllerFacade {
         }
     }
 
+    /**
+     * let the active window know that the right arrow is pressed
+     */
     public void handleArrowRight() {
         this.windows.get(active).handler.handleArrowRight();
     }
 
+    /**
+     * let the active window know that the Left arrow is pressed
+     */
     public void handleArrowLeft() {
         this.windows.get(active).handler.handleArrowLeft();
     }
 
+    /**
+     * let the active window know that the Down arrow is pressed
+     */
     public void handleArrowDown() {
         this.windows.get(active).handler.handleArrowDown();
     }
 
+    /**
+     * let the active window know that the Up arrow is pressed
+     */
     public void handleArrowUp() {
         this.windows.get(active).handler.handleArrowUp();
     }
 
+    /**
+     * let the active window insert a separator
+     */
     public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
     }
@@ -224,6 +258,9 @@ class ControllerFacade {
         active = this.windows.size() - 1;
     }
 
+    /**
+     * duplicate the active view
+     */
     public void duplicateActive() throws IOException {
         if(windows.get(active).handler instanceof FileBufferInputHandler fbh){
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());

@@ -68,7 +68,6 @@ public class FileBuffer {
      * @param byteArrIndex the index where the enter character needs to go
      */
     protected void enterInsertionPoint(int byteArrIndex) {
-        Debug.write("tessstresources/tesdddddddddt.txt", "We get into the 26 case");
         insert(byteArrIndex, System.lineSeparator().getBytes());
         for (int i = 0; i < listenersArrayList.size(); i++)
             listenersArrayList.get(i).contentsChanged();
@@ -349,6 +348,12 @@ public class FileBuffer {
         }
     }
 
+    /**
+     * converts line and column to position in an array with newlines
+     * @param line the line
+     * @param col column
+     * @return the index in an array
+     */
     public int convertLineAndColToIndex(int line, int col) {
         int byteLengthSeparatorLen = file.getLineSeparator().length;
         int byteArrIndex = 0;
@@ -359,10 +364,16 @@ public class FileBuffer {
         return byteArrIndex;
     }
 
+    /**
+     * @return lineseparator
+     */
     public byte[] getLineSeparator() {
         return file.getLineSeparator();
     }
 
+    /**
+     * @return the path of the file 
+     */
     public String getPath() {
         return file.getPath();
     }

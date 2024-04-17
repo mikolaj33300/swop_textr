@@ -30,6 +30,7 @@ public class TextR {
 
     /**
      * A beautiful start for a beautiful project
+     * @throws IOException, RuntimeException
      */
     public static void main(String[] args) throws IOException, RuntimeException {
         TextR textR;
@@ -42,6 +43,7 @@ public class TextR {
 
     /**
      * Contains the main input loop
+     * @throws IOException
      */
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
