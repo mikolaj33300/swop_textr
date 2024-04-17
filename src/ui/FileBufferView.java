@@ -4,7 +4,6 @@ import controller.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
-import files.FileBufferContentChangedListener;
 
 import java.io.IOException;
 
@@ -122,7 +121,6 @@ public class FileBufferView extends View{
         termiosTerminalAdapter.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
     }
 
-    @Override
     public void contentsChanged() {
         //render();
     }

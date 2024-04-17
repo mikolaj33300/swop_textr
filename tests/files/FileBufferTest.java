@@ -113,13 +113,14 @@ public class FileBufferTest {
 
 
     @Test
-    public void testEnterInsertionPoint() throws IOException {
-        // One line test
-        Debug.write("testresources/test.txt", "termios is life");
-        FileBuffer buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
-        assertEquals(1, buff.getLines().size());
-        buff.enterInsertionPoint(0, 0);
-        assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
+    public void testEnterInsertionPoint1() throws IOException {
+        buffer1.enterInsertionPoint(0,0);
+        assertTrue(
+          FileHolder.areContentsEqual(
+                   "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes(),
+                  buffer1.getBytes()
+          )
+        );
     }
 
     @Test
@@ -272,5 +273,4 @@ public class FileBufferTest {
                 )
         );
     }
-
 }
