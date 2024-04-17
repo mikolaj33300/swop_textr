@@ -27,10 +27,10 @@ public class FileBufferTest {
         Files.write(path3, "termios".getBytes());
         path4 = path4.resolve("test4.txt");
         Files.write(path4, "hallo kaas i am your loyal student\n i use termios daily".getBytes());
-        buffer1 = new FileBuffer(path1.toString(), System.lineSeparator().getBytes());
-        buffer2 = new FileBuffer(path2.toString(), System.lineSeparator().getBytes());
-        buffer3 = new FileBuffer(path3.toString(), System.lineSeparator().getBytes());
-        buffer4 = new FileBuffer(path4.toString(), System.lineSeparator().getBytes());
+        buffer1 = new FileBuffer(path1.toString(), "\n".getBytes());
+        buffer2 = new FileBuffer(path2.toString(), "\n".getBytes());
+        buffer3 = new FileBuffer(path3.toString(), "\n".getBytes());
+        buffer4 = new FileBuffer(path4.toString(), "\n".getBytes());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class FileBufferTest {
     @Test
     public void testCorrectFileHolder() throws IOException {
         // Test if the FileHolder is equal == Paths are equal
-        FileHolder holder = new FileHolder(path1.toString(), System.lineSeparator().getBytes());
+        FileHolder holder = new FileHolder(path1.toString(), "\n".getBytes());
         assertTrue(buffer1.getFileHolder().equals(holder));
     }
 

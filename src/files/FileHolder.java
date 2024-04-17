@@ -58,11 +58,11 @@ public class FileHolder {
                 if(b < 32 && b != 10 && b != 13 || 127 <= b)
                     throw new RuntimeException("Error: Invalid file contents - Invalid bytes");
             // 2. Non platform specific line seperators
-            byte[] lineSeperatorBytes = System.lineSeparator().getBytes();
+            byte[] lineSeperatorBytes = lineSeparator;
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes());
+            String lineSeperatorCode = FileAnalyserUtil.formatBytes(lineSeparator);
 
 
             Formatter formatterContent = new Formatter();
