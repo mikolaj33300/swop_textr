@@ -5,7 +5,7 @@ import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
-import snake.fruits.Fruit;
+import snake.food.Food;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class SnakeView extends View {
         Snake head = game.getSnake();
 
         // Print border
-        printLine(new Pos(width, 0), new Pos(width, height), "I", false);
+        printLine(new Pos(width, 0), new Pos(width, height), "|", false);
         printLine(new Pos(0, height-1), new Pos(width, height-1), "-", false);
 
         // Print score
@@ -56,7 +56,7 @@ public class SnakeView extends View {
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
-        a = game.getSnake().getHeadString() + "abcdefghijklmnopqrstuvwxyz";
+        a = game.getSnake().getHeadString() + "abcdefghijklmnopqrstuvw";
 
         int skip = 0;
         skip = printLine(head.getEnd(), head.getStart(), Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining()), false);
@@ -69,12 +69,12 @@ public class SnakeView extends View {
         }
 
 
-        List<Fruit> fruits = game.getFruits();
-        for(int i = 0; i < fruits.size(); i++)
+        List<Food> foods = game.getFruits();
+        for(int i = 0; i < foods.size(); i++)
             Terminal.printText(
-                    1+fruits.get(i).getPosition().y()+startY,
-                    1+fruits.get(i).getPosition().x()+startX,
-                    fruits.get(i).getCharacter());
+                    1+ foods.get(i).getPosition().y()+startY,
+                    1+ foods.get(i).getPosition().x()+startX,
+                    foods.get(i).getCharacter());
 
         // Print lost/won
         if(!this.game.canContinue())
@@ -163,8 +163,8 @@ public class SnakeView extends View {
 
         // For each line in 'text', we creat the vertical borders
         for (int i = 0; i < text.length; i++) {
-            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + this.width - width, "I");
-            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width, "I");
+            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + this.width - width, "|");
+            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width, "|");
         }
 
         // We also put the horizontal borders, but these are always static..
