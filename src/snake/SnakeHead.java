@@ -36,6 +36,11 @@ public class SnakeHead extends Snake {
         this.segments = new SnakeSegment[] {};
     }
 
+    /**
+     * @param direction
+     * @param start
+     * @param end
+     */
     private SnakeHead(MoveDirection direction, Pos start, Pos end) {
         super(direction, start, end);
     }
@@ -57,6 +62,7 @@ public class SnakeHead extends Snake {
 
     /**
      * Called when the head has consumed a fruit. This behaviour is controlled by {@link SnakeGame}
+     * @param amount the number of segments to add
      */
     public void grow(int amount) {
         growState += amount;

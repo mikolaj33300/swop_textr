@@ -125,6 +125,7 @@ public class SnakeGame {
 
     /**
      * Handles user input
+     * @param dir the input direction
      */
     public void move(MoveDirection dir) {
         this.snake.move(dir);
@@ -141,6 +142,7 @@ public class SnakeGame {
 
     /**
      * Returns the amount of delay that has been added by eating food items.
+     * @return int
      */
     public int getRemovedDelay() {
         return this.delay;
@@ -214,6 +216,9 @@ public class SnakeGame {
         return new Pos(rand.nextInt(maxX), rand.nextInt(maxY));
     }
 
+    /**
+     * @return SnakeGame a clone of this object
+     */
     @Override
     public SnakeGame clone() {
         SnakeGame game = new SnakeGame(5, this.maxX, this.maxY);

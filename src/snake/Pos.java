@@ -4,27 +4,49 @@ public class Pos {
 
     private final int x, y;
 
+    /**
+     * @param x the x position
+     * @param y the y position
+     */
     public Pos(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * @return the x value
+     */
     public int x() {
         return this.x;
     }
 
+    /**
+     * @return the y value
+     */
     public int y() {
         return this.y;
     }
 
+    /**
+     * @param pos the other point
+     * @return the x distance between the two points
+     */
     public int distanceX(Pos pos) {
         return Math.abs(x - pos.x);
     }
 
+    /**
+     * @param pos the other point
+     * @return the y distance between the two points
+     */
     public int distanceY(Pos pos) {
         return Math.abs(y - pos.y);
     }
 
+    /**
+     * @param o the object to compare to
+     * @return if this equals the given object
+     */
     @Override
     public boolean equals(Object o) {
         if(o instanceof Pos p)
@@ -32,6 +54,9 @@ public class Pos {
         return false;
     }
 
+    /**
+     * @return a clone of this object
+     */
     @Override
     public Pos clone() {
         return new Pos(x, y);

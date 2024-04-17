@@ -16,10 +16,15 @@ public abstract class Snake {
     private MoveDirection direction;
     /**
      * The start position represents from where the snake moves FROM
-     * The end position is either the head or the 'knikpunt'
+     * The end position where the snake goes to
      */
     private Pos start, end;
 
+    /**
+     * @param direction the direction to start in
+     * @param start the position of the tail
+     * @param end the position of the head
+     */
     public Snake(MoveDirection direction, Pos start, Pos end) {
         this.direction = direction;
         this.start = start;
@@ -47,6 +52,10 @@ public abstract class Snake {
         this.end = pos;
     }
 
+    /**
+     * set a new direction for the snake
+     * @param dir the new direction for the snake to go to
+     */
     protected void setDirection(MoveDirection dir) {
         this.direction = dir;
     }
@@ -69,6 +78,9 @@ public abstract class Snake {
         }
     }
 
+    /**
+     * @return the direction the snake is going in
+     */
     public MoveDirection getDirection() {
         return this.direction;
     }
@@ -88,5 +100,4 @@ public abstract class Snake {
     public Pos getEnd() {
         return this.end.clone();
     }
-
 }
