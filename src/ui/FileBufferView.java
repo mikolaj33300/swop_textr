@@ -120,4 +120,17 @@ public class FileBufferView extends View{
         int cursorYoffset = 0;//containedFileBuffer.getInsertionPointLine() % (height-1);
         termiosTerminalAdapter.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
     }
+
+    public void contentsChanged() {
+        //render();
+    }
+
+    /**
+     * Returns the {@link BufferCursorContext} object of this view
+     * @return buffer cursor context
+     */
+    public BufferCursorContext cursorContext() {
+        return this.containedFileBuffer.deepClone();
+    }
+
 }
