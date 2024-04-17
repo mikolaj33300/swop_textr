@@ -19,7 +19,6 @@ public class TestSnakeGame {
     @Test
     public void testSnakeInitialization() {
 
-        System.out.println("Test");
         assertEquals(game.getFruits().size(), game.MAX_FRUITS);
         assertEquals(game.getScore(), 0);
         assertEquals(game.getSnake().getEnd(), new Pos(10, 10));
