@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 abstract public class InputHandlingElement {
 
-    boolean needsRerender = false;
+    boolean contentsChangedSinceRender = false;
 
     public int getHash() {
         return this.hashCode();
@@ -39,14 +39,14 @@ abstract public class InputHandlingElement {
      * @return boolean
      */
     public boolean needsRerender() {
-        return this.needsRerender;
+        return this.contentsChangedSinceRender;
     }
 
     /**
      * Turns the boolean for rerender to false. Use after rendering
      */
-    public void toggleRerender() {
-        needsRerender = false;
+    public void setContentsChangedSinceLastRenderFalse() {
+        contentsChangedSinceRender = false;
     }
 
 }

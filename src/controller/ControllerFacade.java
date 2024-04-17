@@ -6,7 +6,6 @@ import files.PathNotFoundException;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import layouttree.*;
-import snake.SnakeHead;
 import ui.*;
 
 import java.io.IOException;
@@ -20,6 +19,7 @@ class ControllerFacade {
     private Layout rootLayout;
     private int active;
 
+    private boolean contentsChangedSinceLastRender;
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
     /**
@@ -30,6 +30,7 @@ class ControllerFacade {
      * @throws IOException when the path is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
+        this.contentsChangedSinceLastRender = true;
         this.termiosTerminalAdapter = termiosTerminalAdapter;
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
         String[] paths;
@@ -61,13 +62,16 @@ class ControllerFacade {
     }
 
     public void renderContent() throws IOException {
+        this.contentsChangedSinceLastRender = false;
         for (Window window : windows) {
             window.view.render(windows.get(active).view.hashCode());
+            window.handler.setContentsChangedSinceLastRenderFalse();
         }
     }
 
     public void saveActive() {
         windows.get(active).handler.save();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     public void renderCursor() throws IOException {
@@ -75,8 +79,10 @@ class ControllerFacade {
     }
 
     public int closeActive() {
+        contentsChangedSinceLastRender = true;
         if (windows.get(active).handler.isSafeToClose()) {
             //safe to do a force close since clean buffer
+            contentsChangedSinceLastRender = true;
             return forceCloseActive();
         } else {
             return 1;
@@ -84,6 +90,7 @@ class ControllerFacade {
     }
 
     public int forceCloseActive() {
+        this.contentsChangedSinceLastRender = true;
         //checks which hash will be the next one after this is closed
         Integer newHashCode = getNewHashCode();
         if (newHashCode == null) return 2;
@@ -109,6 +116,7 @@ class ControllerFacade {
 
     public void passToActive(byte b) throws IOException {
         this.windows.get(active).handler.input(b);
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     /**
@@ -116,7 +124,7 @@ class ControllerFacade {
      * @param dir the direction to move focus to
      */
     public void moveFocus(MOVE_DIRECTION dir) {
-
+        contentsChangedSinceLastRender = true;
         int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
         for (int i = 0; i < this.windows.size(); i++) {
             if (this.windows.get(i).view.hashCode() == newActive) {
@@ -138,28 +146,34 @@ class ControllerFacade {
      * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
      */
     public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
+        contentsChangedSinceLastRender = true;
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
         updateViewCoordinates();
     }
 
     public void handleArrowRight() {
         this.windows.get(active).handler.handleArrowRight();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     public void handleArrowLeft() {
         this.windows.get(active).handler.handleArrowLeft();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     public void handleArrowDown() {
         this.windows.get(active).handler.handleArrowDown();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     public void handleArrowUp() {
         this.windows.get(active).handler.handleArrowUp();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
+        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
     /**
@@ -168,6 +182,7 @@ class ControllerFacade {
      * to {@link SnakeView}. We delete the active window and add a new window to the list.
      */
     public void openSnakeGame() throws IOException {
+        this.contentsChangedSinceLastRender = true;
         // Get UI coords of current window to initialize snake view's playfield
         UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
         SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
@@ -194,6 +209,7 @@ class ControllerFacade {
     }
 
     public void duplicateActive() throws IOException {
+        this.contentsChangedSinceLastRender = true;
         if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
             FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
@@ -230,6 +246,7 @@ class ControllerFacade {
     }
 
     private void updateViewCoordinates() {
+        this.contentsChangedSinceLastRender = true;
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
         for (Window w : windows) {
             w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
@@ -255,4 +272,7 @@ class ControllerFacade {
         return newHashCode;
     }
 
+    public boolean getContentsChangedSinceLastRender() {
+        return this.contentsChangedSinceLastRender;
+    }
 }

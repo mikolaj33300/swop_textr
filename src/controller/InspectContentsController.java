@@ -3,7 +3,6 @@ package controller;
 import io.github.btj.termios.Terminal;
 import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
-import snake.SnakeHead;
 
 import java.io.IOException;
 
@@ -16,7 +15,7 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
-            case 8, 127, 10, 62, 1, 21:
+            case 8, 127, 10, 62, 26, 21, 1:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
             // Control + S
@@ -53,9 +52,9 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Character input
             default:
-                if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b)
+                if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
                     break;
-
+                }
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }
@@ -103,21 +102,20 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void paintScreen() {
-        try {
-            coreControllerParent.facade.renderContent();
-            coreControllerParent.facade.renderCursor();
-        } catch (IOException e){
-            coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
-        }
+            if(coreControllerParent.facade.getContentsChangedSinceLastRender()){
+                try {
+                    clearContent();
+                    coreControllerParent.facade.renderContent();
+                    coreControllerParent.facade.renderCursor();
+                } catch (IOException e){
+                    coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
+                }
+            }
+
     }
 
-    /**
-     * Clears the active layouttree of text
-     * @throws IOException
-     */
-    @Override
     public void clearContent() throws IOException {
-        coreControllerParent.facade.clearContent();
+        coreControllerParent.adapter.clearScreen();
     }
 
     @Override

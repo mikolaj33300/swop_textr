@@ -44,8 +44,7 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToDeletionChar(new DeletedCharListener() {
             @Override
             public void handleDeletedChar(int deletedLine, int deletedCol) {
-                if(getInsertionPointLine()==deletedLine && getInsertionPointCol()==deletedCol
-                        && deletedCol > containedFileBuffer.getLines().get(deletedLine).size()){
+                if(getInsertionPointLine()==deletedLine && getInsertionPointCol()>=deletedCol){
                     insertionPointCol--;
                 }
             }
