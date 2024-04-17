@@ -4,16 +4,10 @@ import controller.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
-import files.FileBufferContentChangedListener;
-import inputhandler.FileBufferInputHandler;
-import io.github.btj.termios.Terminal;
-import observer.FileBufferListener;
-import layouttree.LayoutLeaf;
 
-import io.github.btj.termios.Terminal;
 import java.io.IOException;
 
-public class FileBufferView extends View implements FileBufferContentChangedListener {
+public class FileBufferView extends View{
 
     /**
      * Reference to the {@link FileBuffer} to retrieve display information
@@ -125,10 +119,5 @@ public class FileBufferView extends View implements FileBufferContentChangedList
         int cursorXoffset = containedFileBuffer.getInsertionPointCol() % (width-1);
         int cursorYoffset = containedFileBuffer.getInsertionPointLine() % (height-1);
         termiosTerminalAdapter.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
-    }
-
-    @Override
-    public void contentsChanged() {
-        //render();
     }
 }
