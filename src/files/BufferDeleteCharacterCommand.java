@@ -22,7 +22,7 @@ public class BufferDeleteCharacterCommand implements Command {
 
         public void undo() {
             if(Arrays.equals(containedFb.getLineSeparator(), deleted)){
-                containedFb.enterInsertionPoint(containedFb.convertLineAndColToIndex(iLine, iCol));
+                containedFb.enterInsertionPoint(iLine, iCol);
             } else {
                 if(deleted != null){
                     //We deleted a normal character

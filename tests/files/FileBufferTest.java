@@ -114,7 +114,7 @@ public class FileBufferTest {
 
     @Test
     public void testEnterInsertionPoint1() throws IOException {
-        buffer1.enterInsertionPoint(buffer1.convertLineAndColToIndex(0,0));
+        buffer1.enterInsertionPoint(0,0);
         assertTrue(
           FileHolder.areContentsEqual(
                    "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes(),
@@ -256,6 +256,7 @@ public class FileBufferTest {
     }
 
     @Test
+<<<<<<< tests/files/FileBufferTest.java
     public void testRedoDelete() {
         buffer1.deleteCharacterCmd(1,0);
         buffer1.undo();
@@ -274,4 +275,19 @@ public class FileBufferTest {
         );
     }
 
+=======
+    public void testEnterUndo() throws IOException {
+        String path = "testresources/test.txt";
+
+        Debug.write(path, "lineOne");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+
+        buffer.enterInsertionCmd(0,0);
+        assertEquals(buffer.getLines().size(), 2);
+
+        buffer.undo();
+        assertEquals(buffer.getLines().size(), 1);
+        assertEquals(new String(buffer.getBytes()), "lineOne");
+    }
+>>>>>>> tests/files/FileBufferTest.java
 }
