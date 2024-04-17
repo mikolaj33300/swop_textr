@@ -26,16 +26,24 @@ public class FileHolder {
         this.path = path;
     }
 
+    /**
+     * @return the line separator used
+     */
     public byte[] getLineSeparator() {
         return lineSeparator;
     }
 
+    /**
+     * @return the path of the file opened
+     */
     public String getPath() {
         return new String(this.path);
     }
 
     /**
      * saves file
+     * @param fileContent the content to write away
+     * @return 0 if the write is successul, 1 if it was not
      */
     int save(byte[] fileContent) {
         try {

@@ -15,6 +15,9 @@ public class FileBuffer {
      */
     private FileHolder file;
 
+    /**
+     * array of listeners for rendering
+     */
     private ArrayList<FileBufferContentChangedListener> listenersArrayList;
 
     /**

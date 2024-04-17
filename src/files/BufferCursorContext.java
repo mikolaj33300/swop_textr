@@ -92,7 +92,7 @@ public class BufferCursorContext {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-/*    *//**
+    /**
      * Makes the calculation to move the cursor to the start of the line. Modifies the {@link BufferCursorContext#insertionPointCol} and {@link BufferCursorContext#insertionPointLine} accordingly.
      *//*
     private void moveCursorToFront() {

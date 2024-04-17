@@ -38,7 +38,10 @@ public class BufferDeleteCharacterCommand implements Command {
         }
 
 	/**
-	 * ?
+	 * constructor
+	 * @param iCol the column of our deleted character
+	 * @param iLine the line of our deleted character
+	 * @param containedFb the filebuffer this operates on
 	 */
         public BufferDeleteCharacterCommand(int iCol, int iLine, FileBuffer containedFb){
             this.containedFb = containedFb;
