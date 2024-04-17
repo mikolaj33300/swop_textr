@@ -3,6 +3,7 @@ package controller;
 import io.github.btj.termios.Terminal;
 import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
+import snake.SnakeHead;
 
 import java.io.IOException;
 
@@ -15,7 +16,6 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
-
             case 8, 127, 10, 62, 1, 21:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
@@ -53,8 +53,9 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Character input
             default:
-                if(b < 32 && b != 10 && b != 13 && b!=26 && b!=21 || 127 <= b)
+                if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b)
                     break;
+
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }

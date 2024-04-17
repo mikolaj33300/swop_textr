@@ -76,7 +76,7 @@ public class TextR {
 
             // Flush stdIn & Recalculate dimensions
             if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
-            if(b == -2){
+            if(b == -2) {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
                 from above in the future*/
                 break;
