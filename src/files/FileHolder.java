@@ -1,8 +1,9 @@
 package files;
 
-import controller.TextR;
+import snake.SnakeHead;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Formatter;
@@ -64,7 +65,6 @@ public class FileHolder {
             // If line separator was specified, use specified otherwise use System.lineSeparator()
             String lineSeperatorCode = FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes());
 
-
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);
             String fileContentFormatted = formatterContent.toString();
@@ -76,6 +76,8 @@ public class FileHolder {
                     || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
                 throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
+
+            SnakeHead.log("Content: " +fileContentFormatted);
 
             return fileContent;
     }

@@ -125,7 +125,7 @@ public class FileBufferTest {
 
     @Test
     public void testEnterInsertionPoint2() throws IOException {
-        buffer2.enterInsertionPoint(buffer2.convertLineAndColToIndex(2,0));
+        buffer2.enterInsertionPoint(2,0);
         assertTrue(
                 FileHolder.areContentsEqual(
                         "if kaas is\n not a mister\n\n ; no one is".getBytes(),
@@ -255,8 +255,6 @@ public class FileBufferTest {
         );
     }
 
-    @Test
-<<<<<<< tests/files/FileBufferTest.java
     public void testRedoDelete() {
         buffer1.deleteCharacterCmd(1,0);
         buffer1.undo();
@@ -275,19 +273,38 @@ public class FileBufferTest {
         );
     }
 
-=======
-    public void testEnterUndo() throws IOException {
-        String path = "testresources/test.txt";
+    @Test
+    public void testEnterInsertionPoint() {
 
-        Debug.write(path, "lineOne");
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+        buffer1.enterInsertionCmd(0,0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
 
-        buffer.enterInsertionCmd(0,0);
-        assertEquals(buffer.getLines().size(), 2);
-
-        buffer.undo();
-        assertEquals(buffer.getLines().size(), 1);
-        assertEquals(new String(buffer.getBytes()), "lineOne");
     }
->>>>>>> tests/files/FileBufferTest.java
+
+    @Test
+    public void testEnterInsertionPoint112() {
+
+        buffer1.enterInsertionCmd(0,0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+        buffer1.undo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+
+    }
+
+
 }

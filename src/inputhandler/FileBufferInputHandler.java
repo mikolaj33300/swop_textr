@@ -1,7 +1,6 @@
 package inputhandler;
 
 import files.BufferCursorContext;
-import ui.Rectangle;
 
 import java.io.IOException;
 
@@ -24,6 +23,9 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
 	public void input(byte b) {
 		switch(b) {
+			case -1:
+				// Idle
+				break;
 			case 27:
 				this.surrogate = true;
 				break;
@@ -84,6 +86,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				this.fb.write(b);
 				break;
 		}
+		needsRerender = true;
 	}
 	/*
 	 * handles surrogate input
@@ -107,32 +110,38 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				fb.moveCursorDown();
 				break;
 		}
+		needsRerender = true;
 	}
 
 	@Override
 	public void handleArrowRight(){
 		fb.moveCursorRight();
+		needsRerender = true;
 	}
 
 	@Override
 	public void handleArrowLeft(){
 		fb.moveCursorLeft();
+		needsRerender = true;
 	}
 
 	@Override
 	public void handleArrowDown(){
 		fb.moveCursorDown();
+		needsRerender = true;
 	}
 
 	@Override
 	public void handleArrowUp(){
 		fb.moveCursorUp();
+		needsRerender = true;
 	}
 
 	@Override
 	public void handleSeparator() throws IOException {
 		fb.enterSeparator();
 		fb.moveCursorRight();
+		needsRerender = true;
 	}
 
 	@Override
@@ -141,6 +150,9 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	}
 
 	@Override
-	public void save() {this.fb.save(); }
+	public void save() {
+		this.fb.save();
+		needsRerender = true;
+	}
 
 }
