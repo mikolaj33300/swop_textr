@@ -62,7 +62,10 @@ public class TextR {
             if (b == 27) {
                 adapter.readByte();
                 activeUseCaseController.handleSurrogate(b, adapter.readByte());
-            } else if (b == -1){
+            } /*else if (b==26){
+                throw new RuntimeException("We are handling ctrl + z. But this exception will never even be thrown when " +
+                        "using actual terminal?!");
+            }*/else if (b == -1){
                 activeUseCaseController.handleIdle();
             } else if(b == -2) {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
