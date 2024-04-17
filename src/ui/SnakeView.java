@@ -47,7 +47,7 @@ public class SnakeView extends View {
         Snake[] segments = game.getSnake().getSegments();
         Snake head = game.getSnake();
 
-        // Print border
+        // Print border + plus sign in the corner
         printLine(new Pos(width, 0), new Pos(width, height-1), "|", false);
         printLine(new Pos(0, height-1), new Pos(width-1, height-1), "-", false);
         Terminal.printText(1 + startY + height, 1 + this.startX + width, "+");
