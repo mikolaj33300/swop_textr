@@ -1,72 +1,114 @@
 package files;
 
-import layouttree.Layout;
-import layouttree.LayoutLeaf;
-import layouttree.VerticalLayoutNode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ui.FileBufferView;
-import ui.Rectangle;
-import ui.View;
-import util.Debug;
-
-import java.io.File;
-import java.io.FileWriter;
+import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList; import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 // Tests eenkel relevant op mac
 public class FileBufferTest {
 
+    @TempDir
+    Path path1, path2, path3, path4;
+    FileBuffer buffer1, buffer2, buffer3, buffer4;
+
+    @BeforeEach
+    public void setVariables() throws IOException {
+        path1 = path1.resolve("test1.txt");
+        Files.write(path1, "termios is life ;\ntermios is also very useful for terminal apps".getBytes());
+        path2 = path2.resolve("test2.txt");
+        Files.write(path2, "if kaas is\n not a mister\n ; no one is".getBytes());
+        path3 = path3.resolve("test3.txt");
+        Files.write(path3, "termios".getBytes());
+        path4 = path4.resolve("test4.txt");
+        Files.write(path4, "hallo kaas i am your loyal student\n i use termios daily".getBytes());
+        buffer1 = new FileBuffer(path1.toString(), System.lineSeparator().getBytes());
+        buffer2 = new FileBuffer(path2.toString(), System.lineSeparator().getBytes());
+        buffer3 = new FileBuffer(path3.toString(), System.lineSeparator().getBytes());
+        buffer4 = new FileBuffer(path4.toString(), System.lineSeparator().getBytes());
+    }
+
     @Test
-    public void testConstructor() throws IOException {
+    public void testClose1() {
+        assertEquals(buffer1.close(), 0);
+    }
 
+    @Test
+    public void testClose2() {
+        buffer1.write("a".getBytes()[0], 0, 0);
+        assertEquals(buffer1.close(), 1);
+    }
+
+    @Test
+    public void testEquals() {
+        assertFalse(buffer1.equals(buffer2));
+        assertTrue(buffer1.equals(buffer1.clone()));
+        assertFalse(buffer1.equals(new String("a")));
+    }
+
+    @Test
+    public void testPath() {
+        assertEquals(buffer1.getPath(), path1.toFile().getAbsolutePath());
+    }
+
+    @Test
+    public void testCorrectFileHolder() throws IOException {
         // Test if the FileHolder is equal == Paths are equal
-        String path = "testresources/test.txt";
-        FileHolder holder = new FileHolder(path, System.lineSeparator().getBytes());
+        FileHolder holder = new FileHolder(path1.toString(), System.lineSeparator().getBytes());
+        assertTrue(buffer1.getFileHolder().equals(holder));
+    }
 
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        assertTrue(buffer.getFileHolder().equals(holder));
-
-        // Test if the content is correctly retrieved
-        String content = "abc";
-        Debug.write(path, content);
-        buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(content.getBytes())))));
-
+    @Test
+    public void testContentsReadCorrectly() {
+        assertTrue(buffer2.contentsEqual(
+                new ArrayList<Byte>(Arrays.<Byte>asList(
+                        FileAnalyserUtil.wrapEachByteElem("if kaas is\n not a mister\n ; no one is".getBytes())))));
     }
 
     @Test
     public void testClone() throws IOException {
-        String path = "testresources/test.txt";
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        assertTrue(buffer.equals(buffer.clone()));
+        assertTrue(buffer1.equals(buffer1.clone()));
+        assertNotSame(buffer1, buffer1.clone());
     }
 
     @Test
-    public void testWriteSave() throws IOException {
-        // Test if the function write correctly adds strings to the content.
-        String text = "i love termios ; long live kaas";
-        String path = "testresources/test.txt";
-        Debug.write(path, text);
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-        assertEquals(new String(buffer.getBytes()), new String(text.getBytes()));
+    public void testContentsChange() throws IOException {
+        buffer1.write("b".getBytes()[0], 0,0);
+        assertTrue(FileHolder.areContentsEqual(
+            buffer1.getBytes(),
+            "btermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+        ));
+    }
 
-        buffer.write("b".getBytes()[0], 0,0);
-        String result = "bi love termios ; long live kaas";
+    @Test
+    public void testGetsDirty() throws IOException {
+        buffer1.write("b".getBytes()[0], 0,0);
+        assertTrue(buffer1.getDirty());
+    }
 
-        assertTrue(buffer.getDirty());
-        buffer.save();
+    @Test
+    public void testSavesCorrectly() throws IOException {
+        buffer1.write("b".getBytes()[0], 0,0);
+        buffer1.save();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        Files.readAllBytes(path1),
+                        "btermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+    }
 
-        assertFalse(buffer.getDirty());
-        assertTrue(buffer.contentsEqual(new ArrayList<Byte>(Arrays.<Byte>asList(FileAnalyserUtil.wrapEachByteElem(result.getBytes())))));
-        assertTrue(FileHolder.areContentsEqual(buffer.getFileHolder().getContent(), result.getBytes()));
-
+    @Test
+    public void testNotDirtyAfterSave() {
+        buffer1.write("b".getBytes()[0], 0,0);
+        assertTrue(buffer1.getDirty());
+        buffer1.save();
+        assertFalse(buffer1.getDirty());
     }
 
 
@@ -78,113 +120,157 @@ public class FileBufferTest {
         assertEquals(1, buff.getLines().size());
         buff.enterInsertionPoint(0, 0);
         assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
+    }
 
-        // More lines
-        Debug.write("testresources/test.txt", "i"+System.lineSeparator()+"b");
-        buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
-        assertEquals(2, buff.getLines().size());
+    @Test
+    public void testEnterInsertionPoint2() throws IOException {
+        buffer2.enterInsertionPoint(buffer2.convertLineAndColToIndex(2,0));
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        "if kaas is\n not a mister\n\n ; no one is".getBytes(),
+                        buffer2.getBytes()
+                )
+        );
     }
 
     @Test
     public void testAmountChar() throws IOException {
-
-        Debug.write("testresources/test.txt", "kaas");
-        FileBuffer buffer = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
-
-        assertEquals(buffer.getAmountChars(), 4);
-
-        buffer.write("a".getBytes()[0], 0,3);
-
-        assertEquals(buffer.getAmountChars(),5);
+        assertEquals(buffer3.getAmountChars(), 7);
     }
 
     @Test
-    public void testDeleteCharacter() throws IOException {
-        String textToWrite = "hallo kaas i am your loyal student i use termios daily";
+    public void testDeleteCharacterLine0() throws IOException {
+        buffer4.deleteCharacter(1, 0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer4.getBytes(),
+                        "allo kaas i am your loyal student\n i use termios daily".getBytes()
+                        )
+                );
+    }
 
-        Debug.write("testresources/test.txt", textToWrite);
-        FileBuffer buffer = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
+    @Test
+    public void testDeleteCharacterLine1() throws IOException {
+        buffer4.deleteCharacter(1, 1);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer4.getBytes(),
+                        "hallo kaas i am your loyal student\ni use termios daily".getBytes()
+                )
+        );
+    }
+// Files.write(path1, "termios is life ;\ntermios is also very useful for terminal apps".getBytes());
+    @Test
+    public void testWriteCommand() {
+        buffer1.writeCmd("t".getBytes()[0], 0, 0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "ttermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+    }
 
-        buffer.deleteCharacter(1, 0);
+    @Test
+    public void testBackspaceCommand() {
+        buffer1.deleteCharacterCmd(1,0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+    }
+
+    @Test
+    public void testUndoWrite() {
+        buffer1.writeCmd("t".getBytes()[0], 0, 0);
+        buffer1.writeCmd("e".getBytes()[0], 0,1);
+        buffer1.undo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "ttermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+    }
+
+    @Test
+    public void testUndoDeleteNothing() {
+        buffer1.deleteCharacterCmd(0, 0);
+        buffer1.undo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+    }
+
+    @Test
+    public void testUndoDeleteCharacter() {
+        buffer1.deleteCharacterCmd(1, 0);
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+        System.out.println(new String(buffer1.getBytes()));
+        buffer1.undo();
 
         assertTrue(
                 FileHolder.areContentsEqual(
-                        buffer.getBytes(),
-                        "allo kaas i am your loyal student i use termios daily".getBytes()
-                        )
-                );
-
-        Debug.write("testresources/test.txt", "hello kaas\nmister");
-
-        buffer.save();
-
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
     }
 
     @Test
-    public void testWriteUndo() throws IOException {
-        String path = "testresources/test.txt";
-
-        Debug.write(path, "");
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        buffer.writeCmd("t".getBytes()[0], 0, 0);
-        buffer.writeCmd("e".getBytes()[0], 0,1);
-        buffer.writeCmd("s".getBytes()[0], 0,2);
-        buffer.writeCmd("t".getBytes()[0], 0,3);
-
-	buffer.undo();// I can undo
-        assertEquals("tes", new String(buffer.getBytes()));
-	buffer.undo();
-        assertEquals("te", new String(buffer.getBytes()));
-	buffer.undo();
-        assertEquals("t", new String(buffer.getBytes()));
-	buffer.undo();
-        assertEquals("", new String(buffer.getBytes()));
-	buffer.undo();// if we undo too much we don't do nothing
-        assertEquals("", new String(buffer.getBytes()));
-	buffer.redo();
-        assertEquals("t", new String(buffer.getBytes()));
-        buffer.writeCmd("u".getBytes()[0], 0,1);
-	buffer.redo();// if we redo too much we don't do nothing
-        assertEquals("tu", new String(buffer.getBytes()));
-	buffer.redo();
-        assertEquals("tu", new String(buffer.getBytes()));
+    public void testRedoWrite() {
+        buffer1.writeCmd("t".getBytes()[0], 0, 0);
+        buffer1.writeCmd("e".getBytes()[0], 0,1);
+        buffer1.undo();
+        buffer1.redo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "tetermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
     }
 
     @Test
-    public void testDeleteUndo() throws IOException {
-        String path = "testresources/test.txt";
-
-        Debug.write(path, "");
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        buffer.writeCmd("t".getBytes()[0], 0,0);
-        buffer.writeCmd("e".getBytes()[0], 0,1);
-        buffer.writeCmd("s".getBytes()[0], 0,2);
-        buffer.writeCmd("t".getBytes()[0], 0,3);
-
-	buffer.deleteCharacterCmd(2, 0);
-        assertEquals("tst", new String(buffer.getBytes()));
-	buffer.undo();
-        assertEquals("test", new String(buffer.getBytes()));
-	buffer.deleteCharacterCmd(0, 0);// if we delete at the first char we don't do nothing
-        assertEquals("test", new String(buffer.getBytes()));
-	buffer.undo();
-        assertEquals("test", new String(buffer.getBytes()));
+    public void testRedoDeleteNothing() {
+        buffer1.deleteCharacterCmd(0,0);
+        buffer1.undo();
+        buffer1.redo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
     }
 
     @Test
-    public void testEnterUndo() throws IOException {
-        String path = "testresources/test.txt";
-
-        Debug.write(path, "lineOne");
-        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
-
-        buffer.enterInsertionCmd(0,0);
-        assertEquals(buffer.getLines().size(), 2);
-
-        buffer.undo();
-        assertEquals(buffer.getLines().size(), 1);
-        assertEquals(new String(buffer.getBytes()), "lineOne");
+    public void testRedoDelete() {
+        buffer1.deleteCharacterCmd(1,0);
+        buffer1.undo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
+        buffer1.redo();
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        buffer1.getBytes(),
+                        "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
+                )
+        );
     }
+
 }

@@ -1,31 +1,34 @@
 package controller;
 
 import io.github.btj.termios.Terminal;
+
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 public class TextR {
     protected UseCaseController activeUseCaseController;
     public final ControllerFacade facade;
+    public final TermiosTerminalAdapter adapter;
 
     /**
      * Creates a controller object.
      */
-    public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) {
+    public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
+        this.adapter = termiosTerminalAdapter;
         ControllerFacade containedAppFacade;
         try {
             String[] paths = Arrays.copyOfRange(args, 1, args.length);
             containedAppFacade = new ControllerFacade(args, termiosTerminalAdapter);// TODO first remove flags? + pass terminal as object in some magic way
         } catch (IOException e) {
             this.activeUseCaseController = new FileErrorPopupController(this);
-            System.out.println("wtf am I doing here?");
             containedAppFacade = null;
             Terminal.clearScreen();
-            System.exit(1);
+            throw e;
         }
         this.facade = containedAppFacade;
+
+        if(this.activeUseCaseController == null) this.activeUseCaseController = new InspectContentsController(this);
     }
 
     /**
@@ -37,7 +40,6 @@ public class TextR {
 
         textR.activeUseCaseController = new InspectContentsController(textR);
         textR.loop();
-
     }
 
     /**
@@ -45,27 +47,27 @@ public class TextR {
      */
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
-        Terminal.enterRawInputMode();
-        Terminal.clearScreen();
+        adapter.enterRawInputMode();
+        adapter.clearScreen();
         // Reading terminal dimensions for correct rendering
         activeUseCaseController.paintScreen();
         // Main loop
         for ( ; ; ) {
             int b = -1;
             try {
-                b = Terminal.readByte(System.currentTimeMillis()+1);
+                b = adapter.readByte(System.currentTimeMillis()+1);
             } catch (TimeoutException e) {
                 // Do nothing
             }
             if (b == 27) {
-                Terminal.readByte();
-                activeUseCaseController.handleSurrogate(b, Terminal.readByte());
+                adapter.readByte();
+                activeUseCaseController.handleSurrogate(b, adapter.readByte());
             }
             if (b == -1) {
                 activeUseCaseController.handleIdle();
             } else {
                 activeUseCaseController.handle(b);
-                Terminal.clearScreen();
+                adapter.clearScreen();
                 activeUseCaseController.paintScreen();
             }
             // Flush stdIn & Recalculate dimensions

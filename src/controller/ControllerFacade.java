@@ -3,21 +3,15 @@ package controller;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.PathNotFoundException;
+import inputhandler.FileBufferInputHandler;
+import inputhandler.SnakeInputHandler;
+import layouttree.*;
+import ui.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import inputhandler.FileBufferInputHandler;
-import inputhandler.SnakeInputHandler;
-import layouttree.Layout;
-import layouttree.LayoutLeaf;
-import layouttree.ROT_DIRECTION;
-import layouttree.MOVE_DIRECTION;
-import layouttree.VerticalLayoutNode;
-import ui.*;
-import ui.FileBufferView;
 
 class ControllerFacade {
     private byte[] lineSeparatorArg;
@@ -43,7 +37,6 @@ class ControllerFacade {
         } else {
             paths = args;
         }
-
         this.windows = new ArrayList<Window>();
         ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
         for (int i = 0; i < paths.length; i++) {
@@ -54,6 +47,7 @@ class ControllerFacade {
             } catch (PathNotFoundException e) {
                 throw e;
             }
+
             this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter), openedFileHandler));
             leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
         }
@@ -62,15 +56,14 @@ class ControllerFacade {
             this.rootLayout = leaves.get(0);
         else
             this.rootLayout = new VerticalLayoutNode(leaves);
-
         this.updateViewCoordinates();
     }
 
-  public void renderContent() throws IOException {
-      for (Window window : windows) {
-          window.view.render(windows.get(active).view.hashCode());
-      }
-  }
+    public void renderContent() throws IOException {
+        for (Window window : windows) {
+            window.view.render(windows.get(active).view.hashCode());
+        }
+    }
 
     public void saveActive() {
         windows.get(active).handler.save();
@@ -113,25 +106,6 @@ class ControllerFacade {
         return 0;
     }
 
-    /**
-     * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
-     *
-     * @return
-     */
-    private Integer getNewHashCode() {
-        int oldHashCode = windows.get(active).view.hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT, windows.get(active).view.hashCode());
-        if (newHashCode == oldHashCode) {
-            newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.LEFT, windows.get(active).view.hashCode());
-            if (oldHashCode == newHashCode) {
-                //no left or right neighbor to focus
-                rootLayout = null;
-                return null;
-            }
-        }
-        return newHashCode;
-    }
-
     public void passToActive(byte b) throws IOException {
         this.windows.get(active).handler.input(b);
     }
@@ -164,13 +138,6 @@ class ControllerFacade {
     public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
         updateViewCoordinates();
-    }
-
-    private void updateViewCoordinates() {
-        HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
-        for (Window w : windows) {
-            w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
-        }
     }
 
     public void handleArrowRight() {
@@ -225,7 +192,7 @@ class ControllerFacade {
     }
 
     public void duplicateActive() throws IOException {
-        if(windows.get(active).handler instanceof FileBufferInputHandler fbh){
+        if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
             FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
             Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
@@ -235,4 +202,55 @@ class ControllerFacade {
             updateViewCoordinates();
         }
     }
+
+    /**
+     * Returns the line separator
+     * @return byte[] containing the line separator
+     */
+    byte[] getLineSeparatorArg() {
+        return this.lineSeparatorArg;
+    }
+
+    /**
+     * Returns the array of windows
+     * @return array of window objects
+     */
+    ArrayList<Window> getWindows() {
+        return this.windows;
+    }
+
+    /**
+     * Returns the active window integer
+     * @return integer determining the active window
+     */
+    int getActive() {
+        return this.active;
+    }
+
+    private void updateViewCoordinates() {
+        HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
+        for (Window w : windows) {
+            w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
+        }
+    }
+
+    /**
+     * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
+     *
+     * @return
+     */
+    private Integer getNewHashCode() {
+        int oldHashCode = windows.get(active).view.hashCode();
+        int newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT, windows.get(active).view.hashCode());
+        if (newHashCode == oldHashCode) {
+            newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.LEFT, windows.get(active).view.hashCode());
+            if (oldHashCode == newHashCode) {
+                //no left or right neighbor to focus
+                rootLayout = null;
+                return null;
+            }
+        }
+        return newHashCode;
+    }
+
 }

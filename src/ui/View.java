@@ -2,8 +2,6 @@ package ui;
 
 import controller.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
-import layouttree.LayoutLeaf;
-import util.Debug;
 
 import java.io.IOException;
 
@@ -67,4 +65,6 @@ public abstract class View {
      * Checks whether this View and the given object are the same type and have the same contents
      */
     public abstract boolean equals(Object o);
+
+
 }

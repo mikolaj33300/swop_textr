@@ -1,43 +1,49 @@
 package ui;
 
 import controller.RealTermiosTerminalAdapter;
-import controller.TermiosTerminalAdapter;
 import controller.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Debug;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileBufferViewTest {
 
     FileBufferView filebufferview;
 
     BufferCursorContext bufferCursorContext;
+    VirtualTestingTermiosAdapter adapter;
 
-    String path1;
+    @TempDir
+    Path path1;
+
+    String content1 = "termios this termios that, you get no say in it";
+
     @BeforeEach
     public void setUp() throws IOException {
-        path1 = "testresources/test.txt";
-        bufferCursorContext = new BufferCursorContext(path1, System.lineSeparator().getBytes());
+        path1 = path1.resolve("test1.txt");
+        Files.write(path1, content1.getBytes());
+        bufferCursorContext = new BufferCursorContext(path1.toString(), System.lineSeparator().getBytes());
+        adapter = new VirtualTestingTermiosAdapter(1000, 2, new ArrayList<Integer>(0));
+        filebufferview = new FileBufferView(bufferCursorContext, adapter);
     }
 
-    /**
-     * Viseel werkt de render, niets testbaar met JUnit
-     */
     @Test
     public void testRender() throws IOException {
-        Debug.write(path1, "testingline");
-        VirtualTestingTermiosAdapter virtualTestAdapter = new VirtualTestingTermiosAdapter(100, 2, new ArrayList<Integer>(0));
+        VirtualTestingTermiosAdapter virtualTestAdapter = new VirtualTestingTermiosAdapter(1000, 2, new ArrayList<Integer>(0));
         FileBufferView toTestFBView = new FileBufferView(bufferCursorContext, virtualTestAdapter);
         toTestFBView.setScaledCoords(new Rectangle(0,0,1,1));
         toTestFBView.render(toTestFBView.hashCode());
 
-        assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), ("testingline"+ " ".repeat(88)+"+").toCharArray());
+        assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), (content1 + " ".repeat(999-content1.length())+ "+").toCharArray());
     }
 
 
@@ -49,7 +55,7 @@ public class FileBufferViewTest {
 
     @Test
     public void testGetContainedFileBuffer(){
-        assertTrue(bufferCursorContext.getFileBuffer().equals(bufferCursorContext));
+        assertEquals(filebufferview.cursorContext().getFileBuffer(), bufferCursorContext.getFileBuffer());
     }
 
     /**
@@ -57,8 +63,11 @@ public class FileBufferViewTest {
      */
     @Test
     public void testRenderCursor(){
-
+        adapter.moveCursor(1, 2);
+        assertEquals(adapter.getCursorX(), 2);
+        assertEquals(adapter.getCursorY(), 1);
     }
+
 }
 
 

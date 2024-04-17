@@ -3,7 +3,8 @@ package files;
 import ui.FileBufferView;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static files.FileAnalyserUtil.wrapEachByteElem;
 
