@@ -1,60 +1,85 @@
 package files;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.*;
-
 public class FileHolderTest {
-    FileHolder f1 = new FileHolder("testresources/test.txt", System.lineSeparator().getBytes());
-    FileHolder f1_ = new FileHolder("testresources/test.txt", System.lineSeparator().getBytes());
-    FileHolder f2 = new FileHolder("testresources/test2.txt", System.lineSeparator().getBytes());
 
-    @Test
-    void testGetPath() {
-        assertEquals("testresources/test.txt", f1.getPath());
-        assertEquals("testresources/test2.txt", f2.getPath());
+    @TempDir
+    Path path1, path2;
+    FileHolder holder1;
+    String content1;
+
+    @BeforeEach
+    public void setVariables() throws IOException {
+        content1 = "the impact of termios in my life is great and good and i like it";
+        path1 = path1.resolve("test1.txt");
+        Files.write(path1, content1.getBytes());
+        path2 = path2.resolve("test2.txt");
+        Files.write(path2, content1.getBytes());
+        holder1 = new FileHolder(path1.toString(), System.lineSeparator().getBytes());
     }
 
     @Test
-    void testSave() throws IOException {
-        String teststring1 = "string to test with";
-        String teststring2 = "string to test with in another file";
-
-        f1.save(teststring1.getBytes());
-        assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring1.getBytes()));
-        assertTrue(FileHolder.areContentsEqual(f1_.getContent(), teststring1.getBytes()));
-
-        f1_.save(teststring2.getBytes());
-        assertTrue(FileHolder.areContentsEqual(f1_.getContent(), teststring2.getBytes()));
-        assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring2.getBytes()));
+    public void testGetPath() {
+        assertEquals(path1.toFile().getAbsolutePath(), holder1.getPath());
     }
 
     @Test
-    void testGetContent() throws IOException {
-        String teststring = "string to test with";
+    public void testSave() throws IOException {
+        holder1.save("are termios users in a cult?".getBytes());
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        "are termios users in a cult?".getBytes(),
+                        holder1.getContent()
+                )
+        );
+    }
 
-        f1.save(teststring.getBytes());
-        assertTrue(FileHolder.areContentsEqual(f1.getContent(), teststring.getBytes()));
+    @Test
+    public void testGetContentBeforeSave() throws IOException {
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        content1.getBytes(),
+                        holder1.getContent()
+                )
+        );
     }
 
     @Test
     void testClone() {
-        FileHolder f1clone = f1.clone();
-
-        assertNotSame(f1clone, f1);
-
-        assertTrue(f1clone.equals(f1));
-        assertTrue(f1.equals(f1clone));
+        assertNotSame(holder1.clone(), holder1);
     }
 
     @Test
-    void testEqual() {
-        assertTrue(f1.equals(f1));
-        assertTrue(f1.equals(f1_));
-        assertTrue(f1_.equals(f1));
-        assertFalse(f1.equals(f2));
-        assertFalse(f2.equals(f1));
+    void testEqual1() {
+        FileHolder holder2 = new FileHolder(path1.toString(), System.lineSeparator().getBytes());
+        assertTrue(holder1.equals(holder2));
     }
+
+    @Test
+    void testEqual2() {
+        assertFalse(holder1.equals(new String("certified termios enthusiast")));
+    }
+
+    @Test
+    public void testEqual3() {
+        FileHolder holder2 = new FileHolder(path1.toString(), " ".getBytes());
+        assertTrue(holder1.equals(holder2));
+    }
+
+    @Test
+    public void testEqual4() {
+        FileHolder holder2 = new FileHolder("hellomiste", " ".getBytes());
+        assertFalse(holder1.equals(holder2));
+    }
+
 }
 

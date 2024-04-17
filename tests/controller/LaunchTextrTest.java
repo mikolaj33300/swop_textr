@@ -1,65 +1,69 @@
-package core;
+package controller;
 
 import files.FileHolder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LaunchTextrTest {
 
-    private final String root = "testresources/";
-    private final String path1 = root + "test.txt";
-    private final String path2 = root + "test2.txt";
-    private final String path3 = root + "test3.txt";
+    @TempDir
+    Path path1, path2;
+
+    private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private TextR textr1, textr2, textr3;
+
+    @BeforeEach
+    public void setVariables() throws IOException {
+        path1 = path1.resolve("test1.txt");
+        Files.write(path1, "mister".getBytes());
+        path2 = path2.resolve("test2.txt");
+        Files.write(path2, "mister2\nhello".getBytes());
+        textr1 = new TextR(new String[] {"--crlf", path1.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf", path1.toString()}, adapter);
+        textr3 = new TextR(new String[] {"--lf", path1.toString(), path2.toString()}, adapter);
+
+    }
 
     @Test
-    public void testLaunch() throws IOException, NoSuchFieldException, IllegalAccessException {
+    public void testNoArguments() {
+        assertThrows(Exception.class, () -> new TextR(new String[] {}, adapter));
+    }
 
-        // Test empty input arguments
-        String[] args = new String[] {};
-        String[] finalArgs = args;
-        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs));
+    @Test
+    public void testNoPaths() {
+        assertThrows(Exception.class, () -> new TextR(new String[] {"--lf"}, adapter));
+        assertThrows(Exception.class, () -> new TextR(new String[] {"--crlf"}, adapter));
+    }
 
-        // Test no path but --lf input
-        args = new String[] {"--lf"};
-        String[] finalArgs1 = args;
-        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs1));
+    @Test
+    public void testInvalidPath() {
+        assertThrows(Exception.class, () -> new TextR(new String[]{"invalidpath.btj"}, adapter));
+    }
 
-        // Test no path but -crlf input
-        args = new String[] {"--crlf"};
-        String[] finalArgs2 = args;
-        assertThrows(RuntimeException.class, () -> TextR.main(finalArgs2));
+    @Test
+    public void testPathsAndLineSeparator() {
+        assertDoesNotThrow(() -> new TextR(new String[] {"--lf", path1.toString()}, adapter));
+        assertDoesNotThrow(() -> new TextR(new String[] {"--crlf", path1.toString()}, adapter));
+    }
 
-        // Testing -crlf recognition
-        args = new String[] {"--crlf", path2, path3, "noterminal"};
-        String[] finalArgs3 = args;
-        assertDoesNotThrow(() -> TextR.main(finalArgs3));
+    @Test
+    public void testLineSeparatorAssignment() {
+        assertTrue(FileHolder.areContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0d, 0x0a}));
+        assertTrue(FileHolder.areContentsEqual(textr2.facade.getLineSeparatorArg(), new byte[] {0x0a}));
+    }
 
-        // Testing -crlf result
-        // It's reflection time.
-        Field field = TextR.class.getDeclaredField("lineSeparatorArg");
-        field.setAccessible(true);
-        byte[] lineSeparator = (byte[]) field.get(null); // pass null for static fields
-        assertTrue(FileHolder.areContentsEqual(new byte[]{0x0d, 0x0a}, lineSeparator));
-
-        // Testing lf recognition
-        args = new String[] {"--lf", path2, path3, "noterminal"};
-        String[] finalArgs4 = args;
-        assertDoesNotThrow(() -> TextR.main(finalArgs4));
-
-        // Testing result
-        // It's reflection time.
-        field = TextR.class.getDeclaredField("lineSeparatorArg");
-        field.setAccessible(true);
-        lineSeparator = (byte[]) field.get(null); // pass null for static fields
-        assertTrue(FileHolder.areContentsEqual(new byte[]{0x0a}, lineSeparator));
-
-        //TextR c = new TextR(new String[] {"test.txt"});
-        //c.enterText(Integer.valueOf(170).byteValue());
-        //assertThrows(IOException.class, () -> c.getRootLayout().saveActiveBuffer());
+    @Test
+    public void testWindowsOpened() {
+        assertEquals(textr1.facade.getWindows().size(), 1);
+        assertEquals(textr3.facade.getWindows().size(), 2);
     }
 
 }

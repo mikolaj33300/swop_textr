@@ -17,7 +17,7 @@ public class HorizontalLayoutNodeTest {
     LayoutLeaf l4;
 
     @BeforeEach
-    void setUp() throws IOException {
+    public void setUp() throws IOException {
         l1 = new LayoutLeaf(1);
         l2 = new LayoutLeaf(2);
         l3 = new LayoutLeaf(3);
@@ -25,7 +25,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testConstructor(){
+    public void testConstructor(){
         ArrayList<Layout> children = new ArrayList<>(Arrays.asList(l1,l2));
         HorizontalLayoutNode ln = new HorizontalLayoutNode(new ArrayList<>(children));
 
@@ -39,13 +39,13 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testGetOrientation(){
+    public void testGetOrientation(){
         HorizontalLayoutNode ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         assertEquals(ln.getOrientation(), LayoutNode.Orientation.HORIZONTAL);
     }
 
     @Test
-    void testIsAllowedToBeChildOfDifferentOrientation(){
+    public void testIsAllowedToBeChildOfDifferentOrientation(){
         VerticalLayoutNode base_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ext_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4)));
 
@@ -53,7 +53,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testIsAllowedToBeChildOfSameOrientation(){
+    public void testIsAllowedToBeChildOfSameOrientation(){
         VerticalLayoutNode base_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         VerticalLayoutNode ext_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4)));
 
@@ -61,7 +61,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testClone(){
+    public void testClone(){
         HorizontalLayoutNode og_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode clone_ln = og_ln.clone();
 
@@ -74,7 +74,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testEqualsSameOrientationSameChildren(){
+    public void testEqualsSameOrientationSameChildren(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
 
@@ -82,7 +82,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testEqualsSameOrientationSimilarChildren(){
+    public void testEqualsSameOrientationSimilarChildren(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1.clone(),l2.clone())));
 
@@ -90,14 +90,14 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testEqualsDifferentOrientation(){
+    public void testEqualsDifferentOrientation(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         VerticalLayoutNode ln2 = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
 
         assertNotEquals(ln1, ln2);
     }
     @Test
-    void testEqualsDifferentAmountChildren(){
+    public void testEqualsDifferentAmountChildren(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
 
@@ -105,7 +105,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testEqualsDifferentChildren(){
+    public void testEqualsDifferentChildren(){
         HorizontalLayoutNode ln1 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         HorizontalLayoutNode ln2 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4)));
 
@@ -128,7 +128,7 @@ public class HorizontalLayoutNodeTest {
     }
 
     @Test
-    void testInsertToRight(){
+    public void testInsertToRight(){
         ArrayList<Layout> toAdd = new ArrayList<>();
         toAdd.add(new LayoutLeaf(1));
         toAdd.add(new LayoutLeaf(3));
