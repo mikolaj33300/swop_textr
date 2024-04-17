@@ -6,6 +6,7 @@ import files.PathNotFoundException;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import layouttree.*;
+import snake.SnakeHead;
 import ui.*;
 
 import java.io.IOException;
@@ -112,6 +113,7 @@ class ControllerFacade {
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
+     * @param dir the direction to move focus to
      */
     public void moveFocus(MOVE_DIRECTION dir) {
 

@@ -75,6 +75,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     private void move(MoveDirection dir) {
+        if(!this.game.canContinue()) return;
         this.game.move(dir);
         this.game.tick();
         this.currentWait = 0;
