@@ -327,8 +327,63 @@ public class BufferCursorContextTest {
     }
 
     @Test
-    public void testCharDeletionSynchronization(){
+    public void testCharDeletionSynchronization() throws IOException {
+        String firstLine = "hello";
+        Debug.write("testresources/test.txt", firstLine);
+        BufferCursorContext bufctx = new BufferCursorContext("testresources/test.txt", System.lineSeparator().getBytes());
+        BufferCursorContext bufctx2 = new BufferCursorContext(bufctx);
+        for(int i = 0; i<firstLine.length(); i++){
+            bufctx.moveCursorRight();
+            bufctx2.moveCursorRight();
+        }
 
+        bufctx.deleteCharacter();
+        bufctx.deleteCharacter();
+        bufctx.deleteCharacter();
+
+        assertEquals(firstLine.length()-3, bufctx2.getInsertionPointCol());
+    }
+
+    @Test
+    public void testDeletionInsertionSynchronization() throws IOException {
+        String firstLine = "aa";
+        String secondLine = "bbb";
+        String textToWrite = firstLine + System.lineSeparator()+ secondLine;
+        Debug.write("testresources/test.txt", textToWrite);
+
+        BufferCursorContext buffer = new BufferCursorContext("testresources/test.txt", System.lineSeparator().getBytes());
+        buffer.moveCursorDown();
+        buffer.moveCursorRight();
+        buffer.moveCursorRight();
+        buffer.moveCursorRight();
+
+        BufferCursorContext buffer2 = new BufferCursorContext(buffer);
+        buffer2.moveCursorLeft();
+        buffer2.moveCursorLeft();
+        buffer2.moveCursorLeft();
+        buffer2.deleteCharacter();
+
+        //When the line you are on gets merged with the previous one, your cursor jumps to the end of the new merged line.
+        assertEquals(5, buffer.getInsertionPointCol());
+        assertEquals(0, buffer.getInsertionPointLine());
+    }
+
+    @Test
+    public void testEnterInsertionSynchronization() throws IOException {
+        String firstLine = "aaabbb";
+        String secondLine = "ccc";
+        Debug.write("testresources/test.txt", firstLine + System.lineSeparator() + secondLine);
+        BufferCursorContext bufctx = new BufferCursorContext("testresources/test.txt", System.lineSeparator().getBytes());
+        BufferCursorContext bufctx2 = new BufferCursorContext(bufctx);
+        for(int i = 0; i<3; i++){
+            bufctx.moveCursorRight();
+            bufctx2.moveCursorRight();
+        }
+        bufctx2.moveCursorDown();
+
+        bufctx.enterSeparator();
+
+        assertEquals(2, bufctx2.getInsertionPointLine());
     }
 
     @Test

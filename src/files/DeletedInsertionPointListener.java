@@ -1,6 +1,6 @@
 package files;
 
-public interface deletedInsertionPointListener {
+public interface DeletedInsertionPointListener {
 
     public void handleDeletedInsertionPoint(int deletedLine, int deletedCol);
 }
