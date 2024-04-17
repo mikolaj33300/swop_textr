@@ -1,6 +1,5 @@
 package files;
 
-import snake.SnakeHead;
 import ui.FileBufferView;
 
 import java.io.IOException;
@@ -197,7 +196,6 @@ public class FileBuffer {
      * @param insertionPointCol    the line of that byte
      */
     protected void write(byte updatedContents, int insertionPointLine, int insertionPointCol) {
-        SnakeHead.log("Registering write");
         insert(convertLineAndColToIndex(insertionPointLine, insertionPointCol), updatedContents);
         dirty = true;
     }

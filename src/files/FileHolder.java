@@ -1,7 +1,5 @@
 package files;
 
-import snake.SnakeHead;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -77,7 +75,6 @@ public class FileHolder {
                     lineSeperatorCode.equals("0d0a")))
                 throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
 
-            SnakeHead.log("Content: " +fileContentFormatted);
 
             return fileContent;
     }
