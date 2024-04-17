@@ -327,6 +327,11 @@ public class BufferCursorContextTest {
     }
 
     @Test
+    public void testCharDeletionSynchronization(){
+
+    }
+
+    @Test
     public void testShallowCopyConstructor() throws IOException {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";

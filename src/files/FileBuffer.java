@@ -15,7 +15,10 @@ public class FileBuffer {
      */
     private FileHolder file;
 
-    private ArrayList<FileBufferContentChangedListener> listenersArrayList;
+    private ArrayList<enteredInsertionPointListener> enteredInsertionPointListeners;
+    private ArrayList<deletedInsertionPointListener> deletedInsertionPointListeners;
+
+    private ArrayList<deletedCharListener> deletedCharListeners;
 
     /**
      * Undo stack
@@ -57,7 +60,9 @@ public class FileBuffer {
         this.file = new FileHolder(path, lineSeparator);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
-        this.listenersArrayList = new ArrayList<>();
+        this.deletedInsertionPointListeners = new ArrayList<deletedInsertionPointListener>();
+        this.enteredInsertionPointListeners = new ArrayList<enteredInsertionPointListener>();
+        this.deletedCharListeners = new ArrayList<deletedCharListener>();
     }
 
     // Implementation
@@ -75,8 +80,12 @@ public class FileBuffer {
     protected void enterInsertionPoint(int iLine, int iCol) {
         int byteArrIndex = convertLineAndColToIndex(iLine, iCol);
         insert(byteArrIndex, System.lineSeparator().getBytes());
-        for (int i = 0; i < listenersArrayList.size(); i++)
-            listenersArrayList.get(i).contentsChanged();
+
+        //TODO: Make safer according to PDF on toledo
+        for (int i = 0; i < enteredInsertionPointListeners.size(); i++){
+            enteredInsertionPointListeners.get(i).handleEnteredInsertionPoint(iLine, iCol);
+        }
+
     }
 
     /**
@@ -139,12 +148,21 @@ public class FileBuffer {
         }
         if (insertionPointCol > 0) {
             this.byteContent.remove(insertionPointByteIndex - 1);
+            //TODO: Make safer according to PDF on toledo
+            for (int i = 0; i < deletedCharListeners.size(); i++){
+                deletedCharListeners.get(i).handleDeletedChar(insertionPointLine, insertionPointCol);
+            }
         } else {
             if (insertionPointLine != 0) {
                 //shift left the amount of bytes that need to be deleted and delete them one by one
                 for (int i = 0; i < file.getLineSeparator().length; i++) {
                     this.byteContent.remove(insertionPointByteIndex - getLineSeparator().length);
                 }
+                //TODO: Make safer according to PDF on toledo
+                for (int i = 0; i < deletedInsertionPointListeners.size(); i++){
+                    deletedInsertionPointListeners.get(i).handleDeletedInsertionPoint(insertionPointLine, insertionPointCol);
+                }
+
             }
         }
         ArrayList<Byte> tmp = new ArrayList<Byte>(this.byteContent);
