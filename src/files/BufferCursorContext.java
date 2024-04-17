@@ -185,6 +185,6 @@ public class BufferCursorContext {
     }
 
     public void enterSeparator() throws IOException {
-        containedFileBuffer.enterInsertionPoint(insertionPointByteIndex);
+        containedFileBuffer.enterInsertionCmd(insertionPointLine, insertionPointCol);
     }
 }

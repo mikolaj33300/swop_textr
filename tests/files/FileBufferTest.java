@@ -76,7 +76,7 @@ public class FileBufferTest {
         Debug.write("testresources/test.txt", "termios is life");
         FileBuffer buff = new FileBuffer("testresources/test.txt", System.lineSeparator().getBytes());
         assertEquals(1, buff.getLines().size());
-        buff.enterInsertionPoint(0);
+        buff.enterInsertionPoint(0, 0);
         assertEquals(2, buff.getLines().size()); // Does buffer detect two lines correctly?
 
         // More lines
@@ -171,5 +171,20 @@ public class FileBufferTest {
         assertEquals("test", new String(buffer.getBytes()));
 	buffer.undo();
         assertEquals("test", new String(buffer.getBytes()));
+    }
+
+    @Test
+    public void testEnterUndo() throws IOException {
+        String path = "testresources/test.txt";
+
+        Debug.write(path, "lineOne");
+        FileBuffer buffer = new FileBuffer(path, System.lineSeparator().getBytes());
+
+        buffer.enterInsertionCmd(0,0);
+        assertEquals(buffer.getLines().size(), 2);
+
+        buffer.undo();
+        assertEquals(buffer.getLines().size(), 1);
+        assertEquals(new String(buffer.getBytes()), "lineOne");
     }
 }

@@ -62,13 +62,18 @@ public class FileBuffer {
 
     // Implementation
 
+    public void enterInsertionCmd(int iLine, int iCol){
+        execute(new BufferEnterInsertionCommand(iCol, iLine, this));
+    }
+
     /**
      * Inserting a line separator can only be done with bytes.
      *
-     * @param byteArrIndex the index where the enter character needs to go
+     * @param iLine the line where the enter character needs to go
+     * @param iCol the column where the enter character needs to go
      */
-    protected void enterInsertionPoint(int byteArrIndex) {
-        Debug.write("tessstresources/tesdddddddddt.txt", "We get into the 26 case");
+    protected void enterInsertionPoint(int iLine, int iCol) {
+        int byteArrIndex = convertLineAndColToIndex(iLine, iCol);
         insert(byteArrIndex, System.lineSeparator().getBytes());
         for (int i = 0; i < listenersArrayList.size(); i++)
             listenersArrayList.get(i).contentsChanged();
