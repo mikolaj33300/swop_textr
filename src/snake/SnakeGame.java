@@ -95,7 +95,6 @@ public class SnakeGame {
            || this.snake.getEnd().y()+1 < 0 || this.snake.getEnd().y() >= maxY-1) {
             // maxX-1 because maxX IS the border of the game and thus invalid
             // snake positions are
-            SnakeHead.log("Position : " + snake.getEnd().getPrint() + " invaliddssdf...?");
             gameState = -1;
         }
 
