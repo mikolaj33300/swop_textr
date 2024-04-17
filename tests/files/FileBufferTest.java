@@ -125,7 +125,7 @@ public class FileBufferTest {
 
     @Test
     public void testEnterInsertionPoint2() throws IOException {
-        buffer2.enterInsertionPoint(buffer2.convertLineAndColToIndex(2,0));
+        buffer2.enterInsertionPoint(2,0);
         assertTrue(
                 FileHolder.areContentsEqual(
                         "if kaas is\n not a mister\n\n ; no one is".getBytes(),
