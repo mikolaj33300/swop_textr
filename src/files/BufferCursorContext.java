@@ -209,7 +209,7 @@ public class BufferCursorContext {
     }
 
     public int getInsertionPointLine() {
-        return insertionPointLine;
+        return this.insertionPointLine;
     }
 
     public ArrayList<ArrayList<Byte>> getLines() {
@@ -217,7 +217,7 @@ public class BufferCursorContext {
     }
 
     public int getInsertionPointCol() {
-        return insertionPointCol;
+        return this.insertionPointCol;
     }
 
     public ArrayList<Byte> getByteContent() {

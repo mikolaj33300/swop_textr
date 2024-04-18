@@ -73,8 +73,8 @@ public class TextR {
             }
             this.activeUseCaseController.paintScreen();
 
-            // Flush stdIn & Recalculate dimensions
-            if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
+            // Do not Flush stdIn & Recalculate dimensions
+            //if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
         }
     }
 }
