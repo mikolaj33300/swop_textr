@@ -119,7 +119,8 @@ public class SnakeView extends View {
         for(int i = 0;
             i < Math.abs(dY) || (isEqual && i <= Math.abs(dY));
             i++) {
-            Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
+            if(1 + startY + start.y() + (i*stepY)>0 && 1 + this.startX + start.x()>0)
+                Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
         }
 
         return Math.max(Math.abs(dX), Math.abs(dY));
