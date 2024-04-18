@@ -1,5 +1,7 @@
 package snake;
 
+import util.MoveDirection;
+
 class SnakeSegment extends Snake {
 
   /**

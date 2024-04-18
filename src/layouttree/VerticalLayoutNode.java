@@ -1,6 +1,7 @@
 package layouttree;
 
-import ui.Rectangle;
+import util.RotationDirection;
+import util.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,12 +31,12 @@ public class VerticalLayoutNode extends LayoutNode{
      * clockwise or counterclockwise, based on the given rotdir
      */
     @Override
-    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
+    protected LayoutNode getNewMergedRotatedChild(RotationDirection rotdir, Layout child, LayoutLeaf newSibling) {
         if(newSibling == null){
             throw new NullPointerException();
         }
         ArrayList<Layout> newChildren;
-        if(rotdir == ROT_DIRECTION.CLOCKWISE){
+        if(rotdir == RotationDirection.CLOCKWISE){
             newChildren = new ArrayList<>(Arrays.asList(newSibling, child));
         } else {
             newChildren = new ArrayList<>(Arrays.asList(child, newSibling));

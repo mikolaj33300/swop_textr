@@ -1,12 +1,17 @@
 package controller;
 
+import controller.adapter.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
-import files.PathNotFoundException;
+import exception.PathNotFoundException;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import layouttree.*;
 import ui.*;
+import util.Coords;
+import util.MoveDirection;
+import util.RotationDirection;
+import util.Rectangle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -141,7 +146,7 @@ class ControllerFacade {
      * Changes the focused {@link LayoutLeaf} to another.
      * @param dir the direction to move focus to
      */
-    public void moveFocus(MOVE_DIRECTION dir) {
+    public void moveFocus(MoveDirection dir) {
         contentsChangedSinceLastRender = true;
         int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
         for (int i = 0; i < this.windows.size(); i++) {
@@ -164,7 +169,7 @@ class ControllerFacade {
      * Rearranges the Layouts, depending on the argument given
      * @param orientation clockwise or counterclockwise
      */
-    public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
+    public void rotateLayout(RotationDirection orientation) throws IOException {
         contentsChangedSinceLastRender = true;
         rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
         updateViewCoordinates();
@@ -218,7 +223,7 @@ class ControllerFacade {
     public void openSnakeGame() throws IOException {
         this.contentsChangedSinceLastRender = true;
         // Get UI coords of current window to initialize snake view's playfield
-        UICoords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
         SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
 
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
@@ -297,9 +302,9 @@ class ControllerFacade {
      */
     private Integer getNewHashCode() {
         int oldHashCode = windows.get(active).view.hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT, windows.get(active).view.hashCode());
+        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).view.hashCode());
         if (newHashCode == oldHashCode) {
-            newHashCode = rootLayout.getNeighborsContainedHash(MOVE_DIRECTION.LEFT, windows.get(active).view.hashCode());
+            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).view.hashCode());
             if (oldHashCode == newHashCode) {
                 //no left or right neighbor to focus
                 rootLayout = null;

@@ -1,6 +1,4 @@
-package ui;
-
-import java.util.Objects;
+package util;
 
 public class Rectangle {
     public final double startX;

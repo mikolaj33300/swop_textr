@@ -1,6 +1,6 @@
-package controller;
+package controller.adapter;
 
-import ui.UICoords;
+import util.Coords;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -158,8 +158,8 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      * @throws IOException
      */
     @Override
-    public UICoords getTextAreaSize() throws IOException {
-        return new UICoords(0, 0, screenWidth, screenHeight);
+    public Coords getTextAreaSize() throws IOException {
+        return new Coords(0, 0, screenWidth, screenHeight);
     }
 
     /**

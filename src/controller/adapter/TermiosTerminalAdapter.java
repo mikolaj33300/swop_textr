@@ -1,6 +1,6 @@
-package controller;
+package controller.adapter;
 
-import ui.UICoords;
+import util.Coords;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -20,6 +20,6 @@ public interface TermiosTerminalAdapter {
 
     public int readByte(long deadline) throws IOException, TimeoutException;
 
-    public UICoords getTextAreaSize() throws IOException;
+    public Coords getTextAreaSize() throws IOException;
 
 }

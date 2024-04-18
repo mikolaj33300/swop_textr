@@ -1,8 +1,7 @@
 package controller;
 
-import io.github.btj.termios.Terminal;
-import layouttree.MOVE_DIRECTION;
-import layouttree.ROT_DIRECTION;
+import util.MoveDirection;
+import util.RotationDirection;
 
 import java.io.IOException;
 
@@ -32,19 +31,19 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Control + P
             case 16:
-                coreControllerParent.facade.moveFocus(MOVE_DIRECTION.LEFT);
+                coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
                 break;
             // Control + N
             case 14:
-                coreControllerParent.facade.moveFocus(MOVE_DIRECTION.RIGHT);
+                coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);
                 break;
             // Control + R
             case 18:
-                coreControllerParent.facade.rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE);
+                coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
                 break;
             // Control + T
             case 20:
-                coreControllerParent.facade.rotateLayout(ROT_DIRECTION.CLOCKWISE);
+                coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
                 break;
             // Control + G
             case 7:

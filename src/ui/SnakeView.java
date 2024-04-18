@@ -1,12 +1,13 @@
 package ui;
 
-import controller.TermiosTerminalAdapter;
+import controller.adapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
-import snake.SnakeHead;
 import snake.food.Food;
+import util.Coords;
+import util.Rectangle;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class SnakeView extends View {
      */
     private void setLocalCoordinates() {
         try {
-            UICoords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+            Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
             this.startX = coords.startX;
             this.startY = coords.startY;
             this.width = coords.width;
@@ -211,7 +212,7 @@ public class SnakeView extends View {
     }
 
     private void scaleGame() throws IOException {
-        UICoords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
         Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
         this.game.modifyPlayfield(rct);
     }

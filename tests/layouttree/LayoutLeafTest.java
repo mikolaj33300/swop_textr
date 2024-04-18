@@ -1,5 +1,6 @@
 package layouttree;
 import org.junit.jupiter.api.*;
+import util.RotationDirection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,13 +36,13 @@ class LayoutLeafTest {
 
     @Test
    void testRotateRelationshipNeighborRootLeafCLock(){
-        Layout rotated_ll = l1.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE, 1);
+        Layout rotated_ll = l1.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
         assertEquals(rotated_ll,l1);
     }
 
     @Test
     void testRotateRelationshipNeighborRootLeafCounter(){
-        Layout rotated_ll = l1.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE, 1);
+        Layout rotated_ll = l1.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
         assertEquals(rotated_ll,l1);
     }
 

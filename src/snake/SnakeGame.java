@@ -4,7 +4,8 @@ import snake.food.Banana;
 import snake.food.Apple;
 import snake.food.Food;
 import snake.food.Mandarin;
-import ui.Rectangle;
+import util.MoveDirection;
+import util.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;

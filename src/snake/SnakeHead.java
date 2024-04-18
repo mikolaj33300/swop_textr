@@ -1,10 +1,12 @@
 package snake;
 
+import util.MoveDirection;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static snake.MoveDirection.DOWN;
-import static snake.MoveDirection.UP;
+import static util.MoveDirection.DOWN;
+import static util.MoveDirection.UP;
 
 /**
  * Information expert:

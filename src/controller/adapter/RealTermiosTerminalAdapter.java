@@ -1,8 +1,8 @@
-package controller;
+package controller.adapter;
 
 import io.github.btj.termios.Terminal;
 import ui.ScreenUIUtil;
-import ui.UICoords;
+import util.Coords;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -45,7 +45,7 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     }
 
     @Override
-    public UICoords getTextAreaSize() throws IOException {
+    public Coords getTextAreaSize() throws IOException {
         return ScreenUIUtil.retrieveDimensionsTerminal();
     }
 }

@@ -1,4 +1,6 @@
-package files;
+package listeners;
+
+import files.BufferCursorContext;
 
 public class DeletedInsertionBufferCtxListener implements DeletedInsertionPointListener {
     private BufferCursorContext listeningBuf;

@@ -1,6 +1,8 @@
 package layouttree;
 
-import ui.Rectangle;
+import util.MoveDirection;
+import util.RotationDirection;
+import util.Rectangle;
 
 import java.util.HashMap;
 
@@ -62,7 +64,7 @@ public abstract class Layout implements Cloneable {
      * Returns the containedHashCode of the neighbor of the LayoutLeaf with a containedHashCode equal to targetHashCode
      * Which neighbour is decided by the dir argument
      */
-    public abstract int getNeighborsContainedHash(MOVE_DIRECTION dir, int targetHashCode) throws RuntimeException;
+    public abstract int getNeighborsContainedHash(MoveDirection dir, int targetHashCode) throws RuntimeException;
 
     /**
      * Returns the containedHashCode of the leftmost LayoutLeaf in the underlying layouttree
@@ -97,7 +99,7 @@ public abstract class Layout implements Cloneable {
      * with its right neighbor if it exists; if it doesn't, a bell-sound will be sounded
      * The rotation happens clockwise or counterclockwise according to rotdir.
      */
-    public abstract Layout rotateRelationshipNeighbor(ROT_DIRECTION rotdir, int targetHashCode);
+    public abstract Layout rotateRelationshipNeighbor(RotationDirection rotdir, int targetHashCode);
 
     /**
      * Returns true if the given LayoutNode is allowed to be a child of this Layout

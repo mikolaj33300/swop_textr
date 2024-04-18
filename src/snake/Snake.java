@@ -1,5 +1,7 @@
 package snake;
 
+import util.MoveDirection;
+
 /**
  * Information expert: this class holds all the information about positioning and movement
  * Cohesion: subclasses can reuse this information without worrying about details

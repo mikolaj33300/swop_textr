@@ -1,4 +1,4 @@
-package layouttree;
+package exception;
 
 public class HashNotMatchingException extends RuntimeException {
     public HashNotMatchingException() {

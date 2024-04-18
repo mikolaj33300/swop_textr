@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import snake.food.Apple;
 import snake.food.Food;
+import util.MoveDirection;
 
 import static org.junit.jupiter.api.Assertions.*;
 

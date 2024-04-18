@@ -1,6 +1,7 @@
 package layouttree;
 
-import ui.Rectangle;
+import util.RotationDirection;
+import util.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,15 +30,15 @@ public class HorizontalLayoutNode extends LayoutNode {
      * @return a LayoutNode in which the given newSibling LayoutLeaf will be rotated around the given child-layout
      * @param rotdir clockwise or counterclockwise
      * @param child the new child
-     * @param newsibling the new layoutnode sibling
+     * @param newSibling the new layoutnode sibling
      */
     @Override
-    protected LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling) {
+    protected LayoutNode getNewMergedRotatedChild(RotationDirection rotdir, Layout child, LayoutLeaf newSibling) {
         if (newSibling == null) {
             throw new NullPointerException();
         }
         ArrayList<Layout> newChildren;
-        if (rotdir == ROT_DIRECTION.CLOCKWISE) {
+        if (rotdir == RotationDirection.CLOCKWISE) {
             newChildren = new ArrayList<>(Arrays.asList(child, newSibling));
         } else {
             newChildren = new ArrayList<>(Arrays.asList(newSibling, child));

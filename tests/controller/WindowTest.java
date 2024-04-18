@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;

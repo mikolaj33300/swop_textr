@@ -2,6 +2,9 @@ package ui;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import util.Coords;
+import util.Rectangle;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RectangleTest {
@@ -34,7 +37,7 @@ public class RectangleTest {
 
     @Test
     public void testEqualsDifObject(){
-        assertNotEquals(rectangle, new UICoords(1,2,3,4));
+        assertNotEquals(rectangle, new Coords(1,2,3,4));
     }
     @Test
     public void testEqualsDifStartX(){
