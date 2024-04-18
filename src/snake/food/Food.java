@@ -51,8 +51,8 @@ public class Food {
      * Returns the amount of milliseconds are subtracted from the delay.
      * @return
      */
-    public int millisecondDecrease() {
-        return 10;
+    public float millisecondDecrease() {
+        return 0.01f;
     }
 
     @Override

@@ -34,7 +34,8 @@ public class SnakeGame {
      * Settings of the game.
      */
     final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 100, MILLISECOND_THRESHOLD = 1000;
-    private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY, currentWait = 0;
+    private int score = 0, gameState = 0, starver = 0, maxX, maxY, currentWait = 0;
+    private float delay = 0f;
 
     /**
      * Represents the max X and Y coordinates of the snake game width. Used to generate foods inside map bounds
@@ -75,7 +76,7 @@ public class SnakeGame {
             this.foods.remove(collidedFood);
             this.snake.grow(collidedFood.getGrowAmount());
             this.score += collidedFood.getScore();
-            this.delay += collidedFood.millisecondDecrease();
+            this.delay = delay > 0.9f ? 0.9f : delay + collidedFood.millisecondDecrease();
             this.starver = 0;
             initializeFruits();
         } else {
@@ -141,7 +142,7 @@ public class SnakeGame {
     /**
      * Returns the amount of delay that has been added by eating food items.
      */
-    public int getRemovedDelay() {
+    public float getRemovedDelay() {
         return this.delay;
     }
 
@@ -202,6 +203,27 @@ public class SnakeGame {
             else this.foods.add(new Banana(position));
         }
 
+    }
+
+    /**
+     * Returns the millisecond threshold between each tick on idle
+     * @return millisecond threshold
+     */
+    public int getMillisecondThreshold() {
+        return this.MILLISECOND_THRESHOLD;
+    }
+
+
+    /**
+     * Resets the game
+     */
+    public void reset() {
+        this.snake = new SnakeHead(5, maxX/2, maxY/2);
+        this.maxX = maxX;
+        this.maxY = maxY;
+        initializeFruits();
+        this.score = gameState = starver = currentWait = 0;
+        delay = 0f;
     }
 
     /**
