@@ -1,5 +1,8 @@
 package files;
 
+import listeners.DeletedCharListener;
+import listeners.DeletedInsertionPointListener;
+import listeners.EnteredInsertionPointListener;
 import ui.FileBufferView;
 
 import java.io.IOException;

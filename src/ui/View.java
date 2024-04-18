@@ -1,7 +1,9 @@
 package ui;
 
-import controller.TermiosTerminalAdapter;
+import controller.adapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
+import util.Coords;
+import util.Rectangle;
 
 import java.io.IOException;
 
@@ -32,9 +34,9 @@ public abstract class View {
      * @param termiosTerminalAdapter the object that renders the terminal
      * @return coordinates 
      */
-    public UICoords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
-        UICoords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
-        return new UICoords(
+    public Coords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
+        Coords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
+        return new Coords(
                 (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.startX),
                 (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.startY),
                 (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.width),

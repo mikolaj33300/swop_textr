@@ -1,5 +1,7 @@
 package controller;
 
+import controller.adapter.RealTermiosTerminalAdapter;
+import controller.adapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 
 import java.io.IOException;

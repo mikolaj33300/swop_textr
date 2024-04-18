@@ -1,6 +1,9 @@
 package layouttree;
 
-import ui.Rectangle;
+import exception.HashNotMatchingException;
+import util.MoveDirection;
+import util.RotationDirection;
+import util.Rectangle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,10 +48,10 @@ public class LayoutLeaf extends Layout {
 
     /**
      * Returns the hashCode of the neighbor of this LayoutLeaf in the layouttree
-     * Which of the neighbors will be chosen, is based of the MOVE_DIRECTION argument
+     * Which of the neighbors will be chosen, is based of the MoveDirection argument
      */
-    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hashCode) {
-        if(dir==MOVE_DIRECTION.RIGHT){
+    public int getNeighborsContainedHash(MoveDirection dir, int hashCode) {
+        if(dir==MoveDirection.RIGHT){
             return this.getRightNeighborsContainedHash(hashCode);
         } else {
             return this.getLeftNeighborsContainedHash(hashCode);
@@ -150,7 +153,7 @@ public class LayoutLeaf extends Layout {
      * (if it has one) with its right neighbor if it exists; if it doesn't, a bell-sound will be sounded
      * The rotation happens clockwise or counterclockwise according to rotdir.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) {
+    public Layout rotateRelationshipNeighbor(RotationDirection rot_dir, int hash) {
         if (parent != null && hash == this.containedHashCode) {
             return parent.rotateWithRightSibling(rot_dir, this);
         } else if (hash == this.containedHashCode) {

@@ -1,4 +1,4 @@
-package files;
+package exception;
 
 public class PathNotFoundException extends RuntimeException {
     public PathNotFoundException() {

@@ -1,9 +1,10 @@
 package ui;
 
-import controller.TermiosTerminalAdapter;
+import controller.adapter.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
+import util.Coords;
 
 import java.io.IOException;
 
@@ -26,7 +27,7 @@ public class FileBufferView extends View{
      */
     @Override
     public void render(int activeHash) throws IOException {
-        UICoords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
@@ -91,7 +92,7 @@ public class FileBufferView extends View{
     /**
      * @param height the height of our view
      * @param scrollStartX the x coordinate for the scrollbar
-     * @param focussedLine the number of the focussed line
+     * @param focusedLine the number of the focussed line
      * @param fileBufferTotalHeight the amount of lines of the filebuffer
      */
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
@@ -165,7 +166,7 @@ public class FileBufferView extends View{
      * Handles printing the cursor in this view.
      */
     public void renderCursor() throws IOException {
-        UICoords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
         int width = coords.width;
         int height = coords.height;
         int startY = coords.startY;

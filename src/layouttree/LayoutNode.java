@@ -1,5 +1,9 @@
 package layouttree;
 
+import exception.HashNotMatchingException;
+import util.MoveDirection;
+import util.RotationDirection;
+
 import java.util.ArrayList;
 
 public abstract class LayoutNode extends Layout {
@@ -99,7 +103,7 @@ public abstract class LayoutNode extends Layout {
      * Which neighbour is decided by the dir argument
      */
     @Override
-    public int getNeighborsContainedHash(MOVE_DIRECTION dir, int hash) throws RuntimeException {
+    public int getNeighborsContainedHash(MoveDirection dir, int hash) throws RuntimeException {
         for (Layout l : children) {
             try{
                 return l.getNeighborsContainedHash(dir, hash);
@@ -194,7 +198,7 @@ public abstract class LayoutNode extends Layout {
      * perpendicular to the current orientation of the parent. If there is no direct right sibling it is added to the parent of the
      * active leaf and rotated then.
      */
-    public Layout rotateRelationshipNeighbor(ROT_DIRECTION rot_dir, int hash) throws RuntimeException {
+    public Layout rotateRelationshipNeighbor(RotationDirection rot_dir, int hash) throws RuntimeException {
         for (Layout l : children) {
             try{
                 return l.rotateRelationshipNeighbor(rot_dir, hash);
@@ -209,7 +213,7 @@ public abstract class LayoutNode extends Layout {
      * Replaces the given child with a new layoutnode with the child and its sibling rotated
      * Returns the new root layout of the rotated node
      */
-    protected Layout rotateWithRightSibling(ROT_DIRECTION rotdir, Layout child) {
+    protected Layout rotateWithRightSibling(RotationDirection rotdir, Layout child) {
         LayoutLeaf newSibling = this.getRightNeighbor(child);
         LayoutNode newChild = null;
 
@@ -217,7 +221,7 @@ public abstract class LayoutNode extends Layout {
             System.out.print((char) 7);
         } else if (newSibling.parent != this) {
             this.deleteRightNeighbor(child);
-            if (rotdir == ROT_DIRECTION.COUNTERCLOCKWISE) {
+            if (rotdir == RotationDirection.COUNTERCLOCKWISE) {
                 children.add(children.indexOf(child), newSibling);
                 newSibling.setParent(this);
             } else {
@@ -242,7 +246,7 @@ public abstract class LayoutNode extends Layout {
     /**
      *  Returns a layoutnode containing a child and a new specified sibling after rotating the active Layout
      */
-    protected abstract LayoutNode getNewMergedRotatedChild(ROT_DIRECTION rotdir, Layout child, LayoutLeaf newSibling);
+    protected abstract LayoutNode getNewMergedRotatedChild(RotationDirection rotdir, Layout child, LayoutLeaf newSibling);
 
     /**
      * Fixes this LayoutNode to change it from an illegal to a legal LayoutNode

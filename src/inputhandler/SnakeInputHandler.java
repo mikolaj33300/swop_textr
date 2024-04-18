@@ -1,8 +1,8 @@
 package inputhandler;
 
-import snake.MoveDirection;
+import util.MoveDirection;
 import snake.SnakeGame;
-import ui.Rectangle;
+import util.Rectangle;
 
 import java.io.IOException;
 

@@ -1,9 +1,8 @@
 package layouttree;
 
-import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
+import util.MoveDirection;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,64 +94,64 @@ class LayoutTest {
      */
     @Test
     void testGetNeighborsContainedHashRightSolo(){
-        assertEquals(l1.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),1);
+        assertEquals(l1.getNeighborsContainedHash(MoveDirection.RIGHT,1),1);
     }
 
     @Test
     void testGetNeighborsContainedHashLeftSolo(){
-        assertEquals(l1.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,1),1);
+        assertEquals(l1.getNeighborsContainedHash(MoveDirection.LEFT,1),1);
     }
 
     @Test
     void testGetNeighborsContainedHashRightSameParentNext(){
         LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),2);
+        assertEquals(ln.getNeighborsContainedHash(MoveDirection.RIGHT,1),2);
     }
 
     @Test
     void testGetNeighborsContainedHashRightSameParentEnd(){
         LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(l2.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,2),2);
+        assertEquals(l2.getNeighborsContainedHash(MoveDirection.RIGHT,2),2);
     }
 
     @Test
     void testGetNeighborsContainedHashLeftSameParentNext(){
         LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,2),1);
+        assertEquals(ln.getNeighborsContainedHash(MoveDirection.LEFT,2),1);
     }
 
     @Test
     void testGetNeighborsContainedHashLeftSameParentEnd(){
         LayoutNode ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        assertEquals(ln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,1),1);
+        assertEquals(ln.getNeighborsContainedHash(MoveDirection.LEFT,1),1);
     }
 
     @Test
     void testGetNeighborsContainedHashRightToLower(){
         HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
         VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hln)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,1),2);
+        assertEquals(vln.getNeighborsContainedHash(MoveDirection.RIGHT,1),2);
     }
 
     @Test
     void testGetNeighborsContainedHashRightToHigher(){
         HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hln,l3)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.RIGHT,2),3);
+        assertEquals(vln.getNeighborsContainedHash(MoveDirection.RIGHT,2),3);
     }
 
     @Test
     void testGetNeighborsContainedHashLeftToLower(){
         HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
         VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hln,l3)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,3),2);
+        assertEquals(vln.getNeighborsContainedHash(MoveDirection.LEFT,3),2);
     }
 
     @Test
     void testGetNeighborsContainedHashLeftToHigher(){
         HorizontalLayoutNode hln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3)));
         VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,hln)));
-        assertEquals(vln.getNeighborsContainedHash(MOVE_DIRECTION.LEFT,2),1);
+        assertEquals(vln.getNeighborsContainedHash(MoveDirection.LEFT,2),1);
     }
 
     @Test

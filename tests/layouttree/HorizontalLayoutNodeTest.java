@@ -1,7 +1,7 @@
 package layouttree;
 
 import org.junit.jupiter.api.*;
-import ui.Rectangle;
+import util.Rectangle;
 
 import java.io.IOException;
 import java.util.ArrayList;

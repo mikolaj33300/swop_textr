@@ -1,8 +1,6 @@
-package ui;
+package util;
 
-import java.util.Objects;
-
-public class UICoords {
+public class Coords {
     public final int startX;
     public final int startY;
     public final int width;
@@ -15,7 +13,7 @@ public class UICoords {
      * @param width the ui width
      * @param height the ui height
      */
-    public UICoords(int startX, int startY, int width, int height){
+    public Coords(int startX, int startY, int width, int height){
         this.startX = startX;
         this.startY = startY;
         this.width = width;
@@ -25,19 +23,19 @@ public class UICoords {
     /**
      * @return a clone fo this object
      */
-    public UICoords clone(){
-        return new UICoords(startX, startY, width, height);
+    public Coords clone(){
+        return new Coords(startX, startY, width, height);
     }
 
     /**
      * @return if this object equals  o
-     * @param object o
+     * @param o
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UICoords uiCoords = (UICoords) o;
-        return startX == uiCoords.startX && startY == uiCoords.startY && width == uiCoords.width && height == uiCoords.height;
+        Coords coords = (Coords) o;
+        return startX == coords.startX && startY == coords.startY && width == coords.width && height == coords.height;
     }
 }

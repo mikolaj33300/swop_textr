@@ -1,11 +1,12 @@
 package ui;
 
-import controller.RealTermiosTerminalAdapter;
-import controller.VirtualTestingTermiosAdapter;
+import controller.adapter.RealTermiosTerminalAdapter;
+import controller.adapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import util.Rectangle;
 
 import java.io.IOException;
 import java.nio.file.Files;

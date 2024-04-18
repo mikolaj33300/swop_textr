@@ -1,5 +1,9 @@
 package files;
 
+import listeners.DeletedCharListener;
+import listeners.DeletedInsertionPointListener;
+import listeners.EnteredInsertionPointListener;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
 package ui;
 
 import io.github.btj.termios.Terminal;
+import util.Coords;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class ScreenUIUtil {
      * @return UI coords
      * @throws IOException exception
      */
-    public static UICoords retrieveDimensionsTerminal() throws IOException {
+    public static Coords retrieveDimensionsTerminal() throws IOException {
         Terminal.reportTextAreaSize();
         for (int i = 0; i < 4; i++)
             Terminal.readByte();
@@ -44,7 +45,7 @@ public class ScreenUIUtil {
         }
         int terminalWidth = width;
         int terminalHeight = height;
-        return new UICoords(0, 0, terminalWidth, terminalHeight);
+        return new Coords(0, 0, terminalWidth, terminalHeight);
     }
 
 }
