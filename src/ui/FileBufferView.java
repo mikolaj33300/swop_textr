@@ -53,7 +53,7 @@ public class FileBufferView extends View{
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
             termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
         renderScrollbar(height, startX+width-1, startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
-        renderHorzScrollbar(width, startX, startY+height-2, containedFileBuffer.getInsertionPointCol(), containedFileBuffer.getLines().size(), containedFileBuffer.getInsertionPointLine());
+        renderHorzScrollbar(width, startX, startY+height-2, containedFileBuffer.getInsertionPointCol(), containedFileBuffer.getLineLength(containedFileBuffer.getInsertionPointLine()), containedFileBuffer.getInsertionPointLine());
     }
 
     /**
@@ -83,8 +83,8 @@ public class FileBufferView extends View{
     }
 
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
-        double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
-        double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
+        double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/fileBufferTotalHeight;
+        double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/fileBufferTotalHeight;
         for(int i = 0; i<(height-1); i++){
             if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
@@ -94,9 +94,18 @@ public class FileBufferView extends View{
         }
     }
 
+    /**
+     * render a horizontal renderHorzScrollbar
+     * @param width the window width
+     * @param startX the x coordinate to draw the scrollbar on
+     * @param startY the Y coordinate to draw the scrollbar on
+     * @param focusedCol the focussed column
+     * @param fileBufferTotalWidth the 
+     * @param focusedLine the focussed line
+     */
     private void renderHorzScrollbar(int width, int startX, int startY, int focusedCol, int fileBufferTotalWidth, int focusedLine){
-        double visibleStartPercent = ((focusedCol/(width-1))*(width-1))*1.0/containedFileBuffer.getLineLength(focusedLine);// get current line length
-        double visibleEndPercent = ((1+focusedCol/(width-1))*(width-1))*1.0/containedFileBuffer.getLineLength(focusedLine);
+        double visibleStartPercent = ((focusedCol/(width-1))*(width-1))*1.0/fileBufferTotalWidth;
+        double visibleEndPercent = ((1+focusedCol/(width-1))*(width-1))*1.0/fileBufferTotalWidth;
         for(int i = 0; i<(width-1); i++){
             if((i*1.0/(width-1)>=visibleStartPercent) && (i*1.0/width <= visibleEndPercent)){
                 termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
