@@ -134,6 +134,18 @@ public class FileBuffer {
         deletedInsertionPointListeners.add(deletedInsertionPointListener);
     }
 
+    public void unsubscribeFromDeletionChar(DeletedCharListener d){
+        deletedCharListeners.remove(d);
+    }
+
+    public void unsubscribeFromEnterInsertion(EnteredInsertionPointListener e){
+        enteredInsertionPointListeners.remove(e);
+    }
+
+    public void unsubscribeFromDeletionInsertion(DeletedInsertionPointListener d){
+        deletedInsertionPointListeners.remove(d);
+    }
+
     /**
      * delete the character at the column and row and pushes it undo stack
      *

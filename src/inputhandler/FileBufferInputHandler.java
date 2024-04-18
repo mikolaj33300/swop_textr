@@ -145,8 +145,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	}
 
 	@Override
-	public int close(){
-		return fb.close();
+	public int forcedClose(){
+		return fb.forcedClose();
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     @Override
-    public int close() {
+    public int forcedClose() {
         return 1;
     }
 

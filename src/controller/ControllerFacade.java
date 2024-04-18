@@ -97,7 +97,6 @@ class ControllerFacade {
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
-        windows.remove(active);
         int newActive = -1;
         for (int i = 0; i < windows.size(); i++) {
             if (windows.get(i).view.hashCode() == newHashCode) {
@@ -108,6 +107,9 @@ class ControllerFacade {
         if (active == -1) {
             throw new RuntimeException("Layout and collection of views inconsistent!");
         }
+
+        windows.get(active).handler.forcedClose();
+        windows.remove(active);
 
         updateViewCoordinates();
         updateViewCoordinates();

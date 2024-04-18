@@ -11,6 +11,11 @@ public class BufferCursorContext {
      * For statusbar, these will need to be increased with 1
      */
     private int insertionPointCol, insertionPointLine, insertionPointByteIndex;
+
+    private EnteredInsertionPointListener el;
+    private DeletedInsertionPointListener dil;
+    private DeletedCharListener dcl;
+
     FileBuffer containedFileBuffer;
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new FileBuffer(path, lineSeparator);
@@ -23,7 +28,7 @@ public class BufferCursorContext {
     }
 
     private void subscribeToDeletionInsertionFb() {
-        containedFileBuffer.subscribeToDeletionInsertion(new DeletedInsertionPointListener() {
+        dil = new DeletedInsertionPointListener() {
             @Override
             public void handleDeletedInsertionPoint(int deletedLine, int deletedCol) {
                 if(deletedLine<insertionPointLine-1){
@@ -37,22 +42,24 @@ public class BufferCursorContext {
                     insertionPointCol = containedFileBuffer.getLines().get(insertionPointLine).size();
                 }
             }
-        });
+        };
+        containedFileBuffer.subscribeToDeletionInsertion(dil);
     }
 
     private void subscribeToDeletionCharFb() {
-        containedFileBuffer.subscribeToDeletionChar(new DeletedCharListener() {
+        dcl = new DeletedCharListener() {
             @Override
             public void handleDeletedChar(int deletedLine, int deletedCol) {
                 if(getInsertionPointLine()==deletedLine && getInsertionPointCol()>=deletedCol){
                     insertionPointCol--;
                 }
             }
-        });
+        };
+        containedFileBuffer.subscribeToDeletionChar(dcl);
     }
 
     private void subscribeToEnterInsertionFb() {
-        containedFileBuffer.subscribeToEnterInsertion(new EnteredInsertionPointListener() {
+        el = new EnteredInsertionPointListener() {
             @Override
             public void handleEnteredInsertionPoint(int enteredLine, int enteredCol) {
                 if(enteredLine<insertionPointLine){
@@ -62,7 +69,8 @@ public class BufferCursorContext {
                     insertionPointCol=0;
                 }
             }
-        });
+        };
+        containedFileBuffer.subscribeToEnterInsertion(el);
     }
 
     private BufferCursorContext(FileBuffer fb, int insertionPointCol, int insertionPointLine) {
@@ -187,7 +195,10 @@ public class BufferCursorContext {
         return byteArrIndex;
     }
 
-    public int close(){
+    public int forcedClose(){
+        containedFileBuffer.unsubscribeFromEnterInsertion(el);
+        containedFileBuffer.unsubscribeFromDeletionInsertion(dil);
+        containedFileBuffer.unsubscribeFromDeletionChar(dcl);
         return containedFileBuffer.close();
     }
 
