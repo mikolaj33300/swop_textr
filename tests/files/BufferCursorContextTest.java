@@ -262,7 +262,7 @@ public class BufferCursorContextTest {
         Debug.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
-        int saveStatus = buffer.close();
+        int saveStatus = buffer.forcedClose();
 
         assertEquals(saveStatus, 0);
     }
@@ -273,7 +273,7 @@ public class BufferCursorContextTest {
         Debug.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.write("a".getBytes()[0]);
-        int saveStatus = buffer.close();
+        int saveStatus = buffer.forcedClose();
 
         assertEquals(saveStatus, 1);
     }
