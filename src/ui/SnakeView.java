@@ -5,6 +5,7 @@ import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
+import snake.SnakeHead;
 import snake.food.Food;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class SnakeView extends View {
         Terminal.printText(1 + startY + height, 1 + this.startX + width, "+");
 
         // Print score
-        Terminal.printText(height,width/2 -1, "Score: " + game.getScore());
+        Terminal.printText(startY + height,startX + width/2 -1, "Score: " + game.getScore());
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
@@ -185,6 +186,17 @@ public class SnakeView extends View {
     @Override
     public void setScaledCoords(Rectangle uiCoordsScaled) {
         super.setScaledCoords(uiCoordsScaled);
-        this.game.modifyPlayfield(uiCoordsScaled);
+        try {
+            scaleGame();
+        } catch(Exception e) {
+            // Will never happen, and if it does, it will crash on snake game too
+        }
     }
+
+    private void scaleGame() throws IOException {
+        UICoords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
+        this.game.modifyPlayfield(rct);
+    }
+
 }

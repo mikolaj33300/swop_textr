@@ -38,7 +38,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     public void input(byte b) throws IOException {
         if(!game.canContinue()) return;
         currentWait++;
-        if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE) {
+        if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE && this.game.canContinue()) {
             game.tick();
             currentWait = 0;
             contentsChangedSinceRender = true;
