@@ -52,8 +52,14 @@ public class FileBufferView extends View{
         //assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
             termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
-        renderScrollbar(height, startX+width-1, startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
-        renderHorzScrollbar(width, startX, startY+height-2, containedFileBuffer.getInsertionPointCol(), containedFileBuffer.getLineLength(containedFileBuffer.getInsertionPointLine()), containedFileBuffer.getInsertionPointLine());
+        renderScrollbar(height, startX+width-1, startY, 
+            containedFileBuffer.getInsertionPointLine(), 
+            containedFileBuffer.getLines().size());
+
+        renderHorzScrollbar(width, startX, startY+height-2, 
+            containedFileBuffer.getInsertionPointCol(), 
+            containedFileBuffer.getLineLength(containedFileBuffer.getInsertionPointLine()), 
+            containedFileBuffer.getInsertionPointLine());
     }
 
     /**
@@ -83,8 +89,18 @@ public class FileBufferView extends View{
     }
 
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
-        double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/fileBufferTotalHeight;
-        double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/fileBufferTotalHeight;
+        fileBufferTotalHeight = fileBufferTotalHeight == 0 ? 1 : fileBufferTotalHeight;
+        int visibleStartPercent = (focusedLine*height)/fileBufferTotalHeight;
+        int visibleEndPercent = ((2+focusedLine)*height)/fileBufferTotalHeight;
+
+        for (int i = 0; i < visibleStartPercent; i++)
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
+        for (int i = visibleStartPercent; i < visibleEndPercent; i++)
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
+        for (int i = visibleEndPercent; i < height-startY-2; i++)
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
+
+        /*
         for(int i = 0; i<(height-1); i++){
             if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
@@ -92,6 +108,7 @@ public class FileBufferView extends View{
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
             }
         }
+        */
     }
 
     /**
@@ -104,8 +121,17 @@ public class FileBufferView extends View{
      * @param focusedLine the focussed line
      */
     private void renderHorzScrollbar(int width, int startX, int startY, int focusedCol, int fileBufferTotalWidth, int focusedLine){
-        double visibleStartPercent = ((focusedCol/(width-1))*(width-1))*1.0/fileBufferTotalWidth;
-        double visibleEndPercent = ((1+focusedCol/(width-1))*(width-1))*1.0/fileBufferTotalWidth;
+        fileBufferTotalWidth = fileBufferTotalWidth == 0 ? 1 : fileBufferTotalWidth;
+        int visibleStartPercent = (focusedCol*width)/fileBufferTotalWidth;
+        int visibleEndPercent = ((2+focusedCol)*width)/fileBufferTotalWidth;
+
+        for (int i = 0; i < visibleStartPercent; i++)
+          termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
+        for (int i = visibleStartPercent; i < visibleEndPercent; i++)
+          termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
+        for (int i  = visibleEndPercent; i < width-1; i++)
+          termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
+        /*
         for(int i = 0; i<(width-1); i++){
             if((i*1.0/(width-1)>=visibleStartPercent) && (i*1.0/width <= visibleEndPercent)){
                 termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
@@ -113,6 +139,7 @@ public class FileBufferView extends View{
                 termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
             }
         }
+        */
     }
 
     /**
