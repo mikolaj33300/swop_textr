@@ -71,7 +71,10 @@ public class TextR {
             }else {
                 activeUseCaseController.handle(b);
             }
-            this.activeUseCaseController.paintScreen();
+            if(activeUseCaseController.getNeedsRenderSinceLast()){
+                this.activeUseCaseController.paintScreen();
+            }
+
 
             // Flush stdIn & Recalculate dimensions
             System.in.read(new byte[System.in.available()]);
