@@ -375,6 +375,14 @@ public class FileBuffer {
         return byteArrIndex;
     }
 
+    /**
+     * @param line the line to get length of
+     * @return the length of line
+     */
+    public int getLineLength(int line) {
+      return linesArrayList.get(line).size();
+    }
+
     public byte[] getLineSeparator() {
         return file.getLineSeparator();
     }

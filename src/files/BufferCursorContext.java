@@ -237,4 +237,12 @@ public class BufferCursorContext {
     public void enterSeparator() throws IOException {
         containedFileBuffer.enterInsertionCmd(insertionPointLine, insertionPointCol);
     }
+
+    /**
+     * @param line the line to get length of
+     * @return the length of line
+     */
+    public int getLineLength(int line) {
+      return containedFileBuffer.getLineLength(line);
+    }
 }

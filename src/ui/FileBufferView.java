@@ -35,7 +35,7 @@ public class FileBufferView extends View{
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = containedFileBuffer.getInsertionPointLine();
         //Renders either all the lines until the end, or the next height-2 lines
-        for (int i = 0; i < Math.min(height - 1, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
+        for (int i = 0; i < Math.min(height - 2, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
             String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex + i)));
             //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
             int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
@@ -53,6 +53,7 @@ public class FileBufferView extends View{
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
             termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
         renderScrollbar(height, startX+width-1, startY, containedFileBuffer.getInsertionPointLine(), containedFileBuffer.getLines().size());
+        renderHorzScrollbar(width, startX, startY+height-2, containedFileBuffer.getInsertionPointCol(), containedFileBuffer.getLines().size(), containedFileBuffer.getInsertionPointLine());
     }
 
     /**
@@ -82,14 +83,25 @@ public class FileBufferView extends View{
     }
 
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
+        double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
+        double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
         for(int i = 0; i<(height-1); i++){
-            double visibleStartPercent = ((focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
-            double visibleEndPercent = ((1+focusedLine/(height-1))*(height-1))*1.0/containedFileBuffer.getLines().size();
-
             if((i*1.0/(height-1)>=visibleStartPercent) && (i*1.0/height <= visibleEndPercent)){
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
             } else {
-                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "-");
+                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
+            }
+        }
+    }
+
+    private void renderHorzScrollbar(int width, int startX, int startY, int focusedCol, int fileBufferTotalWidth, int focusedLine){
+        double visibleStartPercent = ((focusedCol/(width-1))*(width-1))*1.0/containedFileBuffer.getLineLength(focusedLine);// get current line length
+        double visibleEndPercent = ((1+focusedCol/(width-1))*(width-1))*1.0/containedFileBuffer.getLineLength(focusedLine);
+        for(int i = 0; i<(width-1); i++){
+            if((i*1.0/(width-1)>=visibleStartPercent) && (i*1.0/width <= visibleEndPercent)){
+                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
+            } else {
+                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
             }
         }
     }
