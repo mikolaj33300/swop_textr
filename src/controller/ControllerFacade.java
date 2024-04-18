@@ -19,8 +19,30 @@ class ControllerFacade {
     private Layout rootLayout;
     private int active;
 
+    private ViewManager viewManager;
+
     private boolean contentsChangedSinceLastRender;
     private TermiosTerminalAdapter termiosTerminalAdapter;
+
+    public void displayFileErrorPopup(){
+        viewManager.handleFileErrorPopup();
+    }
+
+    public void displayDirtyClosePrompt(){
+        viewManager.handleClosePrompt();
+    }
+
+    public void displayFailedSavePopup(){
+        viewManager.handleFileSaveError();
+    }
+
+    public void displayContents(){
+        viewManager.displayNormalContents();
+    }
+
+    public TermiosTerminalAdapter getTermiosTerminalAdapter(){
+        return termiosTerminalAdapter;
+    }
 
     /**
      * Creates a ControllerFacade object.
@@ -33,6 +55,7 @@ class ControllerFacade {
         this.contentsChangedSinceLastRender = true;
         this.termiosTerminalAdapter = termiosTerminalAdapter;
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
+        this.viewManager = new ViewManager(this);
         String[] paths;
         if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
             paths = Arrays.copyOfRange(args, 1, args.length);
@@ -59,23 +82,6 @@ class ControllerFacade {
         else
             this.rootLayout = new VerticalLayoutNode(leaves);
         this.updateViewCoordinates();
-    }
-
-    public void renderContent() throws IOException {
-        this.contentsChangedSinceLastRender = false;
-        for (Window window : windows) {
-            window.view.render(windows.get(active).view.hashCode());
-            window.handler.setContentsChangedSinceLastRenderFalse();
-        }
-    }
-
-    public void saveActive() {
-        windows.get(active).handler.save();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
-    }
-
-    public void renderCursor() throws IOException {
-        windows.get(active).view.renderCursor();
     }
 
     public int closeActive() {
@@ -274,5 +280,17 @@ class ControllerFacade {
 
     public boolean getContentsChangedSinceLastRender() {
         return this.contentsChangedSinceLastRender;
+    }
+
+    public void paintScreen() throws IOException {
+        this.viewManager.paintScreen();
+    }
+
+    public int saveActive(){
+        return windows.get(active).handler.save();
+    }
+
+    public void setContentsChangedSinceRender(boolean b) {
+        this.contentsChangedSinceLastRender = b;
     }
 }

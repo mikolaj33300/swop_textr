@@ -17,7 +17,6 @@ public class FailedSavePopupController extends UseCaseController {
         coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
     }
 
-    @Override
     public void paintScreen() throws IOException {
         clearContent();
         userPopupBox.render();

@@ -27,12 +27,6 @@ public abstract class UseCaseController {
 
     }
 
-    /**
-     * Prints contents on a screen
-     * @throws IOException a
-     */
-    public abstract void paintScreen() throws IOException;
-
     public abstract void handleIdle() throws IOException;
 
 }

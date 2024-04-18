@@ -150,9 +150,11 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	}
 
 	@Override
-	public void save() {
-		this.fb.save();
+	public int save() {
 		contentsChangedSinceRender = true;
+		return this.fb.save(); /*strictly speaking should require a rerender only when save succeeds,
+		but this doesnt affect the program in a meaningful way*/
+
 	}
 
 }

@@ -191,8 +191,8 @@ public class BufferCursorContext {
         return containedFileBuffer.close();
     }
 
-    public void save() {
-        containedFileBuffer.save();
+    public int save() {
+        return containedFileBuffer.save();
     }
 
     public void write(byte b) {

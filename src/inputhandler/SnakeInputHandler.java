@@ -29,8 +29,8 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     @Override
-    public void save() {
-        return;
+    public int save() {
+        return 0;
     }
 
     @Override

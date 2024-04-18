@@ -22,13 +22,12 @@ public class TextR {
             containedAppFacade = new ControllerFacade(args, termiosTerminalAdapter);// TODO first remove flags? + pass terminal as object in some magic way
         } catch (IOException e) {
             this.activeUseCaseController = new FileErrorPopupController(this);
+            (new FileErrorPopupRenderer(null)).paintView(); //Not using invalid controller, security issue and not necessary as all operations after this close the program
             containedAppFacade = null;
-            Terminal.clearScreen();
-            throw e;
         }
         this.facade = containedAppFacade;
 
-        if(this.activeUseCaseController == null) this.activeUseCaseController = new InspectContentsController(this);
+        if(this.activeUseCaseController == null && this.facade != null) this.activeUseCaseController = new InspectContentsController(this);
     }
 
     /**
@@ -48,9 +47,8 @@ public class TextR {
     public void loop() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         adapter.enterRawInputMode();
-        adapter.clearScreen();
         // Reading terminal dimensions for correct rendering
-        activeUseCaseController.paintScreen();
+        facade.paintScreen();
         // Main loop
         for ( ; ; ) {
             int b = -1;
@@ -74,7 +72,7 @@ public class TextR {
             }else {
                 activeUseCaseController.handle(b);
             }
-            this.activeUseCaseController.paintScreen();
+            facade.paintScreen();
 
             // Flush stdIn & Recalculate dimensions
             if(System.in.available() > 0) System.in.skipNBytes(System.in.available());

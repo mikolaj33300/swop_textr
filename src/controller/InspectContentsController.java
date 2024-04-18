@@ -21,7 +21,11 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Control + S
             case 19:
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                int status = coreControllerParent.facade.saveActive();
+                if(status == 1){
+                    coreControllerParent.activeUseCaseController = new FailedSavePopupController(coreControllerParent);
+                    coreControllerParent.facade.displayFailedSavePopup();
+                }
                 break;
             // Control + P
             case 16:
@@ -87,36 +91,16 @@ public class InspectContentsController extends UseCaseController {
                         int result = coreControllerParent.facade.closeActive();
                         if (result == 1) { //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
+                            coreControllerParent.facade.displayDirtyClosePrompt();
                         } else if (result == 2) {
                             //TODO Delegate clearing to more specialized class, idem in dirty close
-                            Terminal.clearScreen();
+                            coreControllerParent.adapter.clearScreen();
                             System.exit(0);
                         }
                         break;
                 }
                 break;
         }
-    }
-
-    /**
-     * Renders the layout with the terminal current height & width
-     */
-    @Override
-    public void paintScreen() {
-            if(coreControllerParent.facade.getContentsChangedSinceLastRender()){
-                try {
-                    clearContent();
-                    coreControllerParent.facade.renderContent();
-                    coreControllerParent.facade.renderCursor();
-                } catch (IOException e){
-                    coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
-                }
-            }
-
-    }
-
-    public void clearContent() throws IOException {
-        coreControllerParent.adapter.clearScreen();
     }
 
     @Override

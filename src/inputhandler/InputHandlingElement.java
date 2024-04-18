@@ -15,7 +15,7 @@ abstract public class InputHandlingElement {
 
     public abstract int close();
 
-    public abstract void save();
+    public abstract int save();
 
     /*
      * Handles input of specific characters

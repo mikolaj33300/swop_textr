@@ -36,21 +36,6 @@ public abstract class View {
                 (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.height));
     }
 
-
-    /**
-     * Clears the content on the terminal window
-     * Used when to prevent text ghosting on the screen
-     */
-    public void clearContent() throws IOException {
-/*        retrieveDimensions();
-        for(int i = startY; i<startY+height; i++){
-            for(int j = startX; j<startX+width; j++){
-                Terminal.printText(i+1, j+1, " ");
-            }
-        }*/
-        Terminal.clearScreen();
-    }
-
     /**
      * Render all the elements on the this view
      */
