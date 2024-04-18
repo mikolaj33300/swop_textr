@@ -150,7 +150,7 @@ public class BufferCursorContext {
         insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);
     }
 
-/*    *//**
+    /**
      * Makes the calculation to move the cursor to the start of the line. Modifies the {@link BufferCursorContext#insertionPointCol} and {@link BufferCursorContext#insertionPointLine} accordingly.
      *//*
     private void moveCursorToFront() {
@@ -195,6 +195,9 @@ public class BufferCursorContext {
         return byteArrIndex;
     }
 
+    /**
+     * close the filebuffer
+     */
     public int forcedClose(){
         containedFileBuffer.unsubscribeFromEnterInsertion(el);
         containedFileBuffer.unsubscribeFromDeletionInsertion(dil);
@@ -202,49 +205,88 @@ public class BufferCursorContext {
         return containedFileBuffer.close();
     }
 
+    /**
+     * save the buffer to disk
+     */
     public void save() {
         containedFileBuffer.save();
     }
 
+    /**
+     * write b at the cursor position
+     * @param b 
+     */
     public void write(byte b) {
         containedFileBuffer.writeCmd(b, insertionPointLine, insertionPointCol);
         moveCursorRight();
     }
 
+    /**
+     * undo in the file buffer
+     */
     public void undo() {
       containedFileBuffer.undo();
     }
 
+    /**
+     * redo in the filebuffer
+     */
     public void redo() {
       containedFileBuffer.redo();
     }
 
+    /**
+     * @return the line of the insertionPoint
+     */
     public int getInsertionPointLine() {
         return this.insertionPointLine;
     }
 
+    /**
+     * @return the number of lines in our filebuffer
+     */
     public ArrayList<ArrayList<Byte>> getLines() {
         return containedFileBuffer.getLines();
     }
 
+    /**
+     * @return the column of the insertionPoint
+     */
     public int getInsertionPointCol() {
         return this.insertionPointCol;
     }
 
+    /**
+     * @return the content of the filebuffer as byte array
+     */
     public ArrayList<Byte> getByteContent() {
         return containedFileBuffer.getByteContent();
     }
 
-    public FileBuffer getFileBuffer() { return containedFileBuffer.clone();}
+    /**
+     * @return the contained filebuffer
+     */
+    public FileBuffer getFileBuffer() { 
+	return containedFileBuffer.clone();
+    }
 
+    /**
+     * @return if the filebuffer is dirty
+     */
     public boolean getDirty() {
         return containedFileBuffer.getDirty();
     }
 
+    /**
+     * @return deep clone of this buffercontext
+     */
     public BufferCursorContext deepClone() {
         return new BufferCursorContext(this.containedFileBuffer, this.insertionPointCol, this.insertionPointLine);
     }
 
+    /**
+     * enter a separator at the insertionPoint
+     */
     public void enterSeparator() throws IOException {
         containedFileBuffer.enterInsertionCmd(insertionPointLine, insertionPointCol);
     }

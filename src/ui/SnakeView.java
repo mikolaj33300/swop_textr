@@ -27,6 +27,9 @@ public class SnakeView extends View {
         this.game = game; this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
 
+    /**
+     * update the coordinates of this view out of 
+     */
     private void setLocalCoordinates() {
         try {
             UICoords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
@@ -39,6 +42,10 @@ public class SnakeView extends View {
         }
     }
 
+    /**
+     * render the snake game
+     * @param activeHash the hash of the active window
+     */
     @Override
     public void render(int activeHash) throws IOException {
         // Retrieve coordinates from superclass (set by ControllerFacade by going through tree)
@@ -86,11 +93,17 @@ public class SnakeView extends View {
 
     }
 
+    /**
+     * snake has  no cursor
+     */
     @Override
     public void renderCursor() throws IOException {
         return;
     }
 
+    /**
+     * compare this object againts object o
+     */
     @Override
     public boolean equals(Object o) {
         return false;
@@ -183,6 +196,10 @@ public class SnakeView extends View {
         }
     }
 
+    /**
+     * @param uiCoordsScaled the new coordinates
+     * sets the view and the game to have the new coordinates
+     */
     @Override
     public void setScaledCoords(Rectangle uiCoordsScaled) {
         super.setScaledCoords(uiCoordsScaled);

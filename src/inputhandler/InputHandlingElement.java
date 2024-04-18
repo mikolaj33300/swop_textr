@@ -15,23 +15,45 @@ abstract public class InputHandlingElement {
 
     public abstract int forcedClose();
 
+    /**
+     * pass a save to the enclosed object
+     */
     public abstract void save();
 
-    /*
+    /**
      * Handles input of specific characters
+     * @param b the input byte
      */
     abstract public void input(byte b) throws IOException;
 
+    /**
+     * @return if the enclosed object is safe to close
+     */
     public abstract boolean isSafeToClose();
 
+    /**
+     * pass a arrow right to the enclosed object
+     */
     public abstract void handleArrowRight();
 
+    /**
+     * pass a arrow left to the enclosed object
+     */
     public abstract void handleArrowLeft();
 
+    /**
+     * pass a arrow down to the enclosed object
+     */
     public abstract void handleArrowDown();
 
+    /**
+     * pass a arrow up to the enclosed object
+     */
     public abstract void handleArrowUp();
 
+    /**
+     * pass a separator to the enclosed object
+     */
     public abstract void handleSeparator() throws IOException;
 
     /**

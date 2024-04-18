@@ -2,10 +2,18 @@ package snake;
 
 class SnakeSegment extends Snake {
 
+  /**
+   * @param dir movedirection
+   * @param start the tail
+   * @param end the head
+   */
     public SnakeSegment(MoveDirection dir, Pos start, Pos end) {
         super(dir, start, end);
     }
 
+    /**
+     * each tick we need to update
+     */
     @Override
     protected void tick() {
         this.updateStart(getNext(getStart()));

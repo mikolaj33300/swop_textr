@@ -15,6 +15,11 @@ public class InspectContentsController extends UseCaseController {
         this.needsRenderSinceLast = true;
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param b the int input
+     * @throws IOException
+     */
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
@@ -64,6 +69,11 @@ public class InspectContentsController extends UseCaseController {
         this.needsRenderSinceLast = true;
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param first the surrogate type
+     * @param second the character after the surrogate
+     */
     @Override
     public void handleSurrogate(int first, int second){
         // Surrogate keys

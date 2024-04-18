@@ -88,6 +88,12 @@ public class FileBufferView extends View{
         return statusLine;
     }
 
+    /**
+     * @param height the height of our view
+     * @param scrollStartX the x coordinate for the scrollbar
+     * @param focussedLine the number of the focussed line
+     * @param fileBufferTotalHeight the amount of lines of the filebuffer
+     */
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
         fileBufferTotalHeight = fileBufferTotalHeight == 0 ? 1 : fileBufferTotalHeight;
         int visibleStartPercent = (focusedLine*height)/fileBufferTotalHeight;
@@ -143,8 +149,9 @@ public class FileBufferView extends View{
     }
 
     /**
+     * @param obj the object to compare this to
      * Determines if the given object is 'equal' to this object.
-     * Returns true if the {@link FileBufferView#containedFileBuffer} is to parameter {@link FileBuffer}
+     * @return true if the {@link FileBufferView#containedFileBuffer} is to parameter {@link FileBuffer}
      */
     public boolean equals(Object obj) {
         if (obj instanceof FileBufferView fBufView) {

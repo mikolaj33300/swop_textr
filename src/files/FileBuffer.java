@@ -15,6 +15,9 @@ public class FileBuffer {
      */
     private FileHolder file;
 
+    /**
+     * array of listeners for rendering
+     */
     private ArrayList<EnteredInsertionPointListener> enteredInsertionPointListeners;
     private ArrayList<DeletedInsertionPointListener> deletedInsertionPointListeners;
 
@@ -85,7 +88,6 @@ public class FileBuffer {
         for (int i = 0; i < enteredInsertionPointListeners.size(); i++){
             enteredInsertionPointListeners.get(i).handleEnteredInsertionPoint(iLine, iCol);
         }
-
     }
 
     /**
@@ -377,6 +379,12 @@ public class FileBuffer {
         }
     }
 
+    /**
+     * converts line and column to position in an array with newlines
+     * @param line the line
+     * @param col column
+     * @return the index in an array
+     */
     public int convertLineAndColToIndex(int line, int col) {
         int byteLengthSeparatorLen = file.getLineSeparator().length;
         int byteArrIndex = 0;
@@ -395,10 +403,16 @@ public class FileBuffer {
       return linesArrayList.get(line).size();
     }
 
+    /**
+     * @return lineseparator
+     */
     public byte[] getLineSeparator() {
         return file.getLineSeparator();
     }
 
+    /**
+     * @return the path of the file 
+     */
     public String getPath() {
         return file.getPath();
     }

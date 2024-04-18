@@ -13,6 +13,9 @@ public enum MoveDirection {
         RIGHT.opposite = LEFT;
     }
 
+    /**
+     * @return the opposite direction
+     */
     public MoveDirection getOpposite() {
         return opposite;
     }

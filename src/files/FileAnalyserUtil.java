@@ -8,6 +8,10 @@ import java.util.Formatter;
 
 public class FileAnalyserUtil {
 
+    /**
+     * @param arg a string containing the separator argument
+     * @return the lineseparator (\n or \n\r)
+     */
     public static byte[] setLineSeparatorFromArgs(String arg) {
         if(arg.equals("--lf"))
             return new byte[]{0x0a};
@@ -16,6 +20,10 @@ public class FileAnalyserUtil {
         else return System.lineSeparator().getBytes();
     }
 
+    /**
+     * @param arg a string containing the separator argument
+     * @return if the argument is correctly formed
+     */
     public static boolean isValidLineSeparatorString(String arg){
         return arg.equals("--lf") || arg.equals("--crlf");
     }
@@ -83,6 +91,11 @@ public class FileAnalyserUtil {
             }
             return byteArr;
         }*/
+
+    /**
+     * @param bArr an array of bytes
+     * @return make arrayList from byte array
+     */
     public static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
         return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
     }

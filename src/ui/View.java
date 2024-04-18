@@ -22,11 +22,16 @@ public abstract class View {
 
     /**
      * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
+     * @param uiCoordsScaled the new coordinates
      */
     public void setScaledCoords(Rectangle uiCoordsScaled) {
         this.uiCoordsScaled = uiCoordsScaled;
     }
 
+    /**
+     * @param termiosTerminalAdapter the object that renders the terminal
+     * @return coordinates 
+     */
     public UICoords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
         UICoords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
         return new UICoords(
@@ -39,7 +44,7 @@ public abstract class View {
 
     /**
      * Clears the content on the terminal window
-     * Used when to prevent text ghosting on the screen
+     * Used to prevent text ghosting on the screen
      */
     public void clearContent() throws IOException {
 /*        retrieveDimensions();
@@ -53,6 +58,7 @@ public abstract class View {
 
     /**
      * Render all the elements on the this view
+     * @param activeHash the hash of the active window
      */
     public abstract void render(int activeHash) throws IOException;
 
@@ -63,6 +69,7 @@ public abstract class View {
 
     /**
      * Checks whether this View and the given object are the same type and have the same contents
+     * @param o the object to compare this to
      */
     public abstract boolean equals(Object o);
 

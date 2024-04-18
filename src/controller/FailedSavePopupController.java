@@ -10,16 +10,28 @@ public class FailedSavePopupController extends UseCaseController {
 
     UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.");
 
+    /**
+     * @param coreControllerParent
+     */
     protected FailedSavePopupController(TextR coreControllerParent) {
         super(coreControllerParent);
         needsRenderSinceLast = true;
     }
 
+    /**
+     * pass the input to the correct controller
+     * @param b the int input
+     * @throws IOException
+     */
     @Override
     public void handle(int b) throws IOException {
         coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
     }
 
+    /**
+     * render the popup
+     * @throws IOException
+     */
     @Override
     public void paintScreen() throws IOException {
         clearContent();
@@ -27,6 +39,10 @@ public class FailedSavePopupController extends UseCaseController {
         needsRenderSinceLast = false;
     }
 
+    /**
+     * remove the popup
+     * @throws IOException
+     */
     public void clearContent() throws IOException {
         coreControllerParent.adapter.clearScreen();
     }

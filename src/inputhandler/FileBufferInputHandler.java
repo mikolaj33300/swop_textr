@@ -9,18 +9,34 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	BufferCursorContext fb;
 	boolean surrogate;
 
+	/**
+	 * constructor
+	 * @param path the path of our file
+	 * @param lineSeparator the separator to insert for newlines (dos/linux)
+	 */
 	public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
 		this.fb = new BufferCursorContext(path, lineSeparator);
 	}
 
+	/**
+	 * constructor
+	 * @param dupedContext the cursorContext to use for this inputhandler
+	 */
 	public FileBufferInputHandler(BufferCursorContext dupedContext) {
 		this.fb = dupedContext;
 	}
 
+	/**
+	 * @return the current buffercontext
+	 */
 	public BufferCursorContext getFileBufferContextTransparent(){
 		return fb;
 	}
 
+  /**
+   * handle input
+   * @param b the input
+   */
 	public void input(byte b) {
 		switch(b) {
 			case -3:
@@ -40,13 +56,17 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		}
 	}
 
+  /**
+   * @return if the buffer is dirty
+   */
 	@Override
 	public boolean isSafeToClose() {
 		return !fb.getDirty();
 	}
 
-	/*
+    /**
      * handles normal input
+     * @param b the input byte
      */
 	public void asciiInput(byte b) {
 		switch(b) {
@@ -66,30 +86,27 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		    // Control + S
 		    case 19:
 			this.fb.save();
-				break;
-		    // Control + P
-		    case 16:
-				break;
-		    // Control + N
-		    case 14:
-				break;
-		    // Control + R
-		    case 18:
-				break;
+			break;
 		    // Control + T
 		    case 20:
-				break;
+			break;
+			    //Control + U
+		    case 25:
+			fb.redo();
+			break;
 		    // Line separator
 		    case 13:
 		    // Character input
-			default:
-				this.fb.write(b);
-				break;
+		    default:
+			this.fb.write(b);
+			break;
 		}
 		contentsChangedSinceRender = true;
 	}
-	/*
+
+	/**
 	 * handles surrogate input
+   * @param b the input byte
 	 */
 	public void surrogateKeysInput(byte b) {
 		switch (b) {
@@ -113,30 +130,45 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * handle right arrow input
+   */
 	@Override
 	public void handleArrowRight(){
 		fb.moveCursorRight();
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * handle left arrow input
+   */
 	@Override
 	public void handleArrowLeft(){
 		fb.moveCursorLeft();
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * handle down arrow input
+   */
 	@Override
 	public void handleArrowDown(){
 		fb.moveCursorDown();
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * handle up arrow input
+   */
 	@Override
 	public void handleArrowUp(){
 		fb.moveCursorUp();
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * enter a separator in the buffer
+   */
 	@Override
 	public void handleSeparator() throws IOException {
 		fb.enterSeparator();
@@ -144,15 +176,21 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		contentsChangedSinceRender = true;
 	}
 
+  /**
+   * close the filebuffer
+   * @return if the filebuffer was closed
+   */
 	@Override
 	public int forcedClose(){
 		return fb.forcedClose();
 	}
 
+  /**
+   * save the filebuffer
+   */
 	@Override
 	public void save() {
 		this.fb.save();
 		contentsChangedSinceRender = true;
 	}
-
 }

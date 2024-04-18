@@ -125,6 +125,7 @@ public class SnakeGame {
 
     /**
      * Handles user input
+     * @param dir the input direction
      */
     public void move(MoveDirection dir) {
         this.snake.move(dir);
@@ -141,6 +142,7 @@ public class SnakeGame {
 
     /**
      * Returns the amount of delay that has been added by eating food items.
+     * @return int
      */
     public float getRemovedDelay() {
         return this.delay;
@@ -244,5 +246,4 @@ public class SnakeGame {
         Random rand = new Random();
         return new Pos(rand.nextInt(maxX-1), rand.nextInt(maxY-1));
     }
-
 }

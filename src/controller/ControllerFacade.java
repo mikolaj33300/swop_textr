@@ -61,6 +61,9 @@ class ControllerFacade {
         this.updateViewCoordinates();
     }
 
+/**
+ * render the active window
+ */
     public void renderContent() throws IOException {
         this.contentsChangedSinceLastRender = false;
         for (Window window : windows) {
@@ -69,15 +72,25 @@ class ControllerFacade {
         }
     }
 
+  /**
+   * save the active filebuffer
+   */
     public void saveActive() {
         windows.get(active).handler.save();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+    /**
+     * render the cursor in the active view
+     */
     public void renderCursor() throws IOException {
         windows.get(active).view.renderCursor();
     }
 
+    /**
+     * closes the active window
+     * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
+     */
     public int closeActive() {
         contentsChangedSinceLastRender = true;
         if (windows.get(active).handler.isSafeToClose()) {
@@ -89,6 +102,9 @@ class ControllerFacade {
         }
     }
 
+    /**
+     * @return 0 if we closed the active window 2 if we can't close it
+     */
     public int forceCloseActive() {
         this.contentsChangedSinceLastRender = true;
         //checks which hash will be the next one after this is closed
@@ -145,7 +161,8 @@ class ControllerFacade {
     }
 
     /**
-     * Rearranges the Layouts clockwise or counterclockwise, depending on the argument given
+     * Rearranges the Layouts, depending on the argument given
+     * @param orientation clockwise or counterclockwise
      */
     public void rotateLayout(ROT_DIRECTION orientation) throws IOException {
         contentsChangedSinceLastRender = true;
@@ -153,26 +170,41 @@ class ControllerFacade {
         updateViewCoordinates();
     }
 
+    /**
+     * let the active window know that the right arrow is pressed
+     */
     public void handleArrowRight() {
         this.windows.get(active).handler.handleArrowRight();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+    /**
+     * let the active window know that the Left arrow is pressed
+     */
     public void handleArrowLeft() {
         this.windows.get(active).handler.handleArrowLeft();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+    /**
+     * let the active window know that the Down arrow is pressed
+     */
     public void handleArrowDown() {
         this.windows.get(active).handler.handleArrowDown();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+    /**
+     * let the active window know that the Up arrow is pressed
+     */
     public void handleArrowUp() {
         this.windows.get(active).handler.handleArrowUp();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+    /**
+     * let the active window insert a separator
+     */
     public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
@@ -210,6 +242,9 @@ class ControllerFacade {
         active = this.windows.size() - 1;
     }
 
+    /**
+     * duplicate the active view
+     */
     public void duplicateActive() throws IOException {
         this.contentsChangedSinceLastRender = true;
         if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {

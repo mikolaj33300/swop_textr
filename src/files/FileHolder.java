@@ -25,16 +25,24 @@ public class FileHolder {
         this.path = path;
     }
 
+    /**
+     * @return the line separator used
+     */
     public byte[] getLineSeparator() {
         return lineSeparator;
     }
 
+    /**
+     * @return the path of the file opened
+     */
     public String getPath() {
         return new String(this.path);
     }
 
     /**
      * saves file
+     * @param fileContent the content to write away
+     * @return 0 if the write is successul, 1 if it was not
      */
     int save(byte[] fileContent) {
         try {
@@ -46,7 +54,7 @@ public class FileHolder {
     }
 
     /**
-     * Returns the content of the file
+     * @return the content of the file
      */
     public final byte[] getContent() throws IOException, RuntimeException {
 
@@ -80,21 +88,23 @@ public class FileHolder {
     }
 
     /**
-     * Return a copy of this FileHolder, without the reference to it
+     * @return a copy of this FileHolder, without the reference to it
      */
     public FileHolder clone() {
         return new FileHolder(new String(this.path), this.lineSeparator);
     }
 
     /**
-     * Returns true if the {@link FileHolder#path}'s of both objects match.
+     * @return true if the {@link FileHolder#path}'s of both objects match.
      */
     public boolean equals(FileHolder holder) {
         return this.path.equals(holder.path);
     }
 
     /**
-     * Checks if given
+     * @param arr1 array 2 to compare
+     * @param arr2 array 2 to compare
+     * @return if given arrays are equal
      */
     public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
         if(arr1.length != arr2.length) return false;
