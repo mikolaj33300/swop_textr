@@ -66,7 +66,7 @@ public class SnakeView extends View {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
             if(s.equals("")) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
-                    s, i != segments.length-1);
+                    s, false);
         }
 
 
