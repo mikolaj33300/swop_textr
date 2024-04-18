@@ -21,6 +21,7 @@ public class PosTest {
         assertNotEquals(a, b);
         assertEquals(a, new Pos(1,2));
         assertEquals(a.clone(), a);
+        assertNotEquals(a, new String("hello mister"));
     }
 
     @Test
@@ -74,6 +75,17 @@ public class PosTest {
         assertEquals(Pos.isBetween1D(a, b, new Pos(0,0)), true);
     }
 
+    @Test
+    public void testInBetween5() {
+        Pos a = new Pos(0,2);
+        Pos b = new Pos(1, 2);
+        assertEquals(Pos.isBetween1D(a, b, new Pos(1,2)), true);
+    }
 
+    @Test
+    public void testPrint() {
+        Pos a = new Pos(1,1);
+        assertEquals(a.getPrint(), "[1, 1]");
+    }
 
 }

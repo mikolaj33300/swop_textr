@@ -10,13 +10,14 @@ public class SnakeInputHandler extends InputHandlingElement {
 
     private SnakeGame game;
     private int currentWait = 0;
-    private final int MILLISECOND_BASE = 1000;
+    private final int MILLISECOND_BASE;
     private Rectangle playField;
 
     public SnakeInputHandler(int maxX, int maxY) {
         this.playField = new Rectangle(0,0, maxX, maxY);
         this.game = new SnakeGame(5, maxX, maxY);
         this.contentsChangedSinceRender = true;
+        this.MILLISECOND_BASE = this.game.getMillisecondThreshold();
     }
 
     public SnakeGame getSnakeGame() {
@@ -24,7 +25,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     @Override
-    public int close() {
+    public int forcedClose() {
         return 1;
     }
 
@@ -35,8 +36,9 @@ public class SnakeInputHandler extends InputHandlingElement {
 
     @Override
     public void input(byte b) throws IOException {
+        if(!game.canContinue()) return;
         currentWait++;
-        if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE) {
+        if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE && this.game.canContinue()) {
             game.tick();
             currentWait = 0;
             contentsChangedSinceRender = true;
@@ -71,7 +73,11 @@ public class SnakeInputHandler extends InputHandlingElement {
 
     @Override
     public void handleSeparator() throws IOException {
-        if(!this.game.canContinue()) this.game = new SnakeGame(5, (int) this.playField.height, (int) this.playField.width);
+        if(!this.game.canContinue()) {
+            this.currentWait = 0;
+            this.game.reset();
+            this.contentsChangedSinceRender = true;
+        }
     }
 
     private void move(MoveDirection dir) {

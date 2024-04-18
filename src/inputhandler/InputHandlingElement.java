@@ -13,7 +13,7 @@ abstract public class InputHandlingElement {
         return this.hashCode();
     }
 
-    public abstract int close();
+    public abstract int forcedClose();
 
     public abstract void save();
 

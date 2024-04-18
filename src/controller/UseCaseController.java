@@ -35,4 +35,5 @@ public abstract class UseCaseController {
 
     public abstract void handleIdle() throws IOException;
 
+    public abstract boolean getNeedsRenderSinceLast();
 }

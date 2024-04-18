@@ -53,7 +53,7 @@ public class TextR {
         activeUseCaseController.paintScreen();
         // Main loop
         for ( ; ; ) {
-            int b = -1;
+            int b = -3;
             try {
                 b = adapter.readByte(System.currentTimeMillis()+1);
             } catch (TimeoutException e) {
@@ -62,7 +62,7 @@ public class TextR {
             if (b == 27) {
                 adapter.readByte();
                 activeUseCaseController.handleSurrogate(b, adapter.readByte());
-            } else if (b == -1){
+            } else if (b == -3){
                 activeUseCaseController.handleIdle();
             } else if(b == -2) {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
@@ -71,10 +71,13 @@ public class TextR {
             }else {
                 activeUseCaseController.handle(b);
             }
-            this.activeUseCaseController.paintScreen();
+            if(activeUseCaseController.getNeedsRenderSinceLast()){
+                this.activeUseCaseController.paintScreen();
+            }
 
-            // Do not Flush stdIn & Recalculate dimensions
-            //if(System.in.available() > 0) System.in.skipNBytes(System.in.available());
+
+            // Flush stdIn & Recalculate dimensions
+            System.in.read(new byte[System.in.available()]);
         }
     }
 }

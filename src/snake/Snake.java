@@ -89,4 +89,15 @@ public abstract class Snake {
         return this.end.clone();
     }
 
+    /**
+     * Scales the snake respectively to the new scale variables.
+     * Use this method with great care!
+     * @param scaleX how much the snake X position should change
+     * @param scaleY how much the snake Y position should change
+     */
+    public void scale(float scaleX, float scaleY) {
+        this.start = new Pos((int) (start.x()*scaleX), (int) (start.y()*scaleY));
+        this.end = new Pos((int) (end.x()*scaleX), (int) (end.y()*scaleY));
+    }
+
 }

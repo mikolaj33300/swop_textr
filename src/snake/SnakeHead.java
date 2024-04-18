@@ -183,14 +183,11 @@ public class SnakeHead extends Snake {
         }
     }
 
-    /**
-     * Clones the object
-     * @return the clone
-     */
-    public SnakeHead clone() {
-        SnakeHead head = new SnakeHead(this.getDirection(), this.getStart(), this.getEnd());
-        head.segments = getSegments().clone();
-        return head;
+    @Override
+    public void scale(float scaleX, float scaleY) {
+        for(int i = 0; i < segments.length; i++)
+            segments[i].scale(scaleX, scaleY);
+        super.scale(scaleX, scaleY);
     }
 
 }

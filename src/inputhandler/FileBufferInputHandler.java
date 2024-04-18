@@ -23,7 +23,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
 	public void input(byte b) {
 		switch(b) {
-			case -1:
+			case -3:
 				// Idle
 				break;
 			case 27:
@@ -56,7 +56,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
 			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
 			// Control + Z or Control + A
-			case 26, 1:
+			case 26, 1, -1:
 				fb.undo();
 				break;
 				//Control + U
@@ -145,8 +145,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	}
 
 	@Override
-	public int close(){
-		return fb.close();
+	public int forcedClose(){
+		return fb.forcedClose();
 	}
 
 	@Override
