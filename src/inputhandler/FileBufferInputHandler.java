@@ -90,10 +90,6 @@ public class FileBufferInputHandler extends InputHandlingElement {
 		    // Control + T
 		    case 20:
 			break;
-		    // Control + Z
-		    case 26:
-			fb.undo();
-			break;
 			    //Control + U
 		    case 25:
 			fb.redo();
