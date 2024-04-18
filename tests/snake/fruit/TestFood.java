@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import snake.Pos;
 import snake.food.Food;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFood {
 
@@ -31,6 +30,7 @@ public class TestFood {
         Food f = new Food("b", 2, 4, new Pos(1, -1));
         Food b = f.clone();
         assertEquals(f, b);
+        assertNotEquals(f, new String("a"));
     }
 
 }
