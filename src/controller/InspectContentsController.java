@@ -15,7 +15,7 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
-            case 8, 127, 10, 62, 26, 21, 1:
+            case 8, 127, 10, 62, 26, 21, 1, -1:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
             // Control + S
@@ -120,7 +120,7 @@ public class InspectContentsController extends UseCaseController {
 
     @Override
     public void handleIdle() throws IOException {
-        coreControllerParent.facade.passToActive((byte) -1);
+        coreControllerParent.facade.passToActive((byte) -3);
     }
 
 }
