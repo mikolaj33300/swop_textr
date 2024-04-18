@@ -8,8 +8,11 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
+    private boolean needsRenderSinceLast;
+
     protected InspectContentsController(TextR coreControllerParent){
         super(coreControllerParent);
+        this.needsRenderSinceLast = true;
     }
 
     @Override
@@ -58,6 +61,7 @@ public class InspectContentsController extends UseCaseController {
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }
+        this.needsRenderSinceLast = true;
     }
 
     @Override
@@ -87,40 +91,40 @@ public class InspectContentsController extends UseCaseController {
                         if (result == 1) { //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if (result == 2) {
-                            //TODO Delegate clearing to more specialized class, idem in dirty close
-                            Terminal.clearScreen();
+                            clearContent();
                             System.exit(0);
                         }
                         break;
                 }
                 break;
         }
+        this.needsRenderSinceLast = true;
     }
 
     /**
      * Renders the layout with the terminal current height & width
      */
     @Override
-    public void paintScreen() {
-            if(coreControllerParent.facade.getContentsChangedSinceLastRender()){
-                try {
-                    clearContent();
-                    coreControllerParent.facade.renderContent();
-                    coreControllerParent.facade.renderCursor();
-                } catch (IOException e){
-                    coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
-                }
-            }
-
+    public void paintScreen() throws IOException {
+        clearContent();
+        coreControllerParent.facade.renderContent();
+        coreControllerParent.facade.renderCursor();
+        this.needsRenderSinceLast = false;
     }
 
-    public void clearContent() throws IOException {
+    private void clearContent() {
         coreControllerParent.adapter.clearScreen();
     }
 
     @Override
     public void handleIdle() throws IOException {
         coreControllerParent.facade.passToActive((byte) -3);
+        this.needsRenderSinceLast = coreControllerParent.facade.getContentsChangedSinceLastRender();
+    }
+
+    @Override
+    public boolean getNeedsRenderSinceLast() {
+        return this.needsRenderSinceLast;
     }
 
 }
