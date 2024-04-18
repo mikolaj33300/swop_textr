@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 
 public abstract class UseCaseController {
+
     TextR coreControllerParent;
 
     /**
@@ -20,24 +21,19 @@ public abstract class UseCaseController {
      */
     public void handle(int b) throws IOException{
 
-    };
+    }
 
     public void handleSurrogate(int first, int second){
 
-    };
+    }
 
     /**
      * Prints contents on a screen
-     * @throws IOException
+     * @throws IOException a
      */
     public abstract void paintScreen() throws IOException;
 
-    /**
-     * Clears contents from screen entirely
-     * @throws IOException
-     */
-    public abstract void clearContent() throws IOException;
-
     public abstract void handleIdle() throws IOException;
 
+    public abstract boolean getNeedsRenderSinceLast();
 }

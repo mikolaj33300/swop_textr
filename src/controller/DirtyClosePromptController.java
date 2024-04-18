@@ -6,6 +6,7 @@ import ui.UserPopupBox;
 import java.io.IOException;
 
 public class DirtyClosePromptController extends UseCaseController {
+    private boolean needsRenderSinceLast;
     UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)");
 
     /**
@@ -13,6 +14,7 @@ public class DirtyClosePromptController extends UseCaseController {
      */
     protected DirtyClosePromptController(TextR coreControllerParent) {
         super(coreControllerParent);
+        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -46,20 +48,26 @@ public class DirtyClosePromptController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
+        clearContent();
         userPopupBox.render();
+        this.needsRenderSinceLast = false;
     }
 
     /**
      * remove the popup
      * @throws IOException
      */
-    @Override
     public void clearContent() throws IOException {
-        userPopupBox.clearContent();
+        coreControllerParent.adapter.clearScreen();
     }
 
     @Override
     public void handleIdle() {
 
+    }
+
+    @Override
+    public boolean getNeedsRenderSinceLast() {
+        return needsRenderSinceLast;
     }
 }

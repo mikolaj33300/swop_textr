@@ -1,8 +1,8 @@
-package snake.fruits;
+package snake.food;
 
 import snake.Pos;
 
-public class Fruit {
+public class Food {
 
     private final int growAmount, score;
     private final String character;
@@ -14,7 +14,7 @@ public class Fruit {
      * @param growAmount the amount the snake grows when eating the fruit
      * @param character the character representing the fruit
      */
-    public Fruit(String character, int growAmount, int score, Pos pos) {
+    public Food(String character, int growAmount, int score, Pos pos) {
         this.character = character;
         this.growAmount = growAmount;
         this.score = score;
@@ -57,16 +57,16 @@ public class Fruit {
      * Returns the amount of milliseconds are subtracted from the delay.
      * @return
      */
-    public int millisecondDecrease() {
-        return 10;
+    public float millisecondDecrease() {
+        return 0.01f;
     }
 
     /**
      * @return Fruit a clone of this object
      */
     @Override
-    public Fruit clone() {
-        return new Fruit(new String(this.character), growAmount, score, this.pos.clone());
+    public Food clone() {
+        return new Food(new String(this.character), growAmount, score, this.pos.clone());
     }
 
     /**
@@ -75,7 +75,7 @@ public class Fruit {
      */
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Fruit f)
+        if(o instanceof Food f)
             return f.pos.equals(this.pos) && f.character.equals(this.character) && f.score == this.score && f.growAmount == this.growAmount;
         return false;
     }

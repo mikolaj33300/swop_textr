@@ -40,4 +40,9 @@ public class Rectangle {
         Rectangle rectangle = (Rectangle) o;
         return Double.compare(startX, rectangle.startX) == 0 && Double.compare(startY, rectangle.startY) == 0 && Double.compare(width, rectangle.width) == 0 && Double.compare(height, rectangle.height) == 0;
     }
+
+    public String getPrint() {
+        return "[" + startX + ", " + startY + "] -> [" + (startX+width) + ", " + (startY+height) + "]";
+    }
+
 }

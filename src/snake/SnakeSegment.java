@@ -27,12 +27,5 @@ class SnakeSegment extends Snake {
         return this.getStart().equals(getEnd());
     }
 
-    /**
-     * Clones the object
-     * @return a clone
-     */
-    public SnakeSegment clone() {
-        return new SnakeSegment(this.getDirection(), this.getStart().clone(), this.getEnd().clone());
-    }
 
 }

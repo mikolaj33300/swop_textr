@@ -1,7 +1,6 @@
 package inputhandler;
 
 import files.BufferCursorContext;
-import ui.Rectangle;
 
 import java.io.IOException;
 
@@ -38,20 +37,23 @@ public class FileBufferInputHandler extends InputHandlingElement {
    * handle input
    * @param b the input
    */
-    public void input(byte b) {
-	    switch(b) {
-		    case 27:
-			    this.surrogate = true;
-			    break;
-		    default:
-			    if (this.surrogate){
-				    surrogateKeysInput(b);
-				    this.surrogate = false;
-			    } else {
-				    asciiInput(b);
-			    }
-			    break;
-	    }
+	public void input(byte b) {
+		switch(b) {
+			case -3:
+				// Idle
+				break;
+			case 27:
+				this.surrogate = true;
+				break;
+			default:
+				if (this.surrogate){
+					surrogateKeysInput(b);
+					this.surrogate = false;
+				} else {
+					asciiInput(b);
+				}
+				break;
+		}
 	}
 
   /**
@@ -69,17 +71,18 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	public void asciiInput(byte b) {
 		switch(b) {
 		    case 8, 127, 10, 62:
-			this.fb.deleteCharacter();
-			break;
-		    // Control + P
-		    case 16:
-			break;
-		    // Control + N
-		    case 14:
-			break;
-		    // Control + R
-		    case 18:
-			break;
+			    this.fb.deleteCharacter();
+				break;
+
+			//TODO: MAKE TERMINAL USE REAL CTRL Z CODE
+			// Control + Z or Control + A
+			case 26, 1, -1:
+				fb.undo();
+				break;
+				//Control + U
+			case 21:
+				fb.redo();
+				break;
 		    // Control + S
 		    case 19:
 			this.fb.save();
@@ -102,6 +105,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 			this.fb.write(b);
 			break;
 		}
+		contentsChangedSinceRender = true;
 	}
 
 	/**
@@ -127,6 +131,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 				fb.moveCursorDown();
 				break;
 		}
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -135,6 +140,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	@Override
 	public void handleArrowRight(){
 		fb.moveCursorRight();
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -143,6 +149,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	@Override
 	public void handleArrowLeft(){
 		fb.moveCursorLeft();
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -151,6 +158,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	@Override
 	public void handleArrowDown(){
 		fb.moveCursorDown();
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -159,6 +167,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	@Override
 	public void handleArrowUp(){
 		fb.moveCursorUp();
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -168,6 +177,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 	public void handleSeparator() throws IOException {
 		fb.enterSeparator();
 		fb.moveCursorRight();
+		contentsChangedSinceRender = true;
 	}
 
   /**
@@ -175,8 +185,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
    * @return if the filebuffer was closed
    */
 	@Override
-	public int close(){
-		return fb.close();
+	public int forcedClose(){
+		return fb.forcedClose();
 	}
 
   /**
@@ -184,7 +194,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
    */
 	@Override
 	public void save() {
-    this.fb.save(); 
-  }
-
+		this.fb.save();
+		contentsChangedSinceRender = true;
+	}
 }

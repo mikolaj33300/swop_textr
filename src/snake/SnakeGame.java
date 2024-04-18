@@ -1,9 +1,9 @@
 package snake;
 
-import snake.fruits.Banana;
-import snake.fruits.Apple;
-import snake.fruits.Fruit;
-import snake.fruits.MogFruit;
+import snake.food.Banana;
+import snake.food.Apple;
+import snake.food.Food;
+import snake.food.Mandarin;
 import ui.Rectangle;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Random;
  * Tasks:
  * - Control the flow of the game: tick
  * - Enforce game rules: positioning
- * - Hold information of the game: fruits, score, delay
+ * - Hold information of the game: foods, score, delay
  * - Make interaction possible: move the snake
  */
 public class SnakeGame {
@@ -26,18 +26,19 @@ public class SnakeGame {
     private SnakeHead snake;
 
     /**
-     * The fruits on the game board
+     * The foods on the game board
      */
-    List<Fruit> fruits = new ArrayList<>();
+    List<Food> foods = new ArrayList<>();
 
     /**
      * Settings of the game.
      */
-    final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 100;
-    private int score = 0, delay = 0, gameState = 0, starver = 0, maxX, maxY;
+    final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 20, MILLISECOND_THRESHOLD = 1000;
+    private int score = 0, gameState = 0, starver = 0, maxX, maxY, currentWait = 0;
+    private float delay = 0f;
 
     /**
-     * Represents the max X and Y coordinates of the snake game width. Used to generate fruits inside map bounds
+     * Represents the max X and Y coordinates of the snake game width. Used to generate foods inside map bounds
      */
     public SnakeGame(int length, int maxX, int maxY) {
         this.snake = new SnakeHead(length, maxX/2, maxY/2);
@@ -65,17 +66,17 @@ public class SnakeGame {
         // 1. Tick the game
         snake.tick();
 
-        // 2. Test if any of the fruits' positions match with the snake head.
-        if(this.fruits.stream().anyMatch((x) -> x.getPosition().equals(snake.getEnd()))) {
-            // We can assume that the amount of matches is 1, because the generation restricts two fruits on the same position
-            Fruit collidedFruit = fruits.stream()
+        // 2. Test if any of the foods' positions match with the snake head.
+        if(this.foods.stream().anyMatch((x) -> x.getPosition().equals(snake.getEnd()))) {
+            // We can assume that the amount of matches is 1, because the generation restricts two foods on the same position
+            Food collidedFood = foods.stream()
                     .filter((fruit) -> fruit.getPosition().equals(snake.getEnd()))
                     .toList()
                     .get(0);
-            this.fruits.remove(collidedFruit);
-            this.snake.grow(collidedFruit.getGrowAmount());
-            this.score += collidedFruit.getScore();
-            this.delay += collidedFruit.millisecondDecrease();
+            this.foods.remove(collidedFood);
+            this.snake.grow(collidedFood.getGrowAmount());
+            this.score += collidedFood.getScore();
+            this.delay = delay > 0.9f ? 0.9f : delay + collidedFood.millisecondDecrease();
             this.starver = 0;
             initializeFruits();
         } else {
@@ -95,12 +96,11 @@ public class SnakeGame {
            || this.snake.getEnd().y()+1 < 0 || this.snake.getEnd().y() >= maxY-1) {
             // maxX-1 because maxX IS the border of the game and thus invalid
             // snake positions are
-            SnakeHead.log("Position : " + snake.getEnd().getPrint() + " invaliddssdf...?");
             gameState = -1;
         }
 
         // 5. Checks if the maximum length has been reached.
-        if(snake.getLength() == WIN_LENGTH) gameState = 1;
+        if(snake.getLength() >= WIN_LENGTH) gameState = 1;
         else if(snake.getLength() <= 0) {
             gameState = -1;
         }
@@ -133,18 +133,18 @@ public class SnakeGame {
 
     /**
      * Retrieves the list of positions
-     * @return list of the available fruits
+     * @return list of the available foods
      */
-    public List<Fruit> getFruits() {
-        // Map each Fruit to its position cloned.
-        return this.fruits.stream().map(Fruit::clone).toList();
+    public List<Food> getFruits() {
+        // Map each Food to its position cloned.
+        return this.foods.stream().map(Food::clone).toList();
     }
 
     /**
      * Returns the amount of delay that has been added by eating food items.
      * @return int
      */
-    public int getRemovedDelay() {
+    public float getRemovedDelay() {
         return this.delay;
     }
 
@@ -162,10 +162,19 @@ public class SnakeGame {
      * @param newPlayfield the rectangle of the new playing field
      */
     public void modifyPlayfield(Rectangle newPlayfield) {
-        int newMaxX = (int) newPlayfield.width;
-        int newMaxY = (int) newPlayfield.height;
-        int startX = (int) newPlayfield.startX;
-        int startY = (int) newPlayfield.startY;
+        float newMaxX = (float) newPlayfield.width;
+        float newMaxY = (float) newPlayfield.height;
+
+        // We scale the previous width to the new width:
+        float scaledX = newMaxX / (float) this.maxX;
+        float scaledY = newMaxY / (float) this.maxY;
+
+        // We can now multiply the snake positions with these scales
+        this.snake.scale(scaledX, scaledY);
+        this.maxX = (int) newMaxX;
+        this.maxY = (int) newMaxY;
+        this.foods.clear();
+        initializeFruits();
 
     }
 
@@ -178,18 +187,18 @@ public class SnakeGame {
         return Arrays.stream(this.snake.getSegments())
                 .anyMatch((segment) -> Pos.isBetween1D(segment.getStart(), segment.getEnd(), pos))
                 ||
-                // Or the position is already occupied by one of the fruits
-                this.fruits.stream().anyMatch((fruit) -> fruit.getPosition().equals(pos))
+                // Or the position is already occupied by one of the foods
+                this.foods.stream().anyMatch((fruit) -> fruit.getPosition().equals(pos))
                 ;
     }
 
     /**
-     * Fills the array {@link SnakeGame#fruits} with {@link Fruit} instances
+     * Fills the array {@link SnakeGame#foods} with {@link Food} instances
      */
     private void initializeFruits() {
-        // Loop as long as the list does not contain the max amount of fruits
-        while(this.fruits.size() < MAX_FRUITS) {
-            // We create a random variable to create random fruits
+        // Loop as long as the list does not contain the max amount of foods
+        while(this.foods.size() < MAX_FRUITS) {
+            // We create a random variable to create random foods
             Random rand = new Random();
             int test = rand.nextInt(10);
 
@@ -200,11 +209,33 @@ public class SnakeGame {
             }
 
             // We check which fruit to add
-            if(test < 3) this.fruits.add(new Apple(position));
-            else if(test >= 3 && test < 7) this.fruits.add(new MogFruit(position));
-            else this.fruits.add(new Banana(position));
+            if(test < 3) this.foods.add(new Apple(position));
+            else if(test >= 3 && test < 7) this.foods.add(new Mandarin(position));
+            else this.foods.add(new Banana(position));
         }
 
+    }
+
+    /**
+     * Returns the millisecond threshold between each tick on idle
+     * @return millisecond threshold
+     */
+    public int getMillisecondThreshold() {
+        return this.MILLISECOND_THRESHOLD;
+    }
+
+
+    /**
+     * Resets the game
+     */
+    public void reset() {
+        this.snake = new SnakeHead(5, maxX/2, maxY/2);
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.foods.clear();
+        initializeFruits();
+        this.score = gameState = starver = currentWait = 0;
+        delay = 0f;
     }
 
     /**
@@ -213,22 +244,6 @@ public class SnakeGame {
      */
     private Pos generatePosition() {
         Random rand = new Random();
-        return new Pos(rand.nextInt(maxX), rand.nextInt(maxY));
+        return new Pos(rand.nextInt(maxX-1), rand.nextInt(maxY-1));
     }
-
-    /**
-     * @return SnakeGame a clone of this object
-     */
-    @Override
-    public SnakeGame clone() {
-        SnakeGame game = new SnakeGame(5, this.maxX, this.maxY);
-        game.snake = this.snake.clone();
-        game.fruits = this.fruits.stream().map((fruit) -> fruit.clone()).toList();
-        game.score = this.score;
-        game.starver = this.starver;
-        game.delay = this.delay;
-        game.gameState = this.gameState;
-        return game;
-    }
-
 }

@@ -3,14 +3,16 @@ package controller;
 import io.github.btj.termios.Terminal;
 import layouttree.MOVE_DIRECTION;
 import layouttree.ROT_DIRECTION;
-import util.Debug;
 
 import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
+    private boolean needsRenderSinceLast;
+
     protected InspectContentsController(TextR coreControllerParent){
         super(coreControllerParent);
+        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -20,10 +22,8 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void handle(int b) throws IOException {
-        //Debug.write("testresources/test.txt", "We get into the 26 case");
         switch(b) {
-
-            case 8, 127, 10, 62, 1, 21:
+            case 8, 127, 10, 62, 26, 21, 1, -1:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
             // Control + S
@@ -50,7 +50,7 @@ public class InspectContentsController extends UseCaseController {
             case 7:
                 coreControllerParent.facade.openSnakeGame();
                 break;
-                // Control + D
+            // Control + D
             case 4:
                 coreControllerParent.facade.duplicateActive();
                 break;
@@ -60,11 +60,13 @@ public class InspectContentsController extends UseCaseController {
                 break;
             // Character input
             default:
-                if(b < 32 && b != 10 && b != 13 && b!=26 && b!=21 || 127 <= b)
+                if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
                     break;
+                }
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }
+        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -99,41 +101,40 @@ public class InspectContentsController extends UseCaseController {
                         if (result == 1) { //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if (result == 2) {
-                            //TODO Delegate clearing to more specialized class, idem in dirty close
-                            Terminal.clearScreen();
+                            clearContent();
                             System.exit(0);
                         }
                         break;
                 }
                 break;
         }
+        this.needsRenderSinceLast = true;
     }
 
-    @Override
     /**
      * Renders the layout with the terminal current height & width
      */
-    public void paintScreen() {
-        try{
-            coreControllerParent.facade.renderContent();
-            coreControllerParent.facade.renderCursor();
-        } catch (IOException e){
-            coreControllerParent.activeUseCaseController = new FileErrorPopupController(coreControllerParent);
-        }
+    @Override
+    public void paintScreen() throws IOException {
+        clearContent();
+        coreControllerParent.facade.renderContent();
+        coreControllerParent.facade.renderCursor();
+        this.needsRenderSinceLast = false;
     }
 
-    /**
-     * Clears the active layouttree of text
-     * @throws IOException
-     */
-    @Override
-    public void clearContent() throws IOException {
-        coreControllerParent.facade.clearContent();
+    private void clearContent() {
+        coreControllerParent.adapter.clearScreen();
     }
 
     @Override
     public void handleIdle() throws IOException {
+        coreControllerParent.facade.passToActive((byte) -3);
+        this.needsRenderSinceLast = coreControllerParent.facade.getContentsChangedSinceLastRender();
+    }
 
+    @Override
+    public boolean getNeedsRenderSinceLast() {
+        return this.needsRenderSinceLast;
     }
 
 }

@@ -54,6 +54,10 @@ public class FileAnalyserUtil {
         if(startOfCurrentLine<byteContents.length){
             linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
         }
+        if(byteContents.length==0){
+            linesArrList = new ArrayList<>(1);
+            linesArrList.add(new ArrayList<Byte>(0));
+        }
         return linesArrList;
     }
     /**

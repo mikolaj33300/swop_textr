@@ -1,8 +1,7 @@
 package files;
 
-import controller.TextR;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Formatter;
@@ -66,12 +65,11 @@ public class FileHolder {
                 if(b < 32 && b != 10 && b != 13 || 127 <= b)
                     throw new RuntimeException("Error: Invalid file contents - Invalid bytes");
             // 2. Non platform specific line seperators
-            byte[] lineSeperatorBytes = System.lineSeparator().getBytes();
+            byte[] lineSeperatorBytes = lineSeparator;
             Formatter formatterLine = new Formatter();
             for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
             // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = FileAnalyserUtil.formatBytes(System.lineSeparator().getBytes());
-
+            String lineSeperatorCode = FileAnalyserUtil.formatBytes(lineSeparator);
 
             Formatter formatterContent = new Formatter();
             for(byte b : fileContent) formatterContent.format("%02x",b);
@@ -84,6 +82,7 @@ public class FileHolder {
                     || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
                     lineSeperatorCode.equals("0d0a")))
                 throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
+
 
             return fileContent;
     }

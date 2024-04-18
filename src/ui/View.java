@@ -2,8 +2,6 @@ package ui;
 
 import controller.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
-import layouttree.LayoutLeaf;
-import util.Debug;
 
 import java.io.IOException;
 
@@ -74,4 +72,6 @@ public abstract class View {
      * @param o the object to compare this to
      */
     public abstract boolean equals(Object o);
+
+
 }

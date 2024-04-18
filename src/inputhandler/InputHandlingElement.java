@@ -1,7 +1,5 @@
 package inputhandler;
 
-import ui.Rectangle;
-
 import java.io.IOException;
 
 /*
@@ -9,10 +7,13 @@ import java.io.IOException;
  */
 abstract public class InputHandlingElement {
 
-    /**
-     * pass a close to the enclosed object
-     */
-    public abstract int close();
+    boolean contentsChangedSinceRender = false;
+
+    public int getHash() {
+        return this.hashCode();
+    }
+
+    public abstract int forcedClose();
 
     /**
      * pass a save to the enclosed object
@@ -54,5 +55,20 @@ abstract public class InputHandlingElement {
      * pass a separator to the enclosed object
      */
     public abstract void handleSeparator() throws IOException;
+
+    /**
+     * Determines if this element needs to be rerendered
+     * @return boolean
+     */
+    public boolean needsRerender() {
+        return this.contentsChangedSinceRender;
+    }
+
+    /**
+     * Turns the boolean for rerender to false. Use after rendering
+     */
+    public void setContentsChangedSinceLastRenderFalse() {
+        contentsChangedSinceRender = false;
+    }
 
 }

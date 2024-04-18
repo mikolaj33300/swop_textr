@@ -5,7 +5,8 @@ import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
-import snake.fruits.Fruit;
+import snake.SnakeHead;
+import snake.food.Food;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -54,12 +55,13 @@ public class SnakeView extends View {
         Snake[] segments = game.getSnake().getSegments();
         Snake head = game.getSnake();
 
-        // Print border
-        printLine(new Pos(width, 0), new Pos(width, height), "I", false);
-        printLine(new Pos(0, height-1), new Pos(width, height-1), "-", false);
+        // Print border + plus sign in the corner
+        printLine(new Pos(width, 0), new Pos(width, height-1), "|", false);
+        printLine(new Pos(0, height-1), new Pos(width-1, height-1), "-", false);
+        Terminal.printText(1 + startY + height, 1 + this.startX + width, "+");
 
         // Print score
-        Terminal.printText(height,width/2 -1, "Score: " + game.getScore());
+        Terminal.printText(startY + height,startX + width/2 -1, "Score: " + game.getScore());
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
@@ -72,11 +74,11 @@ public class SnakeView extends View {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
             if(s.equals("")) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
-                    s, i != segments.length-1);
+                    s, false);
         }
 
 
-        List<Fruit> fruits = game.getFruits();
+        List<Food> fruits = game.getFruits();
         for(int i = 0; i < fruits.size(); i++)
             Terminal.printText(
                     1+fruits.get(i).getPosition().y()+startY,
@@ -131,7 +133,8 @@ public class SnakeView extends View {
         for(int i = 0;
             i < Math.abs(dY) || (isEqual && i <= Math.abs(dY));
             i++) {
-            Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
+            if(1 + startY + start.y() + (i*stepY)>0 && 1 + this.startX + start.x()>0)
+                Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
         }
 
         return Math.max(Math.abs(dX), Math.abs(dY));
@@ -200,6 +203,17 @@ public class SnakeView extends View {
     @Override
     public void setScaledCoords(Rectangle uiCoordsScaled) {
         super.setScaledCoords(uiCoordsScaled);
-        this.game.modifyPlayfield(uiCoordsScaled);
+        try {
+            scaleGame();
+        } catch(Exception e) {
+            // Will never happen, and if it does, it will crash on snake game too
+        }
     }
+
+    private void scaleGame() throws IOException {
+        UICoords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
+        this.game.modifyPlayfield(rct);
+    }
+
 }
