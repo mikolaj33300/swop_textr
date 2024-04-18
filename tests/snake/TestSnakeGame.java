@@ -3,7 +3,7 @@ package snake;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import snake.fruits.Apple;
-import snake.fruits.Fruit;
+import snake.fruits.Food;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +19,6 @@ public class TestSnakeGame {
     @Test
     public void testSnakeInitialization() {
 
-        System.out.println("Test");
         assertEquals(game.getFruits().size(), game.MAX_FRUITS);
         assertEquals(game.getScore(), 0);
         assertEquals(game.getSnake().getEnd(), new Pos(10, 10));
@@ -46,7 +45,7 @@ public class TestSnakeGame {
         assertEquals(game.getSnake().getStart().distanceX(game.getSnake().getEnd()), 5);
         // Generate fruit
         Pos nextPos = game.getSnake().getEnd();
-        Fruit apple = new Apple(game.getSnake().getNext(nextPos));
+        Food apple = new Apple(game.getSnake().getNext(nextPos));
         game.fruits.add(apple);
         // Progress snake
         game.tick(); // eat

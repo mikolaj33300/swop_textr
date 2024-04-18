@@ -6,6 +6,8 @@ import files.PathNotFoundException;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import layouttree.*;
+import snake.SnakeGame;
+import snake.SnakeHead;
 import ui.*;
 
 import java.io.IOException;

@@ -5,7 +5,8 @@ import io.github.btj.termios.Terminal;
 import snake.Pos;
 import snake.Snake;
 import snake.SnakeGame;
-import snake.fruits.Fruit;
+import snake.SnakeHead;
+import snake.fruits.Food;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class SnakeView extends View {
 
-    private final SnakeGame game;
+    private SnakeGame game;
     private int startX, startY, width, height;
 
     private TermiosTerminalAdapter termiosTerminalAdapter;
@@ -48,7 +49,7 @@ public class SnakeView extends View {
         Snake head = game.getSnake();
 
         // Print border
-        printLine(new Pos(width, 0), new Pos(width, height), "I", false);
+        printLine(new Pos(width, 0), new Pos(width, height-1), "|", false);
         printLine(new Pos(0, height-1), new Pos(width, height-1), "-", false);
 
         // Print score
@@ -65,11 +66,11 @@ public class SnakeView extends View {
             String s = Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining());
             if(s.equals("")) s = a.split("")[a.length()-1];
             skip += printLine(segments[i].getEnd(), segments[i].getStart(),
-                    s, i != segments.length-1);
+                    s, false);
         }
 
 
-        List<Fruit> fruits = game.getFruits();
+        List<Food> fruits = game.getFruits();
         for(int i = 0; i < fruits.size(); i++)
             Terminal.printText(
                     1+fruits.get(i).getPosition().y()+startY,
@@ -80,7 +81,6 @@ public class SnakeView extends View {
         if(!this.game.canContinue())
             if(this.game.isWon()) printBox(5, "You won", "Press enter to try again");
             else printBox(5, "You lost", "Press enter to try again");
-
 
     }
 
@@ -104,6 +104,10 @@ public class SnakeView extends View {
      */
     private int printLine(Pos start, Pos end, String character, boolean isEqual) {
         setLocalCoordinates();
+
+        if(start.x() < 0 || start.y() < 0 || end.x() < 0 || end.y() < 0) {
+            return 1;
+        }
 
         int dX = -(start.x() - end.x());
         int dY = -(start.y() - end.y());

@@ -2,7 +2,7 @@ package snake.fruits;
 
 import snake.Pos;
 
-public class Banana extends Fruit {
+public class Banana extends Food {
 
     private static final String CHARACTER = "b";
 
