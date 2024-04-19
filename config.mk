@@ -1,12 +1,15 @@
 # all variables, and various go here, the makefile itself just contains the build scripts
 
+rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 #
 # diags:
 #
 OFORMAT = pdf
 DOT := $(wildcard ./diagrams/*.dot) 
 DOT += $(wildcard ./diagrams/**/*.dot)
+SD := $(call rwildcard,diagrams/,*.sd)
 DIAGS = $(patsubst %.dot,%.$(OFORMAT),$(DOT))
+DIAGS += $(patsubst %.sd,%.$(OFORMAT),$(SD))
 termios = termios/_build/main/io.github.btj.termios.jar
 
 #
@@ -15,7 +18,6 @@ termios = termios/_build/main/io.github.btj.termios.jar
 JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-jupiter-api.jar /usr/share/apiguardian-api/lib/apiguardian-api.jar
 #$(wildcard /usr/share/junit-5/lib/*.jar)
 
-rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 SRC = $(call rwildcard,src/,*.java)
 
 #TEST = $(call rwildcard,tests/,*.java)

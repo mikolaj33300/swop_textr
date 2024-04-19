@@ -1,0 +1,110 @@
+user:User
+controller:Controller
+rootLayout:Layout
+layout:Layout
+layoutLeaf:LayoutLeaf
+view:View
+fileBuffer:FileBuffer
+Terminal:Terminal
+
+[c:while user presses ctrl+n]
+  user:controller.ctrl+n
+  controller:rootLayout.moveFocus(DIRECTION.RIGHT)
+  rootLayout:layout.moveFocus(DIRECTION.RIGHT)
+  layout:layoutLeaf.moveFocus(DIRECTION.RIGHT)
+  layoutLeaf:layoutLeaf.moveFocusRight()
+  layoutLeaf:layout.makeRightNeighBourActive()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses ctrl+p]
+  user:controller.ctrl+p
+  controller:layout.moveFocus(DIRECTION.LEFT)
+  layout:layoutLeaf.moveFocus(DIRECTION.LEFT)
+  layoutLeaf:layoutLeaf.moveFocusLeft()
+  layoutLeaf:layout.makeLeftNeighBourActive()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses Left]
+  user:controller.Left
+  controller:layout.moveCursor('D')
+  layout:layoutLeaf.moveCursor('D')
+  layoutLeaf:view.moveCursor('D')
+  view:fileBuffer.moveCursor('D')
+  fileBuffer:fileBuffer.moveCursorLeft()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses Right]
+  user:controller.Right
+  controller:layout.moveCursor('C')
+  layout:layoutLeaf.moveCursor('C')
+  layoutLeaf:view.moveCursor('C')
+  view:fileBuffer.moveCursor('C')
+  fileBuffer:fileBuffer.moveCursorRight()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses Up]
+  user:controller.Up
+  controller:layout.moveCursor('A')
+  layout:layoutLeaf.moveCursor('A')
+  layoutLeaf:view.moveCursor('A')
+  view:fileBuffer.moveCursor('A')
+  fileBuffer:fileBuffer.moveCursorUp()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses Down]
+  user:controller.Down
+  controller:layout.moveCursor('B')
+  layout:layoutLeaf.moveCursor('B')
+  layoutLeaf:view.moveCursor('B')
+  view:fileBuffer.moveCursor('B')
+  fileBuffer:fileBuffer.moveCursorDown()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]

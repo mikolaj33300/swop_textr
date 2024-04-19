@@ -1,0 +1,41 @@
+user:User
+controller:Controller
+rootLayout:Layout
+layout:Layout
+layoutLeaf:Layoutleaf
+view:View
+fileBuffer:Filebuffer
+Terminal:Terminal
+
+[c:while user presses ctrl+r]
+  user:controller.ctrl+r
+  controller:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  rootLayout:layout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  layout:layoutLeaf.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  layoutLeaf:layout.rotateWithRightSibling(ROT_DIRECTION.COUNTERCLOCKWISE, this)
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]
+[c:while user presses ctrl+t]
+  user:controller.ctrl+t
+  controller:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
+  rootLayout:layout.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
+  layout:layoutLeaf.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
+  layoutLeaf:layout.rotateWithRightSibling(ROT_DIRECTION.CLOCKWISE, this)
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+view:content=fileBuffer.getContent()
+[c:loop over content]
+	view:Terminal.printText()
+[/c]
+[/c]

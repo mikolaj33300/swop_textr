@@ -1,0 +1,39 @@
+user:User
+controller:Controller
+rootLayout:Layout
+layout:Layout
+layoutLeaf:Layoutleaf
+view:View
+filebuffer:Filebuffer
+file:FileHolder
+Terminal:Terminal
+
+[c:while user presses ctrl+n]
+  user:controller.ctrl+n
+  controller:rootLayout.moveFocus(DIRECTION.RIGHT)
+  rootLayout:layout.moveFocus(DIRECTION.RIGHT)
+  layout:layoutLeaf.moveFocus(DIRECTION.RIGHT)
+  layoutLeaf:layoutLeaf.moveFocusRight()
+[/c]
+[c:while user presses ctrl+p]
+  user:controller.ctrl+p
+  controller:layout.moveFocus(DIRECTION.LEFT)
+  layout:layoutLeaf.moveFocus(DIRECTION.LEFT)
+  layoutLeaf:layoutLeaf.moveFocusLeft()
+[/c]
+user:controller.f4
+controller:rootLayout.closeActive()
+rootLayout:layout.closeActive()
+layout:layoutLeaf.closeActive()
+layout:view.close()
+view:filebuffer.closeHolder()
+view:file.close()
+view:filebuffer.close()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+[c:loop over characters]
+	view:Terminal.printText(i, j, string)
+[/c]
