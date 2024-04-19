@@ -1,41 +1,30 @@
 user:User
-controller:Controller
+TextR:TextR
+facade:ControllerFacade
 rootLayout:Layout
-layout:Layout
-layoutLeaf:Layoutleaf
 view:View
-fileBuffer:Filebuffer
-Terminal:Terminal
 
 [c:while user presses ctrl+r]
-  user:controller.ctrl+r
-  controller:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
-  rootLayout:layout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
-  layout:layoutLeaf.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
-  layoutLeaf:layout.rotateWithRightSibling(ROT_DIRECTION.COUNTERCLOCKWISE, this)
-controller:Terminal.clearScreen()
-controller:rootLayout.render()
-rootLayout:layout.render()
-layout:layoutLeaf.render()
-layoutLeaf:view.render()
-view:content=fileBuffer.getContent()
-[c:loop over content]
-	view:Terminal.printText()
+  user:TextR.ctrl+r
+  TextR:facade.rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE)
+  facade:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  [c:view in windows]
+    facade:view.setScaledCoords()
+  [/c]
 [/c]
+TextR:facade.needsRender()
+[c:for each view in Windows]
+  facade:view.render()
 [/c]
 [c:while user presses ctrl+t]
-  user:controller.ctrl+t
-  controller:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
-  rootLayout:layout.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
-  layout:layoutLeaf.rotateRelationshipNeighbor(ROT_DIRECTION.CLOCKWISE)
-  layoutLeaf:layout.rotateWithRightSibling(ROT_DIRECTION.CLOCKWISE, this)
-controller:Terminal.clearScreen()
-controller:rootLayout.render()
-rootLayout:layout.render()
-layout:layoutLeaf.render()
-layoutLeaf:view.render()
-view:content=fileBuffer.getContent()
-[c:loop over content]
-	view:Terminal.printText()
+  user:TextR.ctrl+t
+  TextR:facade.rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE)
+  facade:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  [c:view in windows]
+    facade:view.setScaledCoords()
+  [/c]
 [/c]
+TextR:facade.needsRender()
+[c:for each view in Windows]
+  facade:view.render()
 [/c]

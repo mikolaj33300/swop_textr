@@ -1,25 +1,15 @@
 user:User
-controller:Controller
+TextR:TextR
+facade:ControllerFacade
 rootLayout:Layout
-layout:Layout
-layoutLeaf:LayoutLeaf
+window:Window
 view:View
-fileBuffer:FileBuffer
-Terminal:Terminal
+handler:InputHandler
 
 [c:while user presses ctrl+n]
   user:controller.ctrl+n
-  controller:rootLayout.moveFocus(DIRECTION.RIGHT)
-  rootLayout:layout.moveFocus(DIRECTION.RIGHT)
-  layout:layoutLeaf.moveFocus(DIRECTION.RIGHT)
-  layoutLeaf:layoutLeaf.moveFocusRight()
-  layoutLeaf:layout.makeRightNeighBourActive()
-controller:Terminal.clearScreen()
-controller:rootLayout.render()
-rootLayout:layout.render()
-layout:layoutLeaf.render()
-layoutLeaf:view.render()
-view:content=fileBuffer.getContent()
+  controller:facade.moveFocus(DIRECTION.RIGHT)
+  facade:rootLayout.getNeighborsContainedHash(DIRECTION.RIGHT, hashCode)
 [c:loop over content]
 	view:Terminal.printText()
 [/c]

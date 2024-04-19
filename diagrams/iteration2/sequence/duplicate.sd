@@ -1,0 +1,13 @@
+user:User
+TextR:TextR
+facade:ControllerFacade
+rootLayout:Layout
+view:View
+/cursor:BufferCursorContext
+
+user:TextR.ctrl+d
+TextR:facade.duplicateActive()
+facade:oldCursor=handler.getCursor()
+facade:newView=view.new()
+facade:newCursor=cursor.new(oldCursor)
+facade:handler=handler.new(newCursor)

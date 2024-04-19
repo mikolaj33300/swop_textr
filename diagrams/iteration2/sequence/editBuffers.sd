@@ -1,27 +1,21 @@
 user:User
-controller:Controller
-rootLayout:Layout
-layout:Layout
-layoutLeaf:Layoutleaf
+TextR:TextR
+facade:ControllerFacade
+handler:InputHandler
+cursor:FileBufferCursorContext
+buffer:FileBuffer
+/command:Command
 view:View
-filebuffer:Filebuffer
-Terminal:Terminal
 
 [c:while user presses ascii keys]
-  user:controller.keypress
-  controller:rootLayout.enterText(byte char)
-  rootLayout:layout.enterText(byte char) 
-  layout:layoutLeaf.enterText(byte char)
-  layoutLeaf:view.enterText(byte char)
-  view:filebuffer.insert(byte char)
-  filebuffer:filebuffer.dirty=true
-
-controller:Terminal.clearScreen()
-controller:rootLayout.render()
-rootLayout:layout.render()
-layout:layoutLeaf.render()
-layoutLeaf:view.render()
-[c:loop over characters]
-	view:Terminal.printText(i, j, string)
+  user:TextR.keypress
+  TextR:facade.passToActive(input)
+  facade:handler.input(input)
+  handler:cursor.write(input)
+  cursor:buffer.writeCmd(input, column, line)
+  buffer:command.new(input, column, line)
 [/c]
+TextR:facade.needsRender()
+[c:for each view in Windows]
+  facade:view.render()
 [/c]
