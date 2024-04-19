@@ -1,6 +1,7 @@
 package snake;
 
 import org.junit.jupiter.api.Test;
+import util.Pos;
 
 import static org.junit.jupiter.api.Assertions.*;
 

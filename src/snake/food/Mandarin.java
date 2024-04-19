@@ -1,6 +1,6 @@
 package snake.food;
 
-import snake.Pos;
+import util.Pos;
 
 public class Mandarin extends Food {
 

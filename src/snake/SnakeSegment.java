@@ -1,6 +1,7 @@
 package snake;
 
 import util.MoveDirection;
+import util.Pos;
 
 class SnakeSegment extends Snake {
 

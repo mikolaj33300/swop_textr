@@ -1,4 +1,4 @@
-package ui;
+package util;
 
 import io.github.btj.termios.Terminal;
 import util.Coords;

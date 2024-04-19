@@ -1,7 +1,7 @@
 package controller.adapter;
 
 import io.github.btj.termios.Terminal;
-import ui.ScreenUIUtil;
+import util.ScreenUIUtil;
 import util.Coords;
 
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package snake.fruit;
 
 import org.junit.jupiter.api.Test;
-import snake.Pos;
+import util.Pos;
 import snake.food.Food;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import snake.food.Apple;
 import snake.food.Food;
 import util.MoveDirection;
+import util.Pos;
 
 import static org.junit.jupiter.api.Assertions.*;
 

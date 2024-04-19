@@ -1,4 +1,4 @@
-package snake;
+package util;
 
 public class Pos {
 

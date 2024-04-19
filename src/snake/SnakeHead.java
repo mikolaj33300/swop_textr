@@ -1,6 +1,7 @@
 package snake;
 
 import util.MoveDirection;
+import util.Pos;
 
 import java.io.FileWriter;
 import java.io.IOException;
