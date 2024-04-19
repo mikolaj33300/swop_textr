@@ -1,6 +1,7 @@
 package snake;
 
 import util.MoveDirection;
+import util.Pos;
 
 /**
  * Information expert: this class holds all the information about positioning and movement

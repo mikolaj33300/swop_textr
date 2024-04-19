@@ -5,6 +5,7 @@ import snake.food.Apple;
 import snake.food.Food;
 import snake.food.Mandarin;
 import util.MoveDirection;
+import util.Pos;
 import util.Rectangle;
 
 import java.util.ArrayList;

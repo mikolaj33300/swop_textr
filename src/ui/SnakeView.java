@@ -2,7 +2,7 @@ package ui;
 
 import controller.adapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
-import snake.Pos;
+import util.Pos;
 import snake.Snake;
 import snake.SnakeGame;
 import snake.food.Food;
