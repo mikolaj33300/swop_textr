@@ -1,0 +1,36 @@
+user:User
+inspectbuffercontroller:InspectBufferController
+facade:ControllerFacade
+rootLayout:Layout
+activeHandler:InputHandlingElement
+game:SnakeGame
+snake:SnakeHead
+
+[c:while user presses Up]
+    user:inspectbuffercontroller.ArrowUp
+    inspectbuffercontroller:facade.handleArrowUp()
+    facade:activeHandler.handleArrowUp()
+    activeHandler:game.move(MoveDirection.UP)
+    game:snake.move(MoveDirection.UP)
+[/c]
+[c:while user presses Down]
+    user:inspectbuffercontroller.ArrowDown
+    inspectbuffercontroller:facade.handleArrowDown()
+    facade:activeHandler.handleArrowDown()
+    activeHandler:game.move(MoveDirection.DOWN)
+    game:snake.move(MoveDirection.DOWN)
+[/c]
+[c:while user presses Left]
+    user:inspectbuffercontroller.ArrowLeft
+    inspectbuffercontroller:facade.handleArrowLeft()
+    facade:activeHandler.handleArrowLeft()
+    activeHandler:game.move(MoveDirection.LEFT)
+    game:snake.move(MoveDirection.LEFT)
+[/c]
+[c:while user presses Right]
+    user:inspectbuffercontroller.ArrowRight
+    inspectbuffercontroller:facade.handleArrowRight()
+    facade:activeHandler.handleArrowRight()
+    activeHandler:game.move(MoveDirection.RIGHT)
+    game:snake.move(MoveDirection.RIGHT)
+[/c]
