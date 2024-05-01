@@ -6,6 +6,7 @@ import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
+import inputhandler.directoryInputHandler;
 import layouttree.*;
 import ui.*;
 import util.Coords;
@@ -316,5 +317,11 @@ class ControllerFacade {
 
     public boolean getContentsChangedSinceLastRender() {
         return this.contentsChangedSinceLastRender;
+    }
+
+    public void openDirectory(String path) {
+      directoryView dirView = new directoryView();
+      windows.add(windows.size(), new Window(dirView, new directoryInputHandler(path)));
+      rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), dirView.hashCode());
     }
 }

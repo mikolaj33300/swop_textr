@@ -37,6 +37,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
    * handle input
    * @param b the input
    */
+  @Override
 	public void input(byte b) {
 		switch(b) {
 			case -3:

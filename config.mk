@@ -3,7 +3,7 @@
 #
 # diags:
 #
-OFORMAT = pdf
+OFORMAT = svg
 DOT := $(wildcard ./diagrams/*.dot) 
 DOT += $(wildcard ./diagrams/**/*.dot)
 DIAGS = $(patsubst %.dot,%.$(OFORMAT),$(DOT))

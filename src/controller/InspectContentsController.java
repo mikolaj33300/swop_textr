@@ -23,12 +23,14 @@ public class InspectContentsController extends UseCaseController {
     public void handle(int b) throws IOException {
         switch(b) {
             case 8, 127, 10, 62, 26, 21, 1, -1:
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                coreControllerParent.facade.passToActive((byte) b);
                 break;
             // Control + S
             case 19:
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                coreControllerParent.facade.passToActive((byte) b);
                 break;
+            case 15:
+                  coreControllerParent.facade.openDirectory(System.getProperty("user.dir"));
             // Control + P
             case 16:
                 coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
@@ -62,7 +64,7 @@ public class InspectContentsController extends UseCaseController {
                 if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
                     break;
                 }
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                coreControllerParent.facade.passToActive((byte) b);
                 break;
         }
         this.needsRenderSinceLast = true;

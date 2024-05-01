@@ -38,6 +38,7 @@ bin/
 *.pdf
 *.ps
 *.png
+*.svg
 *.class
 *.jar
 *.so
