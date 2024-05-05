@@ -9,6 +9,7 @@ public class directoryInputHandler extends InputHandlingElement {
   
   @Override
   public void handleSeparator(){// open the current open file
+    dirCntnt.enterDir();
     return;
   }
 

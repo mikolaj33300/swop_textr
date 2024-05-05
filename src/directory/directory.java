@@ -5,20 +5,22 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class directory {
-  private final String path;
+  private String path;
   private int x,y;
   private ArrayList<String> files;
 
-  public directory (String path) {
-    this.path = path;
-  }
+  public directory (String path) { this.path = path; }
 
   private void updateFiles() {
     File folder = new File(this.path);
     this.files = new ArrayList<String>(10);
     
+    this.files.add("../");
     for (final File fileEntry : folder.listFiles()) {
-      this.files.add(fileEntry.getName());
+      if (fileEntry.isDirectory())
+	  this.files.add(fileEntry.getName() + "/");
+      else 
+	  this.files.add(fileEntry.getName());
     }
   }
 
@@ -26,6 +28,16 @@ public class directory {
     if (this.files == null) updateFiles();
 
     return this.files;
+  }
+
+  public void enterDir() { 
+      String dir = getCrnt(); 
+      if (dir.substring(dir.length() - 1).equals("/")) {
+	  path += "/";
+	  path += dir.substring(0, dir.length()-1);
+	  updateFiles();
+	  x = 0; y = 0;
+      }
   }
 
   public String getCrnt() { return files.get(y); }
