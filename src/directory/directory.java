@@ -1,39 +1,41 @@
 package directory;
 
-import listeners.directoryListener;
-
 import java.nio.file.Files;
 import java.io.File;
 import java.util.ArrayList;
 
 public class directory {
   private final String path;
-  private ArrayList<directoryListener> rListener;
+  private int x,y;
+  private ArrayList<String> files;
 
   public directory (String path) {
     this.path = path;
   }
 
-  private String getFilesList () {
+  private void updateFiles() {
     File folder = new File(this.path);
-    String res = "";
+    this.files = new ArrayList<String>(10);
     
     for (final File fileEntry : folder.listFiles()) {
-      res += fileEntry.getName();
-    }
-
-    return res;
-  }
-
-  public void addListener(directoryListener lsnr) {
-    this.rListener.add(this.rListener.size(), lsnr);
-  }
-
-  public void render(int hash) {
-    String cntnt = getFilesList();
-    for (directoryListener lr : this.rListener) {
-      lr.setContent(cntnt);
-      lr.render(hash);
+      this.files.add(fileEntry.getName());
     }
   }
+
+  public ArrayList<String> getFilesList () {
+    if (this.files == null) updateFiles();
+
+    return this.files;
+  }
+
+  public String getCrnt() { return files.get(y); }
+
+  private void cToEnd() { if (x > files.get(y).length()) x = files.get(y).length()-1; }
+  public void scrollDown(){ if (y < files.size()-1) { y++; cToEnd(); } }
+  public void scrollUp(){ if (y > 0) { y--; cToEnd(); } }
+  public void scrollLeft() { if (x > 0) x--; }
+  public void scrollRight() { if (x < files.get(y).length()-1) x++; }
+
+  public int getX() { return x; }
+  public int getY() { return y; }
 }

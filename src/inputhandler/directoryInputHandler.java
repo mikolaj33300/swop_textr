@@ -4,7 +4,6 @@ import directory.directory;
 
 public class directoryInputHandler extends InputHandlingElement {
   directory dirCntnt;
-  int x, y;// make separate class cursor and include it here
 
   public directoryInputHandler (String path){ this.dirCntnt = new directory(path); }
   
@@ -13,25 +12,10 @@ public class directoryInputHandler extends InputHandlingElement {
     return;
   }
 
-  @Override
-  public void handleArrowUp(){
-    this.y--;
-    return;
-  }
-  @Override
-  public void handleArrowDown(){
-    this.y++;
-  }
-
-  @Override
-  public void handleArrowLeft(){
-    this.x++;
-  }
-
-  @Override
-  public void handleArrowRight(){
-    this.x--;
-  }
+  @Override public void handleArrowUp(){ this.dirCntnt.scrollUp(); }
+  @Override public void handleArrowDown(){ this.dirCntnt.scrollDown(); }
+  @Override public void handleArrowLeft(){ this.dirCntnt.scrollLeft(); }
+  @Override public void handleArrowRight(){ this.dirCntnt.scrollRight(); }
 
   @Override
   public boolean isSafeToClose(){
@@ -51,5 +35,9 @@ public class directoryInputHandler extends InputHandlingElement {
   @Override
   public int forcedClose(){
     return 1;//?? what to return + enum???
+  }
+
+  public directory getDir() {
+      return this.dirCntnt;
   }
 }

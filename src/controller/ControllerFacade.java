@@ -181,7 +181,11 @@ class ControllerFacade {
      */
     public void handleArrowRight() {
         this.windows.get(active).handler.handleArrowRight();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	try {
+	    windows.get(active).view.renderCursor();
+	} catch (Exception e) {
+	    //this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	}
     }
 
     /**
@@ -189,7 +193,11 @@ class ControllerFacade {
      */
     public void handleArrowLeft() {
         this.windows.get(active).handler.handleArrowLeft();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	try {
+	    windows.get(active).view.renderCursor();
+	} catch (Exception e) {
+	    //this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	}
     }
 
     /**
@@ -197,7 +205,11 @@ class ControllerFacade {
      */
     public void handleArrowDown() {
         this.windows.get(active).handler.handleArrowDown();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	try {
+	    windows.get(active).view.renderCursor();
+	} catch (Exception e) {
+	    //this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	}
     }
 
     /**
@@ -205,7 +217,11 @@ class ControllerFacade {
      */
     public void handleArrowUp() {
         this.windows.get(active).handler.handleArrowUp();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	try {
+	    windows.get(active).view.renderCursor();
+	} catch (Exception e) {
+	    //this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	}
     }
 
     /**
@@ -319,9 +335,11 @@ class ControllerFacade {
         return this.contentsChangedSinceLastRender;
     }
 
-    public void openDirectory(String path) {
-      directoryView dirView = new directoryView();
-      windows.add(windows.size(), new Window(dirView, new directoryInputHandler(path)));
+    public void openDirectory(String path) { 
+	directoryInputHandler dirhandle = new directoryInputHandler(path);
+	directoryView dirView = new directoryView(dirhandle.getDir(), termiosTerminalAdapter);
+      windows.add(windows.size(), new Window(dirView, dirhandle));
       rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), dirView.hashCode());
+	updateViewCoordinates();
     }
 }

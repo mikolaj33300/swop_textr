@@ -165,6 +165,7 @@ public class FileBufferView extends View{
     /**
      * Handles printing the cursor in this view.
      */
+    @Override
     public void renderCursor() throws IOException {
         Coords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
         int width = coords.width;

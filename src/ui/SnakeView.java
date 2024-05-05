@@ -99,7 +99,7 @@ public class SnakeView extends View {
      */
     @Override
     public void renderCursor() throws IOException {
-        return;
+	render(0);
     }
 
     /**

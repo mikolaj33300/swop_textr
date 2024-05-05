@@ -29,6 +29,7 @@ public class InspectContentsController extends UseCaseController {
             case 19:
                 coreControllerParent.facade.passToActive((byte) b);
                 break;
+	    // Control + O
             case 15:
                   coreControllerParent.facade.openDirectory(System.getProperty("user.dir"));
             // Control + P
@@ -105,11 +106,11 @@ public class InspectContentsController extends UseCaseController {
                             clearContent();
                             System.exit(0);
                         }
+			this.needsRenderSinceLast = true;
                         break;
                 }
                 break;
         }
-        this.needsRenderSinceLast = true;
     }
 
     /**
