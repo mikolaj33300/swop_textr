@@ -10,7 +10,6 @@ public class directoryInputHandler extends InputHandlingElement {
   @Override
   public void handleSeparator(){// open the current open file
     dirCntnt.enterDir();
-    return;
   }
 
   @Override public void handleArrowUp(){ this.dirCntnt.scrollUp(); }
@@ -25,20 +24,30 @@ public class directoryInputHandler extends InputHandlingElement {
 
   @Override
   public void input(byte b){
+      switch (b) {
+	  case 104:
+	      dirCntnt.toggleHide();
+	      break;
+      }
+
+    this.contentsChangedSinceRender = false;
     return;
   }
 
   @Override
   public void save(){
+      this.contentsChangedSinceRender = false;
     return;
   }
 
   @Override
   public int forcedClose(){
+      this.contentsChangedSinceRender = false;
     return 1;//?? what to return + enum???
   }
 
   public directory getDir() {
+      this.contentsChangedSinceRender = false;
       return this.dirCntnt;
   }
 }

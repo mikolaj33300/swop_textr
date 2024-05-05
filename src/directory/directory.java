@@ -7,16 +7,19 @@ import java.util.ArrayList;
 public class directory {
   private String path;
   private int x,y;
+  private boolean hidden = false;
   private ArrayList<String> files;
 
   public directory (String path) { this.path = path; }
 
   private void updateFiles() {
-    File folder = new File(this.path);
+    File folder = new File(path);
     this.files = new ArrayList<String>(10);
     
-    this.files.add("../");
+    if (folder.getParent() != null)
+	this.files.add("../");
     for (final File fileEntry : folder.listFiles()) {
+      if (!fileEntry.isHidden() || hidden)
       if (fileEntry.isDirectory())
 	  this.files.add(fileEntry.getName() + "/");
       else 
@@ -39,6 +42,8 @@ public class directory {
 	  x = 0; y = 0;
       }
   }
+
+  public void toggleHide() { hidden = !hidden; updateFiles(); }
 
   public String getCrnt() { return files.get(y); }
 
