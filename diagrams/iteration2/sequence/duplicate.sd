@@ -1,5 +1,5 @@
 user:User
-InspectBufferController:InspectBufferController
+InspectContentController:InspectContentController
 facade:ControllerFacade
 rootLayout:Layout
 /view:View
@@ -8,9 +8,10 @@ oldHandler:InputHandler
 /cursor:BufferCursorContext
 /newWindow:Window
 
-user:InspectBufferController.ctrl+d
-InspectBufferController:facade.duplicateActive()
+user:InspectContentController.ctrl+d
+InspectContentController:facade.duplicateActive()
 facade:oldCursor=oldHandler.getCursor()
+
 facade:newView=view.new()
 facade:newCursor=cursor.new(oldCursor)
 facade:newHandler=handler.new(newCursor)

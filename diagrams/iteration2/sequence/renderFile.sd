@@ -1,0 +1,13 @@
+fileBufferView:FileBufferView
+view:View
+termiosTerminalAdapter:TermiosTerminalAdapter
+containedFileBuffer:FileBuffer
+
+fileBufferView:coords=view.getRealUICoordsFromScaled(termiosTerminalAdapter)
+view:screenDimensions=termiosTerminalAdapter.getTextAreaSize()
+fileBufferView:containedFileBuffer.getInsertionPointLine()
+fileBufferView:containedFileBuffer.getInsertionPointCol()
+fileBufferView:containedFileBuffer.getLines()
+[c:for each line]
+	fileBufferView:termiosTerminalAdapter.printText(line)
+[/c]

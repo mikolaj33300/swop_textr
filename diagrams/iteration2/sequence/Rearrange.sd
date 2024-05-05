@@ -1,30 +1,36 @@
 user:User
-TextR:TextR
+InspectContentController:ICC
 facade:ControllerFacade
 rootLayout:Layout
+layout:LayoutNode
+layoutleaf:LayoutLeaf
 view:View
 
 [c:while user presses ctrl+r]
-  user:TextR.ctrl+r
-  TextR:facade.rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE)
-  facade:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  user:InspectContentController.ctrl+r
+  InspectContentController:facade.rotateLayout(CCW)
+  facade:rootLayout.rotateN(CCW, activeH)
+  rootLayout:layout.rotateN(CCW, activeH)
+  layout:layoutleaf.rotateN(CCW, activeH)
   [c:view in windows]
     facade:view.setScaledCoords()
   [/c]
-[/c]
-TextR:facade.needsRender()
-[c:for each view in Windows]
-  facade:view.render()
+  InspectContentController:facade.needsRender()
+  [c:for each view in Windows]
+    facade:view.render()
+  [/c]
 [/c]
 [c:while user presses ctrl+t]
-  user:TextR.ctrl+t
-  TextR:facade.rotateLayout(ROT_DIRECTION.COUNTERCLOCKWISE)
-  facade:rootLayout.rotateRelationshipNeighbor(ROT_DIRECTION.COUNTERCLOCKWISE)
+  user:InspectContentController.ctrl+t
+  InspectContentController:facade.rotateLayout(CLOCKWISE)
+  facade:rootLayout.rotateNeighbor(CW, activeH)
+  rootLayout:layout.rotateNeighbor(CW, activeH)
+  layout:layoutleaf.rotateNeighbor(CW, activeH)
   [c:view in windows]
     facade:view.setScaledCoords()
   [/c]
-[/c]
-TextR:facade.needsRender()
-[c:for each view in Windows]
-  facade:view.render()
+  InspectContentController:facade.needsRender()
+  [c:for each view in Windows]
+    facade:view.render()
+  [/c]
 [/c]

@@ -4,7 +4,6 @@ all: options diagrams $(DIAGS) $(termios) build textr.jar
 
 options:
 	@echo OFORMAT: $(OFORMAT)
-	@echo OBJ: $(OBJ)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@

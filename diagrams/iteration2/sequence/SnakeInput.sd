@@ -5,6 +5,7 @@ rootLayout:Layout
 activeHandler:InputHandlingElement
 game:SnakeGame
 snake:SnakeHead
+view:View
 
 [c:while user presses Up]
     user:inspectbuffercontroller.ArrowUp
@@ -12,6 +13,10 @@ snake:SnakeHead
     facade:activeHandler.handleArrowUp()
     activeHandler:game.move(MoveDirection.UP)
     game:snake.move(MoveDirection.UP)
+    inspectbuffercontroller:facade.renderContent()
+    [c:view in windows]
+    	facade:view.render()
+    [/c]
 [/c]
 [c:while user presses Down]
     user:inspectbuffercontroller.ArrowDown
@@ -19,6 +24,10 @@ snake:SnakeHead
     facade:activeHandler.handleArrowDown()
     activeHandler:game.move(MoveDirection.DOWN)
     game:snake.move(MoveDirection.DOWN)
+    inspectbuffercontroller:facade.renderContent()
+    [c:view in windows]
+    	facade:view.render()
+    [/c]
 [/c]
 [c:while user presses Left]
     user:inspectbuffercontroller.ArrowLeft
@@ -26,6 +35,10 @@ snake:SnakeHead
     facade:activeHandler.handleArrowLeft()
     activeHandler:game.move(MoveDirection.LEFT)
     game:snake.move(MoveDirection.LEFT)
+    inspectbuffercontroller:facade.renderContent()
+    [c:view in windows]
+    	facade:view.render()
+    [/c]
 [/c]
 [c:while user presses Right]
     user:inspectbuffercontroller.ArrowRight
@@ -33,4 +46,8 @@ snake:SnakeHead
     facade:activeHandler.handleArrowRight()
     activeHandler:game.move(MoveDirection.RIGHT)
     game:snake.move(MoveDirection.RIGHT)
+    inspectbuffercontroller:facade.renderContent()
+    [c:view in windows]
+    	facade:view.render()
+    [/c]
 [/c]
