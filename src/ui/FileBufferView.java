@@ -138,15 +138,6 @@ public class FileBufferView extends View{
           termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
         for (int i  = visibleEndPercent; i < width-1; i++)
           termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
-        /*
-        for(int i = 0; i<(width-1); i++){
-            if((i*1.0/(width-1)>=visibleStartPercent) && (i*1.0/width <= visibleEndPercent)){
-                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
-            } else {
-                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
-            }
-        }
-        */
     }
 
     /**

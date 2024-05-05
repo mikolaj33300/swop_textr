@@ -24,41 +24,52 @@ public class InspectContentsController extends UseCaseController {
         switch(b) {
             case 8, 127, 10, 62, 26, 21, 1, -1:
                 coreControllerParent.facade.passToActive((byte) b);
+		this.needsRenderSinceLast = true;
                 break;
             // Control + S
             case 19:
                 coreControllerParent.facade.passToActive((byte) b);
+		this.needsRenderSinceLast = true;
                 break;
 	    // Control + O
             case 15:
                   coreControllerParent.facade.openDirectory(System.getProperty("user.dir"));
+		this.needsRenderSinceLast = true;
+		break;
             // Control + P
             case 16:
                 coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
+		this.needsRenderSinceLast = true;
                 break;
             // Control + N
             case 14:
                 coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);
+		this.needsRenderSinceLast = true;
                 break;
             // Control + R
             case 18:
                 coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+		this.needsRenderSinceLast = true;
                 break;
             // Control + T
             case 20:
                 coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
+		this.needsRenderSinceLast = true;
                 break;
             // Control + G
             case 7:
                 coreControllerParent.facade.openSnakeGame();
+		this.needsRenderSinceLast = true;
                 break;
             // Control + D
             case 4:
                 coreControllerParent.facade.duplicateActive();
+		this.needsRenderSinceLast = true;
                 break;
             // Line separator
             case 13:
                 coreControllerParent.facade.handleSeparator();
+		this.needsRenderSinceLast = true;
                 break;
             // Character input
             default:
@@ -66,9 +77,9 @@ public class InspectContentsController extends UseCaseController {
                     break;
                 }
                 coreControllerParent.facade.passToActive((byte) b);
+		this.needsRenderSinceLast = true;
                 break;
         }
-        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -85,18 +96,22 @@ public class InspectContentsController extends UseCaseController {
                     // Right
                     case 'C':
                         coreControllerParent.facade.handleArrowRight();
+			this.needsRenderSinceLast = false;
                         break;
                     // Left
                     case 'D':
                         coreControllerParent.facade.handleArrowLeft();
+			this.needsRenderSinceLast = false;
                         break;
                     // Up
                     case 'A':
                         coreControllerParent.facade.handleArrowUp();
+			this.needsRenderSinceLast = false;
                         break;
                     // Down
                     case 'B':
                         coreControllerParent.facade.handleArrowDown();
+			this.needsRenderSinceLast = false;
                         break;
                     case 'S':// F4
                         int result = coreControllerParent.facade.closeActive();

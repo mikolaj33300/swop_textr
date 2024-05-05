@@ -71,10 +71,10 @@ public class directoryView extends View {
         int visibleEndPercent = ((2+focusedLine)*height)/fileBufferTotalHeight;
 
         for (int i = 0; i < visibleStartPercent; i++)
-                termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
+                termiosTerminalAdapter.printText(startY+i, 1+scrollStartX, "|");
         for (int i = visibleStartPercent; i < visibleEndPercent; i++)
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
-        for (int i = visibleEndPercent; i < height-startY-2; i++)
+        for (int i = visibleEndPercent; i < height; i++)
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
     }
 

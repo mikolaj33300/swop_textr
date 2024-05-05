@@ -67,6 +67,22 @@ class ControllerFacade {
         this.updateViewCoordinates();
     }
 
+    public void openFile(String path) {
+	FileBufferInputHandler openedFileHandler;
+	try {
+	    openedFileHandler = new FileBufferInputHandler(path, lineSeparatorArg);
+	    FileBufferView newView = new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter);
+	    this.windows.add(new Window(newView, openedFileHandler));
+
+	    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
+	    updateViewCoordinates();
+	} catch(Exception e) {
+	}
+
+    }
+
+	
+
 /**
  * render the active window
  */
