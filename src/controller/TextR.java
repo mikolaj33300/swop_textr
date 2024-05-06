@@ -35,7 +35,7 @@ public class TextR {
 
     /**
      * A beautiful start for a beautiful project
-     * @throws IOException, RuntimeException
+     * @throws IOException RuntimeException
      */
     public static void main(String[] args) throws IOException, RuntimeException {
         TextR textR;

@@ -95,8 +95,6 @@ public class FileBuffer {
 
     /**
      * undo the command nbUndone points to
-     *
-     * @return void
      */
     public void undo() {
         if (undoStack.size() > nbUndone)
@@ -105,8 +103,6 @@ public class FileBuffer {
 
     /**
      * redo the command nbUndone points to
-     *
-     * @return void
      */
     public void redo() {
         if (nbUndone > 0)
@@ -156,7 +152,6 @@ public class FileBuffer {
      *
      * @param insertionPointCol  the column of the deleted character
      * @param insertionPointLine the row of the deleted character
-     * @return void
      */
     public void deleteCharacterCmd(int insertionPointCol, int insertionPointLine) {
         execute(new BufferDeleteCharacterCommand(insertionPointCol, insertionPointLine, this));
@@ -167,7 +162,6 @@ public class FileBuffer {
      *
      * @param insertionPointCol  the column of the deleted character
      * @param insertionPointLine the row of the deleted character
-     * @return the character delted
      */
     protected void deleteCharacter(int insertionPointCol, int insertionPointLine) {
         int insertionPointByteIndex = convertLineAndColToIndex(insertionPointLine, insertionPointCol);

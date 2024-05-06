@@ -71,13 +71,13 @@ public class Pos {
     }
 
     /**
-     * Determines if the test position is inbetween the start & end positions.
-     * If start & end are not on the same axis {@link Pos#x()} or {@link Pos#y()} are not equal,
+     * Determines if the test position is inbetween the start and end positions.
+     * If start and end are not on the same axis PoxX or PoxY are not equal,
      * then the method will always fail.
      * @param start start position
      * @param end end position
      * @param test the position that should be tested
-     * @return a boolean determining if the test position is inbetween start & end
+     * @return a boolean determining if the test position is inbetween start and end
      */
     public static boolean isBetween1D(Pos start, Pos end, Pos test) {
         // Start & End is horizontal

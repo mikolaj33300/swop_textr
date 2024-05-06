@@ -23,3 +23,4 @@ public interface TermiosTerminalAdapter {
     public Coords getTextAreaSize() throws IOException;
 
 }
+

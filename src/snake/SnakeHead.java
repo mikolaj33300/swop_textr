@@ -11,7 +11,7 @@ import static util.MoveDirection.UP;
 
 /**
  * Information expert:
- * Cohesion: this class holds information about snake creation & logic behind controlling the snake.
+ * Cohesion: this class holds information about snake creation and logic behind controlling the snake.
  *           class makes sure that the creator does not have to worry about specifics, only about the location
  *           of the head of the snake
  * Creator: creates SnakeSegment

@@ -164,7 +164,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
 
     /**
      * Adds an integer to the inputstream
-     * @param i the integer for the input stream <3
+     * @param i the integer for the input stream
      */
     public void putByte(int i) {
         this.inputStream.add(i);

@@ -1,4 +1,4 @@
-package snake;
+package util;
 
 import org.junit.jupiter.api.Test;
 import util.Pos;
