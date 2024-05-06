@@ -111,7 +111,7 @@ public class InspectContentsController extends UseCaseController {
     }
 
     /**
-     * Renders the layout with the terminal current height & width
+     * Renders the layout with the terminal current height and width
      */
     @Override
     public void paintScreen() throws IOException {

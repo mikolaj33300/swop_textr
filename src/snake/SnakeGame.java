@@ -118,7 +118,7 @@ public class SnakeGame {
     }
 
     /**
-     * Determines if the game can still continue: not lost & not won.
+     * Determines if the game can still continue: not lost and not won.
      * @return boolean
      */
     public boolean canContinue() {
