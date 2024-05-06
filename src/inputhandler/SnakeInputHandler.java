@@ -36,7 +36,7 @@ public class SnakeInputHandler extends InputHandlingElement {
     }
 
     /**
-     * @return snake can't be saved at the moment
+     * snake can't be saved at the moment
      */
     @Override
     public void save() {

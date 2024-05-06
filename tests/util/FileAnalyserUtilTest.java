@@ -1,5 +1,6 @@
-package files;
+package util;
 
+import files.FileAnalyserUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
