@@ -1,6 +1,7 @@
 package controller;
 
 import controller.adapter.VirtualTestingTermiosAdapter;
+import files.FileAnalyserUtil;
 import files.FileHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public class SaveBufferTest {
         assertFalse(
                 ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).cursorContext().getDirty()
         );
-        assertTrue(FileHolder.areContentsEqual(Files.readAllBytes(path1.resolve("test1.txt")), "bi am a mister\n ; but you can call me mister TEE".getBytes()));
+        assertTrue(FileAnalyserUtil.areByteArrayContentsEqual(Files.readAllBytes(path1.resolve("test1.txt")), "bi am a mister\n ; but you can call me mister TEE".getBytes()));
     }
 
 

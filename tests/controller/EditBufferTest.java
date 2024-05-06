@@ -1,6 +1,7 @@
 package controller;
 
 import controller.adapter.VirtualTestingTermiosAdapter;
+import files.FileAnalyserUtil;
 import files.FileHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                     ((FileBufferView) textr1.facade
                             .getWindows().get(textr1.facade.getActive()).view)
                             .cursorContext().getFileBuffer().getBytes(),

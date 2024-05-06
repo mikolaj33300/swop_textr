@@ -113,4 +113,16 @@ public class FileAnalyserUtil {
         }
         return resultArray;
     }
+
+    /**
+     * @param arr1 array 2 to compare
+     * @param arr2 array 2 to compare
+     * @return if given arrays are equal
+     */
+    public static boolean areByteArrayContentsEqual(byte[] arr1, byte[] arr2) {
+        if(arr1.length != arr2.length) return false;
+        for(int i = 0; i < arr1.length; i++)
+            if(arr1[i] != arr2[i]) return false;
+        return true;
+    }
 }

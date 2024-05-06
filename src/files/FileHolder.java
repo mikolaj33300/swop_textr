@@ -10,33 +10,15 @@ import java.util.Formatter;
  * file aparte klasse omdat eventueel andere io gebruikt moet worden +
  *  andere functie dan buffer
  */
-public class FileHolder {
-    private byte[] lineSeparator;
-    private final String path;
-
+public class FileHolder extends ContentsHolder{
     private final File fd;
 
     /**
      * Creates File object with given path
      */
     public FileHolder(String path, byte[] lineSeparator) {
+        super(path, lineSeparator.clone());
         this.fd = new File(path);
-        this.lineSeparator = lineSeparator.clone();
-        this.path = path;
-    }
-
-    /**
-     * @return the line separator used
-     */
-    public byte[] getLineSeparator() {
-        return lineSeparator;
-    }
-
-    /**
-     * @return the path of the file opened
-     */
-    public String getPath() {
-        return new String(this.path);
     }
 
     /**
@@ -100,17 +82,4 @@ public class FileHolder {
     public boolean equals(FileHolder holder) {
         return this.path.equals(holder.path);
     }
-
-    /**
-     * @param arr1 array 2 to compare
-     * @param arr2 array 2 to compare
-     * @return if given arrays are equal
-     */
-    public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
-        if(arr1.length != arr2.length) return false;
-        for(int i = 0; i < arr1.length; i++)
-            if(arr1[i] != arr2[i]) return false;
-        return true;
-    }
-
 }

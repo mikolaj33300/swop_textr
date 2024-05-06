@@ -36,7 +36,7 @@ public class FileHolderTest {
     public void testSave() throws IOException {
         holder1.save("are termios users in a cult?".getBytes());
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         "are termios users in a cult?".getBytes(),
                         holder1.getContent()
                 )
@@ -46,7 +46,7 @@ public class FileHolderTest {
     @Test
     public void testGetContentBeforeSave() throws IOException {
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         content1.getBytes(),
                         holder1.getContent()
                 )

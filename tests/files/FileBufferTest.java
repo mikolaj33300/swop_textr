@@ -79,7 +79,7 @@ public class FileBufferTest {
     @Test
     public void testContentsChange() throws IOException {
         buffer1.write("b".getBytes()[0], 0,0);
-        assertTrue(FileHolder.areContentsEqual(
+        assertTrue(FileAnalyserUtil.areByteArrayContentsEqual(
             buffer1.getBytes(),
             "btermios is life ;\ntermios is also very useful for terminal apps".getBytes()
         ));
@@ -96,7 +96,7 @@ public class FileBufferTest {
         buffer1.write("b".getBytes()[0], 0,0);
         buffer1.save();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         Files.readAllBytes(path1),
                         "btermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -116,7 +116,7 @@ public class FileBufferTest {
     public void testEnterInsertionPoint1() throws IOException {
         buffer1.enterInsertionPoint(0,0);
         assertTrue(
-          FileHolder.areContentsEqual(
+          FileAnalyserUtil.areByteArrayContentsEqual(
                    "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes(),
                   buffer1.getBytes()
           )
@@ -127,7 +127,7 @@ public class FileBufferTest {
     public void testEnterInsertionPoint2() throws IOException {
         buffer2.enterInsertionPoint(2,0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         "if kaas is\n not a mister\n\n ; no one is".getBytes(),
                         buffer2.getBytes()
                 )
@@ -143,7 +143,7 @@ public class FileBufferTest {
     public void testDeleteCharacterLine0() throws IOException {
         buffer4.deleteCharacter(1, 0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer4.getBytes(),
                         "allo kaas i am your loyal student\n i use termios daily".getBytes()
                         )
@@ -154,7 +154,7 @@ public class FileBufferTest {
     public void testDeleteCharacterLine1() throws IOException {
         buffer4.deleteCharacter(1, 1);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer4.getBytes(),
                         "hallo kaas i am your loyal student\ni use termios daily".getBytes()
                 )
@@ -165,7 +165,7 @@ public class FileBufferTest {
     public void testWriteCommand() {
         buffer1.writeCmd("t".getBytes()[0], 0, 0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "ttermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -176,7 +176,7 @@ public class FileBufferTest {
     public void testBackspaceCommand() {
         buffer1.deleteCharacterCmd(1,0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -189,7 +189,7 @@ public class FileBufferTest {
         buffer1.writeCmd("e".getBytes()[0], 0,1);
         buffer1.undo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "ttermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -201,7 +201,7 @@ public class FileBufferTest {
         buffer1.deleteCharacterCmd(0, 0);
         buffer1.undo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -212,7 +212,7 @@ public class FileBufferTest {
     public void testUndoDeleteCharacter() {
         buffer1.deleteCharacterCmd(1, 0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -221,7 +221,7 @@ public class FileBufferTest {
         buffer1.undo();
 
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -235,7 +235,7 @@ public class FileBufferTest {
         buffer1.undo();
         buffer1.redo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "tetermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -248,7 +248,7 @@ public class FileBufferTest {
         buffer1.undo();
         buffer1.redo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -260,14 +260,14 @@ public class FileBufferTest {
         buffer1.deleteCharacterCmd(1,0);
         buffer1.undo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
         );
         buffer1.redo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "ermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -279,7 +279,7 @@ public class FileBufferTest {
 
         buffer1.enterInsertionCmd(0,0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
@@ -292,14 +292,14 @@ public class FileBufferTest {
 
         buffer1.enterInsertionCmd(0,0);
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "\ntermios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )
         );
         buffer1.undo();
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer1.getBytes(),
                         "termios is life ;\ntermios is also very useful for terminal apps".getBytes()
                 )

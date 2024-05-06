@@ -45,7 +45,7 @@ public class BufferCursorContextTest {
         buffer.deleteCharacter();
 
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer.getFileBuffer().getBytes(),
                         "allo kaas i am your loyal student i use termios daily".getBytes()
                 )
@@ -64,7 +64,7 @@ public class BufferCursorContextTest {
         buffer.deleteCharacter();
 
         assertTrue(
-                FileHolder.areContentsEqual(
+                FileAnalyserUtil.areByteArrayContentsEqual(
                         buffer.getFileBuffer().getBytes(),
                         "i use termios daily".getBytes()
                 )

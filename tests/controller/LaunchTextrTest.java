@@ -1,6 +1,7 @@
 package controller;
 
 import controller.adapter.VirtualTestingTermiosAdapter;
+import files.FileAnalyserUtil;
 import files.FileHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,8 +58,8 @@ public class LaunchTextrTest {
 
     @Test
     public void testLineSeparatorAssignment() {
-        assertTrue(FileHolder.areContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0a}));
-        assertTrue(FileHolder.areContentsEqual(textr2.facade.getLineSeparatorArg(), new byte[] {0x0a}));
+        assertTrue(FileAnalyserUtil.areByteArrayContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0a}));
+        assertTrue(FileAnalyserUtil.areByteArrayContentsEqual(textr2.facade.getLineSeparatorArg(), new byte[] {0x0a}));
     }
 
     @Test
