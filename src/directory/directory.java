@@ -9,19 +9,19 @@ public class directory {
   private int x,y;
   private boolean hidden = false;
   private ArrayList<String> files;
+  private dirEntry crnt;
 
-  public directory (String path) { this.path = path; }
+  public directory (String path) { this.path = path; this.crnt = new fileAdapter(path); }
 
   public void updateFiles() {
-    File folder = new File(path);
     this.files = new ArrayList<String>(10);
     
-    if (folder.getParent() != null)
-	this.files.add("../");
-    for (final File fileEntry : folder.listFiles()) {
+    if (crnt.getParent() != null)
+      this.files.add("../");
+    for (final dirEntry fileEntry : crnt.listFiles()) {
       if (!fileEntry.isHidden() || hidden)
       if (fileEntry.isDirectory())
-	  this.files.add(fileEntry.getName() + "/");
+	  this.files.add(fileEntry.getName()+"/");
       else 
 	  this.files.add(fileEntry.getName());
     }
@@ -41,6 +41,7 @@ public class directory {
       } else if (dir.substring(dir.length() - 1).equals("/")) {
         path += "/" + dir.substring(0, dir.length()-1);
       }
+      crnt = new fileAdapter(path);
       updateFiles();
       x = 0; y = 0;
   }
