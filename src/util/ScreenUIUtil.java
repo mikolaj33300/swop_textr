@@ -51,7 +51,8 @@ public class ScreenUIUtil {
 
 
     public static Coords retrieveDimensionsTerminal() throws IOException {
-      return new Coords(0, 0, 135, 125);
+      return new Coords(0, 0, 188, 63);
+      //return new Coords(0, 0, 135, 125);
 
     }
 

@@ -26,14 +26,15 @@ public class directoryView extends View {
     int y = this.dir.getY();
 
     for (int i = 0; i < content.size(); i++){
-      this.termiosTerminalAdapter.printText(c.startY+i+1, c.startX+1,  content.get(i));
+      termiosTerminalAdapter.printText(c.startY+i+1, c.startX+1,  content.get(i));
     }
 
     renderScrollbar(c.height, c.startX+c.width-1, c.startY,
 	y, content.size());
-    renderHorzScrollbar(c.width, c.startX, c.startY+c.height-1,
+    renderHorzScrollbar(c.width, c.startX, c.startY+c.height-2,
 	x, content.get(y).length(), 1);
-    this.termiosTerminalAdapter.moveCursor(c.startY + y+1, c.startX + x+1);
+    termiosTerminalAdapter.printText(c.startY+c.height, c.startX+1,  getStatus());
+    termiosTerminalAdapter.moveCursor(c.startY + y+1, c.startX + x+1);
     return;
   }
 
@@ -46,7 +47,7 @@ public class directoryView extends View {
 
     renderScrollbar(c.height, c.startX+c.width-1, c.startY,
 	y, content.size());
-    renderHorzScrollbar(c.width, c.startX, c.startY+c.height-1,
+    renderHorzScrollbar(c.width, c.startX, c.startY+c.height-2,
 	x, content.get(y).length(), 1);
     this.termiosTerminalAdapter.moveCursor(c.startY + y+1, c.startX + x+1);
   }
@@ -70,12 +71,16 @@ public class directoryView extends View {
         int visibleStartPercent = (focusedLine*height)/fileBufferTotalHeight;
         int visibleEndPercent = ((2+focusedLine)*height)/fileBufferTotalHeight;
 
-        for (int i = 0; i < visibleStartPercent; i++)
+        for (int i = 1; i < visibleStartPercent; i++)
                 termiosTerminalAdapter.printText(startY+i, 1+scrollStartX, "|");
         for (int i = visibleStartPercent; i < visibleEndPercent; i++)
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "+");
         for (int i = visibleEndPercent; i < height; i++)
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");
+    }
+
+    private String getStatus() {
+      return dir.getPath();
     }
 
     /**

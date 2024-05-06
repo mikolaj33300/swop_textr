@@ -12,7 +12,7 @@ public class directory {
 
   public directory (String path) { this.path = path; }
 
-  private void updateFiles() {
+  public void updateFiles() {
     File folder = new File(path);
     this.files = new ArrayList<String>(10);
     
@@ -35,12 +35,14 @@ public class directory {
 
   public void enterDir() { 
       String dir = getCrnt(); 
-      if (dir.substring(dir.length() - 1).equals("/")) {
-	  path += "/";
-	  path += dir.substring(0, dir.length()-1);
-	  updateFiles();
-	  x = 0; y = 0;
+      if (dir.equals("../")){
+        File tmp = new File(path);
+        path = tmp.getParent();
+      } else if (dir.substring(dir.length() - 1).equals("/")) {
+        path += "/" + dir.substring(0, dir.length()-1);
       }
+      updateFiles();
+      x = 0; y = 0;
   }
 
   public void toggleHide() { hidden = !hidden; updateFiles(); }
@@ -55,4 +57,6 @@ public class directory {
 
   public int getX() { return x; }
   public int getY() { return y; }
+
+  public String getPath() { return path; }
 }

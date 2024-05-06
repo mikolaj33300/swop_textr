@@ -25,9 +25,12 @@ public class directoryInputHandler extends InputHandlingElement {
   @Override
   public void input(byte b){
       switch (b) {
-	  case 104:
-	      dirCntnt.toggleHide();
-	      break;
+        case 104:
+            dirCntnt.toggleHide();
+            break;
+        case 114:
+            dirCntnt.updateFiles();
+            break;
       }
 
     this.contentsChangedSinceRender = false;
