@@ -1,48 +1,30 @@
 package util.json;
 
-import directory.directorytree.DirEntry;
+import directory.directorytree.FileSystemEntry;
+import directory.directorytree.JsonDirectoryEntry;
 
 public class JsonUtil {
-
-    private final String contents;
-    private final SimpleJsonObject parsedFileBuffer;
-
-    JsonUtil(String contentsBuffer) {
-        this.contents = contentsBuffer;
-        this.parsedFileBuffer = SimpleJsonParser.parseSimpleJsonObject(contents);
-    }
 
     /**
      * Returns a {@link JsonUtil} object when the parameter contents were correct json format.
      * @param contents the contents that should be parsed to json
      * @return a {@link JsonUtil} object if correct json format, else null
      */
-    static DirEntry getParser(String contents) {
-        JsonUtil util = new JsonUtil(contents);
-        if(util.parsesCorrectly()) return util.buildJsonTree();
-        return null;
+    public static FileSystemEntry getParser(String contents) {
+        SimpleJsonObject object = SimpleJsonParser.parseObject(contents);
+        TextLocation location = JsonUtil.getErrorLocation(contents);
+        return location != null ? null :
+                new JsonDirectoryEntry(object.property.name,
+                object.properties,
+                null);
     }
 
     /**
      * Determines if the given string parameter has correct JSON structure
-     * @return a boolean determining if the contents were correct json
+     * @return a textlocation determining the location of the error, or null if there were no errors
      */
-    private boolean parsesCorrectly() {
-        try {
-            SimpleJsonObject parsed = SimpleJsonParser.parseSimpleJsonObject(contents);
-            } catch(SimpleJsonParserException exception) {
-            return false;
-        }
-        return true;
+    public static TextLocation getErrorLocation(String contents) {
+        return SimpleJsonParser.getErrorLocation(contents);
     }
-
-
-    private DirEntry buildJsonTree() {
-        //return new JsonDirectoryEntry(parsedFileBuffer.property.name, parsedFileBuffer.properties, null);
-        return null;
-    }
-
-
-
 
 }

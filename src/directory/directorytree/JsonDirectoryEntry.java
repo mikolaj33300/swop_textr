@@ -23,7 +23,7 @@ public class JsonDirectoryEntry extends JsonEntry {
         for (Map.Entry<String, SimpleJsonProperty> entry : this.entries.entrySet()) {
 
             if (entry.getValue().value.getChildren() == null)
-                json.add(new JsonFileEntry(entry.getKey(), entry.getValue().value.getLocation(), this));
+                json.add(new JsonFileEntry(entry.getKey(), this));
             else
                 json.add(new JsonDirectoryEntry(entry.getKey(), entry.getValue().value.getChildren(), this));
 
@@ -31,4 +31,5 @@ public class JsonDirectoryEntry extends JsonEntry {
 
         return json;
     }
+
 }
