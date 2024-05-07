@@ -1,8 +1,8 @@
-package directory.json;
+package util.json;
 
 import java.util.LinkedHashMap;
 
-class SimpleJsonParser {
+public class SimpleJsonParser {
 
     String text;
     /**

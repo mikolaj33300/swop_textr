@@ -1,4 +1,4 @@
-package directory.json;
+package util.json;
 
 import directory.directorytree.DirEntry;
 
@@ -17,9 +17,9 @@ public class JsonUtil {
      * @param contents the contents that should be parsed to json
      * @return a {@link JsonUtil} object if correct json format, else null
      */
-    static JsonUtil getParser(String contents) {
+    static DirEntry getParser(String contents) {
         JsonUtil util = new JsonUtil(contents);
-        if(util.parsesCorrectly()) return util;
+        if(util.parsesCorrectly()) return util.buildJsonTree();
         return null;
     }
 
@@ -36,7 +36,9 @@ public class JsonUtil {
         return true;
     }
 
+
     private DirEntry buildJsonTree() {
+        //return new JsonDirectoryEntry(parsedFileBuffer.property.name, parsedFileBuffer.properties, null);
         return null;
     }
 

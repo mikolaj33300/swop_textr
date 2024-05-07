@@ -9,6 +9,7 @@ import static files.FileAnalyserUtil.getContentLines;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileAnalyserUtilTest {
+
     @Test
     public void testGetContentLinesBasic() {
         byte[] testingByteArr = {65, 65, 65};

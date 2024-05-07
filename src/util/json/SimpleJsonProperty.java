@@ -1,6 +1,6 @@
-package directory.json;
+package util.json;
 
-class SimpleJsonProperty {
+public class SimpleJsonProperty {
     /**
      * Parent object
      */
@@ -9,10 +9,12 @@ class SimpleJsonProperty {
     /**
      * A value, can be a {@link SimpleJsonObject} or {@link SimpleJsonString}
      */
-    SimpleJsonValue value;
+    public SimpleJsonValue value;
+
     SimpleJsonProperty(String name, SimpleJsonValue value) {
         this.name = name;
         this.value = value;
         value.property = this;
     }
+
 }

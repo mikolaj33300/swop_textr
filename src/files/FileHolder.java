@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Formatter;
 
 /*
  * file aparte klasse omdat eventueel andere io gebruikt moet worden +
@@ -41,6 +40,7 @@ public class FileHolder {
 
     /**
      * saves file
+     *
      * @param fileContent the content to write away
      * @return 0 if write is successul, 1 if it was not
      */
@@ -54,41 +54,49 @@ public class FileHolder {
     }
 
     /**
-     * @return the content of the file
+     * Checks if the program should throw an exception when non ascii characters were found
+     * @param fileContent the bytes that should be checked for invalid ascii characters
+     * @throws {@link RuntimeException} when the parameter represented non ascii characters
      */
-    public final byte[] getContent() throws IOException, RuntimeException {
-
-            // Check for invalid bytes
-            // 1. Non ASCII characters
-            byte[] fileContent = Files.readAllBytes(this.fd.toPath());
-            for(byte b : fileContent)
-                if(b < 32 && b != 10 && b != 13 || 127 <= b)
-                    throw new RuntimeException("Error: Invalid file contents - Invalid bytes");
-            // 2. Non platform specific line seperators
-            byte[] lineSeperatorBytes = lineSeparator;
-            Formatter formatterLine = new Formatter();
-            for(byte b : lineSeperatorBytes) formatterLine.format("%02x",b);
-            // If line separator was specified, use specified otherwise use System.lineSeparator()
-            String lineSeperatorCode = FileAnalyserUtil.formatBytes(lineSeparator);
-
-            Formatter formatterContent = new Formatter();
-            for(byte b : fileContent) formatterContent.format("%02x",b);
-            String fileContentFormatted = formatterContent.toString();
-
-            // We zullen enkel voor windows ("0d0a") kijken voor een match.
-            // Contains 0d0a, code is 0a
-            if((fileContentFormatted.contains("0d0a") && lineSeperatorCode.equals("0a"))
-                    // Contains 0a, not 0d0a, code is 0d0a
-                    || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
-                    lineSeperatorCode.equals("0d0a")))
-                throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
-
-
-            return fileContent;
+    protected void checkInvalidCharacters(byte[] fileContent) throws RuntimeException {
+        for (byte b : fileContent)
+            if (b < 32 && b != 10 && b != 13 || 127 <= b)
+                throw new RuntimeException("Error: Invalid file contents - Invalid bytes");
     }
 
     /**
-     * @return a copy of this FileHolder, without the reference to it
+     * Checks if the parameter content contained byte sequences that were invalid in terms of line separators.
+     * Allowed line separators were specified in the constructor {@link FileHolder#lineSeparator}.
+     * @param fileContent the bytes that should be checked for a valid line separator
+     * @throws RuntimeException when the parameter contained invalid byte sequence
+     */
+    protected void checkLineSeparator(byte[] fileContent) throws RuntimeException {
+        // First get formatted line separator bytes: bytes to 0d0a or 0d
+        String lineSeperatorCode = FileAnalyserUtil.formatBytes(lineSeparator);
+        String fileContentFormatted = FileAnalyserUtil.formatBytes(fileContent);
+
+        // We zullen enkel voor windows ("0d0a") kijken voor een match.
+        // Contains 0d0a, code is 0a
+        if ((fileContentFormatted.contains("0d0a") && lineSeperatorCode.equals("0a"))
+                // Contains 0a, not 0d0a, code is 0d0a
+                || (fileContentFormatted.contains("0a") && !fileContentFormatted.contains("0d0a") &&
+                lineSeperatorCode.equals("0d0a")))
+            throw new RuntimeException("Error: Invalid file contents - Invalid line separator");
+
+    }
+
+    /**
+     * @return the content of the file
+     */
+    public byte[] getContent() throws IOException {
+        byte[] fileContent = Files.readAllBytes(this.fd.toPath());
+        checkInvalidCharacters(fileContent);
+        checkLineSeparator(fileContent);
+        return fileContent;
+    }
+
+    /**
+     * @return a copy of this {@link FileHolder}, without the reference to it
      */
     public FileHolder clone() {
         return new FileHolder(new String(this.path), this.lineSeparator);
@@ -107,9 +115,9 @@ public class FileHolder {
      * @return if given arrays are equal
      */
     public static boolean areContentsEqual(byte[] arr1, byte[] arr2) {
-        if(arr1.length != arr2.length) return false;
-        for(int i = 0; i < arr1.length; i++)
-            if(arr1[i] != arr2[i]) return false;
+        if (arr1.length != arr2.length) return false;
+        for (int i = 0; i < arr1.length; i++)
+            if (arr1[i] != arr2[i]) return false;
         return true;
     }
 

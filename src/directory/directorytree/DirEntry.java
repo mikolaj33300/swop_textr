@@ -1,13 +1,29 @@
 package directory.directorytree;
 
-public abstract class DirEntry {
-    abstract public String getParent();
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-    abstract public DirEntry[] listFiles();
+public class DirEntry extends FileSystemEntry {
 
-    abstract public boolean isHidden();
+    public DirEntry(FileSystemEntry parent, String path) {
+        super(path, parent);
+    }
 
-    abstract public boolean isDirectory();
+    @Override
+    public List<FileSystemEntry> initChildren() {
+        List<FileSystemEntry> entry = new ArrayList<>();
 
-    abstract public String getName();
+        for(File listedFile : new File(getPath()).listFiles()) {
+
+            if(listedFile.isDirectory())
+                entry.add(new DirEntry(this, listedFile.getPath()));
+            else
+                entry.add(new FileEntry(this, listedFile.getPath()));
+
+        }
+
+        return entry;
+    }
+
 }

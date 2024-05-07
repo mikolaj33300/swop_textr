@@ -1,6 +1,6 @@
-package directory.json;
+package util.json;
 
-class SimpleJsonGenerator {
+public class SimpleJsonGenerator {
 
     private StringBuilder builder = new StringBuilder();
     private int objectNestingDepth;

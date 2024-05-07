@@ -1,12 +1,7 @@
 package directory;
 
-import directory.directorytree.DirEntry;
-import directory.directorytree.FileEntry;
-
-import java.io.File;
-import java.util.ArrayList;
-
 public class Directory {
+    /*
     private String path;
     private int x, y;
     private boolean hidden = false;
@@ -54,7 +49,7 @@ public class Directory {
 
     /**
      * Vond ik leuk om te doen, groetjes tom
-     */
+
     public void toggleHide() {
         hidden = !hidden;
         updateFiles();
@@ -100,6 +95,6 @@ public class Directory {
 
     public String getPath() {
         return path;
-    }
+    }*/
 }
 

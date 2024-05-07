@@ -1,4 +1,4 @@
-package directory.json;
+package util.json;
 
 class SimpleJsonParserException extends RuntimeException {
     TextLocation location;
