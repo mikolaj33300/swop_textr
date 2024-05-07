@@ -42,7 +42,7 @@ public class FileHolder {
     /**
      * saves file
      * @param fileContent the content to write away
-     * @return 0 if the write is successul, 1 if it was not
+     * @return 0 if write is successul, 1 if it was not
      */
     int save(byte[] fileContent) {
         try {
