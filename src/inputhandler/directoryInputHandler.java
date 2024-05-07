@@ -1,16 +1,32 @@
 package inputhandler;
 
+import inputhandler.FileBufferInputHandler;
+import controller.ControllerFacade;
+import ui.FileBufferView;
 import directory.directory;
 
 public class directoryInputHandler extends InputHandlingElement {
   directory dirCntnt;
+  private ControllerFacade parent;
 
-  public directoryInputHandler (String path){ this.dirCntnt = new directory(path); }
-  
-  @Override
-  public void handleSeparator(){// open the current open file
-    dirCntnt.enterDir();
+  public directoryInputHandler (String path, ControllerFacade prnt){ 
+      this.dirCntnt = new directory(path); 
+      this.parent = prnt;
   }
+  
+    @Override
+    public void handleSeparator(){// open the current open file
+	String path = dirCntnt.handleEnter();
+	if (path != null)
+	    try {
+		FileBufferInputHandler fh = new FileBufferInputHandler(path, System.lineSeparator().getBytes());
+		parent.replaceActive(new FileBufferView(fh.fb, parent.getTerminal()), fh);
+	    } catch (Exception e) {
+		System.out.println(path);
+		System.out.println(e);
+		System.exit(1);
+	    }
+    }
 
   @Override public void handleArrowUp(){ this.dirCntnt.scrollUp(); }
   @Override public void handleArrowDown(){ this.dirCntnt.scrollDown(); }

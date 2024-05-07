@@ -4,6 +4,7 @@ import controller.adapter.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
+import inputhandler.InputHandlingElement;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import inputhandler.directoryInputHandler;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class ControllerFacade {
+public class ControllerFacade {
     private byte[] lineSeparatorArg;
     private ArrayList<Window> windows;
     private Layout rootLayout;
@@ -248,6 +249,23 @@ class ControllerFacade {
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
     }
 
+   public void replaceActive(View view, InputHandlingElement input) {
+	int oldHash = this.windows.get(active).view.hashCode();
+	Window win = new Window(view, input);
+
+        rootLayout.changeHash(oldHash, view.hashCode());
+	windows.add(win);
+	windows.remove(active);
+        active = this.windows.size() - 1;
+	updateViewCoordinates();
+	try {
+	    renderContent();
+	} catch (Exception e) {
+	    System.out.println(e);
+	    System.exit(1);
+	}
+   }
+
     /**
      * Opens the snake game by doing overwriting the active {@link ControllerFacade#windows}'s
      * {@link inputhandler.InputHandlingElement} to {@link SnakeInputHandler} and {@link View}
@@ -352,10 +370,14 @@ class ControllerFacade {
     }
 
     public void openDirectory(String path) { 
-	directoryInputHandler dirhandle = new directoryInputHandler(path);
+	directoryInputHandler dirhandle = new directoryInputHandler(path, this);
 	directoryView dirView = new directoryView(dirhandle.getDir(), termiosTerminalAdapter);
-      windows.add(windows.size(), new Window(dirView, dirhandle));
-      rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), dirView.hashCode());
+	windows.add(windows.size(), new Window(dirView, dirhandle));
+	rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), dirView.hashCode());
 	updateViewCoordinates();
+    }
+
+    public TermiosTerminalAdapter getTerminal() {
+	return this.termiosTerminalAdapter;
     }
 }

@@ -33,7 +33,8 @@ public class directory {
     return this.files;
   }
 
-  public void enterDir() { 
+  /*
+  private void enterDir() { 
       String dir = getCrnt(); 
       if (dir.equals("../")){
         File tmp = new File(path);
@@ -44,10 +45,26 @@ public class directory {
       updateFiles();
       x = 0; y = 0;
   }
+  */
+
+  public String handleEnter() {
+      String dir = getCrnt(); 
+      if (dir.equals("../")){
+        File tmp = new File(path);
+        path = tmp.getParent();
+      } else if (dir.substring(dir.length() - 1).equals("/")) {
+        path += "/" + dir.substring(0, dir.length()-1);
+      } else {
+	  return path + "/" + dir.substring(0, dir.length());
+      }
+      updateFiles();
+      x = 0; y = 0;
+      return null;
+  }
 
   public void toggleHide() { hidden = !hidden; updateFiles(); }
 
-  public String getCrnt() { return files.get(y); }
+  private String getCrnt() { return files.get(y); }
 
   private void cToEnd() { if (x > files.get(y).length()) x = files.get(y).length()-1; }
   public void scrollDown(){ if (y < files.size()-1) { y++; cToEnd(); } }
