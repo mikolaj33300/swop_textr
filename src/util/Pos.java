@@ -2,6 +2,9 @@ package util;
 
 public class Pos {
 
+    /**
+     * The x, y coordinates of this position
+     */
     private final int x, y;
 
     /**
@@ -14,14 +17,14 @@ public class Pos {
     }
 
     /**
-     * @return the x value
+     * @return the x value of this position
      */
     public int x() {
         return this.x;
     }
 
     /**
-     * @return the y value
+     * @return the y value of this position
      */
     public int y() {
         return this.y;
@@ -81,17 +84,10 @@ public class Pos {
      */
     public static boolean isBetween1D(Pos start, Pos end, Pos test) {
         // Start & End is horizontal
-        if(start.x() == end.x() && start.x() == test.x()) {
-            /*SnakeHead.log("X Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " + test.getPrint()
-            + " -> bool: " + (start.y <= test.y && end.y >= test.y));*/
+        if(start.x() == end.x() && start.x() == test.x())
             return start.y <= test.y && end.y >= test.y;
-            // Start & End is vertical
-        }
-        else if(start.y() == end.y() && start.y() == test.y()) {
-            /*SnakeHead.log("Y Start = " + start.getPrint() + " - End: " + end.getPrint() + " -> test: " +
-                    test.getPrint() + " return: " + (start.x <= test.x && end.x >= test.x));*/
+        else if(start.y() == end.y() && start.y() == test.y())
             return start.x <= test.x && end.x >= test.x;
-        }
         return false;
     }
 
