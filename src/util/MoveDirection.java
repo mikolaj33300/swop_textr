@@ -4,6 +4,9 @@ public enum MoveDirection {
 
     UP, DOWN, RIGHT, LEFT;
 
+    /**
+     * The opposite direction of a {@link MoveDirection} direction
+     */
     private MoveDirection opposite;
 
     static {

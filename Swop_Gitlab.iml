@@ -9,7 +9,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="io.github.btj.termios-0.8" level="project" />
     <orderEntry type="module-library" exported="" scope="TEST">
       <library name="JUnit5.8.1">
         <CLASSES>
@@ -26,6 +25,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="io.github.btj.termios-0.8" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="935e7ed1-9c44-4efb-9f89-0edfd6d8e386" />
