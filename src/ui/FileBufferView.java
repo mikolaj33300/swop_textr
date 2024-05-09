@@ -15,8 +15,16 @@ public class FileBufferView extends View{
      */
     private final BufferCursorContext containedFileBuffer;
 
+    /**
+     * The adapter used for interacting with termios
+     */
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
+    /**
+     * The constructor for this view.
+     * @param openedFile the cursor context for the opened file
+     * @param termiosTerminalAdapter the assigned adapter for this view, used to interact with termios
+     */
     public FileBufferView(BufferCursorContext openedFile,TermiosTerminalAdapter termiosTerminalAdapter) {
         this.containedFileBuffer=openedFile;
         this.termiosTerminalAdapter = termiosTerminalAdapter;

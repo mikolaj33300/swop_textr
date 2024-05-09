@@ -1,30 +1,29 @@
 package util.json;
 
 public class SimpleJsonGenerator {
-
-    private StringBuilder builder = new StringBuilder();
-    private int objectNestingDepth;
-    private String lineSeparator;
+    StringBuilder builder = new StringBuilder();
+    int objectNestingDepth;
+    String lineSeparator;
 
     SimpleJsonGenerator(String lineSeparator) {
         this.lineSeparator = lineSeparator;
     }
 
-    private void generateLineBreak() {
+    void generateLineBreak() {
         builder.append(lineSeparator);
         int n = 2 * objectNestingDepth;
         for (int i = 0; i < n; i++)
             builder.append(' ');
     }
 
-    private void generate(SimpleJsonValue value) {
+    void generate(SimpleJsonValue value) {
         switch (value) {
             case SimpleJsonString s -> generate(s);
             case SimpleJsonObject o -> generate(o);
         }
     }
 
-    private void generate(String text) {
+    void generate(String text) {
         builder.append('"');
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
@@ -44,11 +43,11 @@ public class SimpleJsonGenerator {
         builder.append('"');
     }
 
-    private void generate(SimpleJsonString string) {
+    void generate(SimpleJsonString string) {
         generate(string.value);
     }
 
-    private void generate(SimpleJsonObject object) {
+    void generate(SimpleJsonObject object) {
         builder.append('{');
         objectNestingDepth++;
         generateLineBreak();

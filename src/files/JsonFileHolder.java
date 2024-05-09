@@ -1,5 +1,6 @@
 package files;
 
+import util.json.JsonUtil;
 import util.json.TextLocation;
 
 import java.io.IOException;
@@ -9,11 +10,20 @@ import java.util.ArrayList;
 
 public class JsonFileHolder extends FileHolder {
 
-    private final TextLocation location;
+    /**
+     * The path to a certain entry in the json structure
+     */
+    private final String entryPath;
 
-    public JsonFileHolder(String path, byte[] lineSeparator, TextLocation location) {
+    /**
+     * The constructor for JsonFileHolder.
+     * @param path the path of the json file on disk
+     * @param entryPath the path of an entry in the json structure
+     * @param lineSeparator the line separator used to read the file
+     */
+    public JsonFileHolder(String path, String entryPath, byte[] lineSeparator) {
         super(path, lineSeparator);
-        this.location = location;
+        this.entryPath = entryPath;
     }
 
     @Override
@@ -27,6 +37,7 @@ public class JsonFileHolder extends FileHolder {
     @Override
     int save(byte[] fileContent) {
 
+        TextLocation location = getJsonContentLocation();
         ArrayList<ArrayList<Byte>> allBytes = readAllFileContent();
 
         // 1. In the specified line, we get the first part which is static: '"file.txt": "'
@@ -53,7 +64,7 @@ public class JsonFileHolder extends FileHolder {
         try {
             Files.write(Path.of(this.getPath()), flatten(replacedLines));
         } catch(IOException e) {
-
+            System.out.println("Writing failed");
         }
 
         return 1;
@@ -66,6 +77,7 @@ public class JsonFileHolder extends FileHolder {
      */
     byte[] readSpecifiedLine() throws IOException {
 
+        TextLocation location = getJsonContentLocation();
         ArrayList<ArrayList<Byte>> allBytes = FileAnalyserUtil.getContentLines(
                 Files.readAllBytes(Path.of(this.getPath())), getLineSeparator()
         );
@@ -87,6 +99,8 @@ public class JsonFileHolder extends FileHolder {
      * @return the byte[] which represents a " or ",
      */
     byte[] getLastBytes() {
+
+        TextLocation location = getJsonContentLocation();
 
         // We get the line this holder represents
         ArrayList<Byte> specifiedLine = readAllFileContent().get(location.line());
@@ -125,26 +139,50 @@ public class JsonFileHolder extends FileHolder {
     }
 
     /**
-     * Mends two byte[] together
-     * @return the mended list
+     * TODO might be better in another class
+     * Flattens a list of lists of bytes
+     * @return the flattened byte[] list
      */
-    byte[] flatten(ArrayList<ArrayList<Byte>> sdfsldfkjsdfjsjj) {
+    byte[] flatten(ArrayList<ArrayList<Byte>> toFlatten) {
 
         int length = 0;
-        for(ArrayList<Byte> list : sdfsldfkjsdfjsjj)
+        for(ArrayList<Byte> list : toFlatten)
             length += list.size();
 
-        byte[] sdfsdfeefeef = new byte[length];
+        byte[] flatArr = new byte[length];
         int currentI = 0;
 
-        for(ArrayList<Byte> list : sdfsldfkjsdfjsjj) {
+        for(ArrayList<Byte> list : toFlatten) {
             for(int i = 0; i < list.size(); i++) {
-                sdfsdfeefeef[i+currentI] = list.get(i);
+                flatArr[i+currentI] = list.get(i);
                 currentI++;
             }
         }
 
-        return sdfsdfeefeef;
+        return flatArr;
+
+    }
+
+    /**
+     * Retrieves the location of the content for this file.
+     * Purpose is to catch exceptions here
+     * @return a {@link TextLocation} object specifying the location of the content for a given {@link JsonFileHolder#entryPath}
+     */
+    TextLocation getJsonContentLocation() {
+
+        TextLocation location = null;
+
+        try {
+
+            location = JsonUtil.getTextLocationFor(getPath(), entryPath);
+
+        } catch(IOException e) {
+
+            System.out.println("We are fucked");
+
+        }
+
+        return location;
 
     }
 

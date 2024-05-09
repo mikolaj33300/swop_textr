@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public abstract class View {
 
+    /**
+     * The rectangle which describes the bounds of this view
+     */
     Rectangle uiCoordsScaled;
 
     /**

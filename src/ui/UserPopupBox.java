@@ -3,6 +3,10 @@ package ui;
 import io.github.btj.termios.Terminal;
 
 public class UserPopupBox {
+
+    /**
+     * The message to be displayed by the pop-up box
+     */
     String message;
 
     /**

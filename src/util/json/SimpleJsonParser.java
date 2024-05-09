@@ -164,15 +164,18 @@ public class SimpleJsonParser {
         return new SimpleJsonObject(properties);
     }
 
-    static SimpleJsonObject parseObject(String text) {
+    public static SimpleJsonObject parseObject(String text) {
         SimpleJsonParser parser = new SimpleJsonParser(text);
-        SimpleJsonObject result = parser.parseSimpleJsonObject();
-        return result;
+        return parser.parseSimpleJsonObject();
     }
 
-    static TextLocation getErrorLocation(String text) {
+    public static TextLocation getErrorLocation(String text) {
         SimpleJsonParser parser = new SimpleJsonParser(text);
-        SimpleJsonObject result = parser.parseSimpleJsonObject();
+        try {
+            parser.parseSimpleJsonObject();
+        } catch(Exception e) {
+
+        }
         if (parser.peek() != -1)
             return parser.location();
         return null;
