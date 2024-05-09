@@ -2,6 +2,7 @@ package directory.directorytree;
 
 import directory.FileCreator;
 import files.FileHolder;
+import util.json.TextLocation;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class JsonFileEntry extends JsonEntry {
      * @param fullPath the full path to the json file on disk
      * @param parent the parent of this file
      */
-    public JsonFileEntry(String path, String fullPath, JsonDirectoryEntry parent) {
-        super(path, fullPath, parent);
+    public JsonFileEntry(String path, String fullPath, TextLocation loc, JsonDirectoryEntry parent) {
+        super(path, fullPath, loc, parent);
     }
 
     @Override

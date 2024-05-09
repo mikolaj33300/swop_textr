@@ -15,10 +15,10 @@ public class JsonUtil {
      * This will retrieve the {@link TextLocation} of a json entry path in a json file.
      * @param jsonFilePath the file path of the Json file
      * @param jsonPath the target path in the json structure
-     * @return a {@link TextLocation} object that specifies the location where the " starts for the target path. Will return null if the path was not found or parsing failed
+     * @return a {@link TextLocation} object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
      */
     public static TextLocation getTextLocationFor(String jsonFilePath, String jsonPath) throws IOException {
-
+        return null;
     }
 
     /**

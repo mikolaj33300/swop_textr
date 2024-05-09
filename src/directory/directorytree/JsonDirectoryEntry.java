@@ -36,7 +36,7 @@ public class JsonDirectoryEntry extends JsonEntry {
 
             // If the selected file's SimpleJsonValue is not a SimpleJsonObject (children = null), we add a FileEntry
             if (entry.getValue().value.getChildren() == null)
-                json.add(new JsonFileEntry(entry.getKey(), getPath(), this));
+                json.add(new JsonFileEntry(entry.getKey(), getPath(), entry.getValue().value.getLocation(), this));
             else
                 json.add(new JsonDirectoryEntry(entry.getKey(), getPath(), entry.getValue().value.getChildren(), this));
 
