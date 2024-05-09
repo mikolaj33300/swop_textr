@@ -43,7 +43,7 @@ public class FileAnalyserUtil {
         while (i < byteContents.length) {
             //if separator encountered
             if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), lineSeparator)){
-                linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
+                linesArrList.add(toArray(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
                 i += lineSepLength;
                 startOfCurrentLine = i;
             } else {
@@ -51,7 +51,7 @@ public class FileAnalyserUtil {
             }
         }
         if(startOfCurrentLine<byteContents.length){
-            linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
+            linesArrList.add(toArray(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
         }
         if(byteContents.length==0){
             linesArrList = new ArrayList<>(1);
@@ -75,7 +75,7 @@ public class FileAnalyserUtil {
      * @param byteArr the byte[] primitive which we want as a {@link Byte} array
      * @return the {@link Byte} array
      */
-    public static Byte[] wrapEachByteElem(byte[] byteArr){
+    public static Byte[] toPrimitive(byte[] byteArr){
         Byte[] wrapperArray = new Byte[byteArr.length];
         for (int i = 0; i < byteArr.length; i++) {
             wrapperArray[i] = byteArr[i];
@@ -96,8 +96,8 @@ public class FileAnalyserUtil {
      * @param bArr an array of bytes
      * @return make arrayList from byte array
      */
-    public static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
-        return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
+    public static ArrayList<Byte> toArray(byte[] bArr){
+        return new ArrayList<>(Arrays.<Byte>asList(toPrimitive(bArr)));
     }
 
 
@@ -116,7 +116,7 @@ public class FileAnalyserUtil {
 
 
     /**
-     * Splices the given array (misschien in FileAnalyserUtil)
+     * Splices the given array
      * @param array the array that should be spliced
      * @param start the start position (inclusive)
      * @param end the end position (inclusive)
@@ -130,6 +130,29 @@ public class FileAnalyserUtil {
             counter++;
         }
         return splicedLine;
+    }
+
+    /**
+     * Inserts the given insertArray into the resultArray
+     * @param resultArray the array that is put as start
+     * @param insertArray the array that is appended
+     * @return a byte[] containing both arrays
+     */
+    public static byte[] copyArray(byte[] resultArray, byte[] insertArray) {
+
+        byte[] result = new byte[resultArray.length + insertArray.length];
+
+        for(int i = 0; i < result.length; i++) {
+
+            if(i < resultArray.length)
+                result[i] = resultArray[i];
+            else
+                result[i] = insertArray[i - resultArray.length];
+
+        }
+
+        return result;
+
     }
 
 }

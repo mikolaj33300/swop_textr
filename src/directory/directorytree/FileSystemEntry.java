@@ -59,11 +59,11 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
     }
 
     /**
-     * Returns the parent's string format
-     * @return path of the parent
+     * Returns the parent entry
+     * @return the parent {@link FileSystemEntry} of this entry
      */
-    public String getParent() {
-        return this.parent.path;
+    public FileSystemEntry getParent() {
+        return this.parent;
     }
 
     /**
@@ -96,7 +96,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * Returns the list of children
      * @return a list of {@link FileSystemEntry}
      */
-    public List<FileSystemEntry> getEntries() {
+    public List<? extends FileSystemEntry> getEntries() {
         List<FileSystemEntry> entries = new ArrayList<>();
         entries.addAll(this.children);
         return entries;

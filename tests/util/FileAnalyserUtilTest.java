@@ -1,11 +1,12 @@
 package util;
 
 import files.FileAnalyserUtil;
+import files.FileHolder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static files.FileAnalyserUtil.getContentLines;
+import static files.FileAnalyserUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileAnalyserUtilTest {
@@ -26,8 +27,8 @@ public class FileAnalyserUtilTest {
         ArrayList<ArrayList<Byte>> a = getContentLines(textToWrite.getBytes(), System.lineSeparator().getBytes());
 
         ArrayList<ArrayList<Byte>> toCompare = new ArrayList<>();
-        ArrayList<Byte> toCompareFirst = FileAnalyserUtil.createByteWrapArrayList(firstLine.getBytes());
-        ArrayList<Byte> toCompareSecond = FileAnalyserUtil.createByteWrapArrayList(secondLine.getBytes());
+        ArrayList<Byte> toCompareFirst = FileAnalyserUtil.toArray(firstLine.getBytes());
+        ArrayList<Byte> toCompareSecond = FileAnalyserUtil.toArray(secondLine.getBytes());
         toCompare.add(toCompareFirst);
         toCompare.add(toCompareSecond);
 
@@ -43,6 +44,31 @@ public class FileAnalyserUtilTest {
 
         assertEquals(6, a.get(0).size());
         assertEquals(3, a.get(1).size());
+    }
+
+    @Test
+    public void testArrayCopy() {
+        byte[] a = "optee or mister tee?".getBytes();
+        byte[] b = "they are complementary!!!!!".getBytes();
+
+        assertTrue(
+                FileHolder.areContentsEqual(
+                    copyArray(a, b),
+                        "optee or mister tee?they are complementary!!!!!".getBytes()
+                )
+        );
+    }
+
+    @Test
+    public void testSpliceArray() {
+        byte[] a = "i like control flow integrity".getBytes();
+
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        "i like control flow integri".getBytes(),
+                        spliceArray(FileAnalyserUtil.toArray(a), 0, a.length - 2)
+                )
+        );
     }
 
 }

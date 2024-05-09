@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static files.FileAnalyserUtil.wrapEachByteElem;
+import static files.FileAnalyserUtil.toPrimitive;
 
 public class FileBuffer {
 
@@ -64,7 +64,7 @@ public class FileBuffer {
      */
     public FileBuffer(String path, byte[] lineSeparator) throws IOException {
         this.file = new FileHolder(path, lineSeparator);
-        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(wrapEachByteElem(this.file.getContent())));
+        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(toPrimitive(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
         this.deletedInsertionPointListeners = new ArrayList<DeletedInsertionPointListener>();
         this.enteredInsertionPointListeners = new ArrayList<EnteredInsertionPointListener>();
@@ -327,7 +327,7 @@ public class FileBuffer {
      */
     private void insert(int byteArrayIndex, byte... data) {
         byteContent.addAll(byteArrayIndex,
-                Arrays.<Byte>asList(wrapEachByteElem(data)));
+                Arrays.<Byte>asList(toPrimitive(data)));
 
         linesArrayList = FileAnalyserUtil.getContentLines(this.getBytes(), this.getLineSeparator());
     }
@@ -413,4 +413,12 @@ public class FileBuffer {
     public String getPath() {
         return file.getPath();
     }
+
+    /**
+     * Sets the buffer content (gebruikt door {@link JsonFileHolder})
+     */
+    void setLinesArrayList(ArrayList<ArrayList<Byte>> bytes) {
+        this.linesArrayList = bytes;
+    }
+
 }

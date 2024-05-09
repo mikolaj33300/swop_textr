@@ -185,10 +185,6 @@ public class FileBufferView extends View{
         termiosTerminalAdapter.moveCursor(1 + startY + cursorYoffset, 1 + startX + cursorXoffset);
     }
 
-    public void contentsChanged() {
-        //render();
-    }
-
     /**
      * Returns the {@link BufferCursorContext} object of this view
      * @return buffer cursor context

@@ -1,8 +1,9 @@
-package directory;
+package directory.directorytree;
 
 import directory.directorytree.FileEntry;
 import directory.directorytree.JsonFileEntry;
 import files.FileHolder;
+import files.JsonFileHolder;
 
 public class FileCreator {
 
@@ -19,7 +20,7 @@ public class FileCreator {
      * @param entry the {@link JsonFileEntry} where we will extract information from to create a {@link files.JsonFileHolder}
      */
     public FileHolder createJson(JsonFileEntry entry) {
-        return null;
+        return new JsonFileHolder(entry.getBuffer(), entry.getName());
     }
 
 }

@@ -3,6 +3,7 @@ package files;
 import util.json.JsonUtil;
 import util.json.TextLocation;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,19 +17,29 @@ public class JsonFileHolder extends FileHolder {
     private final String entryPath;
 
     /**
-     * The constructor for JsonFileHolder.
-     * @param path the path of the json file on disk
-     * @param entryPath the path of an entry in the json structure
-     * @param lineSeparator the line separator used to read the file
+     * The referenced file buffer
      */
-    public JsonFileHolder(String path, String entryPath, byte[] lineSeparator) {
-        super(path, lineSeparator);
+    private final FileBuffer buffer;
+
+    /**
+     * The constructor for JsonFileHolder.
+     * @param buffer the buffer where the contents should be saved
+     * @param entryPath the path of an entry in the json structure
+     */
+    public JsonFileHolder(FileBuffer buffer, String entryPath) {
+        super(buffer.getPath(), buffer.getLineSeparator());
         this.entryPath = entryPath;
+        this.buffer = buffer;
     }
 
     @Override
     public byte[] getContent() throws IOException, RuntimeException {
         byte[] fileContent = readSpecifiedLine();
+        fileContent = FileAnalyserUtil.spliceArray(
+                FileAnalyserUtil.toArray(fileContent),
+                0,
+                fileContent.length - getLastBytes().length + 1
+        );
         checkInvalidCharacters(fileContent);
         checkLineSeparator(fileContent);
         return fileContent;
@@ -38,49 +49,39 @@ public class JsonFileHolder extends FileHolder {
     int save(byte[] fileContent) {
 
         TextLocation location = getJsonContentLocation();
-        ArrayList<ArrayList<Byte>> allBytes = readAllFileContent();
+        ArrayList<ArrayList<Byte>> allBytes = buffer.getLines();
 
         // 1. In the specified line, we get the first part which is static: '"file.txt": "'
-        byte[] firstLine = FileAnalyserUtil.spliceArray(allBytes.get(location.line()), 0, location.column());
+        byte[] firstLine = FileAnalyserUtil.spliceArray(allBytes.get(location.line()), 0, location.column()+1);
 
         // 2. Then we add the rest: content
         byte[] lastBytes = getLastBytes();
-        byte[] result = new byte[firstLine.length + fileContent.length + lastBytes.length];
-
-        System.arraycopy(firstLine, 0, result, 0, firstLine.length);
-        System.arraycopy(fileContent, firstLine.length, result, firstLine.length, firstLine.length + fileContent.length - firstLine.length);
-        if (firstLine.length + fileContent.length + lastBytes.length - (firstLine.length + fileContent.length) >= 0)
-            System.arraycopy(lastBytes, firstLine.length + fileContent.length, result, firstLine.length + fileContent.length, firstLine.length + fileContent.length + lastBytes.length - (firstLine.length + fileContent.length));
+        byte[] lineAndContent = FileAnalyserUtil.copyArray(firstLine, fileContent);
+        byte[] fullLine = FileAnalyserUtil.copyArray(lineAndContent, lastBytes);
 
         // 3. we replace the entry with result
         ArrayList<ArrayList<Byte>> replacedLines = new ArrayList<>();
         for(int i = 0; i < allBytes.size(); i++) {
             if(i == location.line())
-                FileAnalyserUtil.createByteWrapArrayList(result);
+                replacedLines.add(FileAnalyserUtil.toArray(fullLine));
             else
                 replacedLines.add(allBytes.get(i));
         }
 
-        try {
-            Files.write(Path.of(this.getPath()), flatten(replacedLines));
-        } catch(IOException e) {
-            System.out.println("Writing failed");
-        }
+        // We save in the FileBuffer
+        buffer.setLinesArrayList(replacedLines);
 
         return 1;
     }
 
     /**
-     * Reads the content between the quotation marks in the json file using the {@link JsonFileHolder#location}.
+     * Reads the content between the quotation marks in the json file using the {@link JsonFileHolder#getJsonContentLocation()}.
      * @return the bytes in the file starting from the given location
-     * @throws IOException when reading the file failed
      */
-    byte[] readSpecifiedLine() throws IOException {
+    byte[] readSpecifiedLine() {
 
         TextLocation location = getJsonContentLocation();
-        ArrayList<ArrayList<Byte>> allBytes = FileAnalyserUtil.getContentLines(
-                Files.readAllBytes(Path.of(this.getPath())), getLineSeparator()
-        );
+        ArrayList<ArrayList<Byte>> allBytes = buffer.getLines();
 
         ArrayList<Byte> specifiedLine = allBytes.get(location.line());
 
@@ -103,7 +104,7 @@ public class JsonFileHolder extends FileHolder {
         TextLocation location = getJsonContentLocation();
 
         // We get the line this holder represents
-        ArrayList<Byte> specifiedLine = readAllFileContent().get(location.line());
+        ArrayList<Byte> specifiedLine = buffer.getLines().get(location.line());
 
         // Then we get the last bytes
         // 1. there is only " at the end
@@ -118,72 +119,12 @@ public class JsonFileHolder extends FileHolder {
     }
 
     /**
-     * Reads the content of the file. We need this method because the JSON file has
-     * to read the full file for returning the specified content and saving new content
-     * at the right place
-     * @return a {@link ArrayList} in a {@link ArrayList} representing each 'line' of {@link Byte} values seperated by the {@link FileHolder#getLineSeparator()}
-     */
-    ArrayList<ArrayList<Byte>> readAllFileContent() {
-        ArrayList<ArrayList<Byte>> allBytes = null;
-
-        try {
-            allBytes = FileAnalyserUtil.getContentLines(
-                    Files.readAllBytes(Path.of(this.getPath())), getLineSeparator()
-            );
-        } catch(IOException io) {
-            System.out.println("If this triggers, we are in big trouble");
-            io.notify();
-        }
-
-        return allBytes;
-    }
-
-    /**
-     * TODO might be better in another class
-     * Flattens a list of lists of bytes
-     * @return the flattened byte[] list
-     */
-    byte[] flatten(ArrayList<ArrayList<Byte>> toFlatten) {
-
-        int length = 0;
-        for(ArrayList<Byte> list : toFlatten)
-            length += list.size();
-
-        byte[] flatArr = new byte[length];
-        int currentI = 0;
-
-        for(ArrayList<Byte> list : toFlatten) {
-            for(int i = 0; i < list.size(); i++) {
-                flatArr[i+currentI] = list.get(i);
-                currentI++;
-            }
-        }
-
-        return flatArr;
-
-    }
-
-    /**
      * Retrieves the location of the content for this file.
      * Purpose is to catch exceptions here
      * @return a {@link TextLocation} object specifying the location of the content for a given {@link JsonFileHolder#entryPath}
      */
     TextLocation getJsonContentLocation() {
-
-        TextLocation location = null;
-
-        try {
-
-            location = JsonUtil.getTextLocationFor(getPath(), entryPath);
-
-        } catch(IOException e) {
-
-            System.out.println("We are fucked");
-
-        }
-
-        return location;
-
+        return JsonUtil.getTextLocationFor(this.buffer, this.entryPath);
     }
 
 }

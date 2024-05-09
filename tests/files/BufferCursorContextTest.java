@@ -3,7 +3,6 @@ package files;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import util.Debug;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,7 +37,7 @@ public class BufferCursorContextTest {
 
       
         String textToWrite = "hallo kaas i am your loyal student i use termios daily";
-        Debug.write(path3.toString(), textToWrite);
+        FileWriterHelper.write(path3.toString(), textToWrite);
 
         BufferCursorContext buffer = new BufferCursorContext(path3.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorRight();
@@ -57,7 +56,7 @@ public class BufferCursorContextTest {
     public void testDeleteCharacterChangesBufInPoint() throws IOException {
 
         String textToWrite = System.lineSeparator() + "i use termios daily";
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
         buffer.moveCursorRight();
@@ -77,7 +76,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
 
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
@@ -91,7 +90,7 @@ public class BufferCursorContextTest {
         String firstLine = "this is a very long line, longer than the second";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
 
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         for (int i = 0; i < firstLine.length(); i++) {
@@ -108,7 +107,7 @@ public class BufferCursorContextTest {
         String firstLine = "this is a very long line, longer than the second";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
         for (int i = 0; i < secondLine.length(); i++) {
@@ -126,7 +125,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
 
@@ -141,7 +140,7 @@ public class BufferCursorContextTest {
         String firstLine = "this is a short line";
         String secondLine = "this is a very long line, longer than the first";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
         for (int i = 0; i < secondLine.length(); i++) {
@@ -159,7 +158,7 @@ public class BufferCursorContextTest {
         String firstLine = "this is a very long line, longer than the second";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
         buffer.moveCursorUp();
@@ -173,7 +172,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorRight();
 
@@ -188,7 +187,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
 
@@ -203,7 +202,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorLeft();
 
@@ -216,7 +215,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
         buffer.moveCursorRight();
@@ -230,7 +229,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         for (int i = 0; i < firstLine.length(); i++) {
             buffer.moveCursorRight();
@@ -245,7 +244,7 @@ public class BufferCursorContextTest {
     @Test
     public void testMoveCursorRightEnd() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         for (int i = 0; i < firstLine.length(); i++) {
             buffer.moveCursorRight();
@@ -259,7 +258,7 @@ public class BufferCursorContextTest {
     @Test
     public void testClosingClean() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
         int saveStatus = buffer.forcedClose();
@@ -270,7 +269,7 @@ public class BufferCursorContextTest {
     @Test
     public void testClosingDirty() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.write("a".getBytes()[0]);
         int saveStatus = buffer.forcedClose();
@@ -281,7 +280,7 @@ public class BufferCursorContextTest {
     @Test
     public void testSaveChangedFile() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.write("a".getBytes()[0]);
 
@@ -294,7 +293,7 @@ public class BufferCursorContextTest {
     @Test
     public void testWriteByte() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorRight();
         buffer.write("a".getBytes()[0]);
@@ -305,7 +304,7 @@ public class BufferCursorContextTest {
     @Test
     public void testDirtyAfterChange() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.write("a".getBytes()[0]);
 
@@ -317,7 +316,7 @@ public class BufferCursorContextTest {
     @Test
     public void testDirtyClean() throws IOException {
         String firstLine = "hello everyone";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
         boolean dirtyStatus = buffer.getDirty();
@@ -330,7 +329,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
 
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
 
@@ -342,7 +341,7 @@ public class BufferCursorContextTest {
     @Test
     public void testCharDeletionSynchronization() throws IOException {
         String firstLine = "hello";
-        Debug.write(path2.toString(), firstLine);
+        FileWriterHelper.write(path2.toString(), firstLine);
         BufferCursorContext bufctx = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         BufferCursorContext bufctx2 = new BufferCursorContext(bufctx);
         for(int i = 0; i<firstLine.length(); i++){
@@ -362,7 +361,7 @@ public class BufferCursorContextTest {
         String firstLine = "aa";
         String secondLine = "bbb";
         String textToWrite = firstLine + System.lineSeparator()+ secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
 
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorDown();
@@ -385,7 +384,7 @@ public class BufferCursorContextTest {
     public void testEnterInsertionSynchronization() throws IOException {
         String firstLine = "aaabbb";
         String secondLine = "ccc";
-        Debug.write(path2.toString(), firstLine + System.lineSeparator() + secondLine);
+        FileWriterHelper.write(path2.toString(), firstLine + System.lineSeparator() + secondLine);
         BufferCursorContext bufctx = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         BufferCursorContext bufctx2 = new BufferCursorContext(bufctx);
         for(int i = 0; i<3; i++){
@@ -404,7 +403,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorRight();
 
@@ -420,7 +419,7 @@ public class BufferCursorContextTest {
         String firstLine = "hello everyone";
         String secondLine = "i use termios daily";
         String textToWrite = firstLine + System.lineSeparator() + secondLine;
-        Debug.write(path2.toString(), textToWrite);
+        FileWriterHelper.write(path2.toString(), textToWrite);
         BufferCursorContext buffer = new BufferCursorContext(path2.toString(), System.lineSeparator().getBytes());
         buffer.moveCursorRight();
 

@@ -23,11 +23,4 @@ public class UserPopupBox {
         Terminal.printText(1,1, message);
     }
 
-    /**
-     * clear the screen
-     */
-    public void clearContent(){
-        Terminal.clearScreen();
-    }
-
 }

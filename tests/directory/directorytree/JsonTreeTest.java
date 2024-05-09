@@ -1,5 +1,6 @@
 package directory.directorytree;
 
+import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -19,7 +20,9 @@ public class JsonTreeTest {
 
     String content1, content2;
 
-    FileSystemEntry root;
+    JsonEntry root;
+
+    FileBuffer buffer1;
 
     @BeforeEach
     public void init() throws IOException {
@@ -45,14 +48,15 @@ public class JsonTreeTest {
 				}""";
         path1 = path1.resolve("test1.txt");
         Files.write(path1, content1.getBytes());
-        root = JsonUtil.parseDirectory(content1, path1.toString());
+        buffer1 = new FileBuffer(path1.toString(), System.lineSeparator().getBytes());
+        root = (JsonEntry) JsonUtil.parseDirectory(buffer1);
     }
 
     @Test
     public void AmountChildrenParser_FileSystemEntryRoot_Same() {
         assertEquals(
                 SimpleJsonParser.parseObject(content1).getChildren().size(),
-                JsonUtil.parseDirectory(content1, path1.toString()).getChildrenPaths().size()
+                JsonUtil.parseDirectory(buffer1).getChildrenPaths().size()
         );
     }
 
@@ -62,8 +66,50 @@ public class JsonTreeTest {
     }
 
     @Test
+    public void NonRootHasNonNullParent_True() {
+        assertNotNull(root.getEntries().getFirst().getParent());
+    }
+
+    @Test
     public void ChildrenListedCorrectly() {
         assertEquals(root.getDirectChildrenNames().getFirst(), "Documents");
     }
+
+    @Test
+    public void getLocation_Dir_Null() {
+        assertNull(root.getEntries().getFirst().getLocation());
+    }
+
+    @Test
+    public void getLocation_File_NotNull() {
+        assertNull(root.getEntries().getFirst().getEntries().getFirst().getLocation());
+    }
+
+    @Test
+    public void IsRootDirectory_True() {
+        assertTrue(root.isDirectory());
+    }
+
+    @Test
+    public void isChildDirectory_False() {
+        assertFalse(root.getEntries().get(0).getEntries().get(1).isDirectory());
+    }
+
+    @Test
+    public void isSubDirectory_Directory_True() {
+        assertTrue(root.getEntries().get(0).isDirectory());
+    }
+
+    @Test
+    public void DirectoryDoesntGenerateFileholder_True() {
+        assertNull(root.getEntries().get(0).createFile(new FileCreator()));
+    }
+
+    @Test
+    public void FileEntryGenerates_FileHolder_True() {
+        System.out.println("Child:" + root.getEntries().get(0).getEntries().get(1).createFile(new FileCreator()));
+        assertNotNull(root.getEntries().get(0).getEntries().get(1).createFile(new FileCreator()));
+    }
+
 
 }

@@ -40,15 +40,6 @@ public class SnakeHead extends Snake {
     }
 
     /**
-     * @param direction
-     * @param start
-     * @param end
-     */
-    private SnakeHead(MoveDirection direction, Pos start, Pos end) {
-        super(direction, start, end);
-    }
-
-    /**
      * Moves the snake in a different direction.
      * @param dir a {@link MoveDirection} object.
      */
@@ -157,19 +148,6 @@ public class SnakeHead extends Snake {
         for(int i = 1; i < this.segments.length; i++)
             segments[i-1] = this.segments[i];
         this.segments = segments;
-    }
-
-    // Debug
-    public static void log(String log) {
-
-       try {
-            FileWriter writer = new FileWriter("test/test.txt", true);
-            writer.write("\n" + log);
-            writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
     /**

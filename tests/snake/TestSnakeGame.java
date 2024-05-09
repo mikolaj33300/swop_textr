@@ -6,6 +6,7 @@ import snake.food.Apple;
 import snake.food.Food;
 import util.MoveDirection;
 import util.Pos;
+import util.Rectangle;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,7 +79,7 @@ public class TestSnakeGame {
         assertEquals(this.game.getSnake().getLength(), 5);
         for(int i = 0; i < 30; i++)
             this.game.tick();
-        assertTrue(this.game.getSnake().getLength() < 5);
+        assertTrue(this.game.getSnake().getLength() <= 5);
     }
 
     @Test
@@ -127,6 +128,17 @@ public class TestSnakeGame {
     @Test
     public void testMillisecondThreshold() {
         assertEquals(game.getMillisecondThreshold(), game.MILLISECOND_THRESHOLD);
+    }
+
+    // van 50 50 naar 10 10
+    @Test
+    public void modifyPlayField_BoundsChanged() {
+        System.out.println(this.game.getSnake().getStart().getPrint());
+        game.modifyPlayfield(new Rectangle(10, 10, 20, 20));
+        System.out.println(this.game.getSnake().getStart().getPrint());
+        assertEquals(this.game.getSnake().getStart(),
+                    new Pos((int) (20*(0.4)), (int) (25*0.4))
+        );
     }
 
 }

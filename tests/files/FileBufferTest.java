@@ -67,7 +67,7 @@ public class FileBufferTest {
     public void testContentsReadCorrectly() {
         assertTrue(buffer2.contentsEqual(
                 new ArrayList<Byte>(Arrays.<Byte>asList(
-                        FileAnalyserUtil.wrapEachByteElem("if kaas is\n not a mister\n ; no one is".getBytes())))));
+                        FileAnalyserUtil.toPrimitive("if kaas is\n not a mister\n ; no one is".getBytes())))));
     }
 
     @Test

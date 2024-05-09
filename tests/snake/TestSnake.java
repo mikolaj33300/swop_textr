@@ -23,6 +23,13 @@ public class TestSnake {
     }
 
     @Test
+    public void testScale() {
+        this.snake.scale(2.0f, 2.0f);
+        assertEquals(snake.getStart(), new Pos(-2, 6));
+        assertEquals(snake.getEnd(), new Pos(8, 3*2));
+    }
+
+    @Test
     public void testConstructorTasks() {
         assertEquals(snake.getStart(), new Pos(4-5, 3));
         assertEquals(snake.getEnd(), new Pos(4, 3));
