@@ -24,7 +24,7 @@ public class JsonDirectoryEntry extends JsonEntry {
      * @param parent the parent of this object, representing the {@link JsonDirectoryEntry}
      */
     public JsonDirectoryEntry(String name, String fullPath, LinkedHashMap<String, SimpleJsonProperty> properties, JsonDirectoryEntry parent) {
-        super(name, fullPath, parent);
+        super(name, fullPath, null, parent);
         this.entries = properties;
     }
 
