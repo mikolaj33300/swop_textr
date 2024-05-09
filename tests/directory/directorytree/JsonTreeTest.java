@@ -56,7 +56,7 @@ public class JsonTreeTest {
     public void AmountChildrenParser_FileSystemEntryRoot_Same() {
         assertEquals(
                 SimpleJsonParser.parseObject(content1).getChildren().size(),
-                JsonUtil.parseDirectory(buffer1).getChildrenPaths().size()
+                JsonUtil.parseDirectory(buffer1).getChildren().size()
         );
     }
 

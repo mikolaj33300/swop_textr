@@ -68,4 +68,13 @@ public abstract class JsonEntry extends FileSystemEntry {
         return this.buffer;
     }
 
+    /**
+     * If a parent is null, then we are at the root of the Json file system
+     * @return a {@link FileSystemEntry} or null incase we are at the root
+     */
+    @Override
+    public FileSystemEntry getParent() {
+        return this.parent;
+    }
+
 }

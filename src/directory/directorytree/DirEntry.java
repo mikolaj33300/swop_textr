@@ -19,9 +19,9 @@ public class DirEntry extends FileSystemEntry {
         for(File listedFile : new File(getPath()).listFiles()) {
 
             if(listedFile.isDirectory())
-                entry.add(new DirEntry(listedFile.getPath(),this));
+                entry.add(new DirEntry(listedFile.getAbsolutePath(),this));
             else
-                entry.add(new FileEntry(listedFile.getPath(), this));
+                entry.add(new FileEntry(listedFile.getAbsolutePath(), this));
 
         }
 

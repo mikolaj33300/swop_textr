@@ -1,100 +1,74 @@
 package directory;
 
+import directory.directorytree.FileEntry;
+import directory.directorytree.FileSystemEntry;
+
+import java.io.File;
+import java.util.List;
+
 public class Directory {
-    /*
-    private String path;
-    private int x, y;
-    private boolean hidden = false;
-    private ArrayList<String> files;
-    private DirEntry crnt;
 
-    public Directory(String path) {
-        this.path = path;
-        this.crnt = new FileEntry(path);
-    }
+    /**
+     * The current directory.
+     */
+    private FileSystemEntry focusedDirectory;
 
-    public void updateFiles() {
-        this.files = new ArrayList<String>(10);
+    /**
+     * The selected entry in the list of {@link FileSystemEntry}
+     */
+    private int focused = 0;
 
-        if (crnt.getParent() != null)
-            this.files.add("../");
-        for (final DirEntry fileEntry : crnt.listFiles()) {
-            if (!fileEntry.isHidden() || hidden)
-                if (fileEntry.isDirectory())
-                    this.files.add(fileEntry.getName() + "/");
-                else
-                    this.files.add(fileEntry.getName());
-        }
-    }
+    /**
+     * The list of {@link FileSystemEntry} the current focused directory has
+     */
+    private List<FileSystemEntry> entries;
 
-    public ArrayList<String> getFilesList() {
-        if (this.files == null) updateFiles();
-
-        return this.files;
-    }
-
-    public void enterDir() {
-        String dir = getCrnt();
-        if (dir.equals("../")) {
-            File tmp = new File(path);
-            path = tmp.getParent();
-        } else if (dir.substring(dir.length() - 1).equals("/")) {
-            path += "/" + dir.substring(0, dir.length() - 1);
-        }
-        crnt = new FileEntry(path);
-        updateFiles();
-        x = 0;
-        y = 0;
+    /**
+     * Creates a directory object
+     * @param entry if entry is null, we use the root of the current jar
+     */
+    public Directory(FileSystemEntry entry) {
+        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null);
+        else focusedDirectory = entry;
     }
 
     /**
-     * Vond ik leuk om te doen, groetjes tom
-
-    public void toggleHide() {
-        hidden = !hidden;
-        updateFiles();
+     * Returns the list of entries in the current focused directory
+     * @return list of {@link FileSystemEntry} representing the children of {@link Directory#focusedDirectory}
+     */
+    public List<FileSystemEntry> getEntries() {
+        return this.focusedDirectory.getChildren();
     }
 
-    public String getCrnt() {
-        return files.get(y);
+    /**
+     * Returns the selected {@link FileSystemEntry}.
+     */
+    public FileSystemEntry selectEntry() {
+        if(!this.getEntries().get(focused).isDirectory())
+            return this.getEntries().get(focused);
+        return null;
     }
 
-    private void cToEnd() {
-        if (x > files.get(y).length()) x = files.get(y).length() - 1;
+    /**
+     * Changes {@link Directory#focusedDirectory} to the parent of
+     */
+    public void moveToParent() {
+        this.focusedDirectory = this.focusedDirectory.getParent();
     }
 
-    public void scrollDown() {
-        if (y < files.size() - 1) {
-            y++;
-            cToEnd();
-        }
+    /**
+     * Increases the hover index {@link Directory#focused}
+     */
+    public void increaseFocused() {
+        this.focused = this.focused + 1 >= focusedDirectory.getChildren().size() ? this.focused : this.focused++;
     }
 
-    public void scrollUp() {
-        if (y > 0) {
-            y--;
-            cToEnd();
-        }
+    /**
+     * Decreases the hover index {@link Directory#focused}
+     */
+    public void decreaseFocused() {
+        this.focused = this.focused - 1 <= 0 ? this.focused : this.focused--;
     }
 
-    public void scrollLeft() {
-        if (x > 0) x--;
-    }
-
-    public void scrollRight() {
-        if (x < files.get(y).length() - 1) x++;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getPath() {
-        return path;
-    }*/
 }
 

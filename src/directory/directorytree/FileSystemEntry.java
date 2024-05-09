@@ -2,9 +2,9 @@ package directory.directorytree;
 
 import directory.FileCreatorVisitor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public abstract class FileSystemEntry implements FileCreatorVisitor {
 
@@ -54,8 +54,8 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * Maps all {@link FileSystemEntry}'s {@link FileSystemEntry#children} to their path
      * @return a list of {@link String} representing all entry paths
      */
-    public List<String> getChildrenPaths() {
-        return this.children.stream().map(FileSystemEntry::getPath).toList();
+    public List<FileSystemEntry> getChildren() {
+        return this.children;
     }
 
     /**
@@ -63,7 +63,9 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * @return the parent {@link FileSystemEntry} of this entry
      */
     public FileSystemEntry getParent() {
-        return this.parent;
+        return this.parent == null ?
+                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this)
+                : this.parent;
     }
 
     /**
