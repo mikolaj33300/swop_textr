@@ -1,0 +1,27 @@
+user:User
+TextR:TextR
+facade:ControllerFacade
+window:Window
+handler:InputHandler
+cursor:BufferCursorContext
+buffer:FileBuffer
+rootLayout:Layout
+view:View
+
+user:TextR.f4
+TextR:facade.closeActive()
+facade:handler.isSafeToClose()
+handler:cursor.getDirty()
+cursor:buffer.getDirty()
+facade:rootLayout.delete(activeHashCode)
+facade:handler.forceClose()
+handler:cursor.forceClose()
+cursor:buffer.unsubscribeFromEnterInsertion(el)
+cursor:buffer.unsubscribeFromDeletionInsertion(dil)
+cursor:buffer.unsubscribeFromDeletionChar(dcl)
+cursor:buffer.close()
+facade:window.remove(activeIndex)
+TextR:facade.getNeedsRenderSinceLast()
+[c:for each view in Windows]
+  facade:view.render()
+[/c]

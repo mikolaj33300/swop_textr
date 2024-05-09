@@ -1,0 +1,13 @@
+snakeView:SnakeView
+view:View
+termiosTerminalAdapter:TermiosTerminalAdapter
+containedFileBuffer:FileBuffer
+
+snakeView:coords=view.getRealUICoordsFromScaled(termiosTerminalAdapter)
+view:screenDimensions=termiosTerminalAdapter.getTextAreaSize()
+snakeView:containedFileBuffer.getInsertionPointLine()
+snakeView:containedFileBuffer.getInsertionPointCol()
+snakeView:containedFileBuffer.getLines()
+[c:for each line]
+	snakeView:termiosTerminalAdapter.printText(line)
+[/c]

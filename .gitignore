@@ -41,6 +41,7 @@ bin/
 *.class
 *.jar
 *.so
+*.svg
 testresources/test.txt
 testresources/test2.txt
 .idea/misc.xml
