@@ -155,4 +155,16 @@ public class FileAnalyserUtil {
 
     }
 
+    /**
+     * Gets the line separator used
+     * @param contents the contents that will be checked for a line separator
+     */
+    public static byte[] getLineSeparator(byte[] contents) {
+        if(formatBytes(contents).contains("0a") && !formatBytes(contents).contains("0d0a"))
+            return "0a".getBytes();
+        if(formatBytes(contents).contains("0d0a"))
+            return "0d0a".getBytes();
+        return System.lineSeparator().getBytes();
+    }
+
 }
