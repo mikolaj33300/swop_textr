@@ -1,0 +1,22 @@
+user:User
+InspectContentController:InspectContentController
+facade:ControllerFacade
+rootLayout:Layout
+/view:View
+oldHandler:InputHandler
+/handler:InputHandler
+/cursor:BufferCursorContext
+/newWindow:Window
+
+user:InspectContentController.ctrl+d
+InspectContentController:facade.duplicateActive()
+facade:oldCursor=oldHandler.getCursor()
+
+facade:newView=view.new()
+facade:newCursor=cursor.new(oldCursor)
+facade:newHandler=handler.new(newCursor)
+facade:newWindow.new(handler, newHandler)
+facade:rootLayout=rootLayout.insertRightOfSpecified(oldview.hash,newWindow.hash)
+[c:for each view]
+	facade:view.updateViewCoordinates()
+[/c]

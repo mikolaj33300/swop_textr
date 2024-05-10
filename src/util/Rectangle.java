@@ -1,9 +1,25 @@
 package util;
 
+/**
+ * This class is used to calculate the dimensions of each opened {@link ui.View} in the terminal.
+ */
 public class Rectangle {
+
+    /**
+     * The start X value for this rectangle
+     */
     public final double startX;
+    /**
+     * The start Y value for this rectangle
+     */
     public final double startY;
+    /**
+     * The width of the rectangle
+     */
     public final double width;
+    /**
+     * The height of the rectangle
+     */
     public final double height;
 
     /**

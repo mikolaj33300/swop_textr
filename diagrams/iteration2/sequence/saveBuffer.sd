@@ -1,0 +1,25 @@
+user:User
+controller:Controller
+rootLayout:Layout
+layout:Layout
+layoutLeaf:LayoutLeaf
+view:View
+fileBuffer:FileBuffer
+file:FileHolder
+Terminal:Terminal
+
+user:controller.ctrl+s
+controller:rootLayout.saveBuffer()
+rootLayout:layout.saveBuffer()
+layout:layoutLeaf.saveBuffer()
+layoutLeaf:view.save()
+view:fileBuffer.save
+fileBuffer:file.save()
+controller:Terminal.clearScreen()
+controller:rootLayout.render()
+rootLayout:layout.render()
+layout:layoutLeaf.render()
+layoutLeaf:view.render()
+[c:loop over characters]
+	view:Terminal.printText(i, j, string)
+[/c]

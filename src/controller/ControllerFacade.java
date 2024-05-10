@@ -66,9 +66,9 @@ class ControllerFacade {
         this.updateViewCoordinates();
     }
 
-/**
- * render the active window
- */
+    /**
+     * render the active window
+     */
     public void renderContent() throws IOException {
         this.contentsChangedSinceLastRender = false;
         for (Window window : windows) {
@@ -77,9 +77,9 @@ class ControllerFacade {
         }
     }
 
-  /**
-   * save the active filebuffer
-   */
+    /**
+     * save the active filebuffer
+     */
     public void saveActive() {
         windows.get(active).handler.save();
         this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
@@ -94,6 +94,7 @@ class ControllerFacade {
 
     /**
      * closes the active window
+     *
      * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
      */
     public int closeActive() {
@@ -108,6 +109,7 @@ class ControllerFacade {
     }
 
     /**
+     *
      * @return 0 if we closed the active window 2 if we can't close it
      */
     public int forceCloseActive() {
@@ -144,6 +146,7 @@ class ControllerFacade {
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
+     *
      * @param dir the direction to move focus to
      */
     public void moveFocus(MoveDirection dir) {
@@ -167,6 +170,7 @@ class ControllerFacade {
 
     /**
      * Rearranges the Layouts, depending on the argument given
+     *
      * @param orientation clockwise or counterclockwise
      */
     public void rotateLayout(RotationDirection orientation) throws IOException {
@@ -248,7 +252,7 @@ class ControllerFacade {
     }
 
     /**
-     * duplicate the active view
+     * Duplicates the active view by
      */
     public void duplicateActive() throws IOException {
         this.contentsChangedSinceLastRender = true;
@@ -265,6 +269,7 @@ class ControllerFacade {
 
     /**
      * Returns the line separator
+     *
      * @return byte[] containing the line separator
      */
     byte[] getLineSeparatorArg() {
@@ -273,6 +278,7 @@ class ControllerFacade {
 
     /**
      * Returns the array of windows
+     *
      * @return list of window objects
      */
     ArrayList<Window> getWindows() {
@@ -281,6 +287,7 @@ class ControllerFacade {
 
     /**
      * Returns the active window integer
+     *
      * @return integer determining the active window
      */
     int getActive() {

@@ -4,10 +4,12 @@ all: options diagrams $(DIAGS) $(termios) build textr.jar
 
 options:
 	@echo OFORMAT: $(OFORMAT)
-	@echo OBJ: $(OBJ)
 
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
+diagrams/%.$(OFORMAT): diagrams/%.sd
+	java -jar /home/tom/sdedit-4.2.1.jar -o $@ -t$(OFORMAT) $<
+
 docs: diagrams $(DIAGS)
 
 build: $(OBJ)

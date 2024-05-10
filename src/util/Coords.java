@@ -1,9 +1,22 @@
 package util;
 
 public class Coords {
+
+    /**
+     * The X start position of our coordinate section (top, left)
+     */
     public final int startX;
+    /**
+     * The Y start position of our coordinate section (top, left)
+     */
     public final int startY;
+    /**
+     * Width of this coordinate section
+     */
     public final int width;
+    /**
+     * Height of this coordinate section
+     */
     public final int height;
 
     /**
@@ -21,15 +34,16 @@ public class Coords {
     }
 
     /**
-     * @return a clone fo this object
+     * @return a clone of this object, copying the class fields
      */
+    @Override
     public Coords clone(){
         return new Coords(startX, startY, width, height);
     }
 
     /**
-     * @return if this object equals  o
-     * @param o
+     * @return boolean determining if the given object is equal to this object
+     * @param o the object to be compared
      */
     @Override
     public boolean equals(Object o) {

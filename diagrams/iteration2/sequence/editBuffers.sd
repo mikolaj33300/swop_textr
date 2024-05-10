@@ -1,0 +1,21 @@
+user:User
+inspectContentController:ICC
+facade:ControllerFacade
+handler:InputHandler
+cursor:FileBufferCursorContext
+buffer:FileBuffer
+/command:Command
+view:View
+
+[c:while user presses ascii keys]
+  user:inspectContentController.keypress
+  inspectContentController:facade.passToActive(input)
+  facade:handler.input(input)
+  handler:cursor.write(input)
+  cursor:buffer.writeCmd(input, column, line)
+  buffer:command.new(input, column, line)
+  inspectContentController:facade.needsRender()
+  [c:for each view in Windows]
+    facade:view.render()
+  [/c]
+[/c]

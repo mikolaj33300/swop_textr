@@ -1,0 +1,20 @@
+user:User
+inspectbuffercontroller:InspectBufferController
+facade:ControllerFacade
+rootLayout:Layout
+window:Window
+/snakeHandler:InputHandlingElement
+/snakeView:view
+view:View
+
+user:inspectbuffercontroller.ctrl+g
+inspectbuffercontroller:facade.openSnakeGame()
+facade:coords=window.getRealUICoordsFromScaled(termiosTerminalAdapter)
+facade:snakeHandler.new(coords.width, coords.height)
+facade:snakeView.new(snakeHandler.getSnakeGame(), termiosTerminalAdapter)
+facade:window.add(new Window(snakeView, snakeHandler)
+facade:rootLayout=rootLayout.insertRightOfSpecified(activeHash, snakeHash)
+inspectbuffercontroller:facade.needsRender()
+[c:for each view in Windows]
+  facade:view.render(activeHash)
+[/c]

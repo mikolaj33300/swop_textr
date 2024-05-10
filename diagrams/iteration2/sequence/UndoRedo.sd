@@ -1,0 +1,23 @@
+user:User
+InspectBufferController:InspectBufferController
+facade:ControllerFacade
+activeHandler:InputHandler
+cursor:FileBufferCursorContext
+buffer:FileBuffer
+/command:Command
+
+[c:while user presses ascii keys]
+  user:InspectBufferController.keypress
+  InspectBufferController:facade.passToActive(input)
+  facade:activeHandler.input(input)
+  activeHandler:cursor.write(input)
+  cursor:buffer.writeCmd(input, column, line)
+  buffer:command.new(input, column, line)
+[/c]
+[c:while user presses ctrl+z]
+    user:InspectBufferController.ctrl+z
+    InspectBufferController:facade.passToActive(inputKey)
+    facade:activeHandler.input(inputKey)
+    activeHandler:cursor.undo()
+    cursor:buffer.undo()
+[/c]

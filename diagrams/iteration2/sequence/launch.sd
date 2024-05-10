@@ -1,0 +1,23 @@
+user:User
+controller:TextR
+/facade:ControllerFacade
+/rootLayout:Layout
+/layoutLeaf:LayoutLeaf
+/window:Window
+/view:View
+/handler:FileBufferInputHandler
+/fileBuffer:FileBuffer
+/file:FileHolder
+Terminal:Terminal
+
+user:controller.main(fileNames)
+controller:new facade=facade.new(fileNames)
+facade:new Layout=rootLayout.new()
+[c:for each file]
+  facade:view=view.new(fileName)
+  facade:handler=handler.new(fileName, view)
+  handler:fileBuffer=fileBuffer.new(fileName, view)
+  facade:window=window.new(handler, view)
+  facade:Leaf=layoutLeaf.new(windowhash)
+  facade:rootLayout.add(Leaf)
+[/c]

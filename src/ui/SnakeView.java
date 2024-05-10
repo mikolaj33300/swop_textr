@@ -17,13 +17,20 @@ import java.util.stream.Collectors;
 
 public class SnakeView extends View {
 
+    /**
+     * The contained {@link SnakeGame}.
+     */
     private final SnakeGame game;
+    /**
+     * The relevant coordinates for displaying this view
+     */
     private int startX, startY, width, height;
 
+    /**
+     * The adapter used that handles the printing
+     */
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
-    // Note: we pass max width & max height of the view. So Snake works with relative coordinates
-    // between [0, width] and [0, height]
     public SnakeView(SnakeGame game, TermiosTerminalAdapter termiosTerminalAdapter) {
         this.game = game; this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
@@ -211,6 +218,10 @@ public class SnakeView extends View {
         }
     }
 
+    /**
+     * This also scales the playing field in {@link SnakeGame} itself. Its bounds are given to this view upon creation.
+     * @throws IOException when the coords cannot be retrieved
+     */
     private void scaleGame() throws IOException {
         Coords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
         Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);

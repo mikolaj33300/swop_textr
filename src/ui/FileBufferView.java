@@ -31,7 +31,7 @@ public class FileBufferView extends View{
     }
 
     /**
-     * Handles the rendering of the whole {@link FileBuffer}
+     * Handles the rendering {@link FileBuffer}
      */
     @Override
     public void render(int activeHash) throws IOException {
