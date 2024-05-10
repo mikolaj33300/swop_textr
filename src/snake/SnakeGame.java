@@ -78,7 +78,7 @@ public class SnakeGame {
             this.foods.remove(collidedFood);
             this.snake.grow(collidedFood.getGrowAmount());
             this.score += collidedFood.getScore();
-            this.delay = delay > 0.9f ? 0.9f : delay + collidedFood.millisecondDecrease();
+            this.delay = delay > 0.9f ? 0.9f : delay + collidedFood.getMillisecondDecrease();
             this.starver = 0;
             initializeFruits();
         } else {
