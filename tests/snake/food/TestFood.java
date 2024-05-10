@@ -75,4 +75,9 @@ public class TestFood {
         Food dif_food = new Food("a", 1, 4, new Pos(1, 1));
         assertNotEquals(dif_food, food);
     }
+
+    @Test
+    public void testGetMillisecondDecrease(){
+        assertEquals(food.getMillisecondDecrease(),0.01f);
+    }
 }

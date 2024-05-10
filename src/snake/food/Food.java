@@ -73,7 +73,7 @@ public class Food {
      * Returns the amount of milliseconds are subtracted from the delay.
      * @return a float
      */
-    public float millisecondDecrease() {
+    public float getMillisecondDecrease() {
         return 0.01f;
     }
 
@@ -83,7 +83,6 @@ public class Food {
      * @return Food, a clone of this object
      */
 
-    @Override
     public Food clone() {
         return new Food(this.character, this.growAmount, this.score, this.pos.clone());
     }
@@ -98,7 +97,7 @@ public class Food {
     public boolean equals(Object o) {
         if(o instanceof Food f)
             return f.pos.equals(this.pos) && f.character.equals(this.character) && f.score == this.score && f.growAmount == this.growAmount;
-        return false;
+        else
+            return false;
     }
-
 }
