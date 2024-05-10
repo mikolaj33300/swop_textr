@@ -1,6 +1,7 @@
 package util.json;
 
 import directory.directorytree.JsonEntry;
+import files.FileAnalyserUtil;
 import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,9 +52,9 @@ public class TestJsonUtil {
         path3 = path3.resolve("test3.txt");
         Files.write(path3, content3.getBytes());
 
-        buffer1 = new FileBuffer(path1.toString(), System.lineSeparator().getBytes());
-        buffer2 = new FileBuffer(path2.toString(), System.lineSeparator().getBytes());
-        buffer3 = new FileBuffer(path3.toString(), System.lineSeparator().getBytes());
+        buffer1 = new FileBuffer(path1.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
+        buffer2 = new FileBuffer(path2.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
+        buffer3 = new FileBuffer(path3.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
     }
 
     @Test
