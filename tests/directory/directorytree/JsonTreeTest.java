@@ -1,5 +1,6 @@
 package directory.directorytree;
 
+import files.FileAnalyserUtil;
 import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class JsonTreeTest {
 				}""";
         path1 = path1.resolve("test1.txt");
         Files.write(path1, content1.getBytes());
-        buffer1 = new FileBuffer(path1.toString(), System.lineSeparator().getBytes());
+        buffer1 = new FileBuffer(path1.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
         root = (JsonEntry) JsonUtil.parseDirectory(buffer1);
     }
 
@@ -107,7 +108,6 @@ public class JsonTreeTest {
 
     @Test
     public void FileEntryGenerates_FileHolder_True() {
-        System.out.println("Child:" + root.getEntries().get(0).getEntries().get(1).createFile(new FileCreator()));
         assertNotNull(root.getEntries().get(0).getEntries().get(1).createFile(new FileCreator()));
     }
 
