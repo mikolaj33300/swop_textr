@@ -3,6 +3,10 @@ package ui;
 import io.github.btj.termios.Terminal;
 
 public class UserPopupBox {
+
+    /**
+     * The message to be displayed by the pop-up box
+     */
     String message;
 
     /**
@@ -17,13 +21,6 @@ public class UserPopupBox {
      */
     public void render(){
         Terminal.printText(1,1, message);
-    }
-
-    /**
-     * clear the screen
-     */
-    public void clearContent(){
-        Terminal.clearScreen();
     }
 
 }

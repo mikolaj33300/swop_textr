@@ -1,7 +1,5 @@
 package files;
 
-import controller.TextR;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
@@ -31,8 +29,9 @@ public class FileAnalyserUtil {
 
     /**
      * Subdivides the given byte array into lines
-     * @param byteContents
-     * @return
+     * @param lineSeparator the line separator which decides where we split the byte[]
+     * @param byteContents the array of byte values we want to transform in a {@link ArrayList} in a {@link ArrayList}
+     * @return a list of lists where each entry in the list represents a line of bytes separated by the parameter line separator
      */
     public static ArrayList<ArrayList<Byte>> getContentLines(byte[] byteContents, byte[] lineSeparator) {
         int lineSepLength = lineSeparator.length;
@@ -44,7 +43,7 @@ public class FileAnalyserUtil {
         while (i < byteContents.length) {
             //if separator encountered
             if(Arrays.equals(Arrays.copyOfRange(byteContents, i, i+lineSepLength), lineSeparator)){
-                linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
+                linesArrList.add(toArray(Arrays.copyOfRange(byteContents, startOfCurrentLine, i)));
                 i += lineSepLength;
                 startOfCurrentLine = i;
             } else {
@@ -52,7 +51,7 @@ public class FileAnalyserUtil {
             }
         }
         if(startOfCurrentLine<byteContents.length){
-            linesArrList.add(createByteWrapArrayList(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
+            linesArrList.add(toArray(Arrays.copyOfRange(byteContents, startOfCurrentLine, byteContents.length)));
         }
         if(byteContents.length==0){
             linesArrList = new ArrayList<>(1);
@@ -73,10 +72,10 @@ public class FileAnalyserUtil {
 
     /**
      * Returns an array of Byte wrappers for given array of bytes
-     * @param byteArr
-     * @return
+     * @param byteArr the byte[] primitive which we want as a {@link Byte} array
+     * @return the {@link Byte} array
      */
-    public static Byte[] wrapEachByteElem(byte[] byteArr){
+    public static Byte[] toPrimitive(byte[] byteArr){
         Byte[] wrapperArray = new Byte[byteArr.length];
         for (int i = 0; i < byteArr.length; i++) {
             wrapperArray[i] = byteArr[i];
@@ -93,18 +92,19 @@ public class FileAnalyserUtil {
         }*/
 
     /**
+     * Transforms the given byte[] object to an {@link ArrayList} object
      * @param bArr an array of bytes
      * @return make arrayList from byte array
      */
-    public static ArrayList<Byte> createByteWrapArrayList(byte[] bArr){
-        return new ArrayList<>(Arrays.<Byte>asList(wrapEachByteElem(bArr)));
+    public static ArrayList<Byte> toArray(byte[] bArr){
+        return new ArrayList<>(Arrays.<Byte>asList(toPrimitive(bArr)));
     }
 
 
     /**
      * Puts all elements from a Byte ArrayList in a byte[]
-     * @param arrList
-     * @return
+     * @param arrList the {@link ArrayList} object which we want to transform to an array
+     * @return a byte[] object with all elements from the given list
      */
     public static byte[] toArray(ArrayList<Byte> arrList) {
         byte[] resultArray = new byte[arrList.size()];
@@ -113,4 +113,46 @@ public class FileAnalyserUtil {
         }
         return resultArray;
     }
+
+
+    /**
+     * Splices the given array
+     * @param array the array that should be spliced
+     * @param start the start position (inclusive)
+     * @param end the end position (inclusive)
+     * @return a byte[] object that contains the range of bytes specified by the parameters
+     */
+    public static byte[] spliceArray(ArrayList<Byte> array, int start, int end) {
+        byte[] splicedLine = new byte[end - start];
+        int counter = 0;
+        for(int i = start; i < end; i++) {
+            splicedLine[counter] = array.get(i);
+            counter++;
+        }
+        return splicedLine;
+    }
+
+    /**
+     * Inserts the given insertArray into the resultArray
+     * @param resultArray the array that is put as start
+     * @param insertArray the array that is appended
+     * @return a byte[] containing both arrays
+     */
+    public static byte[] copyArray(byte[] resultArray, byte[] insertArray) {
+
+        byte[] result = new byte[resultArray.length + insertArray.length];
+
+        for(int i = 0; i < result.length; i++) {
+
+            if(i < resultArray.length)
+                result[i] = resultArray[i];
+            else
+                result[i] = insertArray[i - resultArray.length];
+
+        }
+
+        return result;
+
+    }
+
 }

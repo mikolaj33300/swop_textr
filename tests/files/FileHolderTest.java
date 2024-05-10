@@ -59,24 +59,24 @@ public class FileHolderTest {
     }
 
     @Test
-    void testEqual1() {
+    void testEqual_PerfectCopy_True() {
         FileHolder holder2 = new FileHolder(path1.toString(), System.lineSeparator().getBytes());
         assertTrue(holder1.equals(holder2));
     }
 
     @Test
-    void testEqual2() {
+    void testEqual_DifferentObject_False() {
         assertFalse(holder1.equals(new String("certified termios enthusiast")));
     }
 
     @Test
-    public void testEqual3() {
+    public void testEqual_DifferentLineSeparatorSameString_True() {
         FileHolder holder2 = new FileHolder(path1.toString(), " ".getBytes());
         assertTrue(holder1.equals(holder2));
     }
 
     @Test
-    public void testEqual4() {
+    public void testEqual_DifferentPath_DifferentContent_False() {
         FileHolder holder2 = new FileHolder("hellomiste", " ".getBytes());
         assertFalse(holder1.equals(holder2));
     }
