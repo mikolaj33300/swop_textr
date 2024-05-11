@@ -38,6 +38,7 @@ class ControllerFacade {
         this.contentsChangedSinceLastRender = true;
         this.termiosTerminalAdapter = termiosTerminalAdapter;
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
+
         String[] paths;
         if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
             paths = Arrays.copyOfRange(args, 1, args.length);
@@ -45,6 +46,7 @@ class ControllerFacade {
             paths = args;
         }
         ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
+
         for (int i = 0; i < paths.length; i++) {
           int hash;
             if (this.windows == null){
@@ -61,7 +63,7 @@ class ControllerFacade {
             this.rootLayout = leaves.get(0);
         else
             this.rootLayout = new VerticalLayoutNode(leaves);
-        this.updateViewCoordinates();
+        updateViewCoordinates();
     }
 
     /**
@@ -252,6 +254,12 @@ class ControllerFacade {
     private void updateViewCoordinates() {
         this.contentsChangedSinceLastRender = true;
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
+        for (Rectangle entry : coordsMap.values()){
+          System.out.println(entry.width);
+          System.out.println(entry.height);
+          System.out.println(entry.startX);
+          System.out.println(entry.startY);
+        }
         windows.updateAllViewCords(coordsMap);
     }
 

@@ -30,7 +30,9 @@ public abstract class View {
      * @param uiCoordsScaled the new coordinates
      */
     public void setScaledCoords(Rectangle uiCoordsScaled) {
-        this.uiCoordsScaled = uiCoordsScaled;
+      if (uiCoordsScaled == null)
+        System.exit(1);
+      this.uiCoordsScaled = uiCoordsScaled;
     }
 
     /**

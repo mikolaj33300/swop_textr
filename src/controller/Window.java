@@ -18,11 +18,13 @@ import java.util.HashMap;
 class Window {
     public final View view;
     public final InputHandlingElement handler;
+    public final int hash;
     private Window next = null;
 
     public Window(View v, InputHandlingElement h) {
         this.view = v;
         this.handler = h;
+        this.hash=v.hashCode();
     }
 
     /**
@@ -40,6 +42,7 @@ class Window {
       }
       this.view = view;
       this.handler = handler;
+      this.hash = view.hashCode();
     }
 
     public void insertWindow(Window window) {
@@ -59,15 +62,17 @@ class Window {
           throw e;
       }
       View view = new FileBufferView(handler.getFileBufferContextTransparent(), term);
-      insertWindow(new Window(view, handler));
-      return this.hashCode();
+      Window win = new Window(view, handler);
+      insertWindow(win);
+      return win.hashCode();
     }
 
     public int createSnakeGame(Coords crds, TermiosTerminalAdapter term) {
       SnakeInputHandler handler = new SnakeInputHandler(crds.width, crds.height);
       SnakeView view = new SnakeView(handler.getSnakeGame(), term);
-      insertWindow(new Window(view, handler));
-      return this.hashCode();
+      Window win = new Window(view, handler);
+      insertWindow(win);
+      return win.hashCode();
     }
 
     public int duplicate(TermiosTerminalAdapter term) {
@@ -75,10 +80,11 @@ class Window {
         BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
         FileBufferView view = new FileBufferView(dupedContext, term);
         FileBufferInputHandler handler = new FileBufferInputHandler(dupedContext);
-        insertWindow(new Window(view, handler));
-        return this.hashCode();
+        Window win = new Window(view, handler);
+        insertWindow(win);
+        return win.hashCode();
       }
-    return 0;
+      return 0;
     }
 
     public int duplicateActive(TermiosTerminalAdapter term, int hash) {
@@ -126,11 +132,11 @@ class Window {
     }
 
     public boolean close(int hash) {
-      if (this.hashCode() == hash)
+      if (hashCode() == hash)
         return handler.isSafeToClose();
       else if (next != null)
         return next.close(hash);
-      return false;
+      return false;// should not be reached
     }
 
     public void handleArrowRight(int hash) {
@@ -169,9 +175,15 @@ class Window {
     }
 
     public void updateAllViewCords(HashMap<Integer, Rectangle> crdMap) {
-      view.setScaledCoords(crdMap.get(this.hashCode()));
-      if (next != null)
+      Rectangle crd = crdMap.get(this.hashCode());
+      if (crd == null && next != null){
         next.updateAllViewCords(crdMap);
+      } else if (crd != null) {
+        view.setScaledCoords(crd);
+      } else {
+        System.out.println("at end and hash not found");
+        System.exit(1);
+      }
     }
 
     public void passToActive(int hash, byte b) throws IOException {
@@ -187,5 +199,10 @@ class Window {
       else if (next != null)
         return next.getRealUICoordsFromScaled(hash, term);
       return new Coords(0, 0, 0, 0);
+    }
+
+    @Override
+    public int hashCode() {
+      return hash;
     }
 }

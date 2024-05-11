@@ -35,7 +35,7 @@ public class FileBufferView extends View{
      */
     @Override
     public void render(int activeHash) throws IOException {
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
