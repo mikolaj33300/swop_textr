@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 class ControllerFacade {
     private byte[] lineSeparatorArg;
-    private ArrayList<Window> windows;
+    private Window windows = null;
     private Layout rootLayout;
     private int active;
 
@@ -44,19 +44,17 @@ class ControllerFacade {
         } else {
             paths = args;
         }
-        this.windows = new ArrayList<Window>();
         ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
         for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            FileBufferInputHandler openedFileHandler;
-            try {
-                openedFileHandler = new FileBufferInputHandler(checkPath, lineSeparatorArg);
-            } catch (PathNotFoundException e) {
-                throw e;
+          int hash;
+            if (this.windows == null){
+              this.windows = new Window(paths[i], this.lineSeparatorArg, termiosTerminalAdapter);
+              hash = this.windows.hashCode();
+              active = hash;
+            } else {
+              hash = this.windows.createFileBuffer(paths[i], this.lineSeparatorArg, termiosTerminalAdapter);
             }
-
-            this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter), openedFileHandler));
-            leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
+            leaves.add(new LayoutLeaf(hash));
         }
 
         if (leaves.size() == 1)
@@ -71,25 +69,21 @@ class ControllerFacade {
      */
     public void renderContent() throws IOException {
         this.contentsChangedSinceLastRender = false;
-        for (Window window : windows) {
-            window.view.render(windows.get(active).view.hashCode());
-            window.handler.setContentsChangedSinceLastRenderFalse();
-        }
+        windows.renderAll();
     }
 
     /**
      * save the active filebuffer
      */
     public void saveActive() {
-        windows.get(active).handler.save();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+      windows.save(active);
     }
 
     /**
      * render the cursor in the active view
      */
     public void renderCursor() throws IOException {
-        windows.get(active).view.renderCursor();
+        windows.renderCursor(active);
     }
 
     /**
@@ -99,7 +93,7 @@ class ControllerFacade {
      */
     public int closeActive() {
         contentsChangedSinceLastRender = true;
-        if (windows.get(active).handler.isSafeToClose()) {
+        if (windows.close(active)) {
             //safe to do a force close since clean buffer
             contentsChangedSinceLastRender = true;
             return forceCloseActive();
@@ -119,29 +113,14 @@ class ControllerFacade {
         if (newHashCode == null) return 2;
 
         //deletes and sets new one as active
-        rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
-        windows.get(active).handler.forcedClose();
-        windows.remove(active);
-
-        int newActive = -1;
-        for (int i = 0; i < windows.size(); i++) {
-            if (windows.get(i).view.hashCode() == newHashCode) {
-                newActive = i;
-            }
-        }
-
-        if (newActive == -1) {
-            throw new RuntimeException("Layout and collection of views inconsistent!");
-        }
-        active = newActive;
-        updateViewCoordinates();
+        rootLayout = this.rootLayout.delete(active);
+        active = windows.forceClose(active);
         updateViewCoordinates();
         return 0;
     }
 
     public void passToActive(byte b) throws IOException {
-        this.windows.get(active).handler.input(b);
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+        windows.passToActive(active, b);
     }
 
     /**
@@ -151,14 +130,7 @@ class ControllerFacade {
      */
     public void moveFocus(MoveDirection dir) {
         contentsChangedSinceLastRender = true;
-        int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
-        for (int i = 0; i < this.windows.size(); i++) {
-            if (this.windows.get(i).view.hashCode() == newActive) {
-                this.active = i;
-                break;
-            }
-        }
-
+        active = this.rootLayout.getNeighborsContainedHash(dir, active);
     }
 
     /**
@@ -175,7 +147,7 @@ class ControllerFacade {
      */
     public void rotateLayout(RotationDirection orientation) throws IOException {
         contentsChangedSinceLastRender = true;
-        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
+        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, active);
         updateViewCoordinates();
     }
 
@@ -183,40 +155,35 @@ class ControllerFacade {
      * let the active window know that the right arrow is pressed
      */
     public void handleArrowRight() {
-        this.windows.get(active).handler.handleArrowRight();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+      windows.handleArrowRight(active);
     }
 
     /**
      * let the active window know that the Left arrow is pressed
      */
     public void handleArrowLeft() {
-        this.windows.get(active).handler.handleArrowLeft();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+      windows.handleArrowLeft(active);
     }
 
     /**
      * let the active window know that the Down arrow is pressed
      */
     public void handleArrowDown() {
-        this.windows.get(active).handler.handleArrowDown();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+      windows.handleArrowDown(active);
     }
 
     /**
      * let the active window know that the Up arrow is pressed
      */
     public void handleArrowUp() {
-        this.windows.get(active).handler.handleArrowUp();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+      windows.handleArrowUp(active);
     }
 
     /**
      * let the active window insert a separator
      */
     public void handleSeparator() throws IOException {
-        this.windows.get(active).handler.handleSeparator();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+        this.windows.handleSeparator(active);
     }
 
     /**
@@ -227,44 +194,32 @@ class ControllerFacade {
     public void openSnakeGame() throws IOException {
         this.contentsChangedSinceLastRender = true;
         // Get UI coords of current window to initialize snake view's playfield
-        Coords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
-        SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
+        Coords coordsView = windows.getRealUICoordsFromScaled(active, termiosTerminalAdapter);
+        int newActive = this.windows.createSnakeGame(coordsView, termiosTerminalAdapter);
 
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
-        int hashActive = this.windows.get(active).view.hashCode();
-        SnakeView view = new SnakeView(handler.getSnakeGame(), termiosTerminalAdapter);
 
         // Remove the window & add the snake window.
-        this.windows.remove(this.windows.get(active));
-        this.windows.add(
-                new Window(
-                        view,
-                        handler
-                )
-        );
+        // this.windows.remove(this.windows.get(active)); // TODO
 
         // Change hash code & update the view coordinates
-        rootLayout.changeHash(hashActive, view.hashCode());
+        rootLayout.changeHash(active, newActive);
         this.updateViewCoordinates();
+        active = newActive;
 
         // Set the active view to the snake view
-        active = this.windows.size() - 1;
     }
 
     /**
      * Duplicates the active view by
      */
     public void duplicateActive() throws IOException {
-        this.contentsChangedSinceLastRender = true;
-        if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
-            BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-            FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
-            Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
-            windows.add(windows.size(), windowToAdd);
+      this.contentsChangedSinceLastRender = true;
 
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
-            updateViewCoordinates();
-        }
+      int oldActive = active;
+      active = windows.duplicateActive(termiosTerminalAdapter, active);
+      rootLayout = rootLayout.insertRightOfSpecified(oldActive, active);
+      updateViewCoordinates();
     }
 
     /**
@@ -281,8 +236,8 @@ class ControllerFacade {
      *
      * @return list of window objects
      */
-    ArrayList<Window> getWindows() {
-        return this.windows;
+    Window getWindows() {
+        return windows;
     }
 
     /**
@@ -291,15 +246,13 @@ class ControllerFacade {
      * @return integer determining the active window
      */
     int getActive() {
-        return this.active;
+        return active;
     }
 
     private void updateViewCoordinates() {
         this.contentsChangedSinceLastRender = true;
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
-        for (Window w : windows) {
-            w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
-        }
+        windows.updateAllViewCords(coordsMap);
     }
 
     /**
@@ -308,10 +261,10 @@ class ControllerFacade {
      * @return
      */
     private Integer getNewHashCode() {
-        int oldHashCode = windows.get(active).view.hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).view.hashCode());
+        int oldHashCode = windows.hashCode();
+        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, active);
         if (newHashCode == oldHashCode) {
-            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).view.hashCode());
+            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, active);
             if (oldHashCode == newHashCode) {
                 //no left or right neighbor to focus
                 rootLayout = null;
