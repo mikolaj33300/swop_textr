@@ -21,19 +21,6 @@ JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-
 SRC = $(call rwildcard,src/,*.java)
 
 TEST = $(call rwildcard,tests/,*.java)
-#TEST = tests/files/FileBufferTest.java ./tests/files/BufferCursorContextTest.java ./tests/files/InsertionPointTest.java ./tests/files/FileAnalyserUtilTest.java ./tests/files/FileHolderTest.java ./tests/controller/RearrangeLayoutTest.java ./tests/controller/CloseBufferTest.java ./tests/layouttree/HorizontalLayoutNodeTest.java  ./tests/ui/ViewTest.java
-
-#TODO
-#./tests/controller/SaveBufferTest.java
-#./tests/controller/EditBufferTest.java
-#./tests/controller/ControllerTest.java
-#./tests/controller/InspectBufferTest.java
-#./tests/controller/LaunchTextrTest.java
-#./tests/layouttree/VerticalLayoutNodeTest.java
-#./tests/layouttree/LayoutNodeTest.java
-#./tests/layouttree/LayoutTest.java
-#./tests/ui/FileBufferViewTest.java
-#./tests/layouttree/LayoutLeafTest.java
 
 OBJ := $(patsubst %.java,%.class,$(SRC))
 OBJ := $(patsubst src/%,build/%,$(OBJ))
@@ -42,6 +29,6 @@ BUILD_DIR = ./build
 #
 # package
 #
-EXTS := java pdf png
+EXTS := java ${OFORMAT}
 TOPACK := $(foreach EXT, $(EXTS), $(shell find . -type d \( -path ./termios -o -path ./build -o -path ./group07 \) -prune -o -name '*.$(EXT)' -print))
 TOPACK += ./textr.jar

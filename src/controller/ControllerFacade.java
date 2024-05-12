@@ -69,9 +69,14 @@ class ControllerFacade {
     /**
      * render the active window
      */
-    public void renderContent() throws IOException {
+    public void renderContent() {
         this.contentsChangedSinceLastRender = false;
-        windows.renderAll();
+        try {
+          windows.renderAll();
+        } catch (Exception e) {
+          System.out.printf("Rendering failed\n");
+          System.exit(1);
+        }
     }
 
     /**
@@ -116,7 +121,11 @@ class ControllerFacade {
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(active);
-        active = windows.forceClose(active);
+        if (active == windows.hashCode()){
+          windows = windows.getNext();
+        } else {
+          active = windows.forceClose(active);
+        }
         updateViewCoordinates();
         return 0;
     }
@@ -203,11 +212,16 @@ class ControllerFacade {
 
         // Remove the window & add the snake window.
         // this.windows.remove(this.windows.get(active)); // TODO
+        if (windows.hashCode() == active) {
+          windows = windows.getNext();
+        } else {
+          windows.forceClose(active);
+        }
 
         // Change hash code & update the view coordinates
         rootLayout.changeHash(active, newActive);
-        this.updateViewCoordinates();
         active = newActive;
+        this.updateViewCoordinates();
 
         // Set the active view to the snake view
     }
@@ -254,12 +268,12 @@ class ControllerFacade {
     private void updateViewCoordinates() {
         this.contentsChangedSinceLastRender = true;
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
-        for (Rectangle entry : coordsMap.values()){
-          System.out.println(entry.width);
-          System.out.println(entry.height);
-          System.out.println(entry.startX);
-          System.out.println(entry.startY);
-        }
+        //for (Rectangle entry : coordsMap.values()){
+        //  System.out.println(entry.width);
+        //  System.out.println(entry.height);
+        //  System.out.println(entry.startX);
+        //  System.out.println(entry.startY);
+        //}
         windows.updateAllViewCords(coordsMap);
     }
 

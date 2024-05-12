@@ -54,6 +54,10 @@ class Window {
       return;
     }
 
+    public Window getNext() {
+      return next;
+    }
+
     public int createFileBuffer(String path, byte[] lineSeparator, TermiosTerminalAdapter term) throws IOException, PathNotFoundException {
       FileBufferInputHandler handler;
       try {
@@ -123,12 +127,12 @@ class Window {
     }
 
     public int forceClose(int hash) {
-      if (next.hashCode() == hash){
+      if (next != null && next.hashCode() == hash){
         next = next.next;
         return next.hashCode();
-      } else if (next != null)
+      } else if (next != null) {
         return next.forceClose(hash);
-      return 0;
+      }
     }
 
     public boolean close(int hash) {
@@ -176,13 +180,13 @@ class Window {
 
     public void updateAllViewCords(HashMap<Integer, Rectangle> crdMap) {
       Rectangle crd = crdMap.get(this.hashCode());
-      if (crd == null && next != null){
-        next.updateAllViewCords(crdMap);
-      } else if (crd != null) {
-        view.setScaledCoords(crd);
-      } else {
-        System.out.println("at end and hash not found");
+      if (crd == null){
+        System.out.println("hash not found");
         System.exit(1);
+      } else {
+       view.setScaledCoords(crd);
+       if (next != null)
+        next.updateAllViewCords(crdMap);
       }
     }
 
@@ -194,10 +198,15 @@ class Window {
     }
 
     public Coords getRealUICoordsFromScaled(int hash, TermiosTerminalAdapter term) throws IOException {
-      if (this.hashCode() == hash)
-        return view.getRealUICoordsFromScaled(term);
-      else if (next != null)
+      if (this.hashCode() == hash){
+        Coords res = view.getRealUICoordsFromScaled(term);
+        System.out.printf("returning: %d, %d\n", res.width, res.height);
+        return res;
+      } else if (next != null) {
         return next.getRealUICoordsFromScaled(hash, term);
+      }
+      System.out.println("could not return correct coordinates");
+      System.exit(1);
       return new Coords(0, 0, 0, 0);
     }
 
