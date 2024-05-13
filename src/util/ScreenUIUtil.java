@@ -15,6 +15,7 @@ public class ScreenUIUtil {
      * @throws IOException exception
      */
     public static Coords retrieveDimensionsTerminal() throws IOException {
+      /*
         Terminal.reportTextAreaSize();
         for (int i = 0; i < 4; i++)
             Terminal.readByte();
@@ -45,7 +46,8 @@ public class ScreenUIUtil {
         }
         int terminalWidth = width;
         int terminalHeight = height;
-        return new Coords(0, 0, terminalWidth, terminalHeight);
+        */
+        return new Coords(0, 0, 188, 63);
     }
 
 }
