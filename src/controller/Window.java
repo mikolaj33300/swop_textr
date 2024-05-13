@@ -128,8 +128,11 @@ class Window {
 
     public int forceClose(int hash) {
       if (next != null && next.hashCode() == hash){
-        next = next.next;
-        return next.hashCode();
+        if (next.next != null){
+          next = next.next;
+          return next.hashCode();
+        }
+        return this.hashCode();
       } else if (next != null) {
         return next.forceClose(hash);
       }
