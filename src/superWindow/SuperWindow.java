@@ -16,10 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class superWindow {
-  private ArrayList<Window> windows;
-  private int subActive;
+  private Layout rootLayout;
+  private ArrayList windows;
+  private int active;
   private TermiosTerminalAdapter swingTerminalAdapter;// swing adapter
-  private superWindow next;// linked list
+  private superWindow next == null;// linked list
 
   public void addWindow(){
     
@@ -28,4 +29,9 @@ public class superWindow {
   private boolean isActive() {
 
   }
+
+  public void renderAll() { windows.renderAll(); }
+  public void save() { windows.save(active); }
+  public void renderCursor() { windows.renderCursor(active); }
+  public void forceClose() { windows.forceClose(active); }
 }
