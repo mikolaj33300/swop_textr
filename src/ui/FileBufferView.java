@@ -106,7 +106,7 @@ public class FileBufferView extends View{
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int fileBufferTotalHeight){
         fileBufferTotalHeight = fileBufferTotalHeight == 0 ? 1 : fileBufferTotalHeight;
         int visibleStartPercent = (focusedLine*height)/fileBufferTotalHeight;
-        int visibleEndPercent = ((2+focusedLine)*height)/fileBufferTotalHeight;
+        int visibleEndPercent = ((1+focusedLine)*height)/fileBufferTotalHeight;
 
         for (int i = 0; i < visibleStartPercent; i++)
                 termiosTerminalAdapter.printText(1+startY+i, 1+scrollStartX, "|");

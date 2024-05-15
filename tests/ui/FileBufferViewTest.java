@@ -39,13 +39,12 @@ public class FileBufferViewTest {
 
     @Test
     public void testRender() throws IOException {
-        /*VirtualTestingTermiosAdapter virtualTestAdapter = new VirtualTestingTermiosAdapter(1000, 2, new ArrayList<Integer>(0));
+        VirtualTestingTermiosAdapter virtualTestAdapter = new VirtualTestingTermiosAdapter(1000, 3, new ArrayList<Integer>(0));
         FileBufferView toTestFBView = new FileBufferView(bufferCursorContext, virtualTestAdapter);
         toTestFBView.setScaledCoords(new Rectangle(0,0,1,1));
         toTestFBView.render(toTestFBView.hashCode());
 
         assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), (content1 + " ".repeat(999-content1.length())+ "+").toCharArray());
-        */
     }
 
 
