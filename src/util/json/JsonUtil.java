@@ -13,7 +13,7 @@ import java.util.List;
 public class JsonUtil {
 
     /**
-     * This will retrieve the {@link TextLocation} of a json entry path in a json file.
+     * This will retrieve the TextLocation of a json entry path in a json file.
      * @param buffer the {@link FileBuffer} which holds the information
      * @param jsonName the target name in the json structure
      * @return a {@link TextLocation} object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
@@ -52,18 +52,20 @@ public class JsonUtil {
         return SimpleJsonParser.getErrorLocation(contents);
     }
 
+    /**
+     * This will retrieve the TextLocation of a json entry path in a json file.
+     * @param key the path to the json file
+     * @param entries the target name in the json structure
+     * @param foundLocation the location of the json file
+     * @return a {@link TextLocation} object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
+     */
     private static TextLocation findLocationForKey(String key, List<JsonEntry> entries, TextLocation foundLocation) {
-
         for(JsonEntry e : entries) {
             // Found!
             if(e.getName().equals(key)) foundLocation = e.getLocation();
             // Else keep searching
             foundLocation = findLocationForKey(key, e.getEntries(), foundLocation);
-
         }
-
         return foundLocation;
-
     }
-
 }

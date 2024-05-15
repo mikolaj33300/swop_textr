@@ -11,6 +11,12 @@ public class SimpleJsonProperty {
      */
     public SimpleJsonValue value;
 
+    /**
+     * Creates a new SimpleJsonProperty
+     *
+     * @param name  the name of the property
+     * @param value the value of the property
+     */
     SimpleJsonProperty(String name, SimpleJsonValue value) {
         this.name = name;
         this.value = value;
