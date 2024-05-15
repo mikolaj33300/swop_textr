@@ -9,10 +9,20 @@ import java.io.IOException;
 
 public abstract class View {
 
+    public abstract int getFocusedCol();
+
+    public abstract int getFocusedLine();
+    public abstract int getTotalContentHeight();
+    /**
+     * The adapter used for interacting with termios
+     */
+    protected TermiosTerminalAdapter termiosTerminalAdapter;
     /**
      * The rectangle which describes the bounds of this view
      */
     Rectangle uiCoordsScaled;
+
+    Coords uiCoordsReal;
 
     /**
      * The total width of the terminal
@@ -23,6 +33,14 @@ public abstract class View {
      * The total height of the terminal
      */
     static int terminalHeight;
+
+    public TermiosTerminalAdapter getTermiosTerminalAdapter() {
+        return termiosTerminalAdapter;
+    }
+
+    public View(TermiosTerminalAdapter termiosTerminalAdapter) {
+        this.termiosTerminalAdapter = termiosTerminalAdapter;
+    }
 
 
     /**
@@ -79,4 +97,5 @@ public abstract class View {
     public abstract boolean equals(Object o);
 
 
+    protected abstract int getLineLength(int focusedLine);
 }

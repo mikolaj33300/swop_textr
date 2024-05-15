@@ -51,8 +51,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
 
     }
 
@@ -74,8 +74,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
 
     }
 
@@ -96,8 +96,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
 
     }
 
@@ -118,8 +118,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr2.facade.getWindows().get(textr2.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 1);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 1);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
 
     }
 
@@ -140,8 +140,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 1);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 1);
 
     }
 
@@ -161,8 +161,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
 
     }
 
@@ -185,8 +185,8 @@ public class InspectBufferTest {
         FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
 
         // Test if the move cursor worked logically
-        assertEquals(view.cursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.cursorContext().getInsertionPointCol(), 2);
+        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
+        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 2);
 
     }
 

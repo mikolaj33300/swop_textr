@@ -32,6 +32,7 @@ public class SnakeView extends View {
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
     public SnakeView(SnakeGame game, TermiosTerminalAdapter termiosTerminalAdapter) {
+        super(termiosTerminalAdapter);
         this.game = game; this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
 
@@ -115,6 +116,12 @@ public class SnakeView extends View {
     @Override
     public boolean equals(Object o) {
         return false;
+    }
+
+    @Override
+    protected int getLineLength(int focusedLine) {
+        //TODO: whatever makes sense, width of the board?
+        return 0;
     }
 
     /**
@@ -202,6 +209,27 @@ public class SnakeView extends View {
                     -2 + (this.width / 2) - ((text[i].length() - 1) / 2);
             Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width + 2, text[i]);
         }
+    }
+
+    @Override
+    public int getFocusedCol() {
+        //TODO: column snake is in?
+        return 0;
+    }
+
+    @Override
+    public int getFocusedLine() {
+        //TODO: line snake is in?
+        return 0;
+    }
+
+    @Override
+    public int getTotalContentHeight() {
+        /*TODO: the logical thing to make snake scrollable would be to return the
+           height of the game here?
+           In the long run we might have to think about if scrolling and resizing the snake game
+           do not exclude each other though and where to put that logic*/
+        return 0;
     }
 
     /**

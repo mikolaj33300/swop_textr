@@ -57,7 +57,7 @@ public class FileBufferViewTest {
 
     @Test
     public void testGetContainedFileBuffer(){
-        assertEquals(filebufferview.cursorContext().getFileBuffer(), bufferCursorContext.getFileBuffer());
+        assertEquals(filebufferview.getBufferCursorContext().getFileBuffer(), bufferCursorContext.getFileBuffer());
     }
 
     /**
