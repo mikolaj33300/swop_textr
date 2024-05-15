@@ -136,6 +136,7 @@ class Window {
       } else if (next != null) {
         return next.forceClose(hash);
       }
+      return -1;//should not be reached
     }
 
     public boolean close(int hash) {

@@ -116,8 +116,6 @@ class ControllerFacade {
     public int forceCloseActive() {
         this.contentsChangedSinceLastRender = true;
         //checks which hash will be the next one after this is closed
-        Integer newHashCode = getNewHashCode();
-        if (newHashCode == null) return 2;
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(active);
