@@ -253,5 +253,4 @@ public class SimpleJsonParser {
             return parser.location();
         return null;
     }
-
 }

@@ -15,20 +15,19 @@ public final class SimpleJsonString extends SimpleJsonValue {
     int length;
 
     /**
-     * The value of this SimpleJsonString
+     * The String value of this SimpleJsonString
      */
     String value;
 
-    //TODO: Verander TextLocation door een coordinate zodat die geclonet kan worden en er geen representation exposure voorkomt
     /**
-     * Creates a new SimpleJsonString
+     * Creates a new SimpleJsonString, which loses the reference to the given TextLocation
      *
      * @param start the start location of this SimpleJsonString
      * @param length the length of this SimpleJsonString
      * @param value the value of this SimpleJsonString
      */
     SimpleJsonString(TextLocation start, int length, String value) {
-        this.start = start;
+        this.start = start.clone();
         this.length = length;
         this.value = value;
     }
@@ -44,13 +43,13 @@ public final class SimpleJsonString extends SimpleJsonValue {
     }
 
     /**
-     * Returns the location of this SimpleJsonString, which is its start location
+     * Returns a copy pf the location of this SimpleJsonString, which is its start location
      *
-     * @return start
+     * @return a copy of start
      */
     @Override
     public TextLocation getLocation() {
-        return this.start;
+        return this.start.clone();
     }
 }
 
