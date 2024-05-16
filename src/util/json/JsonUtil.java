@@ -11,9 +11,9 @@ public class JsonUtil {
 
     /**
      * This will retrieve the TextLocation of a json entry path in a json file.
-     * @param buffer the {@link FileBuffer} which holds the information
+     * @param buffer the FileBuffer which holds the information
      * @param jsonName the target name in the json structure
-     * @return a {@link TextLocation} object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
+     * @return a TextLocation object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
      */
     public static TextLocation getTextLocationFor(FileBuffer buffer, String jsonName) {
         JsonEntry entry = (JsonEntry) parseDirectory(buffer);
@@ -21,9 +21,9 @@ public class JsonUtil {
     }
 
     /**
-     * Returns a {@link JsonUtil} object when the parameter contents were correct json format.
+     * Returns a FileSystemEntry object when the parameter contents were correct json format.
      * @param buffer the location of the file
-     * @return a {@link JsonUtil} object if correct json format, else null
+     * @return a FileSystemEntry object if correct json format, else null
      */
     public static FileSystemEntry parseDirectory(FileBuffer buffer) {
         TextLocation location = JsonUtil.getErrorLocation(new String(buffer.getBytes()));
@@ -43,7 +43,7 @@ public class JsonUtil {
 
     /**
      * Determines if the given string parameter has correct JSON structure
-     * @return a textlocation determining the location of the error, or null if there were no errors
+     * @return a TextLocation determining the location of the error, or null if there were no errors
      */
     public static TextLocation getErrorLocation(String contents) {
         return SimpleJsonParser.getErrorLocation(contents);
@@ -54,7 +54,7 @@ public class JsonUtil {
      * @param key the path to the json file
      * @param entries the target name in the json structure
      * @param foundLocation the location of the json file
-     * @return a {@link TextLocation} object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
+     * @return a TextLocation object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
      */
     private static TextLocation findLocationForKey(String key, List<JsonEntry> entries, TextLocation foundLocation) {
         for(JsonEntry e : entries) {
