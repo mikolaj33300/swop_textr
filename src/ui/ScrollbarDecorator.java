@@ -7,11 +7,12 @@ import util.Rectangle;
 import java.io.IOException;
 
 //This decorator does not extend an abstract ViewDecorator because we need to extend all the methods anyways
-public abstract class ScrollbarDecorator extends View{
+public class ScrollbarDecorator extends View{
     View wrappedView;
 
     public ScrollbarDecorator(View v) {
         super(v.getTermiosTerminalAdapter());
+        this.wrappedView = v;
     }
 
     //TODO: these operations could be done better using some special library for vector/matrix operations? Lets only do this if enough time
@@ -34,12 +35,33 @@ public abstract class ScrollbarDecorator extends View{
 
     @Override
     public void renderCursor() throws IOException {
-
+        updateWrappeeDimensions();
+        wrappedView.renderCursor();
     }
 
     @Override
     public boolean equals(Object o) {
         return false;
+    }
+
+    @Override
+    protected int getLineLength(int focusedLine) {
+        return wrappedView.getLineLength(focusedLine);
+    }
+
+    @Override
+    public int getFocusedCol() {
+        return wrappedView.getFocusedCol();
+    }
+
+    @Override
+    public int getFocusedLine() {
+        return wrappedView.getFocusedLine();
+    }
+
+    @Override
+    public int getTotalContentHeight() {
+        return wrappedView.getTotalContentHeight();
     }
 
     @Override
