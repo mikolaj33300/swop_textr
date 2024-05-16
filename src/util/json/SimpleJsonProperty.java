@@ -7,10 +7,17 @@ public class SimpleJsonProperty {
     SimpleJsonObject object;
     String name;
     /**
-     * A value, can be a {@link SimpleJsonObject} or {@link SimpleJsonString}
+     * A value that can either refer to a String or new object
      */
     public SimpleJsonValue value;
 
+    //TODO: check if SimpleJsonValue should be cloned to prevent representation exposure
+    /**
+     * Creates a new SimpleJsonProperty
+     *
+     * @param name  the name of the property
+     * @param value the value of the property
+     */
     SimpleJsonProperty(String name, SimpleJsonValue value) {
         this.name = name;
         this.value = value;
