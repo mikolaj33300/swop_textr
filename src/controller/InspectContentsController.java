@@ -65,7 +65,7 @@ public class InspectContentsController extends UseCaseController {
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }
-        this.needsRenderSinceLast = true;
+        //this.needsRenderSinceLast = true;
     }
 
     /**
@@ -107,7 +107,7 @@ public class InspectContentsController extends UseCaseController {
                 }
                 break;
         }
-        this.needsRenderSinceLast = true;
+        //this.needsRenderSinceLast = true;
     }
 
     /**

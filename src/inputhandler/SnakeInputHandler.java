@@ -3,6 +3,7 @@ package inputhandler;
 import util.MoveDirection;
 import snake.SnakeGame;
 import util.Rectangle;
+import ui.renderIndicator;
 
 import java.io.IOException;
 
@@ -47,15 +48,15 @@ public class SnakeInputHandler extends InputHandlingElement {
      * @param b the input to be handled by snake
      */
     @Override
-    public void input(byte b) throws IOException {
-        if(!game.canContinue()) return;
+    public renderIndicator input(byte b) throws IOException {
+        if(!game.canContinue()) return renderIndicator.NONE;
         currentWait++;
         if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE && this.game.canContinue()) {
             game.tick();
             currentWait = 0;
             contentsChangedSinceRender = true;
         }
-        return;
+        return renderIndicator.WINDOW;
     }
 
     /**

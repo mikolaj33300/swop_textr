@@ -61,14 +61,39 @@ class Display {
     }
 
     /**
-     * render the active window
+     * render all windows
      */
     public void renderContent() throws IOException {
+      termiosTerminalAdapter.clearScreen();
         this.contentsChangedSinceLastRender = false;
         for (Window window : windows) {
             window.view.render(windows.get(active).view.hashCode());
             window.handler.setContentsChangedSinceLastRenderFalse();
         }
+    }
+
+    /**
+     * render active window
+     */
+    public void renderActive() throws IOException {
+        this.contentsChangedSinceLastRender = false;
+	windows.get(active).view.render(windows.get(active).view.hashCode());
+    }
+
+    public void render(renderIndicator ind) throws IOException {
+      switch (ind) {
+	case FULL:
+	  renderContent();
+	  break;
+	case WINDOW:
+	  renderActive();
+	  break;
+	case CURSOR:
+	  renderCursor();
+	  break;
+	case NONE:
+	  break;
+      }
     }
 
     /**
@@ -134,13 +159,11 @@ class Display {
         }
         active = newActive;
         updateViewCoordinates();
-        updateViewCoordinates();
         return 0;
     }
 
     public void passToActive(byte b) throws IOException {
-        this.windows.get(active).handler.input(b);
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	render(this.windows.get(active).handler.input(b));
     }
 
     /**
