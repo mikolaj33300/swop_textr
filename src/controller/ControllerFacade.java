@@ -55,7 +55,7 @@ class ControllerFacade {
                 throw e;
             }
 
-            this.windows.add(new Window(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter), openedFileHandler));
+            this.windows.add(new Window(new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter)), openedFileHandler));
             leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
         }
 
@@ -258,7 +258,8 @@ class ControllerFacade {
         this.contentsChangedSinceLastRender = true;
         if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
             BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-            FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
+            View newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
+            newView = new ScrollbarDecorator(newView);
             Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
             windows.add(windows.size(), windowToAdd);
 
