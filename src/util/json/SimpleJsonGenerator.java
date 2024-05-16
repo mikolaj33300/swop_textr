@@ -8,7 +8,7 @@ public class SimpleJsonGenerator {
     StringBuilder builder = new StringBuilder();
 
     /**
-     * The objectNestingDepth is used to determine the indentation of the JSON
+     * The objectNestingDepth is used to determine the indentation level of the JSON
      */
     int objectNestingDepth;
 
@@ -38,7 +38,7 @@ public class SimpleJsonGenerator {
 
     //TODO: remove beautified instanceof
     /**
-     * Generates a JSON value from a SimpleJsonValue
+     * Generates the JSON builder from a SimpleJsonValue
      *
      * @param value the value to convert to a JSON value
      */
@@ -50,7 +50,7 @@ public class SimpleJsonGenerator {
     }
 
     /**
-     * Generates a JSON string from a string
+     * Generates the JSON buimder from a string
      *
      * @param text the string to convert to a JSON string
      */
@@ -75,7 +75,7 @@ public class SimpleJsonGenerator {
     }
 
     /**
-     * Generates a JSON string from a SimpleJsonString
+     * Generates the JSON builder from a SimpleJsonString
      *
      * @param string the string to convert to a JSON string
      */
@@ -84,7 +84,7 @@ public class SimpleJsonGenerator {
     }
 
     /**
-     * Generates a JSON object from a SimpleJsonObject
+     * Generates the JSON builder from a SimpleJsonObject
      *
      * @param object the object to convert to a JSON object
      */
