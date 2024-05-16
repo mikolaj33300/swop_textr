@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class ControllerFacade {
+public class ControllerFacade {
     private byte[] lineSeparatorArg;
     private ArrayList<Window> windows;
     private Layout rootLayout;
