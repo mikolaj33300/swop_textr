@@ -44,7 +44,7 @@ public class FileBufferViewTest {
         toTestFBView.setScaledCoords(new Rectangle(0,0,1,1));
         toTestFBView.render(toTestFBView.hashCode());
 
-        assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), (content1 + " ".repeat(999-content1.length())+ "+").toCharArray());
+        assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), (content1 + " ".repeat(1000-content1.length())).toCharArray());
     }
 
 
@@ -57,7 +57,7 @@ public class FileBufferViewTest {
 
     @Test
     public void testGetContainedFileBuffer(){
-        assertEquals(filebufferview.cursorContext().getFileBuffer(), bufferCursorContext.getFileBuffer());
+        assertEquals(filebufferview.getBufferCursorContext().getFileBuffer(), bufferCursorContext.getFileBuffer());
     }
 
     /**

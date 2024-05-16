@@ -41,7 +41,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).cursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
         );
     }
 
@@ -52,7 +52,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).cursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
         );
     }
 
@@ -64,7 +64,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).cursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
         );
     }
 
@@ -76,7 +76,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).cursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
         );
     }
 
@@ -89,7 +89,7 @@ public class EditBufferTest {
                 FileHolder.areContentsEqual(
                     ((FileBufferView) textr1.facade
                             .getWindows().get(textr1.facade.getActive()).view)
-                            .cursorContext().getFileBuffer().getBytes(),
+                            .getBufferCursorContext().getFileBuffer().getBytes(),
                             "mi am a mister\n ; but you can call me mister TEE".getBytes()
                 )
         );
