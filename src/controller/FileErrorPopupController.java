@@ -30,7 +30,7 @@ public class FileErrorPopupController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
         userPopupBox.render();
         this.needsRenderSinceLast = false;
     }
@@ -40,7 +40,7 @@ public class FileErrorPopupController extends UseCaseController {
      * @throws IOException
      */
     public void clearContent() throws IOException {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
     }
 
     @Override

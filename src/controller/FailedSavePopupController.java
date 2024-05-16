@@ -44,7 +44,7 @@ public class FailedSavePopupController extends UseCaseController {
      * @throws IOException
      */
     public void clearContent() throws IOException {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
     }
 
     @Override

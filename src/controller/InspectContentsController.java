@@ -122,7 +122,7 @@ public class InspectContentsController extends UseCaseController {
     }
 
     private void clearContent() {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
     }
 
     @Override
