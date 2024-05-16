@@ -54,12 +54,12 @@ public class FileBufferView extends View {
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = containedFileBuffer.getInsertionPointLine();
-        //Renders either all the lines until the end, or the next height-2 lines
-        for (int i = 0; i < Math.min(height - 2, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
+        //Renders either all the lines until the end, or the next height-1 lines
+        for (int i = 0; i < Math.min(height - 1, containedFileBuffer.getLines().size() - renderStartingLineIndex); i++) {
             String lineString = new String(FileAnalyserUtil.toArray(containedFileBuffer.getLines().get(renderStartingLineIndex + i)));
             //For each line, renders between the closest multiples of width-1, or starts at the closest multiple and ends at the end of file
-            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width - 1)) * (width - 1);
-            int renderLineEndIndex = Math.min(renderLineStartIndex + width - 1, lineString.length());
+            int renderLineStartIndex = (containedFileBuffer.getInsertionPointCol() / (width)) * (width);
+            int renderLineEndIndex = Math.min(renderLineStartIndex + width, lineString.length());
             //endindex -1 to make space for vertical bar
             if (renderLineStartIndex < lineString.length()) {
                 assert renderLineEndIndex <= lineString.length() && renderLineStartIndex <= lineString.length();
