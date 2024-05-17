@@ -21,10 +21,8 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void handle(int b) throws IOException {
-      System.out.println(b);
+      System.out.printf("got %d\n", b);
         switch(b) {
-	  case 0:
-	    break;
             case 8, 127, 10, 62, 26, 21, 1, -1:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;

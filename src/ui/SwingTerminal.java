@@ -21,7 +21,7 @@ import util.Coords;
 public class SwingTerminal extends JPanel {
 	private char[][] buffer = new char[25][80];
 	public ArrayList<Runnable> resizeListeners = new ArrayList<>();
-	private int x,y; // cursor
+	private int x = 0, y = 0; // cursor
 	
 	public void clearBuffer() {
 		for (int i = 0; i < buffer.length; i++)
@@ -82,6 +82,8 @@ public class SwingTerminal extends JPanel {
 	}
 
 	public void addString(int x, int y, String in){
+	    if (x >= buffer.length)
+		return;
 	    for (int i = 0; i < in.length() && i + y < buffer[x].length; i++)
 		buffer[x][y+i] = (char) in.indexOf(i);
 	}

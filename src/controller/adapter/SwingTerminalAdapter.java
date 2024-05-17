@@ -43,7 +43,8 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	terminal.addKeyListener(new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
-		    keyQueue.add(e.getKeyCode());
+		    System.out.printf("adding:  %d to queue\n", e.getKeyCode());
+		    keyQueue.add((int) e.getKeyChar());
 		}
 	});
 	
@@ -83,20 +84,20 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   @Override
   public void printText(int row, int column, String text){
-
-      terminal.addString(row, column, text);
+      terminal.clearBuffer();
+      terminal.addString(column, row, text);
     terminal.repaint();
   }
 
   @Override
   public int readByte() throws IOException {
-      while (keyQueue.size() == 0);
+      while (!keyQueue.isEmpty());
       return keyQueue.remove();
   }
 
   @Override
   public int readByte(long deadline) throws IOException, TimeoutException{
-      while (keyQueue.size() == 0);// TODO: deadline
+      while (!keyQueue.isEmpty());// TODO: deadline
       return keyQueue.remove();
   }
 

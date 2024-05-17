@@ -197,10 +197,12 @@ class ControllerFacade {
     public void addDisplay(TermiosTerminalAdapter adapter) {
 	String[] test = new String[1];
 	test[0] = "long.txt";
-	try {
-      this.displays.add(new Display(test, adapter, this.lineSeparatorArg));
+	try { 
+	    this.displays.add(new Display(test, adapter, this.lineSeparatorArg));
+	    active = displays.size()-1;
+	    renderContent();
 	} catch (Exception e){
-	    System.out.println("adding display failed");
+	    System.out.println("adding/rendering display failed");
 	    System.out.println(e);
 	    System.exit(1);
 	}
