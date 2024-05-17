@@ -4,7 +4,6 @@ import controller.adapter.TermiosTerminalAdapter;
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
 import util.Coords;
-import util.Pos;
 
 import java.io.IOException;
 
@@ -26,6 +25,15 @@ public class DirectoryView extends View {
      * The {@link Directory} object we will render
      */
     private final Directory dir;
+    /**
+     * Determines the indent from left
+     * "  "# name directory == 2
+     */
+    private final int indent = 2;
+    /**
+     * The amount of lines between every entry
+     */
+    private final int spacing = 1;
 
     /**
      * Creates a {@link DirectoryView} object given a {@link Directory}
@@ -39,17 +47,17 @@ public class DirectoryView extends View {
 
     @Override
     public int getFocusedCol() {
-        return 0;
+        return indent;
     }
 
     @Override
     public int getFocusedLine() {
-        return 0;
+        return (spacing+1) + dir.getFocused()*(spacing+1);
     }
 
     @Override
     public int getTotalContentHeight() {
-        return 0;
+        return (spacing + 1) + dir.getEntries().size() * (spacing + 1);
     }
 
     /**
@@ -69,10 +77,13 @@ public class DirectoryView extends View {
         // We start printing one space from the top border
         int printLocationY = startY+1;
 
-        this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
-
         // We loop over every entry and print it
-        for(FileSystemEntry entry : dir.getEntries()) {
+        for(int i = getStartIndex(); i < dir.getEntries().size(); i++) {
+
+            // Root
+            if(i == 0) this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
+
+            FileSystemEntry entry = dir.getEntries().get(i);
 
             if(entry.isDirectory())
                 this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  /" + entry.getName());
@@ -86,9 +97,7 @@ public class DirectoryView extends View {
 
     @Override
     public void renderCursor() throws IOException {
-
-
-
+        termiosTerminalAdapter.moveCursor(getFocusedLine(), getFocusedCol());
     }
 
     @Override
@@ -102,25 +111,34 @@ public class DirectoryView extends View {
     }
 
     /**
-     * This function will calculate the Y position for the render cursor, when we select an entry which is off screen, we will
-     * scroll by making the start Y position higher
-     * @return
+     * Determines the start index for {@link Directory#getEntries()} to display so the list
+     * will not fall offscreen before we hit {@link Directory#getFocused()}
+     * @return the index in {@link Directory#getEntries()} which will be the highest
+     * @throws IOException
      */
-    int calculateBeginning() throws IOException {
+    int getStartIndex() throws IOException {
 
         Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
         int height = coords.height;
 
-        // We print 1 from the top border, and 2 spaces per entry so our current depth is:
-        int depth = 1;
-        for(int i = 0; i < dir.getFocused(); i++)
-            depth += (2*i);
+        // 1 + focused want 0 is parent dir ; spacing + 1 want we voorzien minimum 1 lijn per entry
+        int totalHeightNeeded = (1+dir.getFocused()) * (spacing+1);
 
-        // If we have exceeded our height limit, we must return a valid start in the array
-        if(depth > height)
-            return depth - height;
-
-        return coords.startY;
+        // Total height - window heigt = de hoogte dat we moeten negeren.
+        // Dit delen we door hoeveel spacing we hebben EN hoeveel de entry bijdraagt aan de hoogte = 1
+        /* focus op entry3 en hoogte window = 3; entry 2 en 3 moeten zichtbaar zijn.
+         * totalheight = (1+3) * (1+1) = 8 ; 8-3 / (1+1) = 5/2 = 2.5 = 2 -> entry 2 mogen we printen
+        -
+        root
+        -
+        entry1
+        -
+        entry2
+        -
+        entry3
+        -
+         */
+        return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
 
     }
 
