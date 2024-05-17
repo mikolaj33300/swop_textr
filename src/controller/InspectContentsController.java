@@ -33,6 +33,9 @@ public class InspectContentsController extends UseCaseController {
             case 16:
                 coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
                 break;
+            // Control + J
+            //case 10:
+                //coreControllerParent.facade.parse();
             // Control + N
             case 14:
                 coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);

@@ -70,5 +70,13 @@ public class Directory {
         this.focused = this.focused - 1 <= 0 ? this.focused : this.focused--;
     }
 
+    /**
+     * Returns the focused integer, representing a file in the {@link Directory#getEntries()} list.
+     * @return an integer representing the focused {@link FileSystemEntry}
+     */
+    public int getFocused() {
+        return this.focused;
+    }
+
 }
 
