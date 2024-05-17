@@ -22,6 +22,8 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void handle(int b) throws IOException {
         switch(b) {
+	  case 0:
+	    break;
             case 8, 127, 10, 62, 26, 21, 1, -1:
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
@@ -44,6 +46,10 @@ public class InspectContentsController extends UseCaseController {
             // Control + T
             case 20:
                 coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
+                break;
+	    // Control + W
+            case 23:
+                coreControllerParent.addSwingAdapter();
                 break;
             // Control + G
             case 7:

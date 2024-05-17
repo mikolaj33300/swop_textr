@@ -2,6 +2,7 @@ package controller;
 
 import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
+import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class TextR {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
                 from above in the future*/
                 break;
-            }else {
+            } else {
                 activeUseCaseController.handle(b);
             }
             if(activeUseCaseController.getNeedsRenderSinceLast()){
@@ -89,5 +90,11 @@ public class TextR {
 
     public TermiosTerminalAdapter getAdapter() {
 	return adapter.get(activeAdapter);
+    }
+
+    public void addSwingAdapter() {
+	adapter.add(new SwingTerminalAdapter());
+	activeAdapter = adapter.size() - 1;
+	facade.addDisplay(adapter.get(activeAdapter));
     }
 }

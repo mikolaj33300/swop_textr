@@ -193,4 +193,16 @@ class ControllerFacade {
     public boolean getContentsChangedSinceLastRender() {
         return this.contentsChangedSinceLastRender;
     }
+
+    public void addDisplay(TermiosTerminalAdapter adapter) {
+	String[] test = new String[1];
+	test[0] = "long.txt";
+	try {
+      this.displays.add(new Display(test, adapter, this.lineSeparatorArg));
+	} catch (Exception e){
+	    System.out.println("adding display failed");
+	    System.out.println(e);
+	    System.exit(1);
+	}
+    }
 }

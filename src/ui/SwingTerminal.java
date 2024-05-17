@@ -14,27 +14,23 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.util.Arrays;
 
+import util.Coords;
+
 public class SwingTerminal extends JPanel {
-	char[][] buffer = new char[25][80];
-	ArrayList<Runnable> resizeListeners = new ArrayList<>();
+	public char[][] buffer = new char[25][80];
+	public ArrayList<Runnable> resizeListeners = new ArrayList<>();
 	private int x,y; // cursor
-	private int w,h; // size
 	
 	public void clearBuffer() {
 		for (int i = 0; i < buffer.length; i++)
 			Arrays.fill(buffer[i], ' ');
 	}
 
-	public void setX(int x) {
-	    this.x = x;
-	}
+	public void setX(int x) { this.x = x; }
 
-	public void setY(int y) {
-	    this.y = y;
-	}
+	public void setY(int y) { this.y = y; }
 	
 	public void SwingTerminal() {
 		setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -44,8 +40,8 @@ public class SwingTerminal extends JPanel {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				FontMetrics metrics = SwingTerminal.this.getFontMetrics(getFont());
-				h = SwingTerminal.this.getHeight() / metrics.getHeight();
-				w = SwingTerminal.this.getWidth() / metrics.charWidth('m');
+				int h = SwingTerminal.this.getHeight() / metrics.getHeight();
+				int w = SwingTerminal.this.getWidth() / metrics.charWidth('m');
 				buffer = new char[h][w];
 				List<Runnable> resizeListenersCopy = List.copyOf(resizeListeners);
 				for (Runnable listener : resizeListenersCopy)
@@ -74,6 +70,10 @@ public class SwingTerminal extends JPanel {
 		FontMetrics fontMetrics = this.getFontMetrics(getFont());
 		int width = fontMetrics.charWidth('m');
 		return new Dimension(width * buffer[0].length, fontMetrics.getHeight() * buffer.length);
+	}
+
+	public Coords getTextAreaSize() {
+		return new Coords(0, 0, buffer[0].length, buffer.length);
 	}
 	
 	@Override
