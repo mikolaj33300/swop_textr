@@ -19,7 +19,7 @@ import java.util.Arrays;
 import util.Coords;
 
 public class SwingTerminal extends JPanel {
-	public char[][] buffer = new char[25][80];
+	private char[][] buffer = new char[25][80];
 	public ArrayList<Runnable> resizeListeners = new ArrayList<>();
 	private int x,y; // cursor
 	
@@ -79,5 +79,10 @@ public class SwingTerminal extends JPanel {
 	@Override
 	public boolean isFocusable() {
 		return true;
+	}
+
+	public void addString(int x, int y, String in){
+	    for (int i = 0; i < in.length() && i + y < buffer[x].length; i++)
+		buffer[x][y+i] = (char) in.indexOf(i);
 	}
 }

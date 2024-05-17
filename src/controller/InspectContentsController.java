@@ -21,6 +21,7 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void handle(int b) throws IOException {
+      System.out.println(b);
         switch(b) {
 	  case 0:
 	    break;

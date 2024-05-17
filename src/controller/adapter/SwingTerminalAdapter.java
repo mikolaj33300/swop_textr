@@ -18,16 +18,19 @@ import javax.swing.Timer;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import util.Coords;
 import ui.swing.SwingTerminal;
 
 public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapter {
     private SwingTerminal terminal = new SwingTerminal();
-    Timer timer = new Timer(1000, e -> updateBuffer());
+    //Timer timer = new Timer(1000, e -> updateBuffer());
     int starRow = 0;
     int starCol = 0;
     long startTime = System.currentTimeMillis();
+    private Queue<Integer> keyQueue = new LinkedList<Integer>();
 
     public SwingTerminalAdapter() {
 	super("Swing Terminal App");
@@ -37,8 +40,14 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	updateBuffer();
 	
 	terminal.resizeListeners.add(() -> updateBuffer());
+	terminal.addKeyListener(new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+		    keyQueue.add(e.getKeyCode());
+		}
+	});
 	
-	timer.start();
+	//timer.start();
 	
 	pack();
 	
@@ -48,17 +57,11 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   void updateBuffer() {
       terminal.clearBuffer();
-      String usageMessage = "Use the arrow keys to move the star; press Ctrl+R to reset the timer";
-      usageMessage.getChars(0, Math.min(usageMessage.length(), terminal.buffer[0].length), terminal.buffer[terminal.buffer.length - 1], 0);
-      String timeMessage = ((System.currentTimeMillis() - startTime) / 1000) + "s passed";
-      timeMessage.getChars(0, Math.min(timeMessage.length(), terminal.buffer[0].length), terminal.buffer[0], terminal.buffer[0].length - timeMessage.length());
-      terminal.buffer[starRow][starCol] = '*';
       terminal.repaint();
   }
   @Override
   public void clearScreen() {
-		terminal.clearBuffer();
-    terminal.repaint();
+    terminal.clearBuffer();
   }
 
   @Override
@@ -73,23 +76,28 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   @Override
   public void moveCursor(int row, int column){
-      terminal.setY(row);
       terminal.setX(column);
+      terminal.setY(row);
+      terminal.repaint();
   }
 
   @Override
   public void printText(int row, int column, String text){
 
+      terminal.addString(row, column, text);
+    terminal.repaint();
   }
 
   @Override
   public int readByte() throws IOException {
-      return 0;
+      while (keyQueue.size() == 0);
+      return keyQueue.remove();
   }
 
   @Override
   public int readByte(long deadline) throws IOException, TimeoutException{
-      return 0;
+      while (keyQueue.size() == 0);// TODO: deadline
+      return keyQueue.remove();
   }
 
   @Override
