@@ -55,8 +55,9 @@ public class SnakeInputHandler extends InputHandlingElement {
             game.tick();
             currentWait = 0;
             contentsChangedSinceRender = true;
+	    return renderIndicator.FULL;
         }
-        return renderIndicator.WINDOW;
+        return renderIndicator.NONE;
     }
 
     /**

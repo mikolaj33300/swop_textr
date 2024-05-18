@@ -207,4 +207,8 @@ class ControllerFacade {
 	    System.exit(1);
 	}
     }
+
+    public void setActive(int a) {
+	this.active = a;
+    }
 }

@@ -8,6 +8,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import util.Coords;
 import ui.swing.SwingTerminal;
+import controller.TSMediator;
 
 public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapter {
     private SwingTerminal terminal = new SwingTerminal();
@@ -32,9 +35,11 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
     int starCol = 0;
     long startTime = System.currentTimeMillis();
     private Queue<Integer> keyQueue = new LinkedList<Integer>();
+    private final TSMediator ctl;
 
-    public SwingTerminalAdapter() {
+    public SwingTerminalAdapter(TSMediator med) {
 	super("Swing Terminal App");
+	this.ctl = med;
 	//setDefaultCloseOperation(null);
 	
 	getContentPane().add(terminal);
@@ -46,6 +51,18 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 		public void keyPressed(KeyEvent e) {
 		    keyQueue.add((int) e.getKeyChar());
 		}
+	});
+	this.addWindowFocusListener(new WindowAdapter () {
+	      public void windowGainedFocus(WindowEvent e) {
+		  System.out.println("gained focus");
+		  ctl.gainFocus();
+	      }
+	});
+	this.addWindowFocusListener(new WindowAdapter () {
+	      public void windowLostFocus(WindowEvent e) {
+		  System.out.println("Lost focus");
+		  ctl.loseFocus();
+	      }
 	});
 	
 	//timer.start();
@@ -60,6 +77,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
       //terminal.clearBuffer();
       terminal.repaint();
   }
+
   @Override
   public void clearScreen() {
     terminal.clearBuffer();
@@ -122,4 +140,5 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
   public Coords getTextAreaSize() throws IOException {
       return terminal.getTextAreaSize();
   }
+
 }

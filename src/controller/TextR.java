@@ -4,6 +4,7 @@ import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
+import controller.TSMediator;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -92,8 +93,15 @@ public class TextR {
 	return adapter.get(activeAdapter);
     }
 
+    public void setAdapter(int a) {
+	activeAdapter = a;
+	facade.setActive(a);
+    }
+
     public void addSwingAdapter() {
-	adapter.add(new SwingTerminalAdapter());
+	int size = adapter.size();
+	System.out.println(size);
+	adapter.add(new SwingTerminalAdapter(new TSMediator(this, size)));
 	activeAdapter = adapter.size() - 1;
 	facade.addDisplay(adapter.get(activeAdapter));
     }
