@@ -12,6 +12,7 @@ public class TSMediator {
     public void gainFocus(){
 	c.setAdapter(index);
     }
+
     public void loseFocus() {
 	c.setAdapter(0);
     }

@@ -96,6 +96,7 @@ public class TextR {
     public void setAdapter(int a) {
 	activeAdapter = a;
 	facade.setActive(a);
+	System.out.printf("facade active: %d, textr active: %d\n", facade.getActive(), activeAdapter);
     }
 
     public void addSwingAdapter() {
