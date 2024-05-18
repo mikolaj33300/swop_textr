@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 import util.Coords;
 import ui.swing.SwingTerminal;
@@ -43,8 +44,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	terminal.addKeyListener(new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
-		    System.out.printf("adding:  %d to queue\n", e.getKeyCode());
-		    keyQueue.add((int) e.getKeyChar());
+		    keyQueue.add((int) e.getKeyCode());
 		}
 	});
 	
@@ -57,7 +57,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
     }
 
   void updateBuffer() {
-      terminal.clearBuffer();
+      //terminal.clearBuffer();
       terminal.repaint();
   }
   @Override
@@ -84,20 +84,36 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   @Override
   public void printText(int row, int column, String text){
-      terminal.clearBuffer();
       terminal.addString(column, row, text);
     terminal.repaint();
   }
 
   @Override
   public int readByte() throws IOException {
-      while (!keyQueue.isEmpty());
+      while (keyQueue.isEmpty()) {
+	  try {
+	      TimeUnit.MILLISECONDS.sleep(10);
+	  } catch (Exception e) {
+	      System.out.println("sleep failed");
+	      System.exit(1);
+	  }
+      }
       return keyQueue.remove();
   }
 
+  /*
+   * less than perfect, but how to get the input directly here?
+   */
   @Override
   public int readByte(long deadline) throws IOException, TimeoutException{
-      while (!keyQueue.isEmpty());// TODO: deadline
+      while (keyQueue.isEmpty()) {
+	  try {
+	      TimeUnit.MILLISECONDS.sleep(10);
+	  } catch (Exception e) {
+	      System.out.println("sleep failed");
+	      System.exit(1);
+	  }
+      }// TODO: deadline
       return keyQueue.remove();
   }
 

@@ -82,9 +82,10 @@ public class SwingTerminal extends JPanel {
 	}
 
 	public void addString(int x, int y, String in){
+	    char[] in2 = in.toCharArray();
 	    if (x >= buffer.length)
 		return;
-	    for (int i = 0; i < in.length() && i + y < buffer[x].length; i++)
-		buffer[x][y+i] = (char) in.indexOf(i);
+	    for (int i = 0; i < in2.length && i + y < buffer[x].length; i++)
+		buffer[x][y+i] = in2[i];
 	}
 }
