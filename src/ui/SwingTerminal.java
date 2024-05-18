@@ -49,6 +49,16 @@ public class SwingTerminal extends JPanel {
 			}
 		});
 	}
+
+	public void resize() {
+	    FontMetrics metrics = SwingTerminal.this.getFontMetrics(getFont());
+	    int h = SwingTerminal.this.getHeight() / metrics.getHeight();
+	    int w = SwingTerminal.this.getWidth() / metrics.charWidth('m');
+	    if (h != buffer.length || w != buffer[0].length){
+		buffer = new char[h][w];
+		clearBuffer();
+	    }
+	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -83,9 +93,9 @@ public class SwingTerminal extends JPanel {
 
 	public void addString(int x, int y, String in){
 	    char[] in2 = in.toCharArray();
-	    if (x >= buffer.length)
+	    if (y >= buffer.length || x >= buffer[y].length)
 		return;
-	    for (int i = 0; i < in2.length && i + y < buffer[x].length; i++)
-		buffer[x][y+i] = in2[i];
+	    for (int i = 0; i < in2.length && i + x < buffer[y].length; i++)
+		buffer[y][x+i] = in2[i];
 	}
 }

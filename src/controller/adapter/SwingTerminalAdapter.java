@@ -44,7 +44,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	terminal.addKeyListener(new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
-		    keyQueue.add((int) e.getKeyCode());
+		    keyQueue.add((int) e.getKeyChar());
 		}
 	});
 	
@@ -84,6 +84,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   @Override
   public void printText(int row, int column, String text){
+	terminal.resize();
       terminal.addString(column, row, text);
     terminal.repaint();
   }
