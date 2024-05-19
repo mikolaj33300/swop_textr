@@ -24,6 +24,7 @@ class ControllerFacade {
     private int active = 0;
 
     private boolean contentsChangedSinceLastRender;
+    private TermiosTerminalAdapter termiosTerminalAdapter;
 
     /**
      * Creates a ControllerFacade object.

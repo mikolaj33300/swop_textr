@@ -20,8 +20,8 @@ JAR= termios/_build/main/io.github.btj.termios.jar /usr/share/junit-5/lib/junit-
 
 SRC = $(call rwildcard,src/,*.java)
 
-#TEST = $(call rwildcard,tests/,*.java)
-TEST = tests/files/FileBufferTest.java ./tests/files/BufferCursorContextTest.java ./tests/files/InsertionPointTest.java ./tests/files/FileAnalyserUtilTest.java ./tests/files/FileHolderTest.java ./tests/controller/RearrangeLayoutTest.java ./tests/controller/CloseBufferTest.java ./tests/layouttree/HorizontalLayoutNodeTest.java  ./tests/ui/ViewTest.java
+TEST = $(call rwildcard,tests/,*.java)
+#TEST = tests/files/FileBufferTest.java ./tests/files/BufferCursorContextTest.java ./tests/files/InsertionPointTest.java ./tests/files/FileAnalyserUtilTest.java ./tests/files/FileHolderTest.java ./tests/controller/RearrangeLayoutTest.java ./tests/controller/CloseBufferTest.java ./tests/layouttree/HorizontalLayoutNodeTest.java  ./tests/ui/ViewTest.java
 
 #TODO
 #./tests/controller/SaveBufferTest.java

@@ -45,6 +45,10 @@ public class InspectContentsController extends UseCaseController {
             case 20:
                 coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
                 break;
+	    // Control + W
+            case 23:
+                coreControllerParent.addSwingAdapter();
+                break;
             // Control + G
             case 7:
                 coreControllerParent.facade.openSnakeGame();
@@ -65,7 +69,7 @@ public class InspectContentsController extends UseCaseController {
                 coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
                 break;
         }
-        this.needsRenderSinceLast = true;
+        //this.needsRenderSinceLast = true;
     }
 
     /**
@@ -107,7 +111,7 @@ public class InspectContentsController extends UseCaseController {
                 }
                 break;
         }
-        this.needsRenderSinceLast = true;
+        //this.needsRenderSinceLast = true;
     }
 
     /**
@@ -122,7 +126,7 @@ public class InspectContentsController extends UseCaseController {
     }
 
     private void clearContent() {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
     }
 
     @Override
