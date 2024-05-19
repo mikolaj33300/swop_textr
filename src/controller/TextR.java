@@ -4,7 +4,6 @@ import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
-import controller.TSMediator;
 
 import java.io.IOException;
 import java.util.Arrays;

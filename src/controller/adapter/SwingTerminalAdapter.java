@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import util.Coords;
 import ui.swing.SwingTerminal;
-import controller.TSMediator;
 
 public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapter {
     private SwingTerminal terminal = new SwingTerminal();
@@ -49,7 +48,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	terminal.addKeyListener(new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
-		    keyQueue.add((int) e.getKeyChar());
+		    handleKey(e);
 		}
 	});
 	this.addWindowFocusListener(new WindowAdapter () {
@@ -72,6 +71,41 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	setLocationRelativeTo(null);
 	java.awt.EventQueue.invokeLater(() -> this.setVisible(true));
     }
+
+  private void handleKey(KeyEvent e) {
+      final char keyChar = e.getKeyChar();
+
+      if (keyChar == KeyEvent.CHAR_UNDEFINED){
+	  switch (e.getKeyCode()) {
+	      case KeyEvent.VK_F4:
+		  keyQueue.add(27);
+		  keyQueue.add(83);// S in ascii
+		  break;
+	    case KeyEvent.VK_KP_UP:
+	    case KeyEvent.VK_UP:
+		  keyQueue.add(27);
+		  keyQueue.add(65);// A in ascii
+		  break;
+	    case KeyEvent.VK_KP_DOWN:
+	    case KeyEvent.VK_DOWN:
+		  keyQueue.add(27);
+		  keyQueue.add(66);// B in ascii
+		  break;
+	    case KeyEvent.VK_KP_RIGHT:
+	    case KeyEvent.VK_RIGHT:
+		  keyQueue.add(27);
+		  keyQueue.add(67);// C in ascii
+		  break;
+	    case KeyEvent.VK_KP_LEFT:
+	    case KeyEvent.VK_LEFT:
+		  keyQueue.add(27);
+		  keyQueue.add(68);// D in ascii
+		  break;
+	  }
+      } else {
+	  keyQueue.add((int) keyChar);
+      }
+  }
 
   void updateBuffer() {
       //terminal.clearBuffer();

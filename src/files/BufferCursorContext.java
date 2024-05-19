@@ -302,4 +302,8 @@ public class BufferCursorContext {
     public int getLineLength(int line) {
       return containedFileBuffer.getLineLength(line);
     }
+
+    public String getPath() {
+	return containedFileBuffer.getPath();
+    }
 }

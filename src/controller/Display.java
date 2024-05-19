@@ -159,6 +159,13 @@ class Display {
         }
         active = newActive;
         updateViewCoordinates();
+	try {
+	    render(renderIndicator.FULL);
+	} catch (Exception e) {
+	    System.out.println("error in render after forceClose: ");
+	    System.out.println(e);
+	    System.exit(1);
+	}
         return 0;
     }
 
@@ -278,15 +285,18 @@ class Display {
      */
     public void duplicateActive() throws IOException {
         this.contentsChangedSinceLastRender = true;
-        if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
-            BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-            FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
-            Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
+            Window windowToAdd = windows.get(active).duplicate(termiosTerminalAdapter);
             windows.add(windows.size(), windowToAdd);
 
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), windowToAdd.view.hashCode());
             updateViewCoordinates();
-        }
+	    try {
+		render(renderIndicator.FULL);
+	    } catch (Exception e) {
+		System.out.println("Exception in duplicateActive Render");
+		System.out.println(e);
+		System.exit(1);
+	    }
     }
 
     /**
@@ -345,5 +355,9 @@ class Display {
 
     public boolean getContentsChangedSinceLastRender() {
         return this.contentsChangedSinceLastRender;
+    }
+
+    public String getPath() {
+	return windows.get(active).getPath();
     }
 }

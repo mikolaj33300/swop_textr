@@ -202,4 +202,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
         this.fb.save();
         contentsChangedSinceRender = true;
     }
+
+    public String getPath() {
+	return fb.getPath();
+    }
 }
