@@ -1,7 +1,7 @@
 package inputhandler;
 
 import files.BufferCursorContext;
-import ui.renderIndicator;
+import util.RenderIndicator;
 
 import java.io.IOException;
 
@@ -43,14 +43,14 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * Handles the input for the {@link files.FileBuffer}
      * @param b the input
      */
-    public renderIndicator input(byte b) {
+    public RenderIndicator input(byte b) {
         switch (b) {
             case -3:
                 // Idle
-		return renderIndicator.NONE;
+		return RenderIndicator.NONE;
             case 27:
                 this.surrogate = true;
-		return renderIndicator.NONE;
+		return RenderIndicator.NONE;
             default:
                 if (this.surrogate) {
                     surrogateKeysInput(b);
@@ -58,7 +58,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
                 } else {
                     asciiInput(b);
                 }
-		return renderIndicator.WINDOW;
+		return RenderIndicator.WINDOW;
         }
     }
 

@@ -2,6 +2,7 @@ package controller;
 
 import controller.adapter.VirtualTestingTermiosAdapter;
 import files.FileHolder;
+import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -41,7 +42,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
+                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -52,7 +53,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
+                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -64,7 +65,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
+                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -76,7 +77,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
+                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -87,9 +88,9 @@ public class EditBufferTest {
         textr1.loop();
         assertTrue(
                 FileHolder.areContentsEqual(
-                    ((FileBufferView) textr1.facade
-                            .getWindows().get(textr1.facade.getActive()).getView())
-                            .getBufferCursorContext().getFileBuffer().getBytes(),
+                    ((FileBufferInputHandler) textr1.facade
+                            .getWindows().get(textr1.facade.getActive()).getHandler())
+                            .getFileBufferContextTransparent().getFileBuffer().getBytes(),
                             "mi am a mister\n ; but you can call me mister TEE".getBytes()
                 )
         );

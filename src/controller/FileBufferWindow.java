@@ -6,13 +6,14 @@ import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.InputHandlingElement;
 import ui.FileBufferView;
+import ui.ScrollbarDecorator;
 import ui.View;
 
 import java.io.IOException;
 
 public class FileBufferWindow extends Window{
     private FileBufferInputHandler fileBufferInputHandler;
-    private FileBufferView fileBufferView;
+    private View view;
     public FileBufferWindow(String path, byte[] lineSeparatorArg, TermiosTerminalAdapter adapter) throws PathNotFoundException, IOException {
         super();
         FileBufferInputHandler openedFileHandler;
@@ -21,13 +22,13 @@ public class FileBufferWindow extends Window{
         } catch (PathNotFoundException | IOException e) {
             throw e;
         }
-        this.fileBufferView = (new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), adapter));
+        this.view = (new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), adapter)));
         this.fileBufferInputHandler = (openedFileHandler);
 
     }
 
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
-        this.fileBufferView = newView;
+        this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
         super.termiosTerminalAdapter = newView.getTermiosTerminalAdapter();
     }
@@ -35,7 +36,7 @@ public class FileBufferWindow extends Window{
 
     @Override
     public View getView() {
-        return this.fileBufferView;
+        return this.view;
     }
 
     @Override

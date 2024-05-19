@@ -4,6 +4,7 @@ import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
+import util.RenderIndicator;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,7 +34,9 @@ public class TextR {
         }
         this.facade = containedAppFacade;
 
-        if(this.activeUseCaseController == null) this.activeUseCaseController = new InspectContentsController(this);
+        if(this.activeUseCaseController == null){
+            this.activeUseCaseController = new InspectContentsController(this);
+        }
     }
 
     /**
@@ -60,6 +63,7 @@ public class TextR {
         activeUseCaseController.paintScreen();
         // Main loop
         for ( ; ; ) {
+            RenderIndicator operationNeedsRerender = RenderIndicator.NONE;
             int b = -3;
             try {
                 b = adapter.get(activeAdapter).readByte(System.currentTimeMillis()+1);
@@ -68,44 +72,42 @@ public class TextR {
             }
             if (b == 27) {
                 adapter.get(activeAdapter).readByte();
-                activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
+                operationNeedsRerender = activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
             } else if (b == -3){
-                activeUseCaseController.handleIdle();
+                operationNeedsRerender = activeUseCaseController.handleIdle();
             } else if(b == -2) {
                 /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
                 from above in the future*/
                 break;
             } else {
-                activeUseCaseController.handle(b);
+                operationNeedsRerender = activeUseCaseController.handle(b);
             }
-            if(activeUseCaseController.getNeedsRenderSinceLast()){
-                this.activeUseCaseController.paintScreen();
+            if(operationNeedsRerender != RenderIndicator.NONE){
+                activeUseCaseController.paintScreen();
             }
-
-
             // Flush stdIn & Recalculate dimensions
             System.in.read(new byte[System.in.available()]);
-	    activeAdapter++;
-	    activeAdapter%=adapter.size();
-	    facade.setActive(activeAdapter);
+	        //activeAdapter++;
+	        //activeAdapter%=adapter.size();
+	        //facade.setActive(activeAdapter);
         }
     }
 
     public TermiosTerminalAdapter getAdapter() {
-	return adapter.get(activeAdapter);
+	    return adapter.get(activeAdapter);
     }
 
     public void setAdapter(int a) {
-	activeAdapter = a;
-	facade.setActive(a);
-	System.out.printf("facade active: %d, textr active: %d\n", facade.getActive(), activeAdapter);
+	    activeAdapter = a;
+	    facade.setActive(a);
+	    System.out.printf("facade active: %d, textr active: %d\n", facade.getActive(), activeAdapter);
     }
 
     public void addSwingAdapter() {
-	int size = adapter.size();
-	System.out.println(size);
-	adapter.add(new SwingTerminalAdapter());
-	activeAdapter = adapter.size() - 1;
-	facade.addDisplay(adapter.get(activeAdapter));
+	    int size = adapter.size();
+	    System.out.println(size);
+	    adapter.add(new SwingTerminalAdapter());
+	    activeAdapter = adapter.size() - 1;
+	    facade.addDisplay(adapter.get(activeAdapter));
     }
 }

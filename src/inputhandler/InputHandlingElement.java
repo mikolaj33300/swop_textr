@@ -1,7 +1,7 @@
 package inputhandler;
 
 import java.io.IOException;
-import ui.renderIndicator;
+import util.RenderIndicator;
 
 /*
  * commands next
@@ -25,7 +25,7 @@ abstract public class InputHandlingElement {
      * Handles input of specific characters
      * @param b the input byte
      */
-    abstract public renderIndicator input(byte b) throws IOException;
+    abstract public RenderIndicator input(byte b) throws IOException;
 
     /**
      * @return if the enclosed object is safe to close

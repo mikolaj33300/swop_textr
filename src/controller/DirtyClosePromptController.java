@@ -1,6 +1,7 @@
 package controller;
 
 import io.github.btj.termios.Terminal;
+import util.RenderIndicator;
 import ui.UserPopupBox;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class DirtyClosePromptController extends UseCaseController {
      * @throws IOException
      */
     @Override
-    public void handle(int b) throws IOException {
+    public RenderIndicator handle(int b) throws IOException {
         switch(b) {
             // N
             case 110:
@@ -31,7 +32,7 @@ public class DirtyClosePromptController extends UseCaseController {
                 break;
             // Y
             case 121:
-                int result = coreControllerParent.facade.forceCloseActive();
+                int result = coreControllerParent.facade.forceCloseActive().b;
                 if(result == 0){
                     coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
                 } else {
@@ -40,6 +41,7 @@ public class DirtyClosePromptController extends UseCaseController {
                 }
                 break;
         }
+        return RenderIndicator.FULL;
     }
 
     /**
@@ -59,15 +61,5 @@ public class DirtyClosePromptController extends UseCaseController {
      */
     public void clearContent() throws IOException {
         coreControllerParent.getAdapter().clearScreen();
-    }
-
-    @Override
-    public void handleIdle() {
-
-    }
-
-    @Override
-    public boolean getNeedsRenderSinceLast() {
-        return needsRenderSinceLast;
     }
 }

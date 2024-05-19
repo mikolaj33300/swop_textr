@@ -149,3 +149,4 @@ public class ScrollbarDecorator extends View{
         wrappedView.setScaledCoords(new Rectangle(wrappeeScaledX, wrappeeScaledY, wrappeeScaledWidth, wrappeeScaledHeight));
     }
 }
+

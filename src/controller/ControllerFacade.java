@@ -1,29 +1,19 @@
 package controller;
 
 import controller.adapter.TermiosTerminalAdapter;
-import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
-import inputhandler.FileBufferInputHandler;
-import inputhandler.SnakeInputHandler;
 import layouttree.*;
-import ui.*;
-import util.Coords;
-import util.MoveDirection;
-import util.RotationDirection;
-import util.Rectangle;
+import util.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 class ControllerFacade {
     private final byte[] lineSeparatorArg;
     private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
     private int active = 0;
-
-    private boolean contentsChangedSinceLastRender;
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
     /**
@@ -72,20 +62,19 @@ class ControllerFacade {
      *
      * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
      */
-    public int closeActive() {
+    public Pair<RenderIndicator, Integer> closeActive() {
         return displays.get(active).closeActive();
     }
 
     /**
-     *
      * @return 0 if we closed the active window 2 if we can't close it
      */
-    public int forceCloseActive() {
+    public Pair<RenderIndicator, Integer> forceCloseActive() {
         return displays.get(active).forceCloseActive();
     }
 
-    public void passToActive(byte b) throws IOException {
-        displays.get(active).passToActive(b);
+    public RenderIndicator passToActive(byte b) throws IOException {
+        return displays.get(active).passToActive(b);
     }
 
     /**
@@ -93,8 +82,9 @@ class ControllerFacade {
      *
      * @param dir the direction to move focus to
      */
-    public void moveFocus(MoveDirection dir) {
+    public RenderIndicator moveFocus(MoveDirection dir) {
         displays.get(active).moveFocus(dir);
+        return RenderIndicator.FULL;
     }
 
     /**
@@ -108,58 +98,62 @@ class ControllerFacade {
      * Rearranges the Layouts, depending on the argument given
      *
      * @param orientation clockwise or counterclockwise
+     * @return
      */
-    public void rotateLayout(RotationDirection orientation) throws IOException {
+    public RenderIndicator rotateLayout(RotationDirection orientation) throws IOException {
         displays.get(active).rotateLayout(orientation);
+        return RenderIndicator.FULL;
     }
 
     /**
      * let the active window know that the right arrow is pressed
+     *
+     * @return
      */
-    public void handleArrowRight() {
-        displays.get(active).handleArrowRight();
+    public RenderIndicator handleArrowRight() {
+        return displays.get(active).handleArrowRight();
     }
 
     /**
      * let the active window know that the Left arrow is pressed
      */
-    public void handleArrowLeft() {
-        displays.get(active).handleArrowLeft();
+    public RenderIndicator handleArrowLeft() {
+        return displays.get(active).handleArrowLeft();
     }
 
     /**
      * let the active window know that the Down arrow is pressed
      */
-    public void handleArrowDown() {
-        displays.get(active).handleArrowDown();
+    public RenderIndicator handleArrowDown() {
+        return displays.get(active).handleArrowDown();
     }
 
     /**
      * let the active window know that the Up arrow is pressed
      */
-    public void handleArrowUp() {
-        displays.get(active).handleArrowUp();
+    public RenderIndicator handleArrowUp() {
+        return displays.get(active).handleArrowUp();
     }
 
     /**
      * let the active window insert a separator
      */
-    public void handleSeparator() throws IOException {
-        displays.get(active).handleSeparator();
+    public RenderIndicator handleSeparator() throws IOException {
+        return displays.get(active).handleSeparator();
     }
 
     /**
      * Opens the snake game on the active display
      */
-    public void openSnakeGame() throws IOException {
-        displays.get(active).openSnakeGame();
+    public RenderIndicator openSnakeGame() throws IOException {
+        return displays.get(active).openSnakeGame();
     }
 
     /**
      * Duplicates the active view by
      */
-    public void duplicateActive() throws IOException {
-        displays.get(active).duplicateActive();
+    public RenderIndicator duplicateActive() throws IOException {
+        return displays.get(active).duplicateActive();
     }
 
     /**
@@ -187,10 +181,6 @@ class ControllerFacade {
      */
     int getActive() {
         return this.active;
-    }
-
-    public boolean getContentsChangedSinceLastRender() {
-        return this.contentsChangedSinceLastRender;
     }
 
     public void addDisplay(TermiosTerminalAdapter adapter) {

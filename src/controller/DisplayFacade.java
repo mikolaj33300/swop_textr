@@ -1,16 +1,11 @@
 package controller;
 
 import controller.adapter.TermiosTerminalAdapter;
-import files.BufferCursorContext;
 import exception.PathNotFoundException;
-import inputhandler.FileBufferInputHandler;
 import inputhandler.SnakeInputHandler;
 import layouttree.*;
 import ui.*;
-import util.Coords;
-import util.MoveDirection;
-import util.RotationDirection;
-import util.Rectangle;
+import util.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,8 +18,6 @@ import java.util.HashMap;
         private ArrayList<FileBufferWindow> fileBufferWindows;
         private Layout rootLayout;
         private int active;
-
-        private boolean contentsChangedSinceLastRender;
         private TermiosTerminalAdapter termiosTerminalAdapter;
 
         /**
@@ -36,7 +29,6 @@ import java.util.HashMap;
          */
         public DisplayFacade(String[] paths, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws PathNotFoundException, IOException {
             this.lineSeparatorArg = lineSeparatorArg;
-            this.contentsChangedSinceLastRender = true;
             this.termiosTerminalAdapter = termiosTerminalAdapter;
 
 
@@ -77,7 +69,6 @@ import java.util.HashMap;
             clearContent();
             renderContent();
             renderCursor();
-            this.contentsChangedSinceLastRender = false;
         }
 
         /**
@@ -105,14 +96,12 @@ import java.util.HashMap;
          *
          * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
          */
-        public int closeActive() {
-            contentsChangedSinceLastRender = true;
+        public Pair<RenderIndicator, Integer> closeActive() {
             if (windows.get(active).getHandler().isSafeToClose()) {
                 //safe to do a force close since clean buffer
-                contentsChangedSinceLastRender = true;
                 return forceCloseActive();
             } else {
-                return 1;
+                return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 1);
             }
         }
 
@@ -120,11 +109,10 @@ import java.util.HashMap;
          *
          * @return 0 if we closed the active window 2 if we can't close it
          */
-        public int forceCloseActive() {
-            this.contentsChangedSinceLastRender = true;
+        public Pair<RenderIndicator, Integer> forceCloseActive() {
             //checks which hash will be the next one after this is closed
             Integer newHashCode = getNewHashCode();
-            if (newHashCode == null) return 2;
+            if (newHashCode == null) return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 2);
 
             //deletes and sets new one as active
             rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
@@ -143,12 +131,11 @@ import java.util.HashMap;
             }
             active = newActive;
             updateViewCoordinates();
-            return 0;
+            return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 0);
         }
 
-        public void passToActive(byte b) throws IOException {
-            this.windows.get(active).getHandler().input(b);
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+        public RenderIndicator passToActive(byte b) throws IOException {
+            return this.windows.get(active).getHandler().input(b);
         }
 
         /**
@@ -156,8 +143,7 @@ import java.util.HashMap;
          *
          * @param dir the direction to move focus to
          */
-        public void moveFocus(MoveDirection dir) {
-            contentsChangedSinceLastRender = true;
+        public RenderIndicator moveFocus(MoveDirection dir) {
             int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).getView().hashCode());
             for (int i = 0; i < this.windows.size(); i++) {
                 if (this.windows.get(i).getView().hashCode() == newActive) {
@@ -165,6 +151,7 @@ import java.util.HashMap;
                     break;
                 }
             }
+            return RenderIndicator.FULL;
 
         }
 
@@ -180,50 +167,50 @@ import java.util.HashMap;
          *
          * @param orientation clockwise or counterclockwise
          */
-        public void rotateLayout(RotationDirection orientation) throws IOException {
-            contentsChangedSinceLastRender = true;
+        public RenderIndicator rotateLayout(RotationDirection orientation) throws IOException {
             rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getView().hashCode());
             updateViewCoordinates();
+            return RenderIndicator.FULL;
         }
 
         /**
          * let the active window know that the right arrow is pressed
          */
-        public void handleArrowRight() {
+        public RenderIndicator handleArrowRight() {
             this.windows.get(active).getHandler().handleArrowRight();
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+            return RenderIndicator.FULL;
         }
 
         /**
          * let the active window know that the Left arrow is pressed
          */
-        public void handleArrowLeft() {
+        public RenderIndicator handleArrowLeft() {
             this.windows.get(active).getHandler().handleArrowLeft();
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+            return RenderIndicator.FULL;
         }
 
         /**
          * let the active window know that the Down arrow is pressed
          */
-        public void handleArrowDown() {
+        public RenderIndicator handleArrowDown() {
             this.windows.get(active).getHandler().handleArrowDown();
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+            return RenderIndicator.FULL;
         }
 
         /**
          * let the active window know that the Up arrow is pressed
          */
-        public void handleArrowUp() {
+        public RenderIndicator handleArrowUp() {
             this.windows.get(active).getHandler().handleArrowUp();
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+            return RenderIndicator.FULL;
         }
 
         /**
          * let the active window insert a separator
          */
-        public void handleSeparator() throws IOException {
+        public RenderIndicator handleSeparator() throws IOException {
             this.windows.get(active).getHandler().handleSeparator();
-            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
+            return RenderIndicator.FULL;
         }
 
         /**
@@ -231,8 +218,7 @@ import java.util.HashMap;
          * {@link inputhandler.InputHandlingElement} to {@link SnakeInputHandler} and {@link View}
          * to {@link SnakeView}. We delete the active window and add a new window to the list.
          */
-        public void openSnakeGame() throws IOException {
-            this.contentsChangedSinceLastRender = true;
+        public RenderIndicator openSnakeGame() throws IOException {
             // Get UI coords of current window to initialize snake view's playfield
             Coords coordsView = this.windows.get(active).getView().getRealUICoordsFromScaled(termiosTerminalAdapter);
 
@@ -251,13 +237,14 @@ import java.util.HashMap;
 
             // Set the active view to the snake view
             active = this.windows.size() - 1;
+
+            return RenderIndicator.FULL;
         }
 
         /**
          * Duplicates the active view by
          */
-        public void duplicateActive() throws IOException {
-            this.contentsChangedSinceLastRender = true;
+        public RenderIndicator duplicateActive() throws IOException {
 
             Window windowToAdd = windows.get(active).duplicate();
             windows.add(windows.size(), windowToAdd);
@@ -265,6 +252,7 @@ import java.util.HashMap;
             rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
             updateViewCoordinates();
 
+            return RenderIndicator.FULL;
         }
 
         /**
@@ -298,12 +286,13 @@ import java.util.HashMap;
             return this.windows.get(active);
         }
 
-        private void updateViewCoordinates() {
-            this.contentsChangedSinceLastRender = true;
+        private RenderIndicator updateViewCoordinates() {
             HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
             for (Window w : windows) {
                 w.getView().setScaledCoords(coordsMap.get(w.getView().hashCode()));
             }
+
+            return RenderIndicator.FULL;
         }
 
         /**
@@ -323,9 +312,5 @@ import java.util.HashMap;
                 }
             }
             return newHashCode;
-        }
-
-        public boolean getContentsChangedSinceLastRender() {
-            return this.contentsChangedSinceLastRender;
         }
     }
