@@ -86,6 +86,9 @@ public class TextR {
 
             // Flush stdIn & Recalculate dimensions
             System.in.read(new byte[System.in.available()]);
+	    activeAdapter++;
+	    activeAdapter%=adapter.size();
+	    facade.setActive(activeAdapter);
         }
     }
 
@@ -102,7 +105,7 @@ public class TextR {
     public void addSwingAdapter() {
 	int size = adapter.size();
 	System.out.println(size);
-	adapter.add(new SwingTerminalAdapter(new TSMediator(this, size)));
+	adapter.add(new SwingTerminalAdapter());
 	activeAdapter = adapter.size() - 1;
 	facade.addDisplay(adapter.get(activeAdapter));
     }

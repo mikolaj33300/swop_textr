@@ -35,11 +35,11 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
     int starCol = 0;
     long startTime = System.currentTimeMillis();
     private Queue<Integer> keyQueue = new LinkedList<Integer>();
-    private final TSMediator ctl;
+    //private final TSMediator ctl;
 
-    public SwingTerminalAdapter(TSMediator med) {
+    public SwingTerminalAdapter() {
 	super("Swing Terminal App");
-	this.ctl = med;
+	//this.ctl = med;
 	//setDefaultCloseOperation(null);
 	
 	getContentPane().add(terminal);
@@ -54,14 +54,14 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	});
 	this.addWindowFocusListener(new WindowAdapter () {
 	      public void windowGainedFocus(WindowEvent e) {
-		  System.out.println("gained focus");
-		  ctl.gainFocus();
+		  //System.out.println("gained focus");
+		  //ctl.gainFocus();
 	      }
 	});
 	this.addWindowFocusListener(new WindowAdapter () {
 	      public void windowLostFocus(WindowEvent e) {
-		  System.out.println("Lost focus");
-		  ctl.loseFocus();
+		  //System.out.println("Lost focus");
+		  //ctl.loseFocus();
 	      }
 	});
 	
@@ -127,10 +127,13 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
   public int readByte(long deadline) throws IOException, TimeoutException{
       while (keyQueue.isEmpty()) {
 	  try {
-	      TimeUnit.MILLISECONDS.sleep(10);
+	      TimeUnit.MILLISECONDS.sleep(1);
 	  } catch (Exception e) {
 	      System.out.println("sleep failed");
 	      System.exit(1);
+	  }
+	  if (System.currentTimeMillis() > deadline){
+	      throw new TimeoutException();
 	  }
       }// TODO: deadline
       return keyQueue.remove();
