@@ -245,7 +245,14 @@ class Display {
      */
     public void handleSeparator() throws IOException {
         this.windows.get(active).handler.handleSeparator();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+        //this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+	    try {
+		render(renderIndicator.WINDOW);
+	    } catch (Exception e) {
+		System.out.println("Exception in duplicateActive Render");
+		System.out.println(e);
+		System.exit(1);
+	    }
     }
 
     /**
