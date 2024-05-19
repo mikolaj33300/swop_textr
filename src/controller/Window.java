@@ -18,4 +18,6 @@ abstract class Window {
     public abstract InputHandlingElement getHandler();
 
     public abstract Window duplicate() throws IOException;
+
+    public abstract void accept(WindowVisitor wv) throws IOException;
 }

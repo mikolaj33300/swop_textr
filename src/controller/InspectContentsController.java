@@ -37,13 +37,12 @@ public class InspectContentsController extends UseCaseController {
             // Control + R
             case 18:
                 return coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+                // Control + W
+            case 23:
+                return coreControllerParent.facade.openNewSwingFromActiveWindow();
             // Control + T
             case 20:
                 return coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
-            // Control + W
-            case 23:
-                coreControllerParent.addSwingAdapter();
-                return RenderIndicator.FULL;
             // Control + G
             case 7:
                 return coreControllerParent.facade.openSnakeGame();

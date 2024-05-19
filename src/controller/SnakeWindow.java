@@ -2,10 +2,8 @@ package controller;
 
 import controller.adapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
-import inputhandler.FileBufferInputHandler;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
-import ui.FileBufferView;
 import ui.SnakeView;
 import ui.View;
 
@@ -32,7 +30,12 @@ public class SnakeWindow extends Window{
     }
 
     @Override
-    public Window duplicate() {
+    public SnakeWindow duplicate() {
         return null;
+    }
+
+    @Override
+    public void accept(WindowVisitor v){
+        v.visitSnakeWindow(this);
     }
 }

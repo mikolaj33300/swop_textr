@@ -16,6 +16,8 @@ class ControllerFacade {
     private int active = 0;
     private TermiosTerminalAdapter termiosTerminalAdapter;
 
+    private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
+
     /**
      * Creates a ControllerFacade object.
      * Creates a {@link Layout} object which represents the root layout.
@@ -33,7 +35,36 @@ class ControllerFacade {
         } else {
             paths = args;
         }
+
+        DisplayFacade initialDisplay = new DisplayFacade(paths, termiosTerminalAdapter, lineSeparatorArg);
         this.displays.add(new DisplayFacade(paths, termiosTerminalAdapter, lineSeparatorArg));
+        subscribeToRequestsOpeningDisplay(initialDisplay);
+    }
+
+    private void subscribeToRequestsOpeningDisplay(DisplayFacade display){
+        DisplayOpeningRequestListener newListener = new DisplayOpeningRequestListener() {
+            @Override
+            public void notifyRequestOpenDisplay(DisplayFacade displayToOpen) throws IOException {
+                openNewSwingDisplayFacade(displayToOpen);
+            }
+
+            @Override
+            public DisplayFacade getListenedToDisplay() {
+                return display;
+            }
+        };
+
+        display.subscribeToRequestsOpeningDisplay(newListener);
+        openingRequestListeners.add(newListener);
+    }
+
+    private void unsubscribeFromRequestsOpeningDisplay(DisplayFacade display){
+        for(int i = 0; i<openingRequestListeners.size(); i++){
+            if(openingRequestListeners.get(i).getListenedToDisplay() == display){
+                openingRequestListeners.remove(openingRequestListeners.get(i));
+                break;
+            }
+        }
     }
 
     /**
@@ -208,6 +239,21 @@ class ControllerFacade {
             toReturn.addAll(d.getWindows());
         }
         return toReturn;
+    }
+
+    public RenderIndicator openNewSwingDisplayFacade(DisplayFacade newFacade) throws IOException {
+        /* Creation of the new facade depending on the window to be opened happens in facade itself.
+        This is because since we have two arraylists for windows etc, and maybe some other specific behavior
+        depending on exact window types, we want to shift that specific logic to the class that has that information.
+         */
+        this.displays.add(displays.size(), newFacade);
+        newFacade.paintScreen();
+        return RenderIndicator.FULL;
+    }
+
+    public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
+        this.displays.get(active).requestOpeningNewSwingDisplay();
+        return RenderIndicator.FULL;
     }
 }
 

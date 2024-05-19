@@ -45,10 +45,15 @@ public class FileBufferWindow extends Window{
     }
 
     @Override
-    public Window duplicate() throws IOException {
+    public FileBufferWindow duplicate() {
         BufferCursorContext dupedContext = new BufferCursorContext(this.fileBufferInputHandler.getFileBufferContextTransparent());
         FileBufferView newView = new FileBufferView(dupedContext, this.termiosTerminalAdapter);
-        Window windowToAdd = new FileBufferWindow(newView, new FileBufferInputHandler(dupedContext));
+        FileBufferWindow windowToAdd = new FileBufferWindow(newView, new FileBufferInputHandler(dupedContext));
         return windowToAdd;
+    }
+
+    @Override
+    public void accept(WindowVisitor v) throws IOException {
+        v.visitFileWindow(this);
     }
 }

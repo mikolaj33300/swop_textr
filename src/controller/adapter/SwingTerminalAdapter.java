@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 import util.Coords;
-import ui.swing.SwingTerminal;
+import ui.SwingTerminal;
 
 public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapter {
     private SwingTerminal terminal = new SwingTerminal();
@@ -37,31 +37,31 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
     //private final TSMediator ctl;
 
     public SwingTerminalAdapter() {
-	super("Swing Terminal App");
-	//this.ctl = med;
-	//setDefaultCloseOperation(null);
+		super("Swing Terminal App");
+		//this.ctl = med;
+		//setDefaultCloseOperation(null);
 	
-	getContentPane().add(terminal);
-	updateBuffer();
+		getContentPane().add(terminal);
+		updateBuffer();
 	
-	terminal.resizeListeners.add(() -> updateBuffer());
-	terminal.addKeyListener(new KeyAdapter() {
+		terminal.resizeListeners.add(() -> updateBuffer());
+		terminal.addKeyListener(new KeyAdapter() {
 		@Override
 		public void keyPressed(KeyEvent e) {
 		    handleKey(e);
 		}
 	});
-	this.addWindowFocusListener(new WindowAdapter () {
-	      public void windowGainedFocus(WindowEvent e) {
-		  //System.out.println("gained focus");
-		  //ctl.gainFocus();
-	      }
-	});
-	this.addWindowFocusListener(new WindowAdapter () {
-	      public void windowLostFocus(WindowEvent e) {
-		  //System.out.println("Lost focus");
-		  //ctl.loseFocus();
-	      }
+		this.addWindowFocusListener(new WindowAdapter () {
+			public void windowGainedFocus(WindowEvent e) {
+				//System.out.println("gained focus");
+				// ctl.gainFocus();
+			}
+		});
+		this.addWindowFocusListener(new WindowAdapter () {
+			public void windowLostFocus(WindowEvent e) {
+		  	//System.out.println("Lost focus");
+		  	//ctl.loseFocus();
+			}
 	});
 	
 	//timer.start();

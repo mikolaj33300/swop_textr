@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.SwingTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.SnakeInputHandler;
@@ -8,6 +9,7 @@ import ui.*;
 import util.*;
 
 import java.io.IOException;
+import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +21,7 @@ import java.util.HashMap;
         private Layout rootLayout;
         private int active;
         private TermiosTerminalAdapter termiosTerminalAdapter;
+        private ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
         /**
          * Creates a ControllerFacade object.
@@ -53,6 +56,13 @@ import java.util.HashMap;
                 this.rootLayout = new VerticalLayoutNode(leaves);
 
             this.updateViewCoordinates();
+        }
+
+        public DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) {
+            this.windows = new ArrayList<>();
+            windows.add(toOpenWindow);
+            this.lineSeparatorArg = lineSeparatorArg.clone();
+            this.termiosTerminalAdapter = termiosTerminalAdapter;
         }
 
         /**
@@ -101,7 +111,7 @@ import java.util.HashMap;
                 //safe to do a force close since clean buffer
                 return forceCloseActive();
             } else {
-                return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 1);
+                return new Pair<>(RenderIndicator.FULL, 1);
             }
         }
 
@@ -112,12 +122,14 @@ import java.util.HashMap;
         public Pair<RenderIndicator, Integer> forceCloseActive() {
             //checks which hash will be the next one after this is closed
             Integer newHashCode = getNewHashCode();
-            if (newHashCode == null) return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 2);
+            if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, 2);
 
             //deletes and sets new one as active
             rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
             windows.get(active).getHandler().forcedClose();
+            fileBufferWindows.remove(windows.get(active));
             windows.remove(active);
+
 
             int newActive = -1;
             for (int i = 0; i < windows.size(); i++) {
@@ -131,7 +143,7 @@ import java.util.HashMap;
             }
             active = newActive;
             updateViewCoordinates();
-            return new Pair<RenderIndicator, Integer>(RenderIndicator.FULL, 0);
+            return new Pair<>(RenderIndicator.FULL, 0);
         }
 
         public RenderIndicator passToActive(byte b) throws IOException {
@@ -167,7 +179,7 @@ import java.util.HashMap;
          *
          * @param orientation clockwise or counterclockwise
          */
-        public RenderIndicator rotateLayout(RotationDirection orientation) throws IOException {
+        public RenderIndicator rotateLayout(RotationDirection orientation){
             rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getView().hashCode());
             updateViewCoordinates();
             return RenderIndicator.FULL;
@@ -226,7 +238,9 @@ import java.util.HashMap;
             int hashActive = this.windows.get(active).getView().hashCode();
 
             // Remove the window & add the snake window.
+            this.fileBufferWindows.remove(this.windows.get(active));
             this.windows.remove(this.windows.get(active));
+
 
             SnakeWindow toAdd = new SnakeWindow(coordsView.width, coordsView.height, termiosTerminalAdapter);
             this.windows.add(toAdd);
@@ -245,13 +259,7 @@ import java.util.HashMap;
          * Duplicates the active view by
          */
         public RenderIndicator duplicateActive() throws IOException {
-
-            Window windowToAdd = windows.get(active).duplicate();
-            windows.add(windows.size(), windowToAdd);
-
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
-            updateViewCoordinates();
-
+            windows.get(active).accept(new DuplicateWindowVisitor());
             return RenderIndicator.FULL;
         }
 
@@ -271,6 +279,10 @@ import java.util.HashMap;
          */
         ArrayList<Window> getWindows() {
             return this.windows;
+        }
+
+        ArrayList<FileBufferWindow> getFileBufferWindows(){
+            return this.fileBufferWindows;
         }
 
         /**
@@ -312,5 +324,66 @@ import java.util.HashMap;
                 }
             }
             return newHashCode;
+        }
+
+        public void requestOpeningNewSwingDisplay() throws IOException {
+            windows.get(active).accept(new SwingDisplayFromWindowVisitor());
+        }
+
+        //To avoid instanceof
+        public class DuplicateWindowVisitor implements WindowVisitor{
+            public DuplicateWindowVisitor(){
+                // TODO document why this constructor is empty
+            }
+            @Override
+            public void visitFileWindow(FileBufferWindow fbw) {
+                FileBufferWindow windowToAdd = fbw.duplicate();
+                if(windowToAdd != null){
+                    windows.add(windows.size(), windowToAdd);
+                    fileBufferWindows.add(fileBufferWindows.size(), windowToAdd);
+                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
+                    updateViewCoordinates();
+                }
+            }
+
+            @Override
+            public void visitSnakeWindow(SnakeWindow sw) {
+                SnakeWindow windowToAdd = sw.duplicate();
+                if(windowToAdd != null){
+                    windows.add(windows.size(), windowToAdd);
+                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
+                    updateViewCoordinates();
+                }
+            }
+        }
+
+        //To avoid instanceof
+        public class SwingDisplayFromWindowVisitor implements WindowVisitor{
+            public SwingDisplayFromWindowVisitor(){
+                // TODO document why this constructor is empty
+            }
+            @Override
+            public void visitFileWindow(FileBufferWindow fbw) throws IOException {
+                FileBufferWindow windowToAdd = fbw.duplicate();
+                if(windowToAdd != null){
+                    DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, new SwingTerminalAdapter(), lineSeparatorArg);
+                    for(DisplayOpeningRequestListener dl : displayRequestListeners){
+                        dl.notifyRequestOpenDisplay(displayToAdd);
+                    }
+                }
+            }
+
+            @Override
+            public void visitSnakeWindow(SnakeWindow sw) {
+                // No putting snake on other window
+            }
+        }
+
+        public void subscribeToRequestsOpeningDisplay(DisplayOpeningRequestListener listener){
+            this.displayRequestListeners.add(listener);
+        }
+
+        public void unsubscribeFromRequestsOpeningDisplay(DisplayOpeningRequestListener listener){
+            this.displayRequestListeners.remove(listener);
         }
     }
