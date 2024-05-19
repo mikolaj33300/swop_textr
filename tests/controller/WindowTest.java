@@ -32,10 +32,10 @@ public class WindowTest {
         FileBufferInputHandler handler = new FileBufferInputHandler(bufferCursorContext);
         VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 10, new ArrayList<>());
 
-        View view = new FileBufferView(bufferCursorContext, adapter);
-        Window window = new Window(view, handler);
-        assertSame(window.view, view);
-        assertSame(window.handler, handler);
+        FileBufferView view = new FileBufferView(bufferCursorContext, adapter);
+        Window window = new FileBufferWindow(view, handler);
+        assertSame(window.getView(), view);
+        assertSame(window.getHandler(), handler);
 
     }
 }

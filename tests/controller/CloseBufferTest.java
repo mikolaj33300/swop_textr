@@ -34,7 +34,7 @@ public class CloseBufferTest {
     public void closeNonDirty_OneFile() {
         // Assert non dirty
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(0).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(0).getView()).getBufferCursorContext().getDirty()
         );
         // Assert that closing gives no error, but since this is the last window, it will return 2
         assertEquals(2, textr1.facade.closeActive());
@@ -46,7 +46,7 @@ public class CloseBufferTest {
     public void closeNonDirty_TwoPlusFile() {
         // Assert non dirty
         assertFalse(
-                ((FileBufferView) textr2.facade.getWindows().get(0).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr2.facade.getWindows().get(0).getView()).getBufferCursorContext().getDirty()
         );
         // Assert that closing gives no error, but since this is the last window, it will return 2
         assertEquals(0, textr2.facade.closeActive());
@@ -60,7 +60,7 @@ public class CloseBufferTest {
         textr1.loop();
         // Assert dirty
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(0).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(0).getView()).getBufferCursorContext().getDirty()
         );
         // Assert that closing gives no error -> not dirty
         assertEquals(1, textr1.facade.closeActive());
@@ -79,7 +79,7 @@ public class CloseBufferTest {
         textr1.loop();
         // Assert dirty
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(0).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(0).getView()).getBufferCursorContext().getDirty()
         );
         // Assert that closing gives no error -> not dirty
         assertEquals(1, textr1.facade.closeActive());

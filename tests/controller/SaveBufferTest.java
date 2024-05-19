@@ -43,7 +43,7 @@ public class SaveBufferTest {
         haltLoop();
         textr1.loop();
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
     }
 
@@ -54,7 +54,7 @@ public class SaveBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
         assertTrue(FileHolder.areContentsEqual(Files.readAllBytes(path1.resolve("test1.txt")), "bi am a mister\n ; but you can call me mister TEE".getBytes()));
     }

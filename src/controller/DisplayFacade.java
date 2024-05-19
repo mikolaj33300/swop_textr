@@ -52,7 +52,7 @@ import java.util.HashMap;
 
                 this.fileBufferWindows.add(toAdd);
                 this.windows.add(toAdd);
-                leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
+                leaves.add(new LayoutLeaf(windows.get(i).getView().hashCode()));
             }
 
             if (leaves.size() == 1)
@@ -68,8 +68,8 @@ import java.util.HashMap;
          */
         public void renderContent() throws IOException {
             for (Window window : windows) {
-                window.view.render(windows.get(active).view.hashCode());
-                window.handler.setContentsChangedSinceLastRenderFalse();
+                window.getView().render(windows.get(active).getView().hashCode());
+                window.getHandler().setContentsChangedSinceLastRenderFalse();
             }
         }
 
@@ -84,7 +84,7 @@ import java.util.HashMap;
          * save the active filebuffer
          */
         public void saveActive() {
-            windows.get(active).handler.save();
+            windows.get(active).getHandler().save();
             try {
                 renderContent();
             } catch (Exception e) {
@@ -97,7 +97,7 @@ import java.util.HashMap;
          * render the cursor in the active view
          */
         public void renderCursor() throws IOException {
-            windows.get(active).view.renderCursor();
+            windows.get(active).getView().renderCursor();
         }
 
         /**
@@ -107,7 +107,7 @@ import java.util.HashMap;
          */
         public int closeActive() {
             contentsChangedSinceLastRender = true;
-            if (windows.get(active).handler.isSafeToClose()) {
+            if (windows.get(active).getHandler().isSafeToClose()) {
                 //safe to do a force close since clean buffer
                 contentsChangedSinceLastRender = true;
                 return forceCloseActive();
@@ -127,13 +127,13 @@ import java.util.HashMap;
             if (newHashCode == null) return 2;
 
             //deletes and sets new one as active
-            rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
-            windows.get(active).handler.forcedClose();
+            rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
+            windows.get(active).getHandler().forcedClose();
             windows.remove(active);
 
             int newActive = -1;
             for (int i = 0; i < windows.size(); i++) {
-                if (windows.get(i).view.hashCode() == newHashCode) {
+                if (windows.get(i).getView().hashCode() == newHashCode) {
                     newActive = i;
                 }
             }
@@ -147,8 +147,8 @@ import java.util.HashMap;
         }
 
         public void passToActive(byte b) throws IOException {
-            this.windows.get(active).handler.input(b);
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().input(b);
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
@@ -158,9 +158,9 @@ import java.util.HashMap;
          */
         public void moveFocus(MoveDirection dir) {
             contentsChangedSinceLastRender = true;
-            int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
+            int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).getView().hashCode());
             for (int i = 0; i < this.windows.size(); i++) {
-                if (this.windows.get(i).view.hashCode() == newActive) {
+                if (this.windows.get(i).getView().hashCode() == newActive) {
                     this.active = i;
                     break;
                 }
@@ -182,7 +182,7 @@ import java.util.HashMap;
          */
         public void rotateLayout(RotationDirection orientation) throws IOException {
             contentsChangedSinceLastRender = true;
-            rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
+            rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getView().hashCode());
             updateViewCoordinates();
         }
 
@@ -190,40 +190,40 @@ import java.util.HashMap;
          * let the active window know that the right arrow is pressed
          */
         public void handleArrowRight() {
-            this.windows.get(active).handler.handleArrowRight();
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().handleArrowRight();
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
          * let the active window know that the Left arrow is pressed
          */
         public void handleArrowLeft() {
-            this.windows.get(active).handler.handleArrowLeft();
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().handleArrowLeft();
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
          * let the active window know that the Down arrow is pressed
          */
         public void handleArrowDown() {
-            this.windows.get(active).handler.handleArrowDown();
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().handleArrowDown();
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
          * let the active window know that the Up arrow is pressed
          */
         public void handleArrowUp() {
-            this.windows.get(active).handler.handleArrowUp();
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().handleArrowUp();
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
          * let the active window insert a separator
          */
         public void handleSeparator() throws IOException {
-            this.windows.get(active).handler.handleSeparator();
-            this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+            this.windows.get(active).getHandler().handleSeparator();
+            this.contentsChangedSinceLastRender = windows.get(active).getHandler().needsRerender();
         }
 
         /**
@@ -234,10 +234,10 @@ import java.util.HashMap;
         public void openSnakeGame() throws IOException {
             this.contentsChangedSinceLastRender = true;
             // Get UI coords of current window to initialize snake view's playfield
-            Coords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
+            Coords coordsView = this.windows.get(active).getView().getRealUICoordsFromScaled(termiosTerminalAdapter);
 
             // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
-            int hashActive = this.windows.get(active).view.hashCode();
+            int hashActive = this.windows.get(active).getView().hashCode();
 
             // Remove the window & add the snake window.
             this.windows.remove(this.windows.get(active));
@@ -246,7 +246,7 @@ import java.util.HashMap;
             this.windows.add(toAdd);
 
             // Change hash code & update the view coordinates
-            rootLayout.changeHash(hashActive, toAdd.view.hashCode());
+            rootLayout.changeHash(hashActive, toAdd.getView().hashCode());
             this.updateViewCoordinates();
 
             // Set the active view to the snake view
@@ -258,15 +258,13 @@ import java.util.HashMap;
          */
         public void duplicateActive() throws IOException {
             this.contentsChangedSinceLastRender = true;
-            if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
-                BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-                FileBufferView newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
-                Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
-                windows.add(windows.size(), windowToAdd);
 
-                rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
-                updateViewCoordinates();
-            }
+            Window windowToAdd = windows.get(active).duplicate();
+            windows.add(windows.size(), windowToAdd);
+
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
+            updateViewCoordinates();
+
         }
 
         /**
@@ -304,7 +302,7 @@ import java.util.HashMap;
             this.contentsChangedSinceLastRender = true;
             HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
             for (Window w : windows) {
-                w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
+                w.getView().setScaledCoords(coordsMap.get(w.getView().hashCode()));
             }
         }
 
@@ -314,10 +312,10 @@ import java.util.HashMap;
          * @return
          */
         private Integer getNewHashCode() {
-            int oldHashCode = windows.get(active).view.hashCode();
-            int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).view.hashCode());
+            int oldHashCode = windows.get(active).getView().hashCode();
+            int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).getView().hashCode());
             if (newHashCode == oldHashCode) {
-                newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).view.hashCode());
+                newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).getView().hashCode());
                 if (oldHashCode == newHashCode) {
                     //no left or right neighbor to focus
                     rootLayout = null;

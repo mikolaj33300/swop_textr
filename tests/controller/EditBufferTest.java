@@ -41,7 +41,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
     }
 
@@ -52,7 +52,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertTrue(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
     }
 
@@ -64,7 +64,7 @@ public class EditBufferTest {
         textr1.loop();
 
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
     }
 
@@ -76,7 +76,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.loop();
         assertFalse(
-                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view).getBufferCursorContext().getDirty()
+                ((FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView()).getBufferCursorContext().getDirty()
         );
     }
 
@@ -88,7 +88,7 @@ public class EditBufferTest {
         assertTrue(
                 FileHolder.areContentsEqual(
                     ((FileBufferView) textr1.facade
-                            .getWindows().get(textr1.facade.getActive()).view)
+                            .getWindows().get(textr1.facade.getActive()).getView())
                             .getBufferCursorContext().getFileBuffer().getBytes(),
                             "mi am a mister\n ; but you can call me mister TEE".getBytes()
                 )

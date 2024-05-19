@@ -46,9 +46,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
@@ -69,9 +69,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
@@ -91,9 +91,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
@@ -113,9 +113,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr2.facade.getWindows().get(textr2.facade.getActive()).view
+                textr2.facade.getWindows().get(textr2.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr2.facade.getWindows().get(textr2.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr2.facade.getWindows().get(textr2.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 1);
@@ -135,9 +135,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
@@ -156,9 +156,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
@@ -180,9 +180,9 @@ public class InspectBufferTest {
         // Assert that the active view is a FileBufferView so we can retrieve the context
         assertInstanceOf(
                 FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
+                textr1.facade.getWindows().get(textr1.facade.getActive()).getView()
         );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).getView();
 
         // Test if the move cursor worked logically
         assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
