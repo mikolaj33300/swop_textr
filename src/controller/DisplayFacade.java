@@ -69,8 +69,10 @@ import java.util.HashMap;
             this.termiosTerminalAdapter = termiosTerminalAdapter;
             rootLayout = (new LayoutLeaf(windows.get(0).getView().hashCode()));
 
+            toOpenWindow.setTermiosAdapter(termiosTerminalAdapter);
 
             this.updateViewCoordinates();
+            this.paintScreen();
         }
 
         /**
@@ -338,8 +340,8 @@ import java.util.HashMap;
             return newHashCode;
         }
 
-        public void requestOpeningNewSwingDisplay() throws IOException {
-            windows.get(active).accept(new SwingDisplayFromWindowVisitor());
+        public void requestOpeningNewDisplay(TermiosTerminalAdapter newAdapter) throws IOException {
+            windows.get(active).accept(new newDisplayFromWindowVisitor(newAdapter));
         }
 
         //To avoid instanceof
@@ -364,14 +366,14 @@ import java.util.HashMap;
         }
 
         //To avoid instanceof
-        public class SwingDisplayFromWindowVisitor implements WindowVisitor{
-            public SwingDisplayFromWindowVisitor(){
-                // TODO document why this constructor is empty
+        public class newDisplayFromWindowVisitor implements WindowVisitor{
+            private TermiosTerminalAdapter newAdapter;
+            public newDisplayFromWindowVisitor(TermiosTerminalAdapter newAdapter){
+                this.newAdapter = newAdapter;
             }
             @Override
             public void visitFileWindow(FileBufferWindow fbw) throws IOException {
                 FileBufferWindow windowToAdd = fbw.duplicate();
-                TermiosTerminalAdapter newAdapter = new SwingTerminalAdapter();
                 windowToAdd.setTermiosAdapter(newAdapter);
                 if(windowToAdd != null){
                     DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, newAdapter, lineSeparatorArg);

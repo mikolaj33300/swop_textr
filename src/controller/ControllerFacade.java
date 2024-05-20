@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.SwingTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
@@ -233,13 +234,16 @@ class ControllerFacade {
         This is because since we have two arraylists for windows etc, and maybe some other specific behavior
         depending on exact window types, we want to shift that specific logic to the class that has that information.
          */
+        //newFacade.paintScreen();
+
         this.displays.add(displays.size(), newFacade);
+        this.active++;
         newFacade.paintScreen();
         return RenderIndicator.FULL;
     }
 
     public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
-        this.displays.get(active).requestOpeningNewSwingDisplay();
+        this.displays.get(active).requestOpeningNewDisplay(new SwingTerminalAdapter());
         return RenderIndicator.FULL;
     }
 

@@ -144,5 +144,10 @@ public class ScrollbarDecorator extends View{
 
         wrappedView.setRealCoords(wrappeeRealDimensions);
     }
+
+    public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
+        this.termiosTerminalAdapter = adapter;
+        wrappedView.setTermiosTerminalAdapter(adapter);
+    };
 }
 

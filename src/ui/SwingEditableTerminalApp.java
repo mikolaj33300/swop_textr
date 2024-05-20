@@ -18,12 +18,21 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 class TerminalPanel extends JPanel {
-    char[][] bufferToDisplay = new char[50][80];
+    char[][] bufferToDisplay = new char[1][1];
     ArrayList<Runnable> resizeListeners = new ArrayList<>();
 
     void clearBuffer() {
         for (int i = 0; i < bufferToDisplay.length; i++)
             Arrays.fill(bufferToDisplay[i], ' ');
+    }
+
+    public void setNewBuffer(char[][] newBuffer){
+        bufferToDisplay = new char[newBuffer.length][newBuffer[0].length];
+        for(int i = 0; i<newBuffer.length; i++){
+            for(int j = 0; j< newBuffer[0].length; j++){
+                bufferToDisplay[i][j] = newBuffer[i][j];
+            }
+        }
     }
 
     TerminalPanel() {
@@ -73,7 +82,7 @@ class TerminalPanel extends JPanel {
 }
 
 public class SwingEditableTerminalApp extends JFrame {
-    private char[][] contentBuffer = new char[50][80];
+    private char[][] contentBuffer = new char[25][160];
 
     private int cursorRow = 0;
     private int cursorCol = 0;
@@ -87,23 +96,15 @@ public class SwingEditableTerminalApp extends JFrame {
    }
 
    private void updateAndRenderVisual(){
-       for(int i = 0; i<contentBuffer.length; i++){
-           for(int j = 0; j< contentBuffer[0].length; j++){
-               try{
-                   terminalPanel.bufferToDisplay[i][j] = contentBuffer[i][j];
-               } catch (ArrayIndexOutOfBoundsException e){
-
-               }
-
-           }
-       }
+       terminalPanel.setNewBuffer(contentBuffer);
        terminalPanel.bufferToDisplay[cursorRow][cursorCol] = '*';
        terminalPanel.repaint();
    }
 
     public void updateBuffer(String toWriteMessage, int dstBeginCol, int dstBeginRow) {
         toWriteMessage.getChars(0, Math.min(toWriteMessage.length(), contentBuffer[0].length), contentBuffer[dstBeginRow], dstBeginCol);
-    }
+        updateAndRenderVisual();
+   }
 
     public void clearBuffer(){
         for(int i = 0; i<contentBuffer.length; i++){

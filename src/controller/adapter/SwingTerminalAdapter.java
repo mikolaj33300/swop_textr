@@ -9,7 +9,7 @@ import ui.SwingEditableTerminalApp;
 import util.Coords;
 
 public class SwingTerminalAdapter implements TermiosTerminalAdapter {
-    private SwingEditableTerminalApp editableSwingTerminal = new SwingEditableTerminalApp();
+    private SwingEditableTerminalApp editableSwingTerminal;
 
 
     public SwingTerminalAdapter() {
