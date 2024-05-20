@@ -26,6 +26,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="io.github.btj.termios-0.8" level="project" />
+    <orderEntry type="library" name="io.github.btj.termios-0.9" level="project" />
   </component>
   <component name="SonarLintModuleSettings">
     <option name="uniqueId" value="935e7ed1-9c44-4efb-9f89-0edfd6d8e386" />
