@@ -1,5 +1,7 @@
 package layouttree;
+import exception.HashNotMatchingException;
 import org.junit.jupiter.api.*;
+import util.MoveDirection;
 import util.RotationDirection;
 
 import java.io.IOException;
@@ -47,6 +49,18 @@ class LayoutLeafTest {
     }
 
     @Test
+    void testGetNeighborsContainedHashLeftLeaf(){
+        int returnedHash = l1.getNeighborsContainedHash(MoveDirection.LEFT, 1);
+        assertEquals(returnedHash, 1);
+    }
+
+    @Test
+    void testGetNeighborsContainedHashRightLeaf(){
+        int returnedHash = l1.getNeighborsContainedHash(MoveDirection.RIGHT, 1);
+        assertEquals(returnedHash, 1);
+    }
+
+    @Test
     void testEqualsSame() throws IOException {
         LayoutLeaf l1_copy = new LayoutLeaf(1);
         assertEquals(l1_copy,l1);
@@ -76,7 +90,7 @@ class LayoutLeafTest {
     }
 
     @Test
-    void testInsertToRight(){
+    void testInsertRightOfSpecifiedToRightSameHash(){
         LayoutLeaf l1 = new LayoutLeaf(1);
         Layout v1 = l1.insertRightOfSpecified(1, 2);
 
@@ -84,6 +98,12 @@ class LayoutLeafTest {
         toAdd.add(new LayoutLeaf(1));
         toAdd.add(new LayoutLeaf(2));
         assertEquals(v1, new VerticalLayoutNode(toAdd));
+    }
+
+    @Test
+    void testInsertRightOfSpecifiedToLeftDifferentHash(){
+        LayoutLeaf l1 = new LayoutLeaf(1);
+        assertThrows(HashNotMatchingException.class, () -> l1.insertRightOfSpecified(2, 3));
     }
 }
 
