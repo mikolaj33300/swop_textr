@@ -67,7 +67,8 @@ public class TextR {
                 // Do nothing
             }
             if (b == 27) {
-                adapter.get(activeAdapter).readByte();
+		if (activeAdapter == 0)// TODO what to do here??
+		    adapter.get(activeAdapter).readByte();
                 activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
             } else if (b == -3){
                 activeUseCaseController.handleIdle();

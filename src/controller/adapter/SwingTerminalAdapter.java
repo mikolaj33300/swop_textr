@@ -73,38 +73,34 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
     }
 
   private void handleKey(KeyEvent e) {
-      final char keyChar = e.getKeyChar();
-
-      if (keyChar == KeyEvent.CHAR_UNDEFINED){
-	  switch (e.getKeyCode()) {
-	      case KeyEvent.VK_F4:
-		  keyQueue.add(27);
-		  keyQueue.add(83);// S in ascii
-		  break;
-	    case KeyEvent.VK_KP_UP:
-	    case KeyEvent.VK_UP:
-		  keyQueue.add(27);
-		  keyQueue.add(65);// A in ascii
-		  break;
-	    case KeyEvent.VK_KP_DOWN:
-	    case KeyEvent.VK_DOWN:
-		  keyQueue.add(27);
-		  keyQueue.add(66);// B in ascii
-		  break;
-	    case KeyEvent.VK_KP_RIGHT:
-	    case KeyEvent.VK_RIGHT:
-		  keyQueue.add(27);
-		  keyQueue.add(67);// C in ascii
-		  break;
-	    case KeyEvent.VK_KP_LEFT:
-	    case KeyEvent.VK_LEFT:
-		  keyQueue.add(27);
-		  keyQueue.add(68);// D in ascii
-		  break;
-	  }
-      } else {
-	  keyQueue.add((int) keyChar);
-      }
+      switch (e.getKeyCode()) {
+	  case KeyEvent.VK_F4:
+	      keyQueue.add(27);
+	      keyQueue.add(83);// S in ascii
+	      break;
+	case KeyEvent.VK_KP_UP:
+	case KeyEvent.VK_UP:
+	      keyQueue.add(27);
+	      keyQueue.add(65);// A in ascii
+	      break;
+	case KeyEvent.VK_KP_DOWN:
+	case KeyEvent.VK_DOWN:
+	      keyQueue.add(27);
+	      keyQueue.add(66);// B in ascii
+	      break;
+	case KeyEvent.VK_KP_RIGHT:
+	case KeyEvent.VK_RIGHT:
+	      keyQueue.add(27);
+	      keyQueue.add(67);// C in ascii
+	      break;
+	case KeyEvent.VK_KP_LEFT:
+	case KeyEvent.VK_LEFT:
+	      keyQueue.add(27);
+	      keyQueue.add(68);// D in ascii
+	      break;
+	default:
+	      keyQueue.add((int) e.getKeyChar()); 
+      } 
   }
 
   void updateBuffer() {
@@ -145,12 +141,14 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
   public int readByte() throws IOException {
       while (keyQueue.isEmpty()) {
 	  try {
-	      TimeUnit.MILLISECONDS.sleep(10);
+	      TimeUnit.MILLISECONDS.sleep(1);
 	  } catch (Exception e) {
 	      System.out.println("sleep failed");
+	      System.out.println(e);
 	      System.exit(1);
 	  }
       }
+      
       return keyQueue.remove();
   }
 
@@ -164,12 +162,13 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	      TimeUnit.MILLISECONDS.sleep(1);
 	  } catch (Exception e) {
 	      System.out.println("sleep failed");
+	      System.out.println(e);
 	      System.exit(1);
 	  }
 	  if (System.currentTimeMillis() > deadline){
 	      throw new TimeoutException();
 	  }
-      }// TODO: deadline
+      }
       return keyQueue.remove();
   }
 
