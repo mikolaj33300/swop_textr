@@ -51,6 +51,10 @@ public class TextR {
             textR = new TextR(args, new RealTermiosTerminalAdapter());
 
             textR.activeUseCaseController = new InspectContentsController(textR);
+            //Fix recommended on sample Swing app
+            JFrame dummyFrame = new JFrame();
+            dummyFrame.pack();
+
             textR.loop();
         } catch (IOException e) {
             throw new RuntimeException("Issue on startup. Are we initializing everything?");
