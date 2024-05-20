@@ -1,14 +1,22 @@
 package controller;
 
+import controller.adapter.TermiosTerminalAdapter;
 import inputhandler.InputHandlingElement;
 import ui.View;
 
-class Window {
-    public final View view;
-    public final InputHandlingElement handler;
+import java.io.IOException;
 
-    public Window(View v, InputHandlingElement h) {
-        this.view = v;
-        this.handler = h;
+abstract class Window {
+    //TODO turn this into a decorator of view and handler: so this also gets handle/updateCoords methods and delegates it to the view/handler
+    Window() {
+
     }
+
+    public abstract View getView();
+
+    public abstract InputHandlingElement getHandler();
+
+    public abstract Window duplicate() throws IOException;
+
+    public abstract void accept(WindowVisitor wv) throws IOException;
 }

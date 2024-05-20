@@ -1,10 +1,10 @@
 package controller;
 
 import controller.adapter.VirtualTestingTermiosAdapter;
+import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,18 +41,15 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 0);
 
     }
 
@@ -64,18 +61,14 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 0);
 
     }
 
@@ -86,18 +79,13 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
-        // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 0);
 
     }
 
@@ -108,18 +96,14 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr2.loop();
+        textr2.startListenersAndHandlers();
 
-        // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr2.facade.getWindows().get(textr2.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr2.facade.getWindows().get(textr2.facade.getActive()).view;
+
+        FileBufferInputHandler view = (FileBufferInputHandler) textr2.facade.getWindows().get(textr2.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 1);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 1);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 0);
 
     }
 
@@ -130,18 +114,14 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 1);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 1);
 
     }
 
@@ -152,17 +132,12 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
-        // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        textr1.startListenersAndHandlers();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 0);
 
     }
 
@@ -176,17 +151,13 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
-        // Assert that the active view is a FileBufferView so we can retrieve the context
-        assertInstanceOf(
-                FileBufferView.class,
-                textr1.facade.getWindows().get(textr1.facade.getActive()).view
-        );
-        FileBufferView view = (FileBufferView) textr1.facade.getWindows().get(textr1.facade.getActive()).view;
+        textr1.startListenersAndHandlers();
+
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
-        assertEquals(view.getBufferCursorContext().getInsertionPointLine(), 0);
-        assertEquals(view.getBufferCursorContext().getInsertionPointCol(), 2);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
+        assertEquals(view.getFileBufferContextTransparent().getInsertionPointCol(), 2);
 
     }
 
@@ -195,7 +166,7 @@ public class InspectBufferTest {
         assertEquals(textr1.facade.getActive(), 0);
         focusNext();
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertEquals(textr1.facade.getActive(), 0);
     }
 
@@ -205,7 +176,7 @@ public class InspectBufferTest {
         assertEquals(textr3.facade.getActive(), 0);
         focusNext();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 1);
     }
 
@@ -215,7 +186,7 @@ public class InspectBufferTest {
         focusNext();
         focusNext();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 1);
     }
 
@@ -225,7 +196,7 @@ public class InspectBufferTest {
         focusNext();
         focusPrevious();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 0);
     }
 

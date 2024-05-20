@@ -46,6 +46,7 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
 
     @Override
     public Coords getTextAreaSize() throws IOException {
+        //return new Coords(0, 0, 50, 20);
         return ScreenUIUtil.retrieveDimensionsTerminal();
     }
 }

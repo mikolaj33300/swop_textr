@@ -1,5 +1,6 @@
 package controller;
 
+import util.RenderIndicator;
 import ui.UserPopupBox;
 
 import java.io.IOException;
@@ -24,8 +25,9 @@ public class FailedSavePopupController extends UseCaseController {
      * @throws IOException
      */
     @Override
-    public void handle(int b) throws IOException {
+    public RenderIndicator handle(int b) throws IOException {
         coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
+        return RenderIndicator.FULL;
     }
 
     /**
@@ -44,16 +46,6 @@ public class FailedSavePopupController extends UseCaseController {
      * @throws IOException
      */
     public void clearContent() throws IOException {
-        coreControllerParent.adapter.clearScreen();
-    }
-
-    @Override
-    public void handleIdle() {
-
-    }
-
-    @Override
-    public boolean getNeedsRenderSinceLast() {
-        return needsRenderSinceLast;
+        coreControllerParent.getAdapter().clearScreen();
     }
 }

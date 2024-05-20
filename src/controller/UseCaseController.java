@@ -1,5 +1,7 @@
 package controller;
 
+import util.RenderIndicator;
+
 import java.io.IOException;
 
 public abstract class UseCaseController {
@@ -19,12 +21,12 @@ public abstract class UseCaseController {
      * @param b
      * @throws IOException
      */
-    public void handle(int b) throws IOException{
-
+    public RenderIndicator handle(int b) throws IOException{
+        return RenderIndicator.NONE;
     }
 
-    public void handleSurrogate(int first, int second){
-
+    public RenderIndicator handleSurrogate(int first, int second){
+        return RenderIndicator.NONE;
     }
 
     /**
@@ -33,7 +35,7 @@ public abstract class UseCaseController {
      */
     public abstract void paintScreen() throws IOException;
 
-    public abstract void handleIdle() throws IOException;
-
-    public abstract boolean getNeedsRenderSinceLast();
+    public RenderIndicator handleIdle() throws IOException {
+        return RenderIndicator.NONE;
+    };
 }

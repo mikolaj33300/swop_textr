@@ -1,13 +1,12 @@
 package inputhandler;
 
 import java.io.IOException;
+import util.RenderIndicator;
 
 /*
  * commands next
  */
 abstract public class InputHandlingElement {
-
-    boolean contentsChangedSinceRender = false;
 
     public int getHash() {
         return this.hashCode();
@@ -24,7 +23,7 @@ abstract public class InputHandlingElement {
      * Handles input of specific characters
      * @param b the input byte
      */
-    abstract public void input(byte b) throws IOException;
+    abstract public RenderIndicator input(byte b) throws IOException;
 
     /**
      * @return if the enclosed object is safe to close
@@ -55,20 +54,5 @@ abstract public class InputHandlingElement {
      * pass a separator to the enclosed object
      */
     public abstract void handleSeparator() throws IOException;
-
-    /**
-     * Determines if this element needs to be rerendered
-     * @return boolean
-     */
-    public boolean needsRerender() {
-        return this.contentsChangedSinceRender;
-    }
-
-    /**
-     * Turns the boolean for rerender to false. Use after rendering
-     */
-    public void setContentsChangedSinceLastRenderFalse() {
-        contentsChangedSinceRender = false;
-    }
 
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import util.RenderIndicator;
 import util.MoveDirection;
 import util.RotationDirection;
 
@@ -7,11 +8,9 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
-    private boolean needsRenderSinceLast;
 
     protected InspectContentsController(TextR coreControllerParent){
         super(coreControllerParent);
-        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -20,55 +19,44 @@ public class InspectContentsController extends UseCaseController {
      * @throws IOException
      */
     @Override
-    public void handle(int b) throws IOException {
+    public RenderIndicator handle(int b) throws IOException {
         switch(b) {
             case 8, 127, 10, 62, 26, 21, 1, -1:
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
-                break;
+                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
             // Control + S
             case 19:
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
-                break;
+                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
             // Control + P
             case 16:
-                coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
-                break;
-            // Control + J
-            //case 10:
-                //coreControllerParent.facade.parse();
+                return coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
             // Control + N
             case 14:
-                coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);
-                break;
+                return coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);
             // Control + R
             case 18:
-                coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
-                break;
+                return coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+                // Control + W
+            case 23:
+                return coreControllerParent.facade.openNewSwingFromActiveWindow();
             // Control + T
             case 20:
-                coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
-                break;
+                return coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
             // Control + G
             case 7:
-                coreControllerParent.facade.openSnakeGame();
-                break;
+                return coreControllerParent.facade.openSnakeGame();
             // Control + D
             case 4:
-                coreControllerParent.facade.duplicateActive();
-                break;
+                return coreControllerParent.facade.duplicateActive();
             // Line separator
             case 13:
-                coreControllerParent.facade.handleSeparator();
-                break;
+                return coreControllerParent.facade.handleSeparator();
             // Character input
             default:
                 if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
-                    break;
+                    return RenderIndicator.NONE;
                 }
-                coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
-                break;
+                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
         }
-        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -77,40 +65,36 @@ public class InspectContentsController extends UseCaseController {
      * @param second the character after the surrogate
      */
     @Override
-    public void handleSurrogate(int first, int second){
+    public RenderIndicator handleSurrogate(int first, int second){
         // Surrogate keys
         switch (first) {
             case 27:
                 switch ((char) second) {
                     // Right
                     case 'C':
-                        coreControllerParent.facade.handleArrowRight();
-                        break;
+                        return coreControllerParent.facade.handleArrowRight();
                     // Left
                     case 'D':
-                        coreControllerParent.facade.handleArrowLeft();
-                        break;
+                        return coreControllerParent.facade.handleArrowLeft();
                     // Up
                     case 'A':
-                        coreControllerParent.facade.handleArrowUp();
-                        break;
+                        return coreControllerParent.facade.handleArrowUp();
                     // Down
                     case 'B':
-                        coreControllerParent.facade.handleArrowDown();
-                        break;
+                        return coreControllerParent.facade.handleArrowDown();
                     case 'S':// F4
-                        int result = coreControllerParent.facade.closeActive();
+                        int result = coreControllerParent.facade.closeActive().b;
                         if (result == 1) { //If was dirty
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
                         } else if (result == 2) {
                             clearContent();
                             System.exit(0);
                         }
-                        break;
+                        return RenderIndicator.FULL;
                 }
                 break;
         }
-        this.needsRenderSinceLast = true;
+        return RenderIndicator.NONE;
     }
 
     /**
@@ -119,24 +103,18 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void paintScreen() throws IOException {
         clearContent();
-        coreControllerParent.facade.renderContent();
-        coreControllerParent.facade.renderCursor();
-        this.needsRenderSinceLast = false;
+        coreControllerParent.facade.paintScreen();
+        //coreControllerParent.facade.renderCursor();
     }
 
     private void clearContent() {
-        coreControllerParent.adapter.clearScreen();
+        coreControllerParent.getAdapter().clearScreen();
     }
 
     @Override
-    public void handleIdle() throws IOException {
-        coreControllerParent.facade.passToActive((byte) -3);
-        this.needsRenderSinceLast = coreControllerParent.facade.getContentsChangedSinceLastRender();
-    }
+    public RenderIndicator handleIdle() throws IOException {
+        return coreControllerParent.facade.passToActive((byte) -3);
 
-    @Override
-    public boolean getNeedsRenderSinceLast() {
-        return this.needsRenderSinceLast;
     }
 
 }
