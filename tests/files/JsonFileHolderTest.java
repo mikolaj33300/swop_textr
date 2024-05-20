@@ -50,8 +50,8 @@ public class JsonFileHolderTest {
         path2 = path2.resolve("test2.txt");
         Files.write(path2, content2.getBytes());
 
-        buffer1 = new FileBuffer(path1.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
-        buffer2 = new FileBuffer(path2.toString(), FileAnalyserUtil.getLineSeparator(content2.getBytes()));
+        buffer1 = new FileBuffer(path1.toString(), "\n".getBytes());
+        buffer2 = new FileBuffer(path2.toString(), "\n".getBytes());
 
         entry1 = (JsonEntry) JsonUtil.parseDirectory(buffer1);
         entry2 = (JsonEntry) JsonUtil.parseDirectory(buffer2);

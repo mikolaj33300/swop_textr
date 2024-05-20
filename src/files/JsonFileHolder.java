@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class JsonFileHolder extends FileHolder {
 
@@ -24,7 +25,7 @@ public class JsonFileHolder extends FileHolder {
     /**
      * The constructor for JsonFileHolder.
      * @param buffer the buffer where the contents should be saved
-     * @param entryPath the path of an entry in the json structure
+     * @param entryPath the name of an entry in the json structure
      */
     public JsonFileHolder(FileBuffer buffer, String entryPath) {
         super(buffer.getPath(), buffer.getLineSeparator());
