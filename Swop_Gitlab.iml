@@ -25,7 +25,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="io.github.btj.termios-0.8" level="project" />
+    <orderEntry type="library" name="io.github.btj.termios-0.9" level="project" />
     <orderEntry type="library" name="io.github.btj.termios-0.9" level="project" />
   </component>
   <component name="SonarLintModuleSettings">

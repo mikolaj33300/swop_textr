@@ -1,4 +1,4 @@
-package ui;
+/*package ui;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -6,19 +6,15 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.util.Arrays;
 
 import util.Coords;
 
-public class SwingTerminal extends JPanel {
+public class SwingTerminalPanel extends JPanel {
 	private char[][] buffer = new char[25][80];
 	public ArrayList<Runnable> resizeListeners = new ArrayList<>();
 	private int x = 0, y = 0; // cursor
@@ -39,9 +35,9 @@ public class SwingTerminal extends JPanel {
 		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				FontMetrics metrics = SwingTerminal.this.getFontMetrics(getFont());
-				int h = SwingTerminal.this.getHeight() / metrics.getHeight();
-				int w = SwingTerminal.this.getWidth() / metrics.charWidth('m');
+				FontMetrics metrics = SwingTerminalPanel.this.getFontMetrics(getFont());
+				int h = SwingTerminalPanel.this.getHeight() / metrics.getHeight();
+				int w = SwingTerminalPanel.this.getWidth() / metrics.charWidth('m');
 				buffer = new char[h][w];
 				List<Runnable> resizeListenersCopy = List.copyOf(resizeListeners);
 				for (Runnable listener : resizeListenersCopy)
@@ -51,9 +47,9 @@ public class SwingTerminal extends JPanel {
 	}
 
 	public void resize() {
-	    FontMetrics metrics = SwingTerminal.this.getFontMetrics(getFont());
-	    int h = SwingTerminal.this.getHeight() / metrics.getHeight();
-	    int w = SwingTerminal.this.getWidth() / metrics.charWidth('m');
+	    FontMetrics metrics = SwingTerminalPanel.this.getFontMetrics(getFont());
+	    int h = SwingTerminalPanel.this.getHeight() / metrics.getHeight();
+	    int w = SwingTerminalPanel.this.getWidth() / metrics.charWidth('m');
 	    if (h != buffer.length || w != buffer[0].length){
 		buffer = new char[h][w];
 		clearBuffer();
@@ -98,4 +94,4 @@ public class SwingTerminal extends JPanel {
 	    for (int i = 0; i < in2.length && i + x < buffer[y].length; i++)
 		buffer[y][x+i] = in2[i];
 	}
-}
+}*/

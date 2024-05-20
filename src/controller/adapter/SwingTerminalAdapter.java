@@ -1,86 +1,34 @@
 package controller.adapter;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
+import ui.SwingEditableTerminalApp;
 import util.Coords;
-import ui.SwingTerminal;
 
-public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapter {
-    private SwingTerminal terminal = new SwingTerminal();
-    //Timer timer = new Timer(1000, e -> updateBuffer());
-    int starRow = 0;
-    int starCol = 0;
-    long startTime = System.currentTimeMillis();
+public class SwingTerminalAdapter implements TermiosTerminalAdapter {
+    private SwingEditableTerminalApp editableSwingTerminal = new SwingEditableTerminalApp();
+
+
     private Queue<Integer> keyQueue = new LinkedList<Integer>();
     //private final TSMediator ctl;
 
     public SwingTerminalAdapter() {
-		super("Swing Terminal App");
-		//this.ctl = med;
-		//setDefaultCloseOperation(null);
-	
-		getContentPane().add(terminal);
-		updateBuffer();
-	
-		terminal.resizeListeners.add(() -> updateBuffer());
-		terminal.addKeyListener(new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-		    handleKey(e);
-		}
-	});
-		this.addWindowFocusListener(new WindowAdapter () {
-			public void windowGainedFocus(WindowEvent e) {
-				//System.out.println("gained focus");
-				// ctl.gainFocus();
-			}
-		});
-		this.addWindowFocusListener(new WindowAdapter () {
-			public void windowLostFocus(WindowEvent e) {
-		  	//System.out.println("Lost focus");
-		  	//ctl.loseFocus();
-			}
-	});
-	
-	//timer.start();
-	
-	pack();
-	
-	setLocationRelativeTo(null);
-	this.setVisible(true);
+        this.editableSwingTerminal = new SwingEditableTerminalApp();
+		editableSwingTerminal.setVisible(true);
     }
 
-  private void handleKey(KeyEvent e) {
+/*  private void handleKey(KeyEvent e) {
       final char keyChar = e.getKeyChar();
 
       if (keyChar == KeyEvent.CHAR_UNDEFINED){
-	  switch (e.getKeyCode()) {
-	      case KeyEvent.VK_F4:
-		  keyQueue.add(27);
-		  keyQueue.add(83);// S in ascii
-		  break;
+		  switch (e.getKeyCode()) {
+			  case KeyEvent.VK_F4:
+				  keyQueue.add(27);
+				  keyQueue.add(83);// S in ascii
+				  break;
 	    case KeyEvent.VK_KP_UP:
 	    case KeyEvent.VK_UP:
 		  keyQueue.add(27);
@@ -101,20 +49,15 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 		  keyQueue.add(27);
 		  keyQueue.add(68);// D in ascii
 		  break;
-	  }
+	  	}
       } else {
-	  keyQueue.add((int) keyChar);
+	  	keyQueue.add((int) keyChar);
       }
-  }
-
-  void updateBuffer() {
-      //terminal.clearBuffer();
-      terminal.repaint();
-  }
+  }*/
 
   @Override
   public void clearScreen() {
-    terminal.clearBuffer();
+      editableSwingTerminal.clearBuffer();
   }
 
   @Override
@@ -129,29 +72,26 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 
   @Override
   public void moveCursor(int row, int column){
-      terminal.setX(column);
-      terminal.setY(row);
-      terminal.repaint();
+      editableSwingTerminal.moveCursor(row-1, column-1);
   }
 
   @Override
   public void printText(int row, int column, String text){
-	terminal.resize();
-	terminal.addString(column-1, row-1, text);
-	terminal.repaint();
+	  editableSwingTerminal.updateBuffer(text, column-1, row);
   }
 
   @Override
   public int readByte() throws IOException {
-      while (keyQueue.isEmpty()) {
+/*      while (keyQueue.isEmpty()) {
 	  try {
-	      TimeUnit.MILLISECONDS.sleep(10);
+	      TimeUnit.MILLISECONDS.sleep(1);
 	  } catch (Exception e) {
 	      System.out.println("sleep failed");
 	      System.exit(1);
 	  }
       }
-      return keyQueue.remove();
+      return keyQueue.remove();*/
+	  return 0;
   }
 
   /*
@@ -159,7 +99,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
    */
   @Override
   public int readByte(long deadline) throws IOException, TimeoutException{
-      while (keyQueue.isEmpty()) {
+/*      while (keyQueue.isEmpty()) {
 	  try {
 	      TimeUnit.MILLISECONDS.sleep(1);
 	  } catch (Exception e) {
@@ -169,13 +109,14 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	  if (System.currentTimeMillis() > deadline){
 	      throw new TimeoutException();
 	  }
-      }// TODO: deadline
-      return keyQueue.remove();
+      }
+      return keyQueue.remove();*/
+	  return 0;
   }
 
   @Override
   public Coords getTextAreaSize() throws IOException {
-      return terminal.getTextAreaSize();
+      return editableSwingTerminal.getSwingTerminalCharSize();
   }
 
 }
