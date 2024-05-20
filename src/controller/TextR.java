@@ -43,12 +43,22 @@ public class TextR {
      * A beautiful start for a beautiful project
      * @throws IOException RuntimeException
      */
-    public static void main(String[] args) throws IOException, RuntimeException {
+    public static void awtMain(String[] args) throws IOException, RuntimeException {
         TextR textR;
         textR = new TextR(args, new RealTermiosTerminalAdapter());
 
         textR.activeUseCaseController = new InspectContentsController(textR);
         textR.loop();
+    }
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                awtMain(args);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**

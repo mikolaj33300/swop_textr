@@ -23,8 +23,8 @@ public class SwingTermiosAdapterTest {
     public void testDisplayedSwing() throws IOException {
         SwingTerminalAdapter adapterToTest = new SwingTerminalAdapter();
         adapterToTest.printText( 1, 1, "aaaaaaaaaaa");
-        while(true){
+        /*while(true){
             //this is so the window doesn't immediately close but the program doesn't have other stuff to do
-        }
+        }*/
     }
 }
