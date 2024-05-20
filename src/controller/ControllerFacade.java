@@ -237,7 +237,6 @@ class ControllerFacade {
         //newFacade.paintScreen();
 
         this.displays.add(displays.size(), newFacade);
-        this.active++;
         newFacade.paintScreen();
         return RenderIndicator.FULL;
     }

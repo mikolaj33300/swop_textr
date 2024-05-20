@@ -1,5 +1,6 @@
 package ui;
 
+import controller.adapter.ResizeListener;
 import util.Coords;
 
 import java.awt.Dimension;
@@ -10,6 +11,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,7 @@ import javax.swing.JPanel;
 
 class TerminalPanel extends JPanel {
     char[][] bufferToDisplay = new char[1][1];
-    ArrayList<Runnable> resizeListeners = new ArrayList<>();
+    ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
 
     void clearBuffer() {
         for (int i = 0; i < bufferToDisplay.length; i++)
@@ -39,18 +41,23 @@ class TerminalPanel extends JPanel {
         setFont(new Font("Monospaced", Font.PLAIN, 12));
         clearBuffer();
 
-/*        addComponentListener(new ComponentAdapter() {
+        addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 FontMetrics metrics = TerminalPanel.this.getFontMetrics(getFont());
                 int nbRows = TerminalPanel.this.getHeight() / metrics.getHeight();
                 int nbCols = TerminalPanel.this.getWidth() / metrics.charWidth('m');
                 bufferToDisplay = new char[nbRows][nbCols];
-                List<Runnable> resizeListenersCopy = List.copyOf(resizeListeners);
-                for (Runnable listener : resizeListenersCopy)
-                    listener.run();
+                List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
+                for (ResizeListener listener : resizeListenersCopy) {
+                    try {
+                        listener.notifyNewCoords(new Coords(0, 0, nbCols-3, nbRows));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             }
-        });*/
+        });
     }
 
     @Override
@@ -63,7 +70,12 @@ class TerminalPanel extends JPanel {
 
         int y = baseLineOffset;
         for (int lineIndex = 0; lineIndex < bufferToDisplay.length; lineIndex++) {
-            g.drawChars(bufferToDisplay[lineIndex], 0, bufferToDisplay[lineIndex].length, 0, y);
+            char[] toDisplay = new char[bufferToDisplay[lineIndex].length+1];
+            System.arraycopy(bufferToDisplay[lineIndex], 0, toDisplay, 0, bufferToDisplay[lineIndex].length);
+            for(int i = bufferToDisplay[lineIndex].length; i<toDisplay.length; i++){
+                toDisplay[i] = 'A';
+            }
+            g.drawChars(toDisplay, 0, toDisplay.length, 0, y);
             y += fontHeight;
         }
     }
@@ -79,6 +91,10 @@ class TerminalPanel extends JPanel {
     public boolean isFocusable() {
         return true;
     }
+
+    public void subscribeToResize(ResizeListener r){
+        this.resizeListeners.add(r);
+    }
 }
 
 public class SwingEditableTerminalApp extends JFrame {
@@ -87,7 +103,10 @@ public class SwingEditableTerminalApp extends JFrame {
     private int cursorRow = 0;
     private int cursorCol = 0;
 
-    TerminalPanel terminalPanel = new TerminalPanel();
+    ArrayList<ResizeListener> resizeListeners = new ArrayList<>(0);
+
+    TerminalPanel terminalPanel;
+    ResizeListener listenerOnPanel = null;
 
    public void moveCursor(int cursorRow, int cursorCol){
        this.cursorRow = cursorRow;
@@ -120,11 +139,21 @@ public class SwingEditableTerminalApp extends JFrame {
     public SwingEditableTerminalApp() {
         super("Swing Terminal App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        this.terminalPanel = new TerminalPanel();
         getContentPane().add(terminalPanel);
-        clearBuffer();
+        terminalPanel.subscribeToResize(new ResizeListener() {
+            @Override
+            public void notifyNewCoords(Coords n) throws IOException {
+                cursorCol = 0;
+                cursorRow = 0;
+                contentBuffer = new char[n.height][n.width];
+                for(ResizeListener l : resizeListeners){
+                    l.notifyNewCoords(n);
+                }
 
-        terminalPanel.resizeListeners.add(() -> {});
+            }
+
+        });
 
         terminalPanel.addKeyListener(new KeyAdapter() {
             @Override
@@ -154,5 +183,9 @@ public class SwingEditableTerminalApp extends JFrame {
 
     int getCursorRow(){
        return cursorRow;
+    }
+
+    public void subscribeToResize(ResizeListener r){
+        this.resizeListeners.add(r);
     }
 }

@@ -162,6 +162,11 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
         return new Coords(0, 0, screenWidth, screenHeight);
     }
 
+    @Override
+    public void subscribeToResizeTextArea(ResizeListener l) {
+        //TODO: We can put resize events as something in the inputstream of the virtual? This is not a priority right now
+    }
+
     /**
      * Adds an integer to the inputstream
      * @param i the integer for the input stream

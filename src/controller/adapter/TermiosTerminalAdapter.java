@@ -22,5 +22,7 @@ public interface TermiosTerminalAdapter {
 
     public Coords getTextAreaSize() throws IOException;
 
+    public void subscribeToResizeTextArea(ResizeListener l);
+
 }
 

@@ -1,20 +1,30 @@
 package controller.adapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
-import java.util.Queue;
-import java.util.LinkedList;
 
 import ui.SwingEditableTerminalApp;
 import util.Coords;
 
 public class SwingTerminalAdapter implements TermiosTerminalAdapter {
+    private ArrayList<ResizeListener> resizeListenerArrayList = new ArrayList<>(0);
+
+
     private SwingEditableTerminalApp editableSwingTerminal;
 
 
     public SwingTerminalAdapter() {
         this.editableSwingTerminal = new SwingEditableTerminalApp();
 		editableSwingTerminal.setVisible(true);
+        editableSwingTerminal.subscribeToResize(new ResizeListener() {
+            @Override
+            public void notifyNewCoords(Coords newCoords) throws IOException {
+                for(ResizeListener l : resizeListenerArrayList){
+                    l.notifyNewCoords(newCoords);
+                }
+            }
+        });
     }
 
 /*  private void handleKey(KeyEvent e) {
@@ -115,6 +125,12 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
   public Coords getTextAreaSize() throws IOException {
       return editableSwingTerminal.getSwingTerminalCharSize();
   }
+
+    @Override
+    public void subscribeToResizeTextArea(ResizeListener l) {
+        //TODO Implement this, add a listener and use the contained jframe's built in functionality
+        resizeListenerArrayList.add(l);
+    }
 
     public char[][] getContentBuffer(){
         return editableSwingTerminal.getContentBuffer();

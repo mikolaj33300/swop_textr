@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.ResizeListener;
 import controller.adapter.SwingTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
@@ -22,6 +23,8 @@ import java.util.HashMap;
         private TermiosTerminalAdapter termiosTerminalAdapter;
         private ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
+        private DisplayFacadeResizeListener displayFacadeResizeListener;
+
         private Coords displayCoords;
 
         /**
@@ -35,7 +38,6 @@ import java.util.HashMap;
             this.lineSeparatorArg = lineSeparatorArg;
             this.termiosTerminalAdapter = termiosTerminalAdapter;
             this.displayCoords = null;
-
 
             this.windows = new ArrayList<>();
             this.fileBufferWindows = new ArrayList<>();
@@ -56,6 +58,11 @@ import java.util.HashMap;
                 this.rootLayout = leaves.get(0);
             else
                 this.rootLayout = new VerticalLayoutNode(leaves);
+
+            DisplayFacadeResizeListener listenerToAdd = new DisplayFacadeResizeListener(this);
+            this.displayFacadeResizeListener = listenerToAdd;
+            termiosTerminalAdapter.subscribeToResizeTextArea(listenerToAdd);
+
         }
 
         DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
@@ -73,6 +80,10 @@ import java.util.HashMap;
 
             this.updateViewCoordinates();
             this.paintScreen();
+
+            DisplayFacadeResizeListener listenerToAdd = new DisplayFacadeResizeListener(this);
+            this.displayFacadeResizeListener = listenerToAdd;
+            termiosTerminalAdapter.subscribeToResizeTextArea(listenerToAdd);
         }
 
         /**
@@ -183,7 +194,7 @@ import java.util.HashMap;
          * Calls clearContent on the contained {@link ui.FileBufferView}(s).
          */
         public void clearContent() throws IOException {
-            return;
+            termiosTerminalAdapter.clearScreen();
         }
 
         /**
@@ -342,6 +353,11 @@ import java.util.HashMap;
 
         public void requestOpeningNewDisplay(TermiosTerminalAdapter newAdapter) throws IOException {
             windows.get(active).accept(new newDisplayFromWindowVisitor(newAdapter));
+        }
+
+        public void repaintOnResize(Coords newCoords) throws IOException {
+            this.displayCoords = newCoords;
+            this.paintScreen();
         }
 
         //To avoid instanceof
