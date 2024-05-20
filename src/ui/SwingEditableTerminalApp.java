@@ -73,7 +73,7 @@ class TerminalPanel extends JPanel {
             char[] toDisplay = new char[bufferToDisplay[lineIndex].length+1];
             System.arraycopy(bufferToDisplay[lineIndex], 0, toDisplay, 0, bufferToDisplay[lineIndex].length);
             for(int i = bufferToDisplay[lineIndex].length; i<toDisplay.length; i++){
-                toDisplay[i] = 'A';
+                toDisplay[i] = ' ';
             }
             g.drawChars(toDisplay, 0, toDisplay.length, 0, y);
             y += fontHeight;
