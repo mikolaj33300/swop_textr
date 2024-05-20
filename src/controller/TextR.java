@@ -43,22 +43,22 @@ public class TextR {
      * A beautiful start for a beautiful project
      * @throws IOException RuntimeException
      */
-    public static void awtMain(String[] args) throws IOException, RuntimeException {
-        TextR textR;
-        textR = new TextR(args, new RealTermiosTerminalAdapter());
+    public static void awtMain(String[] args) {
+        if (!java.awt.EventQueue.isDispatchThread())
+            throw new AssertionError("Should run in AWT dispatch thread!");
+        try {
+            TextR textR;
+            textR = new TextR(args, new RealTermiosTerminalAdapter());
 
-        textR.activeUseCaseController = new InspectContentsController(textR);
-        textR.loop();
+            textR.activeUseCaseController = new InspectContentsController(textR);
+            textR.loop();
+        } catch (IOException e) {
+            throw new RuntimeException("Issue on startup. Are we initializing everything?");
+        }
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> {
-            try {
-                awtMain(args);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        java.awt.EventQueue.invokeLater(() -> {awtMain(args);});
     }
 
     /**
@@ -71,36 +71,70 @@ public class TextR {
         adapter.get(activeAdapter).clearScreen();
         // Reading terminal dimensions for correct rendering
         activeUseCaseController.paintScreen();
-        // Main loop
-        for ( ; ; ) {
-            RenderIndicator operationNeedsRerender = RenderIndicator.NONE;
-            int b = -3;
-            try {
-                b = adapter.get(activeAdapter).readByte(System.currentTimeMillis()+1);
-            } catch (TimeoutException e) {
-                // Do nothing
+
+
+        addTimerListener();
+
+        addTerminalInputListener();
+    }
+
+    private void addTerminalInputListener() {
+        Terminal.setInputListener(new Runnable() {
+            public void run() {
+                java.awt.EventQueue.invokeLater(() -> {
+                    try {
+                        handleTerminalInputEvent();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Terminal.setInputListener(this);
+                });
             }
-            if (b == 27) {
-                adapter.get(activeAdapter).readByte();
-                operationNeedsRerender = activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
-            } else if (b == -3){
-                operationNeedsRerender = activeUseCaseController.handleIdle();
-            } else if(b == -2) {
-                /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
-                from above in the future*/
-                break;
-            } else {
-                operationNeedsRerender = activeUseCaseController.handle(b);
-            }
-            if(operationNeedsRerender != RenderIndicator.NONE){
-                activeUseCaseController.paintScreen();
-            }
-            // Flush stdIn & Recalculate dimensions
-            System.in.read(new byte[System.in.available()]);
-	        //activeAdapter++;
-	        //activeAdapter%=adapter.size();
-	        //facade.setActive(activeAdapter);
+        });
+    }
+
+    private void handleIdleEvent() throws IOException {
+        if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
+            activeUseCaseController.paintScreen();
         }
+    }
+
+    private void addTimerListener() {
+        javax.swing.Timer timer = new javax.swing.Timer(1, e -> {
+            try {
+                handleIdleEvent();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        timer.start();
+    }
+
+    private boolean handleTerminalInputEvent() throws IOException {
+        RenderIndicator operationNeedsRerender = RenderIndicator.NONE;
+        int b;
+
+        b = adapter.get(activeAdapter).readByte();
+
+        if (b == 27) {
+            adapter.get(activeAdapter).readByte();
+            operationNeedsRerender = activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
+        } else if(b == -2) {
+            /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
+            from above in the future*/
+            return true;
+        } else {
+            operationNeedsRerender = activeUseCaseController.handle(b);
+        }
+        if(operationNeedsRerender != RenderIndicator.NONE){
+            activeUseCaseController.paintScreen();
+        }
+        // Flush stdIn & Recalculate dimensions
+        System.in.read(new byte[System.in.available()]);
+        //activeAdapter++;
+        //activeAdapter%=adapter.size();
+        //facade.setActive(activeAdapter);
+        return false;
     }
 
     public TermiosTerminalAdapter getAdapter() {
