@@ -17,10 +17,7 @@ public abstract class View {
      * The adapter used for interacting with termios
      */
     protected TermiosTerminalAdapter termiosTerminalAdapter;
-    /**
-     * The rectangle which describes the bounds of this view
-     */
-    Rectangle uiCoordsScaled;
+
 
     Coords uiCoordsReal;
 
@@ -41,29 +38,6 @@ public abstract class View {
     public View(TermiosTerminalAdapter termiosTerminalAdapter) {
         this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
-
-
-    /**
-     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
-     * @param uiCoordsScaled the new coordinates
-     */
-    public void setScaledCoords(Rectangle uiCoordsScaled) {
-        this.uiCoordsScaled = uiCoordsScaled;
-    }
-
-    /**
-     * @param termiosTerminalAdapter the object that renders the terminal
-     * @return coordinates 
-     */
-    public Coords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
-        Coords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
-        return new Coords(
-                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.startX),
-                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.startY),
-                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.width),
-                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.height));
-    }
-
 
     /**
      * Clears the content on the terminal window
@@ -98,4 +72,12 @@ public abstract class View {
 
 
     protected abstract int getLineLength(int focusedLine);
+
+    public void setRealCoords(Rectangle rectangle) {
+        this.uiCoordsReal = new Coords((int) Math.floor(rectangle.startX), (int) Math.floor(rectangle.startY), (int) Math.floor(rectangle.width), (int) Math.floor(rectangle.height));
+    }
+
+    public Coords getRealCoords() {
+        return uiCoordsReal;
+    }
 }

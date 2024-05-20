@@ -5,7 +5,6 @@ import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,7 +41,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
 
@@ -62,7 +61,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
@@ -80,7 +79,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
@@ -97,7 +96,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr2.loop();
+        textr2.startListenersAndHandlers();
 
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr2.facade.getWindows().get(textr2.facade.getActive()).getHandler();
@@ -115,7 +114,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
@@ -133,7 +132,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
         // Test if the move cursor worked logically
@@ -152,7 +151,7 @@ public class InspectBufferTest {
         haltLoop();
 
         // Loop the program: will read the move cursor command & stop the loop after
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
 
@@ -167,7 +166,7 @@ public class InspectBufferTest {
         assertEquals(textr1.facade.getActive(), 0);
         focusNext();
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertEquals(textr1.facade.getActive(), 0);
     }
 
@@ -177,7 +176,7 @@ public class InspectBufferTest {
         assertEquals(textr3.facade.getActive(), 0);
         focusNext();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 1);
     }
 
@@ -187,7 +186,7 @@ public class InspectBufferTest {
         focusNext();
         focusNext();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 1);
     }
 
@@ -197,7 +196,7 @@ public class InspectBufferTest {
         focusNext();
         focusPrevious();
         haltLoop();
-        textr3.loop();
+        textr3.startListenersAndHandlers();
         assertEquals(textr3.facade.getActive(), 0);
     }
 

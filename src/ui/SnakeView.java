@@ -40,15 +40,15 @@ public class SnakeView extends View {
      * update the coordinates of this view out of 
      */
     private void setLocalCoordinates() {
-        try {
-            Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        /*try {*/
+            Coords coords = super.uiCoordsReal;
             this.startX = coords.startX;
             this.startY = coords.startY;
             this.width = coords.width;
             this.height = coords.height;
-        } catch(IOException e) {
+/*        } catch(IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -233,25 +233,11 @@ public class SnakeView extends View {
     }
 
     /**
-     * @param uiCoordsScaled the new coordinates
-     * sets the view and the game to have the new coordinates
-     */
-    @Override
-    public void setScaledCoords(Rectangle uiCoordsScaled) {
-        super.setScaledCoords(uiCoordsScaled);
-        try {
-            scaleGame();
-        } catch(Exception e) {
-            // Will never happen, and if it does, it will crash on snake game too
-        }
-    }
-
-    /**
      * This also scales the playing field in {@link SnakeGame} itself. Its bounds are given to this view upon creation.
      * @throws IOException when the coords cannot be retrieved
      */
     private void scaleGame() throws IOException {
-        Coords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords ui = super.uiCoordsReal;
         Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
         this.game.modifyPlayfield(rct);
     }

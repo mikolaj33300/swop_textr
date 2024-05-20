@@ -53,7 +53,7 @@ public class SnakeInputHandler extends InputHandlingElement {
         if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE && this.game.canContinue()) {
             game.tick();
             currentWait = 0;
-	    return RenderIndicator.FULL;
+	        return RenderIndicator.FULL;
         }
         return RenderIndicator.NONE;
     }

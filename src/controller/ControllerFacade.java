@@ -69,24 +69,10 @@ class ControllerFacade {
     }
 
     /**
-     * render the active window
-     */
-    public void renderContent() throws IOException {
-        displays.get(active).renderContent();
-    }
-
-    /**
      * save the active filebuffer
      */
     public void saveActive() {
         displays.get(active).saveActive();
-    }
-
-    /**
-     * render the cursor in the active view
-     */
-    public void renderCursor() throws IOException {
-        displays.get(active).renderCursor();
     }
 
     /**
@@ -215,19 +201,19 @@ class ControllerFacade {
         return this.active;
     }
 
-    public void addDisplay(TermiosTerminalAdapter adapter) {
+/*    public void addDisplay(TermiosTerminalAdapter adapter) {
         String[] test = new String[1];
         test[0] = "long.txt";
         try {
             this.displays.add(new DisplayFacade(test, adapter, this.lineSeparatorArg));
             active = displays.size()-1;
-            renderContent();
+            paintScreen();
         } catch (Exception e){
             System.out.println("adding/rendering display failed");
             System.out.println(e);
             System.exit(1);
         }
-    }
+    }*/
 
     public void setActive(int a) {
         this.active = a;
@@ -255,6 +241,10 @@ class ControllerFacade {
     public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
         this.displays.get(active).requestOpeningNewSwingDisplay();
         return RenderIndicator.FULL;
+    }
+
+    public void paintScreen() throws IOException {
+        this.displays.get(active).paintScreen();
     }
 }
 

@@ -7,11 +7,10 @@ import java.io.IOException;
 
 public class FileErrorPopupController extends UseCaseController {
     UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file");
-    private boolean needsRenderSinceLast;
+
 
     protected FileErrorPopupController(TextR coreControllerParent) {
         super(coreControllerParent);
-        this.needsRenderSinceLast=true;
     }
 
     /**
@@ -22,7 +21,6 @@ public class FileErrorPopupController extends UseCaseController {
     @Override
     public RenderIndicator handle(int b) throws IOException {
         Runtime.getRuntime().halt(1);
-        this.needsRenderSinceLast = true;
         return null;
     }
 
@@ -34,7 +32,6 @@ public class FileErrorPopupController extends UseCaseController {
     public void paintScreen() throws IOException {
         coreControllerParent.getAdapter().clearScreen();
         userPopupBox.render();
-        this.needsRenderSinceLast = false;
     }
 
     /**

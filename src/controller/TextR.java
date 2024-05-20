@@ -2,11 +2,12 @@ package controller;
 
 import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
-import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import util.RenderIndicator;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -44,8 +45,10 @@ public class TextR {
      * @throws IOException RuntimeException
      */
     public static void awtMain(String[] args) {
-        if (!java.awt.EventQueue.isDispatchThread())
+        if (!java.awt.EventQueue.isDispatchThread()){
             throw new AssertionError("Should run in AWT dispatch thread!");
+        }
+
         try {
             TextR textR;
             textR = new TextR(args, new RealTermiosTerminalAdapter());
@@ -55,7 +58,7 @@ public class TextR {
             JFrame dummyFrame = new JFrame();
             dummyFrame.pack();
 
-            textR.loop();
+            textR.startListenersAndHandlers();
         } catch (IOException e) {
             throw new RuntimeException("Issue on startup. Are we initializing everything?");
         }
@@ -69,18 +72,40 @@ public class TextR {
      * Contains the main input loop
      * @throws IOException
      */
-    public void loop() throws IOException {
+    public void startListenersAndHandlers() throws IOException {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         adapter.get(activeAdapter).enterRawInputMode();
-        adapter.get(activeAdapter).clearScreen();
         // Reading terminal dimensions for correct rendering
         activeUseCaseController.paintScreen();
 
 
-        initializeTimer();
+        addTimerListener();
 
         addTerminalInputListener();
     }
+
+
+    private void addTimerListener() {
+        javax.swing.Timer timer = new javax.swing.Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleIdleEvent();
+            }
+        });
+        timer.start();
+    }
+
+    private void handleIdleEvent() {
+            try {
+                if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
+                    activeUseCaseController.paintScreen();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+    }
+
+
 
     private void addTerminalInputListener() {
         Terminal.setInputListener(new Runnable() {
@@ -97,31 +122,8 @@ public class TextR {
         });
     }
 
-    private void handleIdleEvent(Timer timer) throws IOException {
-        //if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
-            activeUseCaseController.paintScreen();
-        //}
-        timer.stop();
-        initializeTimer();
-    }
-
-    private void initializeTimer() {
-        javax.swing.Timer timer = new javax.swing.Timer(1, null);
-        timer.addActionListener(e -> {
-            try {
-                activeUseCaseController.paintScreen();
-                handleIdleEvent(timer);
-
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
-        timer.start();
-        timer.setRepeats(false);
-    }
-
     private boolean handleTerminalInputEvent() throws IOException {
-        RenderIndicator operationNeedsRerender = RenderIndicator.NONE;
+        RenderIndicator operationNeedsRerender;
         int b;
 
         b = adapter.get(activeAdapter).readByte();
@@ -151,17 +153,17 @@ public class TextR {
 	    return adapter.get(activeAdapter);
     }
 
-    public void setAdapter(int a) {
+/*    public void setAdapter(int a) {
 	    activeAdapter = a;
 	    facade.setActive(a);
 	    System.out.printf("facade active: %d, textr active: %d\n", facade.getActive(), activeAdapter);
-    }
+    }*/
 
-    public void addSwingAdapter() {
+/*    public void addSwingAdapter() {
 	    int size = adapter.size();
 	    System.out.println(size);
 	    adapter.add(new SwingTerminalAdapter());
 	    activeAdapter = adapter.size() - 1;
 	    facade.addDisplay(adapter.get(activeAdapter));
-    }
+    }*/
 }

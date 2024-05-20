@@ -41,7 +41,7 @@ public class ScrollbarDecoratorTest {
     public void testRender() throws IOException {
         View toTestFBView = new FileBufferView(bufferCursorContext, adapter);
         toTestFBView = new ScrollbarDecorator(toTestFBView);
-        toTestFBView.setScaledCoords(new Rectangle(0,0,1,0.5));
+        toTestFBView.setRealCoords(new Rectangle(0,0,150,5));
         toTestFBView.render(toTestFBView.hashCode());
 
     }

@@ -46,7 +46,7 @@ public class FileBufferView extends View {
     //TODO: remove any remnants of logic that still contains scrolling
     @Override
     public void render(int activeHash) throws IOException {
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.uiCoordsReal;
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
@@ -123,7 +123,7 @@ public class FileBufferView extends View {
      */
     @Override
     public void renderCursor() throws IOException {
-        Coords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.uiCoordsReal;
         int width = coords.width;
         int height = coords.height;
         int startY = coords.startY;

@@ -6,7 +6,6 @@ import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,7 +41,7 @@ public class SaveBufferTest {
     public void testGetsDirty() throws IOException {
         enterCharacter('b');
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertTrue(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
@@ -53,7 +52,7 @@ public class SaveBufferTest {
         enterCharacter('b');
         adapter.putByte(19); // Ctrl + S
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertFalse(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );

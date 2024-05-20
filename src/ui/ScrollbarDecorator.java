@@ -19,12 +19,12 @@ public class ScrollbarDecorator extends View{
     @Override
     public void render(int activeHash) throws IOException {
         Coords thisRealDimensions;
-        try{
-            thisRealDimensions = super.getRealUICoordsFromScaled(this.termiosTerminalAdapter);
-        } catch (IOException e){
+        /*try{*/
+            thisRealDimensions = super.uiCoordsReal;
+/*        } catch (IOException e){
             System.out.println(e);
             return;
-        }
+        }*/
         updateWrappeeDimensions();
         wrappedView.render(activeHash);
 
@@ -68,11 +68,6 @@ public class ScrollbarDecorator extends View{
     @Override
     public int getTotalContentHeight() {
         return wrappedView.getTotalContentHeight();
-    }
-
-    @Override
-    public void setScaledCoords(Rectangle uiCoordsScaled) {
-        this.uiCoordsScaled = uiCoordsScaled;
     }
 
     /**
@@ -142,17 +137,12 @@ public class ScrollbarDecorator extends View{
     }
 
     private void updateWrappeeDimensions() throws IOException {
-        Coords thisRealDimensions = super.getRealUICoordsFromScaled(this.termiosTerminalAdapter);
+        Coords thisRealDimensions = super.uiCoordsReal;
 
-        Coords wrappeeRealDimensions = new Coords(thisRealDimensions.startX, thisRealDimensions.startY, thisRealDimensions.width-1, thisRealDimensions.height-1);
-        Coords screenDims = termiosTerminalAdapter.getTextAreaSize();
+        Rectangle wrappeeRealDimensions = new Rectangle(thisRealDimensions.startX, thisRealDimensions.startY, thisRealDimensions.width-1, thisRealDimensions.height-1);
+        //Coords screenDims = termiosTerminalAdapter.getTextAreaSize();
 
-        double wrappeeScaledX = (double) wrappeeRealDimensions.startX / screenDims.width;
-        double wrappeeScaledY = (double) wrappeeRealDimensions.startY / screenDims.height;
-        double wrappeeScaledWidth = (double) wrappeeRealDimensions.width / screenDims.width;
-        double wrappeeScaledHeight = (double) wrappeeRealDimensions.height / screenDims.height;
-
-        wrappedView.setScaledCoords(new Rectangle(wrappeeScaledX, wrappeeScaledY, wrappeeScaledWidth, wrappeeScaledHeight));
+        wrappedView.setRealCoords(wrappeeRealDimensions);
     }
 }
 

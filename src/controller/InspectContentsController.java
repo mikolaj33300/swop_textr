@@ -8,11 +8,9 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
-    private boolean needsRenderSinceLast;
 
     protected InspectContentsController(TextR coreControllerParent){
         super(coreControllerParent);
-        this.needsRenderSinceLast = true;
     }
 
     /**
@@ -105,8 +103,8 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void paintScreen() throws IOException {
         clearContent();
-        coreControllerParent.facade.renderContent();
-        coreControllerParent.facade.renderCursor();
+        coreControllerParent.facade.paintScreen();
+        //coreControllerParent.facade.renderCursor();
     }
 
     private void clearContent() {

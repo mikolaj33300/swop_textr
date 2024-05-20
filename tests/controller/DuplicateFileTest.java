@@ -34,7 +34,7 @@ public class DuplicateFileTest {
         enterDuplicateCtrl();
         haltLoop();
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertTrue(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );

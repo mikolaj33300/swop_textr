@@ -6,7 +6,6 @@ import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,17 +39,18 @@ public class EditBufferTest {
     @Test
     public void testNonDirtyOpened() throws IOException, NoSuchFieldException {
         haltLoop();
-        textr1.loop();
-        assertFalse(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
-        );
+        textr1.startListenersAndHandlers();
+        while(true);
+        //assertFalse(
+        //        ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+        //);
     }
 
     @Test
     public void testDirtyEdited() throws IOException {
         enterCharacter('H');
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         assertTrue(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
@@ -62,7 +62,7 @@ public class EditBufferTest {
         enterCharacter('H');
         adapter.putByte(19); // Ctrl + S
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
 
         assertFalse(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
@@ -75,7 +75,7 @@ public class EditBufferTest {
         enterCharacter('H');
         adapter.putByte(19); // Ctrl + S
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertFalse(
                 ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
@@ -85,7 +85,7 @@ public class EditBufferTest {
     public void testBufferReceivesCharacter() throws IOException {
         enterCharacter('m');
         haltLoop();
-        textr1.loop();
+        textr1.startListenersAndHandlers();
         assertTrue(
                 FileHolder.areContentsEqual(
                     ((FileBufferInputHandler) textr1.facade

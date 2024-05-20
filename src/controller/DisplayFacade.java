@@ -9,7 +9,6 @@ import ui.*;
 import util.*;
 
 import java.io.IOException;
-import java.net.http.WebSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +22,8 @@ import java.util.HashMap;
         private TermiosTerminalAdapter termiosTerminalAdapter;
         private ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
+        private Coords displayCoords;
+
         /**
          * Creates a ControllerFacade object.
          * Creates a {@link Layout} object which represents the root layout.
@@ -33,6 +34,7 @@ import java.util.HashMap;
         public DisplayFacade(String[] paths, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws PathNotFoundException, IOException {
             this.lineSeparatorArg = lineSeparatorArg;
             this.termiosTerminalAdapter = termiosTerminalAdapter;
+            this.displayCoords = null;
 
 
             this.windows = new ArrayList<>();
@@ -54,15 +56,14 @@ import java.util.HashMap;
                 this.rootLayout = leaves.get(0);
             else
                 this.rootLayout = new VerticalLayoutNode(leaves);
-
-            this.updateViewCoordinates();
         }
 
-        DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) {
+        DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
             this.windows = new ArrayList<>();
             this.fileBufferWindows = new ArrayList<>();
             windows.add(toOpenWindow);
             fileBufferWindows.add(toOpenWindow);
+            this.displayCoords = termiosTerminalAdapter.getTextAreaSize();
 
             this.lineSeparatorArg = lineSeparatorArg.clone();
             this.termiosTerminalAdapter = termiosTerminalAdapter;
@@ -75,13 +76,17 @@ import java.util.HashMap;
         /**
          * render all windows
          */
-        public void renderContent() throws IOException {
+        private void renderContent() throws IOException {
             for (Window window : windows) {
                 window.getView().render(windows.get(active).getView().hashCode());
             }
         }
 
         public void paintScreen() throws IOException {
+            if(displayCoords == null){
+                displayCoords = this.termiosTerminalAdapter.getTextAreaSize();
+            }
+            updateViewCoordinates();
             clearContent();
             renderContent();
             renderCursor();
@@ -103,7 +108,7 @@ import java.util.HashMap;
         /**
          * render the cursor in the active view
          */
-        public void renderCursor() throws IOException {
+        private void renderCursor() throws IOException {
             windows.get(active).getView().renderCursor();
         }
 
@@ -148,7 +153,6 @@ import java.util.HashMap;
                 throw new RuntimeException("Layout and collection of views inconsistent!");
             }
             active = newActive;
-            updateViewCoordinates();
             return new Pair<>(RenderIndicator.FULL, 0);
         }
 
@@ -187,7 +191,6 @@ import java.util.HashMap;
          */
         public RenderIndicator rotateLayout(RotationDirection orientation){
             rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getView().hashCode());
-            updateViewCoordinates();
             return RenderIndicator.FULL;
         }
 
@@ -238,7 +241,7 @@ import java.util.HashMap;
          */
         public RenderIndicator openSnakeGame() throws IOException {
             // Get UI coords of current window to initialize snake view's playfield
-            Coords coordsView = this.windows.get(active).getView().getRealUICoordsFromScaled(termiosTerminalAdapter);
+            Coords coordsView = this.windows.get(active).getView().getRealCoords();
 
             // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
             int hashActive = this.windows.get(active).getView().hashCode();
@@ -304,10 +307,13 @@ import java.util.HashMap;
             return this.windows.get(active);
         }
 
-        private RenderIndicator updateViewCoordinates() {
-            HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
+        private RenderIndicator updateViewCoordinates() throws IOException {
+            if(displayCoords == null){
+                displayCoords = this.termiosTerminalAdapter.getTextAreaSize();
+            }
+            HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, displayCoords.width, displayCoords.height));
             for (Window w : windows) {
-                w.getView().setScaledCoords(coordsMap.get(w.getView().hashCode()));
+                w.getView().setRealCoords(coordsMap.get(w.getView().hashCode()));
             }
 
             return RenderIndicator.FULL;
@@ -348,7 +354,6 @@ import java.util.HashMap;
                     windows.add(windows.size(), windowToAdd);
                     fileBufferWindows.add(fileBufferWindows.size(), windowToAdd);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
-                    updateViewCoordinates();
                 }
             }
 
