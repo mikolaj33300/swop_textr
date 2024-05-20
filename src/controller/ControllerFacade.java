@@ -14,7 +14,7 @@ class ControllerFacade {
     private final byte[] lineSeparatorArg;
     private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
     private int active = 0;
-    private TermiosTerminalAdapter termiosTerminalAdapter;
+    private TermiosTerminalAdapter initialTermiosAdapter;
 
     private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
@@ -28,6 +28,7 @@ class ControllerFacade {
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
 
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
+        this.initialTermiosAdapter = termiosTerminalAdapter;
         String[] paths;
 
         if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
@@ -36,8 +37,8 @@ class ControllerFacade {
             paths = args;
         }
 
-        DisplayFacade initialDisplay = new DisplayFacade(paths, termiosTerminalAdapter, lineSeparatorArg);
-        this.displays.add(new DisplayFacade(paths, termiosTerminalAdapter, lineSeparatorArg));
+        DisplayFacade initialDisplay = new DisplayFacade(paths, initialTermiosAdapter, lineSeparatorArg);
+        this.displays.add(initialDisplay);
         subscribeToRequestsOpeningDisplay(initialDisplay);
     }
 

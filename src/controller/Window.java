@@ -8,7 +8,6 @@ import java.io.IOException;
 
 abstract class Window {
     //TODO turn this into a decorator of view and handler: so this also gets handle/updateCoords methods and delegates it to the view/handler
-    TermiosTerminalAdapter termiosTerminalAdapter;
     Window() {
 
     }

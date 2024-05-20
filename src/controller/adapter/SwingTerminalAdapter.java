@@ -69,7 +69,7 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
 	pack();
 	
 	setLocationRelativeTo(null);
-	java.awt.EventQueue.invokeLater(() -> this.setVisible(true));
+	this.setVisible(true);
     }
 
   private void handleKey(KeyEvent e) {

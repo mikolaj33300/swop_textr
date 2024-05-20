@@ -18,7 +18,13 @@ public class ScrollbarDecorator extends View{
     //TODO: these operations could be done better using some special library for vector/matrix operations? Lets only do this if enough time
     @Override
     public void render(int activeHash) throws IOException {
-        Coords thisRealDimensions = super.getRealUICoordsFromScaled(this.termiosTerminalAdapter);
+        Coords thisRealDimensions;
+        try{
+            thisRealDimensions = super.getRealUICoordsFromScaled(this.termiosTerminalAdapter);
+        } catch (IOException e){
+            System.out.println(e);
+            return;
+        }
         updateWrappeeDimensions();
         wrappedView.render(activeHash);
 

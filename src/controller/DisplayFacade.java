@@ -61,8 +61,13 @@ import java.util.HashMap;
         public DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) {
             this.windows = new ArrayList<>();
             windows.add(toOpenWindow);
+
             this.lineSeparatorArg = lineSeparatorArg.clone();
             this.termiosTerminalAdapter = termiosTerminalAdapter;
+            rootLayout = (new LayoutLeaf(windows.get(0).getView().hashCode()));
+
+
+            this.updateViewCoordinates();
         }
 
         /**
@@ -348,12 +353,7 @@ import java.util.HashMap;
 
             @Override
             public void visitSnakeWindow(SnakeWindow sw) {
-                SnakeWindow windowToAdd = sw.duplicate();
-                if(windowToAdd != null){
-                    windows.add(windows.size(), windowToAdd);
-                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
-                    updateViewCoordinates();
-                }
+                // No duplicating snake
             }
         }
 

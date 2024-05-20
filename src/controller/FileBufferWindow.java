@@ -30,7 +30,6 @@ public class FileBufferWindow extends Window{
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
         this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
-        super.termiosTerminalAdapter = newView.getTermiosTerminalAdapter();
     }
 
 
@@ -47,8 +46,10 @@ public class FileBufferWindow extends Window{
     @Override
     public FileBufferWindow duplicate() {
         BufferCursorContext dupedContext = new BufferCursorContext(this.fileBufferInputHandler.getFileBufferContextTransparent());
-        FileBufferView newView = new FileBufferView(dupedContext, this.termiosTerminalAdapter);
+        FileBufferView newView = new FileBufferView(dupedContext, this.view.getTermiosTerminalAdapter());
+
         FileBufferWindow windowToAdd = new FileBufferWindow(newView, new FileBufferInputHandler(dupedContext));
+        windowToAdd.view = new ScrollbarDecorator(windowToAdd.view);
         return windowToAdd;
     }
 
