@@ -15,7 +15,8 @@ class SnakeSegment extends Snake {
     }
 
     /**
-     * each tick we need to update
+     * Function that implements the behaviour that the SnakeSegment should execute every 'tick'
+     * This changes the location of this segment, to the next segment in the direction of the head (aka moving forward)
      */
     @Override
     protected void tick() {

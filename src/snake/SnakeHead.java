@@ -3,22 +3,9 @@ package snake;
 import util.MoveDirection;
 import util.Pos;
 
-import java.io.FileWriter;
-import java.io.IOException;
-
 import static util.MoveDirection.DOWN;
 import static util.MoveDirection.UP;
 
-/**
- * Information expert:
- * Cohesion: this class holds information about snake creation and logic behind controlling the snake.
- *           class makes sure that the creator does not have to worry about specifics, only about the location
- *           of the head of the snake
- * Creator: creates SnakeSegment
- * Low coupling: no coupling except superclasses
- * Indirection:
- * Polymorphism: yes, this is an implementation of an abstract class
- */
 public class SnakeHead extends Snake {
 
     /**
@@ -26,6 +13,10 @@ public class SnakeHead extends Snake {
      * direction. They are created and removed constantly.
      */
     private SnakeSegment[] segments;
+
+    /**
+     * Determines the amount the snake still has to grow
+     */
     private int growState = 0;
 
     /**
@@ -40,7 +31,7 @@ public class SnakeHead extends Snake {
     }
 
     /**
-     * Moves the snake in a different direction.
+     * Moves the snake to a different direction.
      * @param dir a {@link MoveDirection} object.
      */
     public void move(MoveDirection dir) {
@@ -70,6 +61,10 @@ public class SnakeHead extends Snake {
         return this.segments.clone();
     }
 
+    /**
+     * Function that implements the behaviour that the snake should execute every 'tick'
+     * This includes gowing the snake, moving the snake, and deleting segments
+     */
     @Override
     public void tick() {
         // We move the snake head.
@@ -170,10 +165,14 @@ public class SnakeHead extends Snake {
         }
     }
 
+    /**
+     * Scales the snake by a scaleX and a scaleY factor
+     * @param scaleX the factor to scale the snake in the x direction
+     * @param scaleY the factor to scale the snake in the y direction
+     */
     @Override
     public void scale(float scaleX, float scaleY) {
-        for(int i = 0; i < segments.length; i++)
-            segments[i].scale(scaleX, scaleY);
+        for (SnakeSegment segment : segments) segment.scale(scaleX, scaleY);
         super.scale(scaleX, scaleY);
     }
 
