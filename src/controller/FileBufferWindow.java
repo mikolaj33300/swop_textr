@@ -57,4 +57,9 @@ public class FileBufferWindow extends Window{
     public void accept(WindowVisitor v) throws IOException {
         v.visitFileWindow(this);
     }
+
+    @Override
+    public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
+        this.view.setTermiosTerminalAdapter(newAdapter);
+    }
 }

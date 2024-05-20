@@ -18,7 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 class TerminalPanel extends JPanel {
-    char[][] bufferToDisplay = new char[25][80];
+    char[][] bufferToDisplay = new char[50][80];
     ArrayList<Runnable> resizeListeners = new ArrayList<>();
 
     void clearBuffer() {
@@ -30,7 +30,7 @@ class TerminalPanel extends JPanel {
         setFont(new Font("Monospaced", Font.PLAIN, 12));
         clearBuffer();
 
-        addComponentListener(new ComponentAdapter() {
+/*        addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 FontMetrics metrics = TerminalPanel.this.getFontMetrics(getFont());
@@ -41,7 +41,7 @@ class TerminalPanel extends JPanel {
                 for (Runnable listener : resizeListenersCopy)
                     listener.run();
             }
-        });
+        });*/
     }
 
     @Override
@@ -73,7 +73,7 @@ class TerminalPanel extends JPanel {
 }
 
 public class SwingEditableTerminalApp extends JFrame {
-    private char[][] contentBuffer = new char[25][80];
+    private char[][] contentBuffer = new char[50][80];
 
     private int cursorRow = 0;
     private int cursorCol = 0;
@@ -88,8 +88,13 @@ public class SwingEditableTerminalApp extends JFrame {
 
    private void updateAndRenderVisual(){
        for(int i = 0; i<contentBuffer.length; i++){
-           for(int j = 0; j< contentBuffer[i].length; j++){
-               terminalPanel.bufferToDisplay[i][j] = contentBuffer[i][j];
+           for(int j = 0; j< contentBuffer[0].length; j++){
+               try{
+                   terminalPanel.bufferToDisplay[i][j] = contentBuffer[i][j];
+               } catch (ArrayIndexOutOfBoundsException e){
+
+               }
+
            }
        }
        terminalPanel.bufferToDisplay[cursorRow][cursorCol] = '*';
@@ -102,7 +107,7 @@ public class SwingEditableTerminalApp extends JFrame {
 
     public void clearBuffer(){
         for(int i = 0; i<contentBuffer.length; i++){
-            for(int j = 0; j< contentBuffer[i].length; j++){
+            for(int j = 0; j< contentBuffer[0].length; j++){
                 contentBuffer[i][j] = ' ';
             }
         }
@@ -134,5 +139,19 @@ public class SwingEditableTerminalApp extends JFrame {
 
     public Coords getSwingTerminalCharSize(){
        return new Coords(0, 0, contentBuffer[0].length, contentBuffer.length);
+    }
+
+    public char[][] getContentBuffer(){
+       char[][] toReturn = new char[contentBuffer.length][contentBuffer[0].length];
+        for(int i = 0; i<contentBuffer.length; i++){
+            for(int j = 0; j< contentBuffer[0].length; j++){
+                toReturn[i][j] = contentBuffer[i][j];
+            }
+        }
+        return toReturn;
+    }
+
+    int getCursorRow(){
+       return cursorRow;
     }
 }

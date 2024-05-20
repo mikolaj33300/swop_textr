@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.SwingTerminalAdapter;
 import controller.adapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
@@ -27,17 +28,19 @@ public class DisplayFacadeTest {
     }
 
     @Test
-    public void testDisplaysDuped() throws IOException {
+    public void testDisplaysSwing() throws IOException {
         String path = path1.toString();
         BufferCursorContext bufferCursorContext = new BufferCursorContext(path, new byte[]{0x0d, 0x0a});
         FileBufferInputHandler handler = new FileBufferInputHandler(bufferCursorContext);
-        VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 10, new ArrayList<>());
+        VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 100, new ArrayList<>());
         FileBufferView view = new FileBufferView(bufferCursorContext, adapter);
         FileBufferWindow window = new FileBufferWindow(view, handler);
 
-        DisplayFacade newDisplay = new DisplayFacade(window, adapter, "--lf".getBytes());
+        SwingTerminalAdapter newSwing = new SwingTerminalAdapter();
+        window.setTermiosAdapter(newSwing);
+        DisplayFacade newDisplay = new DisplayFacade(window, newSwing, "--lf".getBytes());
         newDisplay.paintScreen();
-        assertEquals(adapter.getVirtualScreen().getFirst()[0], 'm');
+        assertEquals(newSwing.getContentBuffer()[0][0], 'm');
     }
 
 }

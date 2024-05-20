@@ -38,4 +38,9 @@ public class SnakeWindow extends Window{
     public void accept(WindowVisitor v){
         v.visitSnakeWindow(this);
     }
+
+    @Override
+    public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
+        snakeView.setTermiosTerminalAdapter(newAdapter);
+    }
 }

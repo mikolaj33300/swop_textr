@@ -371,8 +371,10 @@ import java.util.HashMap;
             @Override
             public void visitFileWindow(FileBufferWindow fbw) throws IOException {
                 FileBufferWindow windowToAdd = fbw.duplicate();
+                TermiosTerminalAdapter newAdapter = new SwingTerminalAdapter();
+                windowToAdd.setTermiosAdapter(newAdapter);
                 if(windowToAdd != null){
-                    DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, new SwingTerminalAdapter(), lineSeparatorArg);
+                    DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, newAdapter, lineSeparatorArg);
                     for(DisplayOpeningRequestListener dl : displayRequestListeners){
                         dl.notifyRequestOpenDisplay(displayToAdd);
                     }

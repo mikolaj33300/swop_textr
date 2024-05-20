@@ -19,4 +19,6 @@ abstract class Window {
     public abstract Window duplicate() throws IOException;
 
     public abstract void accept(WindowVisitor wv) throws IOException;
+
+    public abstract void setTermiosAdapter(TermiosTerminalAdapter newAdapter);
 }

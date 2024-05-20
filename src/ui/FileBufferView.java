@@ -9,6 +9,7 @@ import util.Coords;
 import java.io.IOException;
 
 public class FileBufferView extends View {
+    //TODO: Make it not crash when the allocated dimensions are smaller than can fit, this is for some render functions
 
     /**
      * Reference to the {@link FileBuffer} to retrieve display information

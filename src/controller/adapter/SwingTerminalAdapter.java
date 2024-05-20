@@ -12,9 +12,6 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
     private SwingEditableTerminalApp editableSwingTerminal = new SwingEditableTerminalApp();
 
 
-    private Queue<Integer> keyQueue = new LinkedList<Integer>();
-    //private final TSMediator ctl;
-
     public SwingTerminalAdapter() {
         this.editableSwingTerminal = new SwingEditableTerminalApp();
 		editableSwingTerminal.setVisible(true);
@@ -77,7 +74,7 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
   @Override
   public void printText(int row, int column, String text){
-	  editableSwingTerminal.updateBuffer(text, column-1, row);
+	  editableSwingTerminal.updateBuffer(text, column-1, row-1);
   }
 
   @Override
@@ -118,5 +115,9 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
   public Coords getTextAreaSize() throws IOException {
       return editableSwingTerminal.getSwingTerminalCharSize();
   }
+
+    public char[][] getContentBuffer(){
+        return editableSwingTerminal.getContentBuffer();
+    }
 
 }

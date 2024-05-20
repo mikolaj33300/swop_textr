@@ -80,4 +80,8 @@ public abstract class View {
     public Coords getRealCoords() {
         return uiCoordsReal;
     }
+
+    public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
+        this.termiosTerminalAdapter = adapter;
+    };
 }
