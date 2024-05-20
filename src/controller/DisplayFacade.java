@@ -58,9 +58,11 @@ import java.util.HashMap;
             this.updateViewCoordinates();
         }
 
-        public DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) {
+        DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) {
             this.windows = new ArrayList<>();
+            this.fileBufferWindows = new ArrayList<>();
             windows.add(toOpenWindow);
+            fileBufferWindows.add(toOpenWindow);
 
             this.lineSeparatorArg = lineSeparatorArg.clone();
             this.termiosTerminalAdapter = termiosTerminalAdapter;

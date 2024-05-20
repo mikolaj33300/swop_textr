@@ -137,8 +137,8 @@ public class SwingTerminalAdapter extends JFrame implements TermiosTerminalAdapt
   @Override
   public void printText(int row, int column, String text){
 	terminal.resize();
-      terminal.addString(column, row, text);
-    terminal.repaint();
+	terminal.addString(column-1, row-1, text);
+	terminal.repaint();
   }
 
   @Override
