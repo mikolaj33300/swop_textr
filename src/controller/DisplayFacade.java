@@ -78,7 +78,6 @@ import java.util.HashMap;
         public void renderContent() throws IOException {
             for (Window window : windows) {
                 window.getView().render(windows.get(active).getView().hashCode());
-                window.getHandler().setContentsChangedSinceLastRenderFalse();
             }
         }
 

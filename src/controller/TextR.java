@@ -6,9 +6,9 @@ import controller.adapter.SwingTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import util.RenderIndicator;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.TimeoutException;
 import java.util.ArrayList;
 
 public class TextR {
@@ -73,7 +73,7 @@ public class TextR {
         activeUseCaseController.paintScreen();
 
 
-        addTimerListener();
+        initializeTimer();
 
         addTerminalInputListener();
     }
@@ -93,21 +93,27 @@ public class TextR {
         });
     }
 
-    private void handleIdleEvent() throws IOException {
-        if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
+    private void handleIdleEvent(Timer timer) throws IOException {
+        //if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
             activeUseCaseController.paintScreen();
-        }
+        //}
+        timer.stop();
+        initializeTimer();
     }
 
-    private void addTimerListener() {
-        javax.swing.Timer timer = new javax.swing.Timer(1, e -> {
+    private void initializeTimer() {
+        javax.swing.Timer timer = new javax.swing.Timer(1, null);
+        timer.addActionListener(e -> {
             try {
-                handleIdleEvent();
+                activeUseCaseController.paintScreen();
+                handleIdleEvent(timer);
+
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         });
         timer.start();
+        timer.setRepeats(false);
     }
 
     private boolean handleTerminalInputEvent() throws IOException {

@@ -17,7 +17,6 @@ public class SnakeInputHandler extends InputHandlingElement {
     public SnakeInputHandler(int maxX, int maxY) {
         this.playField = new Rectangle(0,0, maxX, maxY);
         this.game = new SnakeGame(5, maxX, maxY);
-        this.contentsChangedSinceRender = true;
         this.MILLISECOND_BASE = this.game.getMillisecondThreshold();
     }
 
@@ -54,7 +53,6 @@ public class SnakeInputHandler extends InputHandlingElement {
         if(currentWait + game.getRemovedDelay() >= this.MILLISECOND_BASE && this.game.canContinue()) {
             game.tick();
             currentWait = 0;
-            contentsChangedSinceRender = true;
 	    return RenderIndicator.FULL;
         }
         return RenderIndicator.NONE;
@@ -108,7 +106,6 @@ public class SnakeInputHandler extends InputHandlingElement {
         if(!this.game.canContinue()) {
             this.currentWait = 0;
             this.game.reset();
-            this.contentsChangedSinceRender = true;
         }
     }
 
@@ -120,7 +117,6 @@ public class SnakeInputHandler extends InputHandlingElement {
         this.game.move(dir);
         this.game.tick();
         this.currentWait = 0;
-        this.contentsChangedSinceRender = true;
     }
 
 }

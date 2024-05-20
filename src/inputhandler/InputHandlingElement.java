@@ -8,8 +8,6 @@ import util.RenderIndicator;
  */
 abstract public class InputHandlingElement {
 
-    boolean contentsChangedSinceRender = false;
-
     public int getHash() {
         return this.hashCode();
     }
@@ -56,20 +54,5 @@ abstract public class InputHandlingElement {
      * pass a separator to the enclosed object
      */
     public abstract void handleSeparator() throws IOException;
-
-    /**
-     * Determines if this element needs to be rerendered
-     * @return boolean
-     */
-    public boolean needsRerender() {
-        return this.contentsChangedSinceRender;
-    }
-
-    /**
-     * Turns the boolean for rerender to false. Use after rendering
-     */
-    public void setContentsChangedSinceLastRenderFalse() {
-        contentsChangedSinceRender = false;
-    }
 
 }
