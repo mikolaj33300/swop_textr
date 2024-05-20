@@ -40,7 +40,10 @@ public class SnakeGame {
     private float delay = 0f;
 
     /**
-     * Represents the max X and Y coordinates of the snake game width. Used to generate foods inside map bounds
+     * Constructor of the SnakeGame
+     * @param length the initial length of the snake
+     * @param maxX the maximum x position of the playing field
+     * @param maxY the maximum y position of the playing field
      */
     public SnakeGame(int length, int maxX, int maxY) {
         this.snake = new SnakeHead(length, maxX/2, maxY/2);
@@ -126,7 +129,7 @@ public class SnakeGame {
     }
 
     /**
-     * Handles user input
+     * Moves the snake in the given direction
      * @param dir the input direction
      */
     public void move(MoveDirection dir) {
@@ -134,7 +137,7 @@ public class SnakeGame {
     }
 
     /**
-     * Retrieves the list of positions
+     * Retrieves the list of positions of all the pieces of food on the board
      * @return list of the available foods
      */
     public List<Food> getFruits() {
@@ -177,7 +180,6 @@ public class SnakeGame {
         this.maxY = (int) newMaxY;
         this.foods.clear();
         initializeFruits();
-
     }
 
     /**
@@ -226,9 +228,9 @@ public class SnakeGame {
         return this.MILLISECOND_THRESHOLD;
     }
 
-
     /**
      * Resets the game
+     * --> Initialize the snake, the size of the playing field, the score and the delay to their initial values
      */
     public void reset() {
         this.snake = new SnakeHead(5, maxX/2, maxY/2);

@@ -3,22 +3,15 @@ package snake;
 import util.MoveDirection;
 import util.Pos;
 
-/**
- * Information expert: this class holds all the information about positioning and movement
- * Cohesion: subclasses can reuse this information without worrying about details
- * Creator: n/a this class holds information only
- * Low coupling: this class holds information about positions, subclasses can indirectly call upon this class without worrying about position updating
- * Indirection:
- * Polymorphism: yes, this is an abstract class
- */
 public abstract class Snake {
 
     /**
-     * The direction of the snake
+     * The direction the snake is rotated towards
      */
     private MoveDirection direction;
+
     /**
-     * The start position represents from where the snake moves FROM
+     * The start position represents where the snake moves FROM
      * The end position where the snake goes to
      */
     private Pos start, end;
@@ -29,8 +22,7 @@ public abstract class Snake {
      * @param end the position of the head
      */
     public Snake(MoveDirection direction, Pos start, Pos end) {
-        this.direction = direction;
-        this.start = start;
+        this.direction = direction;        this.start = start;
         this.end = end;
     }
 
@@ -44,7 +36,7 @@ public abstract class Snake {
      * @param pos the new start position
      */
     protected void updateStart(Pos pos) {
-        this.start = pos;
+        this.start = pos.clone();
     }
 
     /**
@@ -52,7 +44,7 @@ public abstract class Snake {
      * @param pos the new end position
      */
     protected void updateEnd(Pos pos) {
-        this.end = pos;
+        this.end = pos.clone();
     }
 
     /**

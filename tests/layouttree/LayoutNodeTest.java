@@ -34,6 +34,11 @@ public class LayoutNodeTest {
         LayoutNode vn1;
         LayoutNode vn2;
 
+        ArrayList<Layout> mixed_children;
+        ArrayList<Layout> two_leafs;
+        Layout layout_two_leafs;
+        Layout layout_mixed_children;
+
         @BeforeEach
         void setUp() throws IOException {
             l1 = new LayoutLeaf(1);
@@ -54,275 +59,146 @@ public class LayoutNodeTest {
             vn1 = new VerticalLayoutNode(children2);
             hn2 = new HorizontalLayoutNode(children3);
             vn2 = new VerticalLayoutNode(children3);
+
+            mixed_children = new ArrayList<>(Arrays.asList(l1, new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l3))), l4));
+            two_leafs = new ArrayList<>(Arrays.asList(l1,l2));
+            layout_mixed_children = new VerticalLayoutNode(mixed_children);
+            layout_two_leafs = new VerticalLayoutNode(two_leafs);
         }
 
-
-
     @Test
-    void testRotateRelationshipNeighborAbleCounterClockLeaf(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,1);
-        assertEquals(ln,correct_ln);
+    void testGetDirectChildrenOnlyLeafs() {
+        ArrayList<Layout> direct_children = ((LayoutNode)layout_two_leafs).getDirectChildren();
+        assertNotSame(direct_children, two_leafs);
+        assertEquals(direct_children, two_leafs);
     }
 
     @Test
-    void testRotateRelationshipNeighborUnableClockLeaf(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,2);
-        assertEquals(ln,correct_ln);
+    void TestGetDirectChildrenMixed() {
+        LayoutNode mixed_layout = new VerticalLayoutNode(mixed_children);
+        ArrayList<Layout> direct_children = mixed_layout.getDirectChildren();
+
+        assertNotSame(direct_children, mixed_children);
+        assertEquals(direct_children, mixed_children);
     }
 
     @Test
-    void testRotateRelationshipNeighborAbleClockLeaf(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,1);
-        assertEquals(ln,correct_ln);
-    }
-
-    @Test
-    void testRotateRelationshipNeighborUnableCounterClockLeaf(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,2);
-        assertEquals(ln,correct_ln);
-    }
-
-    @Test
-    void testRotateRelationshipNeighborAbleCounterClockNode(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,1);
-        assertEquals(ln,correct_ln);
-    }
-
-    @Test
-    void testRotateRelationshipNeighborUnableCounterClockNode(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,2);
-        assertEquals(ln,correct_ln);
-    }
-
-    @Test
-    void testRotateRelationshipNeighborAbleClockNode(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,1);
-        assertEquals(ln,correct_ln);
-    }
-
-    @Test
-    void testRotateRelationshipNeighborUnableClockNode(){
-        Layout ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-        ln = ln.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,2);
-        assertEquals(ln,correct_ln);
-    }
-
-
-
-
-    @Test
-    void testGetDirectChildren() {
-        ArrayList<Layout> get_children1 = hn1.getDirectChildren();
-        assertNotSame(get_children1,children1);
-        for(int i = 0;i < children1.size();i++){
-            assertEquals(get_children1.get(i), children1.get(i));
-            assertNotSame(get_children1.get(i), children1.get(i));
-        }
-        ArrayList<Layout> get_children2 = vn1.getDirectChildren();
-        assertNotSame(get_children2,children2);
-        for(int i = 0;i < children2.size();i++){
-            assertEquals(get_children2.get(i), children2.get(i));
-            assertNotSame(get_children2.get(i), children2.get(i));
-        }
-        LayoutNode hn3 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(vn1,l9,l10)));
-        ArrayList<Layout> get_children3 = hn3.getDirectChildren();
-        assertNotSame(get_children3,children3);
-        for(int i = 0;i < get_children3.size();i++){
-            assertEquals(get_children3.get(i), Arrays.asList(vn1,l9,l10).get(i));
-            assertNotSame(get_children3.get(i), Arrays.asList(vn1,l9,l10).get(i));
-        }
-    }
-
-
-
-
-    @Test
-    void moveFocusBasic(){
-        //Test Node with only leafs
-        int returnedHash = hn1.getNeighborsContainedHash(MoveDirection.LEFT, 1);
+    void testGetNeighborsContainedHashLeftSameRootParentEnd(){
+        int returnedHash = layout_two_leafs.getNeighborsContainedHash(MoveDirection.LEFT, 1);
         assertEquals(returnedHash, 1);
+    }
 
-        returnedHash = hn1.getNeighborsContainedHash(MoveDirection.RIGHT, 1);
-        assertEquals(returnedHash, 2);
+    @Test
+    void testGetNeighborsContainedHashLeftSameRootParentNext(){
+        int returnedHash = layout_two_leafs.getNeighborsContainedHash(MoveDirection.LEFT, 2);
+        assertEquals(returnedHash, 1);
+    }
 
-        returnedHash = hn1.getNeighborsContainedHash(MoveDirection.RIGHT, 2);
-        assertEquals(returnedHash, 3);
-
-        returnedHash = hn1.getNeighborsContainedHash(MoveDirection.RIGHT, 3);
-        assertEquals(returnedHash, 3);
-
-        returnedHash = hn1.getNeighborsContainedHash(MoveDirection.LEFT, 3);
+    @Test
+    void testGetNeighborsContainedHashRightSameRootParentNext(){
+        int returnedHash = layout_two_leafs.getNeighborsContainedHash(MoveDirection.RIGHT, 1);
         assertEquals(returnedHash, 2);
     }
+
     @Test
-    void moveFocusComplex(){
-        //Test with a complex tree
-        HorizontalLayoutNode hn10 = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l5, vn2,l10)));
-        VerticalLayoutNode currentlayout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(hn1,l4,hn10)));
+    void testGetNeighborsContainedHashRightSameRootParentEnd(){
+        int returnedHash = layout_two_leafs.getNeighborsContainedHash(MoveDirection.RIGHT, 2);
+        assertEquals(returnedHash, 2);
+    }
 
-        int returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 1);
-        assertEquals(returnedHash,1);
+    @Test
+    void testGetNeighborsContainedHashLeftSameParentNext(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.LEFT, 3);
+        assertEquals(returnedHash, 2);
+    }
 
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 1);
-        assertEquals(returnedHash,2);
+    @Test
+    void testGetNeighborsContainedHashRightSameParentNext(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.RIGHT, 2);
+        assertEquals(returnedHash, 3);
+    }
 
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 2);
-        assertEquals(3,returnedHash);
+    @Test
+    void testGetNeighborsContainedHashRightToLower(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.RIGHT, 1);
+        assertEquals(returnedHash, 2);
+    }
 
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 3);
+    @Test
+    void testGetNeighborsContainedHashRightToHigher(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.RIGHT, 3);
         assertEquals(returnedHash, 4);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 4);
-        assertEquals(returnedHash,5);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 5);
-        assertEquals(returnedHash,7);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 7);
-        assertEquals(returnedHash,8);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 8);
-        assertEquals(returnedHash,9);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 9);
-        assertEquals(returnedHash,10);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.RIGHT, 10);
-        assertEquals(returnedHash,10);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 10);
-        assertEquals(returnedHash,9);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 9);
-        assertEquals(returnedHash,8);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 8);
-        assertEquals(returnedHash,7);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 7);
-        assertEquals(returnedHash,5);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 5);
-        assertEquals(returnedHash,4);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 4);
-        assertEquals(returnedHash,3);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 3);
-        assertEquals(returnedHash,2);
-
-        returnedHash = currentlayout.getNeighborsContainedHash(MoveDirection.LEFT, 2);
-        assertEquals(returnedHash,1);
     }
 
     @Test
-    void testInsertDirectChild(){
-        ArrayList<Layout> old_children = vn1.getDirectChildren();
-        vn1.insertDirectChild(l4);
-        ArrayList<Layout> new_children = vn1.getDirectChildren();
-        old_children.add(l4);
-        assertEquals(old_children,new_children);
-
-        vn1.insertDirectChild(hn2);
-        new_children = vn1.getDirectChildren();
-        old_children.add(hn2);
-        assertEquals(old_children,new_children);
-    }
-
-
-    @Test
-    void testRotateRelationshipNeighborLeafs() {
-        Layout current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
-
-        current_layout = current_layout.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        Layout correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
-        assertEquals(current_layout, correct_layout);
-
-        current_layout = current_layout.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout);
-
-        //Can't rotate any further, active leaf is mostright
-        current_layout = current_layout.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout
-        );
-
-        current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2)));
-
-        //Can't rotate any further active leaf is mostright
-        current_layout = current_layout.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
-        correct_layout = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2, l1)));
-        assertEquals(current_layout, correct_layout);
-
-        //Test neighbours not affected
-        current_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l1,l2,l4)));
-
-        current_layout = current_layout.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_layout = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1, l2))),l4)));
-        assertEquals(current_layout, correct_layout);
+    void testGetNeighborsContainedHashLeftToLower(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.LEFT, 4);
+        assertEquals(returnedHash, 3);
     }
 
     @Test
-    void testRotateRelationShipNeighbourLeafsUnderNode(){
-        //Leaf on node with leaf on same node
-        Layout root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        LayoutNode correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
-        assertEquals(root_clock,correct_clock);
+    void testGetNeighborsContainedHashLeftToHigher(){
+        int returnedHash = layout_mixed_children.getNeighborsContainedHash(MoveDirection.LEFT, 2);
+        assertEquals(returnedHash, 1);
+    }
 
-        Layout root_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2))),l3)));
-        root_counter = root_counter.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
-        VerticalLayoutNode correct_counter = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
-        assertEquals(root_counter,correct_counter);
+    @Test
+    void testInsertRightOfSpecified(){}
 
-        //Leaf off node with leaf on node
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
-        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborAbleCounterClockTowLeafs(){
+        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        layout_two_leafs = layout_two_leafs.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,1);
+        assertEquals(layout_two_leafs,correct_ln);
+    }
 
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborUnableCounterClockTwoLeafs(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        layout_two_leafs = layout_two_leafs.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,2);
+        assertEquals(layout_two_leafs,correct_ln);
+    }
 
-        //Leaf on node with leaf off node
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),l3)));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_clock = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborAbleClockTwoLeafs(){
+        HorizontalLayoutNode correct_ln = new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1)));
+        layout_two_leafs = layout_two_leafs.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,1);
+        assertEquals(layout_two_leafs,correct_ln);
+    }
 
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3))))));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
-        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborUnableClockTwoLeafs(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2)));
+        layout_two_leafs = layout_two_leafs.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,2);
+        assertEquals(layout_two_leafs,correct_ln);
+    }
 
-        //Leaf on node with leaf on other node
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4))))));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE, 1);
-        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3))),l4)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborAbleCounterClockWithLowerLeaf(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l4,l3))))));
+        layout_mixed_children = layout_mixed_children.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,3);
+        assertEquals(layout_mixed_children,correct_ln);
+    }
 
-        root_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1))),new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l3,l4))))));
-        root_clock = root_clock.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE, 1);
-        correct_clock = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l1))),l4)));
-        assertEquals(root_clock, correct_clock);
+    @Test
+    void testRotateRelationshipNeighborAbleClockWithLowerLeaf(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,new HorizontalLayoutNode(new ArrayList<>(Arrays.asList(l2,l3,l4))))));
+        layout_mixed_children = layout_mixed_children.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,3);
+        assertEquals(layout_mixed_children,correct_ln);
+    }
+
+    @Test
+    void testRotateRelationshipNeighborAbleCounterClockWithHigherLeaf(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l2,l1,l3,l4)));
+        layout_mixed_children = layout_mixed_children.rotateRelationshipNeighbor(RotationDirection.COUNTERCLOCKWISE,1);
+        assertEquals(layout_mixed_children,correct_ln);
+    }
+
+    @Test
+    void testRotateRelationshipNeighborAbleClockWithHigherLeaf(){
+        VerticalLayoutNode correct_ln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l2,l3,l4)));
+        layout_mixed_children = layout_mixed_children.rotateRelationshipNeighbor(RotationDirection.CLOCKWISE,1);
+        assertEquals(layout_mixed_children,correct_ln);
     }
 
     @Test
