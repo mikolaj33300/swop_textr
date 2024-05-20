@@ -68,7 +68,7 @@ public class DirectoryView extends View {
     @Override
     public void render(int activeHash) throws IOException {
 
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.getRealCoords();
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
@@ -118,7 +118,7 @@ public class DirectoryView extends View {
      */
     int getStartIndex() throws IOException {
 
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.getRealCoords();
         int height = coords.height;
 
         // 1 + focused want 0 is parent dir ; spacing + 1 want we voorzien minimum 1 lijn per entry
