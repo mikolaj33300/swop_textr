@@ -2,6 +2,7 @@ package controller;
 
 import controller.adapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
+import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
@@ -38,11 +39,17 @@ class DisplayFacade {
     /**
      * The adapter used for rendering
      */
-    private TermiosTerminalAdapter termiosTerminalAdapter;
-    private ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
+    private final TermiosTerminalAdapter termiosTerminalAdapter;
+    private final ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
-    private DisplayFacadeResizeListener displayFacadeResizeListener;
+    /**
+     * The listener that will catch any
+     */
+    private final DisplayFacadeResizeListener displayFacadeResizeListener;
 
+    /**
+     * The {@link Coords} indicating the size of the display
+     */
     private Coords displayCoords;
 
     /**
@@ -148,16 +155,19 @@ class DisplayFacade {
     }
 
     /**
-     * render the cursor in the active view
+     * Render the cursor in the active view
      */
     private void renderCursor() throws IOException {
         windows.get(active).getView().renderCursor();
     }
 
     /**
-     * closes the active window
-     *
-     * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
+     * Called from {@link ControllerFacade}, used to close a focused {@link Window} in {@link DisplayFacade#windows}.
+     * Will ask the {@link Window#getHandler()} if {@link InputHandlingElement#isSafeToClose()} is true.
+     * @return  A {@link RenderIndicator} combined with an integer determining how the close action happened.
+     *          0 if the window is safe to close and closed
+     *          1 if it has a dirty buffer
+     *          2 if it is not force closable
      */
     public Pair<RenderIndicator, Integer> closeActive() {
         if (windows.get(active).getHandler().isSafeToClose()) {
@@ -169,7 +179,11 @@ class DisplayFacade {
     }
 
     /**
-     * @return 0 if we closed the active window 2 if we can't close it
+     * Called from {@link ControllerFacade}, used to force close a focused {@link Window} in {@link DisplayFacade#windows}.
+     * @return  A {@link RenderIndicator} combined with an integer determining how the close action happened.
+     *          0 if the window is safe to close and closed
+     *          1 if it has a dirty buffer
+     *          2 if it is not force closable
      */
     public Pair<RenderIndicator, Integer> forceCloseActive() {
         //checks which hash will be the next one after this is closed
@@ -203,7 +217,6 @@ class DisplayFacade {
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
-     *
      * @param dir the direction to move focus to
      */
     public RenderIndicator moveFocus(MoveDirection dir) {
@@ -226,7 +239,6 @@ class DisplayFacade {
 
     /**
      * Rearranges the Layouts, depending on the argument given
-     *
      * @param orientation clockwise or counterclockwise
      */
     public RenderIndicator rotateLayout(RotationDirection orientation) {
@@ -236,38 +248,43 @@ class DisplayFacade {
 
     /**
      * let the active window know that the right arrow is pressed
+     * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowRight() {
         this.windows.get(active).getHandler().handleArrowRight();
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * let the active window know that the Left arrow is pressed
+     * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowLeft() {
         this.windows.get(active).getHandler().handleArrowLeft();
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * let the active window know that the Down arrow is pressed
+     * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowDown() {
         this.windows.get(active).getHandler().handleArrowDown();
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * let the active window know that the Up arrow is pressed
+     * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowUp() {
         this.windows.get(active).getHandler().handleArrowUp();
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * let the active window insert a separator
+     * @return {@link RenderIndicator} indicating to re-render the full display
      */
     public RenderIndicator handleSeparator() throws IOException {
         this.windows.get(active).getHandler().handleSeparator();
@@ -314,7 +331,6 @@ class DisplayFacade {
 
     /**
      * Returns the line separator
-     *
      * @return byte[] containing the line separator
      */
     byte[] getLineSeparatorArg() {
@@ -323,7 +339,6 @@ class DisplayFacade {
 
     /**
      * Returns the array of windows
-     *
      * @return list of window objects
      */
     ArrayList<Window> getWindows() {
@@ -409,12 +424,17 @@ class DisplayFacade {
         this.paintScreen();
     }
 
-    //To avoid instanceof
+    /**
+     * This visitor is used so {@link Window} instances can be called by {@link Window#accept(WindowVisitor)}.
+     * Depending on which action, in this case duplication, we can let the window double-dispatch to here, where
+     * {@link DisplayFacade.DuplicateWindowVisitor} can access {@link DisplayFacade#windows}.
+     */
     public class DuplicateWindowVisitor implements WindowVisitor {
-        public DuplicateWindowVisitor() {
-            // TODO document why this constructor is empty
-        }
 
+        /**
+         * Initializes a new {@link Window} object and adds it to {@link DisplayFacade#windows}.
+         * @param fbw the window that double dispatched to this location.
+         */
         @Override
         public void visitFileWindow(FileBufferWindow fbw) {
             FileBufferWindow windowToAdd = fbw.duplicate();
@@ -429,16 +449,32 @@ class DisplayFacade {
         public void visitSnakeWindow(SnakeWindow sw) {
             // No duplicating snake
         }
+
     }
 
-    //To avoid instanceof
+    /**
+     * This visitor is used so {@link Window} instances can be called by {@link Window#accept(WindowVisitor)}.
+     * Depending on which action, in this case opening a new display, we can let the window double-dispatch to here, where
+     * {@link DisplayFacade.DuplicateWindowVisitor} can access {@link DisplayFacade#windows}.
+     */
     public class newDisplayFromWindowVisitor implements WindowVisitor {
         private TermiosTerminalAdapter newAdapter;
 
+        /**
+         * Upon creation of this object, {@link DisplayFacade} gives a {@link TermiosTerminalAdapter} which will be used
+         * for the new {@link DisplayFacade}.
+         * @param newAdapter the termios adapter for the new display facade
+         */
         public newDisplayFromWindowVisitor(TermiosTerminalAdapter newAdapter) {
             this.newAdapter = newAdapter;
         }
 
+        /**
+         * Dispatches a request to {@link DisplayFacade#displayRequestListeners}, which will notify a method in {@link ControllerFacade} that
+         * adds a newly created {@link DisplayFacade} object
+         * @param fbw the {@link FileBufferWindow} where the 'open new display' command is triggered
+         * @throws IOException ?
+         */
         @Override
         public void visitFileWindow(FileBufferWindow fbw) throws IOException {
             FileBufferWindow windowToAdd = fbw.duplicate();
@@ -455,8 +491,13 @@ class DisplayFacade {
         public void visitSnakeWindow(SnakeWindow sw) {
             // No putting snake on other window
         }
+
     }
 
+    /**
+     * Subscribes to a listener
+     * @param listener
+     */
     public void subscribeToRequestsOpeningDisplay(DisplayOpeningRequestListener listener) {
         this.displayRequestListeners.add(listener);
     }
@@ -464,4 +505,5 @@ class DisplayFacade {
     public void unsubscribeFromRequestsOpeningDisplay(DisplayOpeningRequestListener listener) {
         this.displayRequestListeners.remove(listener);
     }
+
 }
