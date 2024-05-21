@@ -140,41 +140,46 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * handle right arrow input
      */
     @Override
-    public void handleArrowRight() {
+    public RenderIndicator handleArrowRight() {
         fb.moveCursorRight();
+	return RenderIndicator.CURSOR;
     }
 
     /**
      * handle left arrow input
      */
     @Override
-    public void handleArrowLeft() {
+    public RenderIndicator handleArrowLeft() {
         fb.moveCursorLeft();
+	return RenderIndicator.CURSOR;
     }
 
     /**
      * handle down arrow input
      */
     @Override
-    public void handleArrowDown() {
+    public RenderIndicator handleArrowDown() {
         fb.moveCursorDown();
+	return RenderIndicator.CURSOR;
     }
 
     /**
      * handle up arrow input
      */
     @Override
-    public void handleArrowUp() {
+    public RenderIndicator handleArrowUp() {
         fb.moveCursorUp();
+	return RenderIndicator.CURSOR;
     }
 
     /**
      * enter a separator in the buffer
      */
     @Override
-    public void handleSeparator() throws IOException {
+    public RenderIndicator handleSeparator() throws IOException {
         fb.enterSeparator();
         fb.moveCursorRight();
+	return RenderIndicator.WINDOW;
     }
 
     /**

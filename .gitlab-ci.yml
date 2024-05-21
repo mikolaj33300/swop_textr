@@ -3,7 +3,7 @@ build:
     stage: build
     script:
         - mkdir build
-        - curl -L "https://github.com/btj/termios/releases/download/0.8/io.github.btj.termios-0.8.jar" -O
+        - curl -L "https://github.com/btj/termios/releases/download/0.9/io.github.btj.termios-0.9.jar" -O
         - jar xvf ./*.jar
         - cp -vr ./io ./build/
         - javac --version

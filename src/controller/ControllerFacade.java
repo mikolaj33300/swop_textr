@@ -26,7 +26,6 @@ class ControllerFacade {
      * Creates a ControllerFacade object.
      * Creates a {@link Layout} object which represents the root layout.
      * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
-     *
      * @throws IOException when the path is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
@@ -46,6 +45,10 @@ class ControllerFacade {
         subscribeToRequestsOpeningDisplay(initialDisplay);
     }
 
+    /**
+     * Called from the constructor in {@link }
+     * @param display the display that can notify this object.
+     */
     private void subscribeToRequestsOpeningDisplay(DisplayFacade display){
         DisplayOpeningRequestListener newListener = new DisplayOpeningRequestListener() {
             @Override
@@ -89,6 +92,7 @@ class ControllerFacade {
     }
 
     /**
+     * Delegates a force close to the active {@link DisplayFacade}
      * @return 0 if we closed the active window 2 if we can't close it
      */
     public Pair<RenderIndicator, Integer> forceCloseActive() {
@@ -100,7 +104,7 @@ class ControllerFacade {
     }
 
     /**
-     * Changes the focused {@link LayoutLeaf} to another.
+     * Changes the focused {@link DisplayFacade} to another.
      *
      * @param dir the direction to move focus to
      */
@@ -232,6 +236,12 @@ class ControllerFacade {
         return toReturn;
     }
 
+    /**
+     * Opens a new {@link DisplayFacade} and adds it to {@link ControllerFacade#displays}
+     * @param newFacade the facade to be added
+     * @return a render indicator
+     * @throws IOException
+     */
     public RenderIndicator openNewSwingDisplayFacade(DisplayFacade newFacade) throws IOException {
         /* Creation of the new facade depending on the window to be opened happens in facade itself.
         This is because since we have two arraylists for windows etc, and maybe some other specific behavior

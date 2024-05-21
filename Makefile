@@ -8,7 +8,7 @@ options:
 diagrams/%.$(OFORMAT): diagrams/%.dot
 	dot -T$(OFORMAT) $< -o $@
 diagrams/%.$(OFORMAT): diagrams/%.sd
-	java -jar /home/tom/sdedit-4.2.1.jar -o $@ -t$(OFORMAT) $<
+	java -jar ~/Documents/tools/java/sdedit-4.2.1.jar -o $@ -t$(OFORMAT) $<
 
 docs: diagrams $(DIAGS)
 
@@ -24,7 +24,7 @@ build/%.class: src/%.java
 	
 textr.jar: $(SRC)
 	mkdir -p $(BUILD_DIR)
-	@javac -Xlint:unchecked -Xdiags:verbose -cp termios/_build/main/io.github.btj.termios.jar -d ./build $^
+	@javac -Xlint:unchecked -Xdiags:verbose -cp ./build:./termios/_build/main/io.github.btj.termios.jar -d ./build $^
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 
 test:
