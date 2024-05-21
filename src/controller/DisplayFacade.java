@@ -43,11 +43,6 @@ class DisplayFacade {
     private final ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
     /**
-     * The listener that will catch any
-     */
-    private final DisplayFacadeResizeListener displayFacadeResizeListener;
-
-    /**
      * The {@link Coords} indicating the size of the display
      */
     private Coords displayCoords;
