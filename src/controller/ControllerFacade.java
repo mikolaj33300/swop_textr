@@ -43,6 +43,10 @@ class ControllerFacade {
         subscribeToRequestsOpeningDisplay(initialDisplay);
     }
 
+    /**
+     *
+     * @param display
+     */
     private void subscribeToRequestsOpeningDisplay(DisplayFacade display){
         DisplayOpeningRequestListener newListener = new DisplayOpeningRequestListener() {
             @Override
