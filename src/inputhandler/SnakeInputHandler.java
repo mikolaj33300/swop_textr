@@ -106,11 +106,14 @@ public class SnakeInputHandler extends InputHandlingElement {
      * handle the separator
      */
     @Override
-    public void handleSeparator() throws IOException {
+    public RenderIndicator handleSeparator() throws IOException {
         if(!this.game.canContinue()) {
             this.currentWait = 0;
             this.game.reset();
-        }
+	    return  RenderIndicator.WINDOW;
+        } else {
+	    return  RenderIndicator.NONE;
+	}
     }
 
     /**

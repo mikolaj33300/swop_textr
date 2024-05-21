@@ -283,8 +283,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the full display
      */
     public RenderIndicator handleSeparator() throws IOException {
-        this.windows.get(active).getHandler().handleSeparator();
-        return RenderIndicator.FULL;
+        return this.windows.get(active).getHandler().handleSeparator();
     }
 
     /**

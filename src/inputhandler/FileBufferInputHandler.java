@@ -176,9 +176,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * enter a separator in the buffer
      */
     @Override
-    public void handleSeparator() throws IOException {
+    public RenderIndicator handleSeparator() throws IOException {
         fb.enterSeparator();
         fb.moveCursorRight();
+	return RenderIndicator.WINDOW;
     }
 
     /**

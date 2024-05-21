@@ -53,6 +53,6 @@ abstract public class InputHandlingElement {
     /**
      * pass a separator to the enclosed object
      */
-    public abstract void handleSeparator() throws IOException;
+    public abstract RenderIndicator handleSeparator() throws IOException;
 
 }
