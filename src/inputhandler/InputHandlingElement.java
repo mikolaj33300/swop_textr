@@ -33,22 +33,22 @@ abstract public class InputHandlingElement {
     /**
      * pass a arrow right to the enclosed object
      */
-    public abstract void handleArrowRight();
+    public abstract RenderIndicator handleArrowRight();
 
     /**
      * pass a arrow left to the enclosed object
      */
-    public abstract void handleArrowLeft();
+    public abstract RenderIndicator handleArrowLeft();
 
     /**
      * pass a arrow down to the enclosed object
      */
-    public abstract void handleArrowDown();
+    public abstract RenderIndicator handleArrowDown();
 
     /**
      * pass a arrow up to the enclosed object
      */
-    public abstract void handleArrowUp();
+    public abstract RenderIndicator handleArrowUp();
 
     /**
      * pass a separator to the enclosed object

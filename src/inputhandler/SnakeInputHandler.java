@@ -70,32 +70,36 @@ public class SnakeInputHandler extends InputHandlingElement {
      * handle the right arrow
      */
     @Override
-    public void handleArrowRight() {
+    public RenderIndicator handleArrowRight() {
         this.move(MoveDirection.RIGHT);
+	return RenderIndicator.WINDOW;
     }
 
     /**
      * handle the left arrow
      */
     @Override
-    public void handleArrowLeft() {
+    public RenderIndicator handleArrowLeft() {
         this.move(MoveDirection.LEFT);
+	return RenderIndicator.WINDOW;
     }
 
     /**
      * handle the down arrow
      */
     @Override
-    public void handleArrowDown() {
+    public RenderIndicator handleArrowDown() {
         this.move(MoveDirection.DOWN);
+	return RenderIndicator.WINDOW;
     }
 
     /**
      * handle the up arrow
      */
     @Override
-    public void handleArrowUp() {
+    public RenderIndicator handleArrowUp() {
         this.move(MoveDirection.UP);
+	return RenderIndicator.WINDOW;
     }
 
     /**

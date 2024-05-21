@@ -251,8 +251,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowRight() {
-        this.windows.get(active).getHandler().handleArrowRight();
-        return RenderIndicator.CURSOR;
+        return this.windows.get(active).getHandler().handleArrowRight();
     }
 
     /**
@@ -260,8 +259,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowLeft() {
-        this.windows.get(active).getHandler().handleArrowLeft();
-        return RenderIndicator.CURSOR;
+        return this.windows.get(active).getHandler().handleArrowLeft();
     }
 
     /**
@@ -269,8 +267,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowDown() {
-        this.windows.get(active).getHandler().handleArrowDown();
-        return RenderIndicator.CURSOR;
+        return this.windows.get(active).getHandler().handleArrowDown();
     }
 
     /**
@@ -278,8 +275,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowUp() {
-        this.windows.get(active).getHandler().handleArrowUp();
-        return RenderIndicator.CURSOR;
+        return this.windows.get(active).getHandler().handleArrowUp();
     }
 
     /**

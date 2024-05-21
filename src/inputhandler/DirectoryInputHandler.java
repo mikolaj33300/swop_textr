@@ -35,23 +35,25 @@ public class DirectoryInputHandler extends InputHandlingElement {
     }
 
     @Override
-    public void handleArrowRight() {
-        return;
+    public RenderIndicator handleArrowRight() {
+	return RenderIndicator.NONE;
     }
 
     @Override
-    public void handleArrowLeft() {
-        return;
+    public RenderIndicator handleArrowLeft() {
+	return RenderIndicator.NONE;
     }
 
     @Override
-    public void handleArrowDown() {
+    public RenderIndicator handleArrowDown() {
         this.directory.increaseFocused();
+	return RenderIndicator.WINDOW;
     }
 
     @Override
-    public void handleArrowUp() {
+    public RenderIndicator handleArrowUp() {
         this.directory.decreaseFocused();
+	return RenderIndicator.WINDOW;
     }
 
     @Override
