@@ -58,11 +58,6 @@ import java.util.HashMap;
                 this.rootLayout = leaves.get(0);
             else
                 this.rootLayout = new VerticalLayoutNode(leaves);
-
-            DisplayFacadeResizeListener listenerToAdd = new DisplayFacadeResizeListener(this);
-            this.displayFacadeResizeListener = listenerToAdd;
-            termiosTerminalAdapter.subscribeToResizeTextArea(listenerToAdd);
-
         }
 
         DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
@@ -80,10 +75,6 @@ import java.util.HashMap;
 
             this.updateViewCoordinates();
             this.paintScreen();
-
-            DisplayFacadeResizeListener listenerToAdd = new DisplayFacadeResizeListener(this);
-            this.displayFacadeResizeListener = listenerToAdd;
-            termiosTerminalAdapter.subscribeToResizeTextArea(listenerToAdd);
         }
 
         /**
@@ -358,6 +349,10 @@ import java.util.HashMap;
         public void repaintOnResize(Coords newCoords) throws IOException {
             this.displayCoords = newCoords;
             this.paintScreen();
+        }
+
+        public TermiosTerminalAdapter getTermiosTerminalAdapter() {
+            return this.termiosTerminalAdapter;
         }
 
         //To avoid instanceof

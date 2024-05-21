@@ -10,12 +10,15 @@ import util.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 class ControllerFacade {
     private final byte[] lineSeparatorArg;
     private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
     private int active = 0;
     private TermiosTerminalAdapter initialTermiosAdapter;
+
+    private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
 
     private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
@@ -237,13 +240,20 @@ class ControllerFacade {
         //newFacade.paintScreen();
 
         this.displays.add(displays.size(), newFacade);
+
+
+        DisplayFacadeResizeListener newListener = new DisplayFacadeResizeListener(newFacade);
+        newFacade.getTermiosTerminalAdapter().subscribeToResizeTextArea(newListener);
+        displayFacadeResizeListenerHashMap.put(newFacade, newListener);
         newFacade.paintScreen();
+
         return RenderIndicator.FULL;
     }
 
     public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
-        this.displays.get(active).requestOpeningNewDisplay(new SwingTerminalAdapter());
-        return RenderIndicator.FULL;
+        SwingTerminalAdapter newAdapter = new SwingTerminalAdapter();
+        this.displays.get(active).requestOpeningNewDisplay(newAdapter);
+         return RenderIndicator.FULL;
     }
 
     public void paintScreen() throws IOException {
