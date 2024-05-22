@@ -90,8 +90,6 @@ class DisplayFacade {
 
         toOpenWindow.setTermiosAdapter(termiosTerminalAdapter);
 
-            this.updateViewCoordinates();
-            this.paintScreen();
         }
 
     /**

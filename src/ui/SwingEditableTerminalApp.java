@@ -148,9 +148,10 @@ public class SwingEditableTerminalApp extends JFrame {
         super("Swing Terminal App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
-        getContentPane().add(terminalPanel);
         contentBuffer =  new char[25][100];
         terminalPanel.setNewBuffer(contentBuffer);
+        getContentPane().add(terminalPanel);
+
         terminalPanel.subscribeToResize(new ResizeListener() {
             @Override
             public void notifyNewCoords(Coords n) throws IOException {
