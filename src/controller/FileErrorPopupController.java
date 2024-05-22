@@ -1,7 +1,6 @@
 package controller;
 
 import controller.adapter.TermiosTerminalAdapter;
-import util.RenderIndicator;
 import ui.UserPopupBox;
 
 import java.io.IOException;
@@ -15,13 +14,13 @@ public class FileErrorPopupController extends UseCaseController {
 
     /**
      * pass the input to the correct controller
+     *
      * @param b the int input
      * @throws IOException
      */
     @Override
-    public RenderIndicator handle(int b) throws IOException {
+    public void handle(int b) throws IOException {
         Runtime.getRuntime().halt(1);
-        return null;
     }
 
     /**

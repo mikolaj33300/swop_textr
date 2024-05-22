@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public abstract class UseCaseController {
 
-    private final ASCIIKeyEventListener asciiEventListener;
+    final ASCIIKeyEventListener asciiEventListener;
     ControllerFacade facade;
     TextR coreControllerParent;
 
@@ -37,15 +37,14 @@ public abstract class UseCaseController {
 
     /**
      * Generic handler of the input byte from terminal
+     *
      * @param b
      * @throws IOException
      */
-    public RenderIndicator handle(int b) throws IOException{
-        return RenderIndicator.NONE;
+    public void handle(int b) throws IOException{
     }
 
-    public RenderIndicator handleSurrogate(int first, int second){
-        return RenderIndicator.NONE;
+    public void handleSurrogate(int first, int second){
     }
 
     /**
@@ -56,7 +55,7 @@ public abstract class UseCaseController {
 
     public RenderIndicator handleIdle() throws IOException {
         return RenderIndicator.NONE;
-    };
+    }
 
     ControllerFacade getFacade(){
         return facade;

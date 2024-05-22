@@ -20,13 +20,15 @@ public class FailedSavePopupController extends UseCaseController {
 
     /**
      * pass the input to the correct controller
+     *
      * @param b the int input
      * @throws IOException
      */
     @Override
-    public RenderIndicator handle(int b) throws IOException {
+    public void handle(int b) throws IOException {
+        unsubscribeFromFacadeAscii();
         coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-        return RenderIndicator.FULL;
+        coreControllerParent.activeUseCaseController.paintScreen();
     }
 
     /**

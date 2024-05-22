@@ -29,7 +29,7 @@ public class DisplayFacadeTest {
 
     @Test
     public void testDisplaysSwing() throws IOException {
-/*        String path = path1.toString();
+        String path = path1.toString();
         BufferCursorContext bufferCursorContext = new BufferCursorContext(path, new byte[]{0x0d, 0x0a});
         FileBufferInputHandler handler = new FileBufferInputHandler(bufferCursorContext);
         VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 100, new ArrayList<>());
@@ -40,7 +40,7 @@ public class DisplayFacadeTest {
         window.setTermiosAdapter(newSwing);
         DisplayFacade newDisplay = new DisplayFacade(window, newSwing, "--lf".getBytes());
         newDisplay.paintScreen();
-        while(true);*/
+        while(true);
         //assertEquals(newSwing.getContentBuffer()[0][0], 'm');
     }
 

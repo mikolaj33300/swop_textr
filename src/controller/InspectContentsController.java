@@ -21,86 +21,125 @@ public class InspectContentsController extends UseCaseController {
 
     /**
      * pass the input to the correct controller
+     *
      * @param b the int input
      * @throws IOException
      */
     @Override
-    public RenderIndicator handle(int b) throws IOException {
+    public void handle(int b) throws IOException {
+        RenderIndicator opRenderIndicator;
         switch(b) {
             case 8, 127, 10, 62, 26, 21, 1, -1:
-                return facade.passToActive((Integer.valueOf(b)).byteValue());
+                opRenderIndicator = facade.passToActive((Integer.valueOf(b)).byteValue());
+                break;
             // Control + S
             case 19:
-                return facade.passToActive((Integer.valueOf(b)).byteValue());
+                opRenderIndicator = facade.passToActive((Integer.valueOf(b)).byteValue());
+                break;
             // Control + P
             case 16:
-                return facade.moveFocus(MoveDirection.LEFT);
+                opRenderIndicator = facade.moveFocus(MoveDirection.LEFT);
+                break;
             // Control + N
             case 14:
-                return facade.moveFocus(MoveDirection.RIGHT);
+                opRenderIndicator = facade.moveFocus(MoveDirection.RIGHT);
+                break;
             // Control + R
             case 18:
-                return facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+                opRenderIndicator = facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+                break;
                 // Control + W
             case 23:
-                return facade.openNewSwingFromActiveWindow();
+                opRenderIndicator = facade.openNewSwingFromActiveWindow();
+                break;
             // Control + T
             case 20:
-                return facade.rotateLayout(RotationDirection.CLOCKWISE);
+                opRenderIndicator = facade.rotateLayout(RotationDirection.CLOCKWISE);
+                break;
             // Control + G
             case 7:
-                return facade.openSnakeGame();
+                opRenderIndicator = facade.openSnakeGame();
+                break;
             // Control + D
             case 4:
-                return facade.duplicateActive();
+                opRenderIndicator = facade.duplicateActive();
+                break;
             // Line separator
             case 13:
-                return facade.handleSeparator();
+                opRenderIndicator = facade.handleSeparator();
+                break;
             // Character input
             default:
                 if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
-                    return RenderIndicator.NONE;
+                    opRenderIndicator = RenderIndicator.NONE;
+                    break;
                 }
-                return facade.passToActive((Integer.valueOf(b)).byteValue());
+                opRenderIndicator = facade.passToActive((Integer.valueOf(b)).byteValue());
+                break;
+        }
+        if(opRenderIndicator != RenderIndicator.NONE){
+            try {
+                this.paintScreen();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     /**
      * pass the input to the correct controller
-     * @param first the surrogate type
+     *
+     * @param first  the surrogate type
      * @param second the character after the surrogate
      */
     @Override
-    public RenderIndicator handleSurrogate(int first, int second){
+    public void handleSurrogate(int first, int second){
+        RenderIndicator opRenderIndicator = RenderIndicator.NONE;
         // Surrogate keys
         switch (first) {
             case 27:
                 switch ((char) second) {
                     // Right
                     case 'C':
-                        return facade.handleArrowRight();
+                        opRenderIndicator = facade.handleArrowRight();
+                        break;
                     // Left
                     case 'D':
-                        return facade.handleArrowLeft();
+                        opRenderIndicator = facade.handleArrowLeft();
+                        break;
                     // Up
                     case 'A':
-                        return facade.handleArrowUp();
+                        opRenderIndicator = facade.handleArrowUp();
+                        break;
                     // Down
                     case 'B':
-                        return facade.handleArrowDown();
+                        opRenderIndicator = facade.handleArrowDown();
+                        break;
                     case 'S':// F4
                         int result = facade.closeActive().b;
                         if (result == 1) { //If was dirty
+                            unsubscribeFromFacadeAscii();
                             coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent, facade);
+                            try {
+                                coreControllerParent.activeUseCaseController.paintScreen();
+                                return;
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         } else if (result == 2) {
                             clearContent();
                             System.exit(0);
                         }
-                        return RenderIndicator.FULL;
                 }
                 break;
         }
-        return RenderIndicator.NONE;
+        if(opRenderIndicator != RenderIndicator.NONE){
+            try {
+                this.paintScreen();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -108,13 +147,12 @@ public class InspectContentsController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
-        clearContent();
         facade.paintScreen();
         //facade.renderCursor();
     }
 
     private void clearContent() {
-        coreControllerParent.getAdapter().clearScreen();
+       facade.clearScreen();
     }
 
     @Override

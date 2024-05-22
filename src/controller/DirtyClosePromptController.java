@@ -18,28 +18,36 @@ public class DirtyClosePromptController extends UseCaseController {
 
     /**
      * pass the input to the correct controller
+     *
      * @param b the int input
      * @throws IOException
      */
     @Override
-    public RenderIndicator handle(int b) throws IOException {
+    public void handle(int b) throws IOException {
+        RenderIndicator opRenderIndicator = RenderIndicator.NONE;
         switch(b) {
             // N
             case 110:
+                unsubscribeFromFacadeAscii();
                 coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                break;
+                coreControllerParent.activeUseCaseController.paintScreen();
+                return;
             // Y
             case 121:
                 int result = facade.forceCloseActive().b;
                 if(result == 0){
+                    unsubscribeFromFacadeAscii();
                     coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
+                    coreControllerParent.activeUseCaseController.paintScreen();
+                    return;
                 } else {
-                    Terminal.clearScreen();
                     System.exit(0);
                 }
                 break;
         }
-        return RenderIndicator.FULL;
+        if(opRenderIndicator != RenderIndicator.NONE){
+            this.paintScreen();
+        }
     }
 
     /**
@@ -48,15 +56,7 @@ public class DirtyClosePromptController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
-        clearContent();
         userPopupBox.render();
     }
 
-    /**
-     * remove the popup
-     * @throws IOException
-     */
-    public void clearContent() throws IOException {
-        coreControllerParent.getAdapter().clearScreen();
-    }
 }

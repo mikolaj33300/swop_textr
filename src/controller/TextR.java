@@ -2,7 +2,6 @@ package controller;
 
 import controller.adapter.RealTermiosTerminalAdapter;
 import controller.adapter.TermiosTerminalAdapter;
-import io.github.btj.termios.Terminal;
 import util.RenderIndicator;
 
 import javax.swing.*;
@@ -116,24 +115,21 @@ public class TextR {
     }
 
     private boolean handleTerminalInputEvent() throws IOException {
-        RenderIndicator operationNeedsRerender;
         int b;
 
         b = adapter.get(activeAdapter).readByte();
 
         if (b == 27) {
             adapter.get(activeAdapter).readByte();
-            operationNeedsRerender = activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
+            activeUseCaseController.handleSurrogate(b, adapter.get(activeAdapter).readByte());
         } else if(b == -2) {
             /*Useful for testing, or if we needed a way to abruptly stop the constant loop on program force close
             from above in the future*/
             return true;
         } else {
-            operationNeedsRerender = activeUseCaseController.handle(b);
+            activeUseCaseController.handle(b);
         }
-        if(operationNeedsRerender != RenderIndicator.NONE){
-            activeUseCaseController.paintScreen();
-        }
+
         // Flush stdIn & Recalculate dimensions
         System.in.read(new byte[System.in.available()]);
         //activeAdapter++;

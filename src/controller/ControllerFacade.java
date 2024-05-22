@@ -87,13 +87,6 @@ class ControllerFacade {
     }
 
     /**
-     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
-     */
-    public void clearContent() throws IOException {
-        displays.get(active).clearContent();
-    }
-
-    /**
      * Rearranges the Layouts, depending on the argument given
      *
      * @param orientation clockwise or counterclockwise
@@ -249,6 +242,7 @@ class ControllerFacade {
     }
 
     public void paintScreen() throws IOException {
+        clearScreen();
         this.displays.get(active).paintScreen();
     }
 
@@ -258,6 +252,14 @@ class ControllerFacade {
 
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
+    }
+
+    public void clearScreen() {
+        try {
+            displays.get(active).clearContent();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

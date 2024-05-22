@@ -73,15 +73,6 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
   @Override
   public int readByte() throws IOException {
-/*      while (keyQueue.isEmpty()) {
-	  try {
-	      TimeUnit.MILLISECONDS.sleep(1);
-	  } catch (Exception e) {
-	      System.out.println("sleep failed");
-	      System.exit(1);
-	  }
-      }
-      return keyQueue.remove();*/
 	  return 0;
   }
 
