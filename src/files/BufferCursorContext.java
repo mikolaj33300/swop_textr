@@ -3,6 +3,8 @@ package files;
 import listeners.DeletedCharListener;
 import listeners.DeletedInsertionPointListener;
 import listeners.EnteredInsertionPointListener;
+import listeners.OpenParsedDirectoryListener;
+import ui.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,16 +21,18 @@ public class BufferCursorContext {
     private EnteredInsertionPointListener el;
     private DeletedInsertionPointListener dil;
     private DeletedCharListener dcl;
+    EditableFileBuffer containedFileBuffer;
+    private OpenParsedDirectoryListener openParsedDirectoryListener;
 
-    FileBuffer containedFileBuffer;
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
-        this.containedFileBuffer = new FileBuffer(path, lineSeparator);
+        this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
         this.insertionPointCol=0;
         this.insertionPointLine=0;
         this.insertionPointByteIndex=0;
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
         subscribeToDeletionInsertionFb();
+        View.write("test2.txt", ">> cursor context created");
     }
 
     private void subscribeToDeletionInsertionFb() {
@@ -77,7 +81,7 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToEnterInsertion(el);
     }
 
-    private BufferCursorContext(FileBuffer fb, int insertionPointCol, int insertionPointLine) {
+    private BufferCursorContext(EditableFileBuffer fb, int insertionPointCol, int insertionPointLine) {
         this.containedFileBuffer = fb.clone();
         this.insertionPointCol=insertionPointCol;
         this.insertionPointLine=insertionPointLine;
@@ -93,7 +97,6 @@ public class BufferCursorContext {
         this.insertionPointByteIndex = bfc.insertionPointByteIndex;
         this.insertionPointLine = bfc.insertionPointLine;
         this.insertionPointCol = bfc.insertionPointCol;
-
 
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
@@ -270,7 +273,7 @@ public class BufferCursorContext {
     /**
      * @return the contained filebuffer
      */
-    public FileBuffer getFileBuffer() { 
+    public EditableFileBuffer getFileBuffer() {
 	return containedFileBuffer.clone();
     }
 
@@ -306,4 +309,28 @@ public class BufferCursorContext {
     public String getPath() {
 	return containedFileBuffer.getPath();
     }
+
+    /**
+     * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
+     * @param listener the listener that passes a window
+     */
+    public void subscribe(OpenParsedDirectoryListener listener) {
+        View.write("test2.txt", "\n<CursorContext> Received request for subscribing in" + this.hashCode());
+        this.openParsedDirectoryListener = listener;
+        this.subscribeEditableBuffer();
+    }
+
+    /**
+     * This will subscribe the {@link EditableFileBuffer} to this class.
+     */
+    private void subscribeEditableBuffer() {
+        View.write("test2.txt", "\n<CursorContext> Subscribing to editable buffer" + this.containedFileBuffer.hashCode());
+        this.containedFileBuffer.subscribeEditableBuffer(
+                window -> {
+                    View.write("test2.txt", "in context");
+                    this.openParsedDirectoryListener.openWindow(window);
+                }
+        );
+    }
+
 }

@@ -74,6 +74,7 @@ class DisplayFacade {
 
             this.fileBufferWindows.add(toAdd);
             this.windows.add(toAdd);
+            this.subscribeFileBufferWindow(toAdd);
             leaves.add(new LayoutLeaf(windows.get(i).getView().hashCode()));
         }
 
@@ -481,6 +482,21 @@ class DisplayFacade {
             // No putting snake on other window
         }
 
+    }
+
+    /**
+     * We will subscribe {@link FileBufferWindow} to this class, making it able to send through {@link Window} elements
+     * which he may request to open.
+     */
+    private void subscribeFileBufferWindow(FileBufferWindow window) {
+        View.write("test2.txt", "\n<Facade> Subscribing in displayfacade to window" + window.hashCode());
+        window.subscribeWindow(
+                openedWindow -> {
+                    View.write("test2.txt", "in displayfacade");
+                    windows.add(windows.size(), openedWindow);
+                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), openedWindow.getView().hashCode());
+                }
+        );
     }
 
 }

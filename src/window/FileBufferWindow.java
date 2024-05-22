@@ -5,6 +5,7 @@ import exception.PathNotFoundException;
 import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.InputHandlingElement;
+import listeners.OpenParsedDirectoryListener;
 import ui.FileBufferView;
 import ui.ScrollbarDecorator;
 import ui.View;
@@ -29,6 +30,10 @@ public class FileBufferWindow extends Window {
      * The view of this window, visual representation of the fileBufferWindow
      */
     private View view;
+    /**
+     * The listener that can open files
+     */
+    private OpenParsedDirectoryListener listener;
 
     /**
      * Constructor of this FileBufferWindow
@@ -47,7 +52,6 @@ public class FileBufferWindow extends Window {
         }
         this.view = (new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), adapter)));
         this.fileBufferInputHandler = (openedFileHandler);
-
     }
 
     /**
@@ -60,6 +64,7 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
         this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
+        View.write("test2.txt", ">> window created");
     }
 
 
@@ -113,4 +118,25 @@ public class FileBufferWindow extends Window {
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
         this.view.setTermiosTerminalAdapter(newAdapter);
     }
+
+    /**
+     * The input handler {@link FileBufferInputHandler} is able to request to open a new window.
+     * We receive a new window here.
+     */
+    private void subscribeInputHandler() {
+        View.write("test2.txt", "\n<Window> Subscribing to input handler with" + this.fileBufferInputHandler.hashCode());
+        this.fileBufferInputHandler.subscribeInputHandler(
+                window -> {
+                    View.write("test2.txt", "in file buffer window");
+                    this.listener.openWindow(window);
+                }
+        );
+    }
+
+    public void subscribeWindow(OpenParsedDirectoryListener listener) {
+        View.write("test2.txt", "\n<Window> Received request for subscribing in" + this.hashCode());
+        this.listener = listener;
+        this.subscribeInputHandler();
+    }
+
 }
