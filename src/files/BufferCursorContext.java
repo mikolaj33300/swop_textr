@@ -3,7 +3,7 @@ package files;
 import listeners.DeletedCharListener;
 import listeners.DeletedInsertionPointListener;
 import listeners.EnteredInsertionPointListener;
-import listeners.OpenParsedDirectoryListener;
+import listeners.OpenWindowRequestListener;
 import ui.View;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class BufferCursorContext {
     private DeletedInsertionPointListener dil;
     private DeletedCharListener dcl;
     EditableFileBuffer containedFileBuffer;
-    private OpenParsedDirectoryListener openParsedDirectoryListener;
+    private OpenWindowRequestListener openParsedDirectoryListener;
 
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
@@ -325,7 +325,7 @@ public class BufferCursorContext {
      * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
      * @param listener the listener that passes a window
      */
-    public void subscribe(OpenParsedDirectoryListener listener) {
+    public void subscribe(OpenWindowRequestListener listener) {
         View.write("test2.txt", "\n<CursorContext> Received request for subscribing in" + this.hashCode());
         this.openParsedDirectoryListener = listener;
         this.subscribeEditableBuffer();

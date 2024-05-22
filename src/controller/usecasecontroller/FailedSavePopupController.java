@@ -2,8 +2,6 @@ package controller.usecasecontroller;
 
 import controller.ControllerFacade;
 import controller.TextR;
-import controller.usecasecontroller.InspectContentsController;
-import controller.usecasecontroller.UseCaseController;
 import ui.UserPopupBox;
 
 import java.io.IOException;

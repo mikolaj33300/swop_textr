@@ -5,7 +5,7 @@ import exception.PathNotFoundException;
 import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.InputHandlingElement;
-import listeners.OpenParsedDirectoryListener;
+import listeners.OpenWindowRequestListener;
 import ui.FileBufferView;
 import ui.ScrollbarDecorator;
 import ui.View;
@@ -33,7 +33,7 @@ public class FileBufferWindow extends Window {
     /**
      * The listener that can open files
      */
-    private OpenParsedDirectoryListener listener;
+    private OpenWindowRequestListener listener;
 
     /**
      * Constructor of this FileBufferWindow
@@ -45,11 +45,8 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(String path, byte[] lineSeparatorArg, TermiosTerminalAdapter adapter) throws PathNotFoundException, IOException {
         super();
         FileBufferInputHandler openedFileHandler;
-        try {
-            openedFileHandler = new FileBufferInputHandler(path, lineSeparatorArg);
-        } catch (PathNotFoundException | IOException e) {
-            throw e;
-        }
+        openedFileHandler = new FileBufferInputHandler(path, lineSeparatorArg);
+
         this.view = (new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), adapter)));
         this.fileBufferInputHandler = (openedFileHandler);
     }
@@ -133,8 +130,8 @@ public class FileBufferWindow extends Window {
         );
     }
 
-    public void subscribeWindow(OpenParsedDirectoryListener listener) {
-        View.write("test2.txt", "\n<Window> Received request for subscribing in" + this.hashCode());
+    @Override
+    public void subscribeWindow(OpenWindowRequestListener listener) {
         this.listener = listener;
         this.subscribeInputHandler();
     }

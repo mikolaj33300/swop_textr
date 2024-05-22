@@ -8,4 +8,5 @@ import java.io.IOException;
 public interface WindowVisitor {
     void visitFileWindow(FileBufferWindow fbw) throws IOException;
     void visitSnakeWindow(SnakeWindow sw);
+    void visitDirectoryWindow(DirectoryWindow dw);
 }

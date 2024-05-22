@@ -1,7 +1,7 @@
 package inputhandler;
 
 import files.BufferCursorContext;
-import listeners.OpenParsedDirectoryListener;
+import listeners.OpenWindowRequestListener;
 import ui.View;
 import util.RenderIndicator;
 
@@ -11,7 +11,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     BufferCursorContext fb;
     boolean surrogate;
-    private OpenParsedDirectoryListener listener;
+    private OpenWindowRequestListener listener;
 
     /**
      * constructor
@@ -229,7 +229,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     /**
      * Allows the {@link window.FileBufferWindow} to receive requests made from here
      */
-    public void subscribeInputHandler(OpenParsedDirectoryListener listener) {
+    public void subscribeInputHandler(OpenWindowRequestListener listener) {
         View.write("test2.txt", "\n<Handler> Received request for subscribing in inputhandler" + this.hashCode());
         this.listener = listener;
         this.subscribeFileBufferContext();

@@ -1,7 +1,7 @@
 package files;
 
 import ioadapter.RealTermiosTerminalAdapter;
-import listeners.OpenParsedDirectoryListener;
+import listeners.OpenWindowRequestListener;
 import ui.View;
 import util.json.JsonUtil;
 import window.DirectoryWindow;
@@ -15,7 +15,7 @@ public class EditableFileBuffer extends FileBuffer {
 
     private int openedSubFiles = 0;
     private boolean parsed = false;
-    private OpenParsedDirectoryListener listener;
+    private OpenWindowRequestListener listener;
 
     /**
      * Creates FileBuffer object with given path;
@@ -26,7 +26,6 @@ public class EditableFileBuffer extends FileBuffer {
      */
     public EditableFileBuffer(String path, byte[] lineSeparator) throws IOException {
         super(path, lineSeparator);
-        View.write("test2.txt", ">> buffer created " + this.hashCode());
     }
 
     /**
@@ -96,7 +95,7 @@ public class EditableFileBuffer extends FileBuffer {
         return copy;
     }
 
-    public void subscribeEditableBuffer(OpenParsedDirectoryListener listener) {
+    public void subscribeEditableBuffer(OpenWindowRequestListener listener) {
         View.write("test2.txt", "\n<Buffer> Subscribed: " + this.hashCode());
         this.listener = listener;
     }

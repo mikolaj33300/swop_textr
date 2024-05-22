@@ -1,7 +1,6 @@
 package controller.usecasecontroller;
 
 import controller.TextR;
-import controller.usecasecontroller.UseCaseController;
 import ioadapter.TermiosTerminalAdapter;
 import ui.UserPopupBox;
 

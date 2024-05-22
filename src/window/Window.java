@@ -2,6 +2,7 @@ package window;
 
 import ioadapter.TermiosTerminalAdapter;
 import inputhandler.InputHandlingElement;
+import listeners.OpenWindowRequestListener;
 import ui.View;
 import util.RenderIndicator;
 
@@ -52,4 +53,10 @@ public abstract class Window {
      * @param newAdapter the new adapter
      */
     public abstract void setTermiosAdapter(TermiosTerminalAdapter newAdapter);
+
+    public abstract void subscribeWindow(OpenWindowRequestListener openWindowRequestListener);
+
+    public boolean isSafeToClose(){
+        return getHandler().isSafeToClose();
+    }
 }

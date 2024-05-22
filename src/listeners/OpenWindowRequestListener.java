@@ -2,7 +2,7 @@ package listeners;
 
 import window.Window;
 
-public interface OpenParsedDirectoryListener {
+public interface OpenWindowRequestListener {
 
     void openWindow(Window window);
 

@@ -1,19 +1,13 @@
 package controller;
 
 import exception.PathNotFoundException;
-import inputhandler.InputHandlingElement;
-import inputhandler.SnakeInputHandler;
 import ioadapter.TermiosTerminalAdapter;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.VerticalLayoutNode;
-import ui.SnakeView;
-import ui.View;
 import util.*;
-import window.FileBufferWindow;
-import window.SnakeWindow;
+import window.NormalWindowFactory;
 import window.Window;
-import window.WindowVisitor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,15 +23,11 @@ class DisplayFacade {
      */
     private ArrayList<Window> windows;
     /**
-     * The list of {@link FileBufferWindow}s for this display
-     */
-    private ArrayList<FileBufferWindow> fileBufferWindows;
-    /**
      * The layout structure for this display
      */
     private Layout rootLayout;
     /**
-     * The integer representing an entry in {@link FileBufferWindow}
+     * The integer representing an entry in {@link Window}
      */
     private int active;
     /**
@@ -63,16 +53,14 @@ class DisplayFacade {
         this.displayCoords = null;
 
         this.windows = new ArrayList<>();
-        this.fileBufferWindows = new ArrayList<>();
         ArrayList<Layout> leaves = new ArrayList<>(paths.length);
 
         for (int i = 0; i < paths.length; i++) {
             String checkPath = paths[i];
-            FileBufferWindow toAdd;
+            Window toAdd;
 
-            toAdd = new FileBufferWindow(checkPath, lineSeparatorArg, termiosTerminalAdapter);
+            toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
 
-            this.fileBufferWindows.add(toAdd);
             this.windows.add(toAdd);
             this.subscribeFileBufferWindow(toAdd);
             leaves.add(new LayoutLeaf(windows.get(i).getView().hashCode()));
@@ -91,11 +79,9 @@ class DisplayFacade {
      * @param lineSeparatorArg
      * @throws IOException
      */
-    DisplayFacade(FileBufferWindow toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
+    DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
         this.windows = new ArrayList<>();
-        this.fileBufferWindows = new ArrayList<>();
         windows.add(toOpenWindow);
-        fileBufferWindows.add(toOpenWindow);
         this.displayCoords = termiosTerminalAdapter.getTextAreaSize();
 
         this.lineSeparatorArg = lineSeparatorArg.clone();
@@ -152,7 +138,7 @@ class DisplayFacade {
 
     /**
      * Called from {@link ControllerFacade}, used to close a focused {@link Window} in {@link DisplayFacade#windows}.
-     * Will ask the {@link Window#getHandler()} if {@link InputHandlingElement#isSafeToClose()} is true.
+     * Will ask the {@link Window#getHandler()} if {@link Window#isSafeToClose()} is true.
      * @return  A {@link RenderIndicator} combined with an integer determining how the close action happened.
      *          0 if the window is safe to close and closed
      *          1 if it has a dirty buffer
@@ -182,7 +168,6 @@ class DisplayFacade {
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
         windows.get(active).getHandler().forcedClose();
-        fileBufferWindows.remove(windows.get(active));
         windows.remove(active);
 
 
@@ -277,8 +262,7 @@ class DisplayFacade {
 
     /**
      * Opens the snake game by doing overwriting the active {@link DisplayFacade#windows}'s
-     * {@link inputhandler.InputHandlingElement} to {@link SnakeInputHandler} and {@link View}
-     * to {@link SnakeView}. We delete the active window and add a new window to the list.
+     active window by a snake game window. We delete the active window and add a new window to the list.
      */
     public RenderIndicator openSnakeGame() throws IOException {
         // Get UI coords of current window to initialize snake view's playfield
@@ -287,12 +271,11 @@ class DisplayFacade {
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
         int hashActive = this.windows.get(active).getView().hashCode();
 
-        // Remove the window & add the snake window.
-        this.fileBufferWindows.remove(this.windows.get(active));
+        // Remove the window & add the snake window.;
         this.windows.remove(this.windows.get(active));
 
 
-        SnakeWindow toAdd = new SnakeWindow(coordsView.width, coordsView.height, termiosTerminalAdapter);
+        Window toAdd = (new NormalWindowFactory().createSnakeGameWindow(coordsView.width, coordsView.height, termiosTerminalAdapter));
         this.windows.add(toAdd);
 
         // Change hash code & update the view coordinates
@@ -309,7 +292,11 @@ class DisplayFacade {
      * Duplicates the active view by asking the view directly.
      */
     public RenderIndicator duplicateActive() throws IOException {
-        windows.get(active).accept(new DuplicateWindowVisitor());
+        Window windowToAdd = windows.get(active).duplicate();
+        if (windowToAdd != null) {
+            windows.add(windows.size(), windowToAdd);
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
+        }
         return RenderIndicator.FULL;
     }
 
@@ -329,13 +316,6 @@ class DisplayFacade {
         return this.windows;
     }
 
-    /**
-     * Returns the list of active {@link FileBufferWindow} objects. For testing
-     * @return the list of file buffer windows
-     */
-    ArrayList<FileBufferWindow> getFileBufferWindows() {
-        return this.fileBufferWindows;
-    }
 
     /**
      * Returns the active window integer
@@ -395,9 +375,9 @@ class DisplayFacade {
      * @throws IOException
      */
     public DisplayFacade requestOpeningNewDisplay(TermiosTerminalAdapter newAdapter) throws IOException {
-        DisplayFromWindowVisitor newVisitor = new DisplayFromWindowVisitor(newAdapter);
+        DisplayFromWindowVisitor newVisitor = new DisplayFromWindowVisitor(newAdapter, lineSeparatorArg);
         windows.get(active).accept(newVisitor);
-        return newVisitor.resultDisplayFacade;
+        return newVisitor.getNewFacade();
     }
 
     /**
@@ -415,83 +395,12 @@ class DisplayFacade {
     }
 
     /**
-     * This visitor is used so {@link Window} instances can be called by {@link Window#accept(WindowVisitor)}.
-     * Depending on which action, in this case duplication, we can let the window double-dispatch to here, where
-     * {@link DisplayFacade.DuplicateWindowVisitor} can access {@link DisplayFacade#windows}.
-     */
-    public class DuplicateWindowVisitor implements WindowVisitor {
-
-        /**
-         * Initializes a new {@link Window} object and adds it to {@link DisplayFacade#windows}.
-         * @param fbw the window that double dispatched to this location.
-         */
-        @Override
-        public void visitFileWindow(FileBufferWindow fbw) {
-            FileBufferWindow windowToAdd = fbw.duplicate();
-            if (windowToAdd != null) {
-                windows.add(windows.size(), windowToAdd);
-                fileBufferWindows.add(fileBufferWindows.size(), windowToAdd);
-                rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
-            }
-        }
-
-        @Override
-        public void visitSnakeWindow(SnakeWindow sw) {
-            // No duplicating snake
-        }
-
-    }
-
-    /**
-     * This visitor is used so {@link Window} instances can be called by {@link Window#accept(WindowVisitor)}.
-     * Depending on which action, in this case opening a new display, we can let the window double-dispatch to here, where
-     * {@link DisplayFacade.DuplicateWindowVisitor} can access {@link DisplayFacade#windows}.
-     */
-    public class DisplayFromWindowVisitor implements WindowVisitor {
-        private TermiosTerminalAdapter newAdapter;
-        private DisplayFacade resultDisplayFacade;
-
-        /**
-         * Upon creation of this object, {@link DisplayFacade} gives a {@link TermiosTerminalAdapter} which will be used
-         * for the new {@link DisplayFacade}.
-         * @param newAdapter the termios adapter for the new display facade
-         */
-        public DisplayFromWindowVisitor(TermiosTerminalAdapter newAdapter) {
-            this.newAdapter = newAdapter;
-            this.resultDisplayFacade = null;
-        }
-
-        /**
-         * Creates a new {@link DisplayFacade} object from the focused window where appropriate for the current {@link DisplayFacade} to access.
-         * @param fbw the {@link FileBufferWindow} where the 'open new display' command is triggered
-         * @throws IOException ?
-         */
-        @Override
-        public void visitFileWindow(FileBufferWindow fbw) throws IOException {
-            FileBufferWindow windowToAdd = fbw.duplicate();
-            windowToAdd.setTermiosAdapter(newAdapter);
-            if (windowToAdd != null) {
-                DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, newAdapter, lineSeparatorArg);
-                resultDisplayFacade = displayToAdd;
-            }
-        }
-
-        @Override
-        public void visitSnakeWindow(SnakeWindow sw) {
-            // No putting snake on other window
-        }
-
-    }
-
-    /**
-     * We will subscribe {@link FileBufferWindow} to this class, making it able to send through {@link Window} elements
+     * We will subscribe {@link Window} to this class, making it able to send through {@link Window} elements
      * which he may request to open.
      */
-    private void subscribeFileBufferWindow(FileBufferWindow window) {
-        View.write("test2.txt", "\n<Facade> Subscribing in displayfacade to window" + window.hashCode());
+    private void subscribeFileBufferWindow(Window window) {
         window.subscribeWindow(
                 openedWindow -> {
-                    View.write("test2.txt", "in displayfacade");
                     windows.add(windows.size(), openedWindow);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), openedWindow.getView().hashCode());
                     try {
@@ -501,10 +410,6 @@ class DisplayFacade {
                     }
                 }
         );
-    }
-
-    private String getFormat(Rectangle rect) {
-        return "(" + rect.startX + ", " + rect.startY + ")";
     }
 
 }

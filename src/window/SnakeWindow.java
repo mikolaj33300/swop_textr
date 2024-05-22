@@ -4,6 +4,7 @@ import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
+import listeners.OpenWindowRequestListener;
 import ui.SnakeView;
 import ui.View;
 
@@ -78,5 +79,11 @@ public class SnakeWindow extends Window {
     @Override
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
         snakeView.setTermiosTerminalAdapter(newAdapter);
+    }
+
+    @Override
+    public void subscribeWindow(OpenWindowRequestListener openWindowRequestListener) {
+        /*Snake normally won't request to open windows but this can be changed in
+        the future*/
     }
 }

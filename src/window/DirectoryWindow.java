@@ -5,6 +5,7 @@ import directory.directorytree.FileSystemEntry;
 import inputhandler.DirectoryInputHandler;
 import inputhandler.InputHandlingElement;
 import ioadapter.TermiosTerminalAdapter;
+import listeners.OpenWindowRequestListener;
 import ui.DirectoryView;
 import ui.View;
 
@@ -41,12 +42,17 @@ public class DirectoryWindow extends Window {
 
     @Override
     public void accept(WindowVisitor wv) throws IOException {
-
+        wv.visitDirectoryWindow(this);
     }
 
     @Override
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
         this.adapter = newAdapter;
+    }
+
+    @Override
+    public void subscribeWindow(OpenWindowRequestListener openWindowRequestListener) {
+        //This normally won't request to open any windows (not directly)
     }
 
 }

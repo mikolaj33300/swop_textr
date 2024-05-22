@@ -2,8 +2,6 @@ package controller.usecasecontroller;
 
 import controller.ControllerFacade;
 import controller.TextR;
-import controller.usecasecontroller.InspectContentsController;
-import controller.usecasecontroller.UseCaseController;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 

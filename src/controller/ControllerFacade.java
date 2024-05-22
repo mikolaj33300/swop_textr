@@ -5,7 +5,6 @@ import ioadapter.SwingTerminalAdapter;
 import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
-import layouttree.*;
 import util.*;
 import window.Window;
 
@@ -48,9 +47,8 @@ public class ControllerFacade {
 
     /**
      * Creates a ControllerFacade object.
-     * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
-     * @throws IOException when the path is invalid
+     * Creates a {@link DisplayFacade} object which represents the first display opened by textr.
+     * @throws IOException when the path provided to it is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
 
@@ -230,6 +228,7 @@ public class ControllerFacade {
             this.displays.add(displays.size(), newFacade);
 
 
+            //Will notify controller above it, the keypresses end up at the usecasecontroller to be converted to a system call
             ASCIIKeyEventListener newAsciiListener = new ASCIIKeyEventListener() {
                 @Override
                 public void notifyNormalKey(int byteInt) {
@@ -263,7 +262,7 @@ public class ControllerFacade {
     }
 
     /**
-     * Renders every element on the active display
+     * Renders every element on all displays (a change on one can be reflected on others)
      */
     public void paintScreen() throws IOException {
         for(DisplayFacade f : displays){
