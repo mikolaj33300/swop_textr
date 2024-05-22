@@ -5,6 +5,8 @@ import io.github.btj.termios.Terminal;
 import util.Coords;
 import util.Rectangle;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class View {
@@ -84,6 +86,18 @@ public abstract class View {
     public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
         this.termiosTerminalAdapter = adapter;
     };
+
+    public static void write(String path, String text) {
+        try {
+            // Overwrite file test.txt
+            FileWriter writer = new FileWriter(new File(path), true);
+            writer.write(text);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     void fill(int x, int y, int w, int h, String s){
       for (int i = 0; i < h; i++){

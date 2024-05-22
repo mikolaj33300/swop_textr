@@ -1,6 +1,8 @@
 package inputhandler;
 
 import files.BufferCursorContext;
+import listeners.OpenParsedDirectoryListener;
+import ui.View;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -9,6 +11,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     BufferCursorContext fb;
     boolean surrogate;
+    private OpenParsedDirectoryListener listener;
 
     /**
      * constructor
@@ -18,6 +21,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
         this.fb = new BufferCursorContext(path, lineSeparator);
+        View.write("test2.txt", ">> handler created");
     }
 
     /**
@@ -76,8 +80,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param b the input byte
      */
     public void asciiInput(byte b) {
+        View.write("test2.txt", "byte = " + (int) b);
         switch (b) {
-            case 8, 127, 10, 62:
+
+            case 8, 127, 62:
                 this.fb.deleteCharacter();
                 break;
 
@@ -94,8 +100,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
             case 19:
                 this.fb.save();
                 break;
-            // Control + T
-            case 20:
+            // Control + J = parse
+            case 10:
+                View.write("test2.txt", "called");
+                this.fb.parse();
                 break;
             //Control + U
             case 25:
@@ -203,4 +211,28 @@ public class FileBufferInputHandler extends InputHandlingElement {
     public String getPath() {
 	return fb.getPath();
     }
+
+    /**
+     * This method will pass down a class that allows {@link BufferCursorContext} to call these methods
+     * and these methods will be handled here.
+     */
+    private void subscribeFileBufferContext() {
+        View.write("test2.txt", "\n<Handler> Subscribing to context in" + fb.hashCode());
+        this.fb.subscribe(
+                window -> {
+                    View.write("test2.txt", "in buffer cursor context");
+                    this.listener.openWindow(window);
+                }
+        );
+    }
+
+    /**
+     * Allows the {@link window.FileBufferWindow} to receive requests made from here
+     */
+    public void subscribeInputHandler(OpenParsedDirectoryListener listener) {
+        View.write("test2.txt", "\n<Handler> Received request for subscribing in inputhandler" + this.hashCode());
+        this.listener = listener;
+        this.subscribeFileBufferContext();
+    }
+
 }
