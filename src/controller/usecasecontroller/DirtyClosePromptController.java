@@ -1,6 +1,9 @@
-package controller;
+package controller.usecasecontroller;
 
-import io.github.btj.termios.Terminal;
+import controller.ControllerFacade;
+import controller.TextR;
+import controller.usecasecontroller.InspectContentsController;
+import controller.usecasecontroller.UseCaseController;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 
@@ -29,16 +32,14 @@ public class DirtyClosePromptController extends UseCaseController {
             // N
             case 110:
                 unsubscribeFromFacadeAscii();
-                coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                coreControllerParent.activeUseCaseController.paintScreen();
+                coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
                 return;
             // Y
             case 121:
                 int result = facade.forceCloseActive().b;
                 if(result == 0){
                     unsubscribeFromFacadeAscii();
-                    coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                    coreControllerParent.activeUseCaseController.paintScreen();
+                    coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
                     return;
                 } else {
                     System.exit(0);

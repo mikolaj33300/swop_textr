@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import util.Coords;
 import util.Rectangle;
 

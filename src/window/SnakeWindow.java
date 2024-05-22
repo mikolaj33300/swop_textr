@@ -1,6 +1,6 @@
-package controller;
+package window;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
@@ -9,7 +9,7 @@ import ui.View;
 
 import java.io.IOException;
 
-public class SnakeWindow extends Window{
+public class SnakeWindow extends Window {
 
     /**
      * The snake view of this window, visual representation of the snakeWindow

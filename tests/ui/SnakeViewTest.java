@@ -1,7 +1,7 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.TermiosTerminalAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import snake.SnakeGame;

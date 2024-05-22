@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
 import util.Coords;

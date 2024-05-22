@@ -1,7 +1,7 @@
 package ui;
 
-import controller.ASCIIKeyEventListener;
-import controller.adapter.ResizeListener;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.ResizeListener;
 import util.Coords;
 
 import java.awt.Dimension;

@@ -1,13 +1,14 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import ui.FileBufferView;
-import ui.View;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.Test;
+import window.FileBufferWindow;
+import window.Window;
 
 import java.io.IOException;
 import java.nio.file.Files;

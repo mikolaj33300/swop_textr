@@ -1,18 +1,20 @@
 package controller;
 
-import controller.adapter.SwingTerminalAdapter;
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
 import layouttree.*;
 import util.*;
+import window.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class ControllerFacade {
+public class ControllerFacade {
 
     /**
      * The line separator of the system
@@ -43,7 +45,6 @@ class ControllerFacade {
 
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
-    private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
     /**
      * Creates a ControllerFacade object.

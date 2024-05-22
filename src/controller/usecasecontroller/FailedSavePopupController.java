@@ -1,6 +1,9 @@
-package controller;
+package controller.usecasecontroller;
 
-import util.RenderIndicator;
+import controller.ControllerFacade;
+import controller.TextR;
+import controller.usecasecontroller.InspectContentsController;
+import controller.usecasecontroller.UseCaseController;
 import ui.UserPopupBox;
 
 import java.io.IOException;
@@ -27,8 +30,7 @@ public class FailedSavePopupController extends UseCaseController {
     @Override
     public void handle(int b) throws IOException {
         unsubscribeFromFacadeAscii();
-        coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-        coreControllerParent.activeUseCaseController.paintScreen();
+        coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
     }
 
     /**

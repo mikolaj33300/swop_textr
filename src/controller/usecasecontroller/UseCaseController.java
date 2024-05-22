@@ -1,5 +1,8 @@
-package controller;
+package controller.usecasecontroller;
 
+import controller.ControllerFacade;
+import controller.TextR;
+import ioadapter.ASCIIKeyEventListener;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -57,7 +60,7 @@ public abstract class UseCaseController {
         return RenderIndicator.NONE;
     }
 
-    ControllerFacade getFacade(){
+    public ControllerFacade getFacade(){
         return facade;
     }
 

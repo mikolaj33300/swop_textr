@@ -1,10 +1,9 @@
-package controller.adapter;
+package ioadapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
-import controller.ASCIIKeyEventListener;
 import ui.SwingEditableTerminalApp;
 import util.Coords;
 

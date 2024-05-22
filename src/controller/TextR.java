@@ -1,17 +1,28 @@
 package controller;
 
-import controller.adapter.RealTermiosTerminalAdapter;
-import controller.adapter.TermiosTerminalAdapter;
+import controller.usecasecontroller.FileErrorPopupController;
+import controller.usecasecontroller.InspectContentsController;
+import controller.usecasecontroller.UseCaseController;
+import ioadapter.RealTermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import util.RenderIndicator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 public class TextR {
+
+    public void setActiveUseCaseController(UseCaseController newUseCaseController){
+        this.activeUseCaseController = newUseCaseController;
+        try {
+            this.activeUseCaseController.paintScreen();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * The active use case controller.

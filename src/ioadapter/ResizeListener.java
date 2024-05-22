@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import util.Coords;
 

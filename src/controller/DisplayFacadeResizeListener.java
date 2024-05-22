@@ -1,6 +1,6 @@
 package controller;
 
-import controller.adapter.ResizeListener;
+import ioadapter.ResizeListener;
 import util.Coords;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import io.github.btj.termios.Terminal;
 import util.ScreenUIUtil;

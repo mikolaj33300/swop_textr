@@ -1,6 +1,8 @@
-package controller;
+package controller.usecasecontroller;
 
-import controller.adapter.TermiosTerminalAdapter;
+import controller.TextR;
+import controller.usecasecontroller.UseCaseController;
+import ioadapter.TermiosTerminalAdapter;
 import ui.UserPopupBox;
 
 import java.io.IOException;
