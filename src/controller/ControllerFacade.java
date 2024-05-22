@@ -1,18 +1,20 @@
 package controller;
 
-import controller.adapter.SwingTerminalAdapter;
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
 import layouttree.*;
 import util.*;
+import window.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class ControllerFacade {
+public class ControllerFacade {
 
     /**
      * The line separator of the system
@@ -43,7 +45,6 @@ class ControllerFacade {
 
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
-    private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
     /**
      * Creates a ControllerFacade object.
@@ -104,13 +105,6 @@ class ControllerFacade {
     public RenderIndicator moveFocus(MoveDirection dir) {
         displays.get(active).moveFocus(dir);
         return RenderIndicator.FULL;
-    }
-
-    /**
-     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
-     */
-    public void clearContent() throws IOException {
-        displays.get(active).clearContent();
     }
 
     /**
@@ -272,6 +266,7 @@ class ControllerFacade {
      * Renders every element on the active display
      */
     public void paintScreen() throws IOException {
+        clearScreen();
         this.displays.get(active).paintScreen();
     }
 
@@ -289,6 +284,14 @@ class ControllerFacade {
      */
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
+    }
+
+    public void clearScreen() {
+        try {
+            displays.get(active).clearContent();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

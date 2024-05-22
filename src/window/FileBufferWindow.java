@@ -1,6 +1,6 @@
-package controller;
+package window;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
@@ -16,7 +16,7 @@ import java.io.IOException;
  *  - duplicate: accepts a {@link WindowVisitor}
  *  - returning the inputhandler, defined in the constructor
  *  - returning the view, defined in the constructor
- * (These things used to be handled by the {@link ControllerFacade}, now done by this object, hence we need the abstract methods)
+ * (These things used to be handled by the layer above, now done by this object, hence we need the abstract methods)
  */
 public class FileBufferWindow extends Window {
 
@@ -96,9 +96,7 @@ public class FileBufferWindow extends Window {
     }
 
     /**
-     * Allows {@link DisplayFacade} to call upon this object using a {@link WindowVisitor} implementation.
-     * The purpose of this is letting that implementation {@link DisplayFacade.DuplicateWindowVisitor} directly
-     * change items in {@link DisplayFacade}. Duplication is now handled in {@link DisplayFacade}, but not by {@link DisplayFacade}
+     * Allows a layer above to call upon this object using a {@link WindowVisitor} implementation.
      * @param v the visitor object
      * @throws IOException when reading files goes wrong.
      */

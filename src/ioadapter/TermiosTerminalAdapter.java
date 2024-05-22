@@ -1,6 +1,5 @@
-package controller.adapter;
+package ioadapter;
 
-import controller.ASCIIKeyEventListener;
 import util.Coords;
 
 import java.io.IOException;

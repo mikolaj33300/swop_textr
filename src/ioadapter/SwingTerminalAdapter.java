@@ -1,10 +1,9 @@
-package controller.adapter;
+package ioadapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
-import controller.ASCIIKeyEventListener;
 import ui.SwingEditableTerminalApp;
 import util.Coords;
 
@@ -73,15 +72,6 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
   @Override
   public int readByte() throws IOException {
-/*      while (keyQueue.isEmpty()) {
-	  try {
-	      TimeUnit.MILLISECONDS.sleep(1);
-	  } catch (Exception e) {
-	      System.out.println("sleep failed");
-	      System.exit(1);
-	  }
-      }
-      return keyQueue.remove();*/
 	  return 0;
   }
 

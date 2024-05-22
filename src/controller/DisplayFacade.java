@@ -1,6 +1,6 @@
 package controller;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
@@ -10,6 +10,10 @@ import layouttree.VerticalLayoutNode;
 import ui.SnakeView;
 import ui.View;
 import util.*;
+import window.FileBufferWindow;
+import window.SnakeWindow;
+import window.Window;
+import window.WindowVisitor;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +44,6 @@ class DisplayFacade {
      * The adapter used for rendering
      */
     private final TermiosTerminalAdapter termiosTerminalAdapter;
-    private final ArrayList<DisplayOpeningRequestListener> displayRequestListeners = new ArrayList<>(0);
 
     /**
      * The {@link Coords} indicating the size of the display
@@ -459,8 +462,7 @@ class DisplayFacade {
         }
 
         /**
-         * Dispatches a request to {@link DisplayFacade#displayRequestListeners}, which will notify a method in {@link ControllerFacade} that
-         * adds a newly created {@link DisplayFacade} object
+         * Creates a new {@link DisplayFacade} object from the focused window where appropriate for the current {@link DisplayFacade} to access.
          * @param fbw the {@link FileBufferWindow} where the 'open new display' command is triggered
          * @throws IOException ?
          */
@@ -479,18 +481,6 @@ class DisplayFacade {
             // No putting snake on other window
         }
 
-    }
-
-    /**
-     * Subscribes to a listener
-     * @param listener
-     */
-    public void subscribeToRequestsOpeningDisplay(DisplayOpeningRequestListener listener) {
-        this.displayRequestListeners.add(listener);
-    }
-
-    public void unsubscribeFromRequestsOpeningDisplay(DisplayOpeningRequestListener listener) {
-        this.displayRequestListeners.remove(listener);
     }
 
 }

@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import util.Coords;
 import util.Rectangle;

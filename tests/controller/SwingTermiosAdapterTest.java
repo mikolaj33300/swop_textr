@@ -1,18 +1,9 @@
 package controller;
 
-import controller.adapter.SwingTerminalAdapter;
-import controller.adapter.VirtualTestingTermiosAdapter;
-import files.BufferCursorContext;
-import inputhandler.FileBufferInputHandler;
-import org.junit.jupiter.api.BeforeEach;
+import ioadapter.SwingTerminalAdapter;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

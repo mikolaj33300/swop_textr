@@ -1,7 +1,7 @@
 package ui;
 
-import controller.ASCIIKeyEventListener;
-import controller.adapter.ResizeListener;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.ResizeListener;
 import util.Coords;
 
 import java.awt.Dimension;
@@ -185,7 +185,12 @@ public class SwingEditableTerminalApp extends JFrame {
                                 break;
                         }
                     } else {
-                        notifyASCIIBasic((int) keyChar);
+                        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                            notifyASCIIBasic(13);
+                        } else {
+                            notifyASCIIBasic((int) keyChar);
+                        }
+
                     }
             }
         });

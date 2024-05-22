@@ -1,6 +1,9 @@
-package controller;
+package controller.usecasecontroller;
 
-import io.github.btj.termios.Terminal;
+import controller.ControllerFacade;
+import controller.TextR;
+import controller.usecasecontroller.InspectContentsController;
+import controller.usecasecontroller.UseCaseController;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 
@@ -18,28 +21,34 @@ public class DirtyClosePromptController extends UseCaseController {
 
     /**
      * pass the input to the correct controller
+     *
      * @param b the int input
      * @throws IOException
      */
     @Override
-    public RenderIndicator handle(int b) throws IOException {
+    public void handle(int b) throws IOException {
+        RenderIndicator opRenderIndicator = RenderIndicator.NONE;
         switch(b) {
             // N
             case 110:
-                coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                break;
+                unsubscribeFromFacadeAscii();
+                coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
+                return;
             // Y
             case 121:
                 int result = facade.forceCloseActive().b;
                 if(result == 0){
-                    coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
+                    unsubscribeFromFacadeAscii();
+                    coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
+                    return;
                 } else {
-                    Terminal.clearScreen();
                     System.exit(0);
                 }
                 break;
         }
-        return RenderIndicator.FULL;
+        if(opRenderIndicator != RenderIndicator.NONE){
+            this.paintScreen();
+        }
     }
 
     /**
@@ -48,15 +57,7 @@ public class DirtyClosePromptController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
-        clearContent();
         userPopupBox.render();
     }
 
-    /**
-     * remove the popup
-     * @throws IOException
-     */
-    public void clearContent() throws IOException {
-        coreControllerParent.getAdapter().clearScreen();
-    }
 }

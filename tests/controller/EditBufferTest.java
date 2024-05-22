@@ -1,6 +1,6 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.FileHolder;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
