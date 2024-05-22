@@ -185,7 +185,12 @@ public class SwingEditableTerminalApp extends JFrame {
                                 break;
                         }
                     } else {
-                        notifyASCIIBasic((int) keyChar);
+                        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                            notifyASCIIBasic(13);
+                        } else {
+                            notifyASCIIBasic((int) keyChar);
+                        }
+
                     }
             }
         });
