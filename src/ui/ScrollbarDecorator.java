@@ -30,13 +30,12 @@ public class ScrollbarDecorator extends View{
 
         int focusedLine = wrappedView.getFocusedLine();
         int contentHeight = wrappedView.getTotalContentHeight();
-        this.renderScrollbar(thisRealDimensions.height, thisRealDimensions.startX+ thisRealDimensions.width-1, thisRealDimensions.startY, focusedLine, contentHeight);
+        this.renderScrollbar(thisRealDimensions.height-1, thisRealDimensions.startX+ thisRealDimensions.width-1, thisRealDimensions.startY, focusedLine, contentHeight);
 
         int focusedCol = wrappedView.getFocusedCol();
-        renderHorzScrollbar(thisRealDimensions.width, thisRealDimensions.startX, thisRealDimensions.startY+thisRealDimensions.height-1,
+        renderHorzScrollbar(thisRealDimensions.width-1, thisRealDimensions.startX, thisRealDimensions.startY+thisRealDimensions.height-1,
                 focusedCol,
-                wrappedView.getLineLength(focusedLine),
-                focusedLine);
+                wrappedView.getLineLength(focusedLine));
     }
 
     @Override
@@ -79,7 +78,7 @@ public class ScrollbarDecorator extends View{
     private void renderScrollbar(int height, int scrollStartX, int startY, int focusedLine, int contentTotalHeight){
         contentTotalHeight = contentTotalHeight == 0 ? 1 : contentTotalHeight;
         int visibleStartPercent = (focusedLine*height)/contentTotalHeight;
-        int visibleEndPercent = ((2+focusedLine)*height)/contentTotalHeight;
+        int visibleEndPercent = ((1+focusedLine)*height)/contentTotalHeight;
 
 /*
         for (int i = 0; i < visibleStartPercent; i++)
@@ -118,12 +117,11 @@ public class ScrollbarDecorator extends View{
      * @param startY the Y coordinate to draw the scrollbar on
      * @param focusedCol the focussed column
      * @param contentTotalWidth the
-     * @param focusedLine the focussed line
      */
-    private void renderHorzScrollbar(int width, int startX, int startY, int focusedCol, int contentTotalWidth, int focusedLine){
+    private void renderHorzScrollbar(int width, int startX, int startY, int focusedCol, int contentTotalWidth){
         contentTotalWidth = contentTotalWidth == 0 ? 1 : contentTotalWidth;
         int visibleStartPercent = (focusedCol*width)/contentTotalWidth;
-        int visibleEndPercent = ((2+focusedCol)*width)/contentTotalWidth;
+        int visibleEndPercent = ((1+focusedCol)*width)/contentTotalWidth;
 
 /*        //TODO: Rewrite this for loop to not get out of bounds error like in vertical bar
         //TODO: Test this
@@ -135,7 +133,7 @@ public class ScrollbarDecorator extends View{
         for (int i  = visibleEndPercent; i < width-1; i++)
             termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");*/
 
-        for(int i = 0; i < visibleStartPercent; i++){
+        for(int i = 0; i < width; i++){
             if(i<visibleStartPercent){
                 termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
             } else if (i<visibleEndPercent){
@@ -150,8 +148,6 @@ public class ScrollbarDecorator extends View{
         Coords thisRealDimensions = super.uiCoordsReal;
 
         Rectangle wrappeeRealDimensions = new Rectangle(thisRealDimensions.startX, thisRealDimensions.startY, thisRealDimensions.width-1, thisRealDimensions.height-1);
-        //Coords screenDims = termiosTerminalAdapter.getTextAreaSize();
-
         wrappedView.setRealCoords(wrappeeRealDimensions);
     }
 
