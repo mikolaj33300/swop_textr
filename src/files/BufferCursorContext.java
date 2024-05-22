@@ -18,7 +18,7 @@ public class BufferCursorContext {
     private DeletedInsertionPointListener dil;
     private DeletedCharListener dcl;
     EditableFileBuffer containedFileBuffer;
-    private OpenWindowForFileEntryRequestListener openParsedDirectoryListener;
+    private DisplayRequestForFileEntryListener openParsedDirectoryListener;
 
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
@@ -320,7 +320,7 @@ public class BufferCursorContext {
      * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
      * @param listener the listener that passes a window
      */
-    public void subscribe(OpenWindowForFileEntryRequestListener listener) {
+    public void subscribe(DisplayRequestForFileEntryListener listener) {
         this.openParsedDirectoryListener = listener;
         this.subscribeEditableBuffer();
     }
@@ -331,7 +331,7 @@ public class BufferCursorContext {
     private void subscribeEditableBuffer() {
        this.containedFileBuffer.subscribeEditableBuffer(
                 window -> {
-                    this.openParsedDirectoryListener.notifyRequestToOpenWindow(window);
+                    this.openParsedDirectoryListener.notifyRequestToOpen(window);
                 }
         );
     }

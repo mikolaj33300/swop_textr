@@ -2,7 +2,7 @@ package inputhandler;
 
 import directory.directorytree.FileSystemEntry;
 import files.BufferCursorContext;
-import listeners.OpenWindowForFileEntryRequestListener;
+import listeners.DisplayRequestForFileEntryListener;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     BufferCursorContext fb;
     boolean surrogate;
-    private OpenWindowForFileEntryRequestListener listener;
+    private DisplayRequestForFileEntryListener listener;
 
     /**
      * constructor
@@ -214,10 +214,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * and these methods will be handled here.
      */
     private void subscribeFileBufferContext() {
-        this.fb.subscribe(new OpenWindowForFileEntryRequestListener() {
+        this.fb.subscribe(new DisplayRequestForFileEntryListener() {
                               @Override
-                              public void notifyRequestToOpenWindow(FileSystemEntry entry) {
-                                  listener.notifyRequestToOpenWindow(entry);
+                              public void notifyRequestToOpen(FileSystemEntry entry) {
+                                  listener.notifyRequestToOpen(entry);
                               }
                           }
         );
@@ -226,7 +226,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     /**
      * Allows the {@link window.FileBufferWindow} to receive requests made from here
      */
-    public void subscribeInputHandler(OpenWindowForFileEntryRequestListener listener) {
+    public void subscribeInputHandler(DisplayRequestForFileEntryListener listener) {
         this.listener = listener;
         this.subscribeFileBufferContext();
     }
