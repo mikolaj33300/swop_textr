@@ -33,6 +33,7 @@ class ControllerFacade {
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
 
+        this.listenersToThisEvents = new ArrayList<>(0);
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
         this.initialTermiosAdapter = termiosTerminalAdapter;
         String[] paths;
@@ -218,6 +219,8 @@ class ControllerFacade {
             ASCIIKeyEventListener newAsciiListener = new ASCIIKeyEventListener() {
                 @Override
                 public void notifyNormalKey(int byteInt) {
+                    active = displays.indexOf(newFacade);
+
                     for(ASCIIKeyEventListener l : listenersToThisEvents){
                         l.notifyNormalKey(byteInt);
                     }
@@ -225,6 +228,8 @@ class ControllerFacade {
 
                 @Override
                 public void notifySurrogateKeys(int first, int second) {
+                    active = displays.indexOf(newFacade);
+
                     for(ASCIIKeyEventListener l : listenersToThisEvents){
                         l.notifySurrogateKeys(first, second);
                     }
@@ -245,6 +250,14 @@ class ControllerFacade {
 
     public void paintScreen() throws IOException {
         this.displays.get(active).paintScreen();
+    }
+
+    public void subscribeToKeyPresses(ASCIIKeyEventListener l) {
+        this.listenersToThisEvents.add(l);
+    }
+
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
+        this.listenersToThisEvents.remove(asciiEventListener);
     }
 }
 

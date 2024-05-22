@@ -57,14 +57,14 @@ public class LaunchTextrTest {
 
     @Test
     public void testLineSeparatorAssignment() {
-        assertTrue(FileHolder.areContentsEqual(textr1.facade.getLineSeparatorArg(), new byte[] {0x0a}));
-        assertTrue(FileHolder.areContentsEqual(textr2.facade.getLineSeparatorArg(), new byte[] {0x0a}));
+        assertTrue(FileHolder.areContentsEqual(textr1.getActiveUseCaseController().getFacade().getLineSeparatorArg(), new byte[] {0x0a}));
+        assertTrue(FileHolder.areContentsEqual(textr2.getActiveUseCaseController().getFacade().getLineSeparatorArg(), new byte[] {0x0a}));
     }
 
     @Test
     public void testWindowsOpened() {
-        assertEquals(textr1.facade.getWindows().size(), 1);
-        assertEquals(textr3.facade.getWindows().size(), 2);
+        assertEquals(textr1.getActiveUseCaseController().getFacade().getWindows().size(), 1);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getWindows().size(), 2);
     }
 
 }

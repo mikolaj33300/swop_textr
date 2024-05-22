@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.TermiosTerminalAdapter;
 import util.RenderIndicator;
 import util.MoveDirection;
 import util.RotationDirection;
@@ -9,8 +10,13 @@ import java.io.IOException;
 public class InspectContentsController extends UseCaseController {
 
 
-    protected InspectContentsController(TextR coreControllerParent){
-        super(coreControllerParent);
+    protected InspectContentsController(TextR coreControllerParent, ControllerFacade facade){
+        super(coreControllerParent, facade);
+    }
+
+
+    public InspectContentsController(TextR textR, String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
+        super(textR, new ControllerFacade(args, termiosTerminalAdapter));
     }
 
     /**
@@ -22,40 +28,40 @@ public class InspectContentsController extends UseCaseController {
     public RenderIndicator handle(int b) throws IOException {
         switch(b) {
             case 8, 127, 10, 62, 26, 21, 1, -1:
-                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                return facade.passToActive((Integer.valueOf(b)).byteValue());
             // Control + S
             case 19:
-                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                return facade.passToActive((Integer.valueOf(b)).byteValue());
             // Control + P
             case 16:
-                return coreControllerParent.facade.moveFocus(MoveDirection.LEFT);
+                return facade.moveFocus(MoveDirection.LEFT);
             // Control + N
             case 14:
-                return coreControllerParent.facade.moveFocus(MoveDirection.RIGHT);
+                return facade.moveFocus(MoveDirection.RIGHT);
             // Control + R
             case 18:
-                return coreControllerParent.facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
+                return facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);
                 // Control + W
             case 23:
-                return coreControllerParent.facade.openNewSwingFromActiveWindow();
+                return facade.openNewSwingFromActiveWindow();
             // Control + T
             case 20:
-                return coreControllerParent.facade.rotateLayout(RotationDirection.CLOCKWISE);
+                return facade.rotateLayout(RotationDirection.CLOCKWISE);
             // Control + G
             case 7:
-                return coreControllerParent.facade.openSnakeGame();
+                return facade.openSnakeGame();
             // Control + D
             case 4:
-                return coreControllerParent.facade.duplicateActive();
+                return facade.duplicateActive();
             // Line separator
             case 13:
-                return coreControllerParent.facade.handleSeparator();
+                return facade.handleSeparator();
             // Character input
             default:
                 if(b < 32 && b != 10 && b != 13 && b==26 && b!=21 || 127 <= b){
                     return RenderIndicator.NONE;
                 }
-                return coreControllerParent.facade.passToActive((Integer.valueOf(b)).byteValue());
+                return facade.passToActive((Integer.valueOf(b)).byteValue());
         }
     }
 
@@ -72,20 +78,20 @@ public class InspectContentsController extends UseCaseController {
                 switch ((char) second) {
                     // Right
                     case 'C':
-                        return coreControllerParent.facade.handleArrowRight();
+                        return facade.handleArrowRight();
                     // Left
                     case 'D':
-                        return coreControllerParent.facade.handleArrowLeft();
+                        return facade.handleArrowLeft();
                     // Up
                     case 'A':
-                        return coreControllerParent.facade.handleArrowUp();
+                        return facade.handleArrowUp();
                     // Down
                     case 'B':
-                        return coreControllerParent.facade.handleArrowDown();
+                        return facade.handleArrowDown();
                     case 'S':// F4
-                        int result = coreControllerParent.facade.closeActive().b;
+                        int result = facade.closeActive().b;
                         if (result == 1) { //If was dirty
-                            coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent);
+                            coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent, facade);
                         } else if (result == 2) {
                             clearContent();
                             System.exit(0);
@@ -103,8 +109,8 @@ public class InspectContentsController extends UseCaseController {
     @Override
     public void paintScreen() throws IOException {
         clearContent();
-        coreControllerParent.facade.paintScreen();
-        //coreControllerParent.facade.renderCursor();
+        facade.paintScreen();
+        //facade.renderCursor();
     }
 
     private void clearContent() {
@@ -113,7 +119,7 @@ public class InspectContentsController extends UseCaseController {
 
     @Override
     public RenderIndicator handleIdle() throws IOException {
-        return coreControllerParent.facade.passToActive((byte) -3);
+        return facade.passToActive((byte) -3);
 
     }
 

@@ -6,14 +6,33 @@ import java.io.IOException;
 
 public abstract class UseCaseController {
 
+    private final ASCIIKeyEventListener asciiEventListener;
+    ControllerFacade facade;
     TextR coreControllerParent;
 
     /**
      * Constructor that sets the main constructor reference of this to the given reerence.
      * @param coreControllerParent
      */
-    protected UseCaseController(TextR coreControllerParent){
+    protected UseCaseController(TextR coreControllerParent, ControllerFacade facade){
         this.coreControllerParent = coreControllerParent;
+        this.facade = facade;
+        this.asciiEventListener = new ASCIIKeyEventListener() {
+            @Override
+            public void notifyNormalKey(int byteInt) {
+                try {
+                    handle(byteInt);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void notifySurrogateKeys(int first, int second) {
+                handleSurrogate(first, second);
+            }
+        };
+        facade.subscribeToKeyPresses(asciiEventListener);
     }
 
     /**
@@ -38,4 +57,12 @@ public abstract class UseCaseController {
     public RenderIndicator handleIdle() throws IOException {
         return RenderIndicator.NONE;
     };
+
+    ControllerFacade getFacade(){
+        return facade;
+    }
+
+    void unsubscribeFromFacadeAscii(){
+        this.facade.unsubscribeFromKeyPresses(asciiEventListener);
+    }
 }

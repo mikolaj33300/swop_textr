@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 public class TextR {
     protected UseCaseController activeUseCaseController;
-    public final ControllerFacade facade;
     public ArrayList<TermiosTerminalAdapter> adapter = new ArrayList<TermiosTerminalAdapter>(1);
     private TermiosTerminalAdapter adapterToStartWith;
     private int activeAdapter = 0;
@@ -22,24 +21,18 @@ public class TextR {
     /**
      * Creates a controller object.
      */
-    public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
+    public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) {
         this.adapter.add(termiosTerminalAdapter);
         this.adapterToStartWith = termiosTerminalAdapter;
-        ControllerFacade containedAppFacade;
         try {
-            String[] paths = Arrays.copyOfRange(args, 1, args.length);
-            containedAppFacade = new ControllerFacade(args, termiosTerminalAdapter);// TODO first remove flags? + pass terminal as object in some magic way
+            if(this.activeUseCaseController == null){
+                this.activeUseCaseController = new InspectContentsController(this, args, termiosTerminalAdapter);
+            }
         } catch (IOException e) {
-            this.activeUseCaseController = new FileErrorPopupController(this);
-            containedAppFacade = null;
-            Terminal.clearScreen();
-            throw e;
+            this.activeUseCaseController = new FileErrorPopupController(this, termiosTerminalAdapter);
         }
-        this.facade = containedAppFacade;
 
-        if(this.activeUseCaseController == null){
-            this.activeUseCaseController = new InspectContentsController(this);
-        }
+
     }
 
     /**
@@ -54,8 +47,6 @@ public class TextR {
         try {
             TextR textR;
             textR = new TextR(args, new RealTermiosTerminalAdapter());
-
-            textR.activeUseCaseController = new InspectContentsController(textR);
             //Fix recommended on sample Swing app
             JFrame dummyFrame = new JFrame();
             dummyFrame.pack();
@@ -153,6 +144,10 @@ public class TextR {
 
     public TermiosTerminalAdapter getAdapter() {
 	    return adapter.get(activeAdapter);
+    }
+
+    UseCaseController getActiveUseCaseController(){
+        return this.activeUseCaseController;
     }
 
 /*    public void setAdapter(int a) {

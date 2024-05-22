@@ -34,23 +34,23 @@ public class CloseBufferTest {
     public void closeNonDirty_OneFile() {
         // Assert non dirty
         assertFalse(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
         // Assert that closing gives no error, but since this is the last window, it will return 2
-        assertEquals(2, textr1.facade.closeActive().b);
+        assertEquals(2, textr1.getActiveUseCaseController().getFacade().closeActive().b);
         // This will return 1, the window is not deleted, but the application is closed
-        assertEquals(1, textr1.facade.getWindows().size());
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().getWindows().size());
     }
 
     @Test
     public void closeNonDirty_TwoPlusFile() {
         // Assert non dirty
         assertFalse(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
         // Assert that closing gives no error, but since this is the last window, it will return 2
-        assertEquals(0, textr2.facade.closeActive().b);
-        assertEquals(1, textr2.facade.getWindows().size());
+        assertEquals(0, textr2.getActiveUseCaseController().getFacade().closeActive().b);
+        assertEquals(1, textr2.getActiveUseCaseController().getFacade().getWindows().size());
     }
 
     @Test
@@ -60,12 +60,12 @@ public class CloseBufferTest {
         textr1.startListenersAndHandlers();
         // Assert dirty
         assertTrue(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
         // Assert that closing gives no error -> not dirty
-        assertEquals(1, textr1.facade.closeActive().b);
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().closeActive().b);
         // Windows stay the same, only textR will handle this popup
-        assertEquals(1, textr1.facade.getWindows().size());
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().getWindows().size());
     }
 
     @Test
@@ -79,12 +79,12 @@ public class CloseBufferTest {
         textr1.startListenersAndHandlers();
         // Assert dirty
         assertTrue(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
         // Assert that closing gives no error -> not dirty
-        assertEquals(1, textr1.facade.closeActive().b);
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().closeActive().b);
         // handled Y
-        assertEquals(1, textr1.facade.getWindows().size());
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().getWindows().size());
     }
 
     private void enterCharacter(char character) {

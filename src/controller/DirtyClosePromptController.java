@@ -12,8 +12,8 @@ public class DirtyClosePromptController extends UseCaseController {
     /**
      * @param coreControllerParent
      */
-    protected DirtyClosePromptController(TextR coreControllerParent) {
-        super(coreControllerParent);
+    protected DirtyClosePromptController(TextR coreControllerParent, ControllerFacade facade) {
+        super(coreControllerParent, facade);
     }
 
     /**
@@ -26,13 +26,13 @@ public class DirtyClosePromptController extends UseCaseController {
         switch(b) {
             // N
             case 110:
-                coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
+                coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
                 break;
             // Y
             case 121:
-                int result = coreControllerParent.facade.forceCloseActive().b;
+                int result = facade.forceCloseActive().b;
                 if(result == 0){
-                    coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
+                    coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
                 } else {
                     Terminal.clearScreen();
                     System.exit(0);

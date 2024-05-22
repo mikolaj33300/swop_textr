@@ -40,9 +40,9 @@ public class EditBufferTest {
     public void testNonDirtyOpened() throws IOException, NoSuchFieldException {
         haltLoop();
         textr1.startListenersAndHandlers();
-        while(true);
+        /*while(true);*/
         //assertFalse(
-        //        ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+        //        ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         //);
     }
 
@@ -53,7 +53,7 @@ public class EditBufferTest {
         textr1.startListenersAndHandlers();
 
         assertTrue(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -65,7 +65,7 @@ public class EditBufferTest {
         textr1.startListenersAndHandlers();
 
         assertFalse(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -77,7 +77,7 @@ public class EditBufferTest {
         haltLoop();
         textr1.startListenersAndHandlers();
         assertFalse(
-                ((FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
@@ -88,8 +88,8 @@ public class EditBufferTest {
         textr1.startListenersAndHandlers();
         assertTrue(
                 FileHolder.areContentsEqual(
-                    ((FileBufferInputHandler) textr1.facade
-                            .getWindows().get(textr1.facade.getActive()).getHandler())
+                    ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade()
+                            .getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler())
                             .getFileBufferContextTransparent().getFileBuffer().getBytes(),
                             "mi am a mister\n ; but you can call me mister TEE".getBytes()
                 )

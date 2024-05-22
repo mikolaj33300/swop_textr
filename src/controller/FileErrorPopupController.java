@@ -1,5 +1,6 @@
 package controller;
 
+import controller.adapter.TermiosTerminalAdapter;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 
@@ -8,9 +9,8 @@ import java.io.IOException;
 public class FileErrorPopupController extends UseCaseController {
     UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file");
 
-
-    protected FileErrorPopupController(TextR coreControllerParent) {
-        super(coreControllerParent);
+    public FileErrorPopupController(TextR coreControllerParent, TermiosTerminalAdapter termiosTerminalAdapter) {
+        super(coreControllerParent, null);
     }
 
     /**

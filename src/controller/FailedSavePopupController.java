@@ -14,9 +14,8 @@ public class FailedSavePopupController extends UseCaseController {
     /**
      * @param coreControllerParent
      */
-    protected FailedSavePopupController(TextR coreControllerParent) {
-        super(coreControllerParent);
-        needsRenderSinceLast = true;
+    protected FailedSavePopupController(TextR coreControllerParent, ControllerFacade facade) {
+        super(coreControllerParent, facade);
     }
 
     /**
@@ -26,7 +25,7 @@ public class FailedSavePopupController extends UseCaseController {
      */
     @Override
     public RenderIndicator handle(int b) throws IOException {
-        coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent);
+        coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
         return RenderIndicator.FULL;
     }
 

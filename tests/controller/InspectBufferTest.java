@@ -45,7 +45,7 @@ public class InspectBufferTest {
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
 
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -64,7 +64,7 @@ public class InspectBufferTest {
         textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -81,7 +81,7 @@ public class InspectBufferTest {
         // Loop the program: will read the move cursor command & stop the loop after
         textr1.startListenersAndHandlers();
 
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -99,7 +99,7 @@ public class InspectBufferTest {
         textr2.startListenersAndHandlers();
 
 
-        FileBufferInputHandler view = (FileBufferInputHandler) textr2.facade.getWindows().get(textr2.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr2.getActiveUseCaseController().getFacade().getWindows().get(textr2.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 1);
@@ -117,7 +117,7 @@ public class InspectBufferTest {
         textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -133,7 +133,7 @@ public class InspectBufferTest {
 
         // Loop the program: will read the move cursor command & stop the loop after
         textr1.startListenersAndHandlers();
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -153,7 +153,7 @@ public class InspectBufferTest {
         // Loop the program: will read the move cursor command & stop the loop after
         textr1.startListenersAndHandlers();
 
-        FileBufferInputHandler view = (FileBufferInputHandler) textr1.facade.getWindows().get(textr1.facade.getActive()).getHandler();
+        FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
         assertEquals(view.getFileBufferContextTransparent().getInsertionPointLine(), 0);
@@ -163,41 +163,41 @@ public class InspectBufferTest {
 
     @Test
     public void testPreviousNext_OneBuffer() throws IOException {
-        assertEquals(textr1.facade.getActive(), 0);
+        assertEquals(textr1.getActiveUseCaseController().getFacade().getActive(), 0);
         focusNext();
         haltLoop();
         textr1.startListenersAndHandlers();
-        assertEquals(textr1.facade.getActive(), 0);
+        assertEquals(textr1.getActiveUseCaseController().getFacade().getActive(), 0);
     }
 
 
     @Test
     public void testPreviousNext_TwoBuffer() throws IOException {
-        assertEquals(textr3.facade.getActive(), 0);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
         focusNext();
         haltLoop();
         textr3.startListenersAndHandlers();
-        assertEquals(textr3.facade.getActive(), 1);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 1);
     }
 
     @Test
     public void testPreviousNext_DoubleNext() throws IOException {
-        assertEquals(textr3.facade.getActive(), 0);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
         focusNext();
         focusNext();
         haltLoop();
         textr3.startListenersAndHandlers();
-        assertEquals(textr3.facade.getActive(), 1);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 1);
     }
 
     @Test
     public void testPreviousNext_NextPevious() throws IOException {
-        assertEquals(textr3.facade.getActive(), 0);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
         focusNext();
         focusPrevious();
         haltLoop();
         textr3.startListenersAndHandlers();
-        assertEquals(textr3.facade.getActive(), 0);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
     }
 
     private void focusNext() {
