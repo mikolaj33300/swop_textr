@@ -125,7 +125,7 @@ public class ScrollbarDecorator extends View{
         int visibleStartPercent = (focusedCol*width)/contentTotalWidth;
         int visibleEndPercent = ((2+focusedCol)*width)/contentTotalWidth;
 
-        //TODO: Rewrite this for loop to not get out of bounds error like in vertical bar
+/*        //TODO: Rewrite this for loop to not get out of bounds error like in vertical bar
         //TODO: Test this
 
         for (int i = 0; i < visibleStartPercent; i++)
@@ -133,7 +133,17 @@ public class ScrollbarDecorator extends View{
         for (int i = visibleStartPercent; i < visibleEndPercent; i++)
             termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
         for (int i  = visibleEndPercent; i < width-1; i++)
-            termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
+            termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");*/
+
+        for(int i = 0; i < visibleStartPercent; i++){
+            if(i<visibleStartPercent){
+                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
+            } else if (i<visibleEndPercent){
+                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "+");
+            } else {
+                termiosTerminalAdapter.printText(1+startY, 1+startX+i, "-");
+            }
+        }
     }
 
     private void updateWrappeeDimensions() throws IOException {

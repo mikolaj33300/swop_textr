@@ -29,17 +29,12 @@ public class DisplayFacadeTest {
 
     @Test
     public void testDisplaysSwing() throws IOException {
-        String path = path1.toString();
-        BufferCursorContext bufferCursorContext = new BufferCursorContext(path, new byte[]{0x0d, 0x0a});
-        FileBufferInputHandler handler = new FileBufferInputHandler(bufferCursorContext);
+
         VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 100, new ArrayList<>());
-        FileBufferView view = new FileBufferView(bufferCursorContext, adapter);
-        FileBufferWindow window = new FileBufferWindow(view, handler);
 
         SwingTerminalAdapter newSwing = new SwingTerminalAdapter();
-        window.setTermiosAdapter(newSwing);
-        DisplayFacade newDisplay = new DisplayFacade(window, newSwing, "--lf".getBytes());
-        newDisplay.paintScreen();
+        ControllerFacade newController = new ControllerFacade(new String[] {"--lf", path1.toString()}, adapter);
+        newController.openNewSwingFromActiveWindow();
         while(true);
         //assertEquals(newSwing.getContentBuffer()[0][0], 'm');
     }

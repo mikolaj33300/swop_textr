@@ -72,7 +72,7 @@ public class FileBufferView extends View {
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         //assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
+            termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash).substring(0, Math.min(width, this.getStatusbarString(activeHash).length())));
     }
 
     /**
