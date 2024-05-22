@@ -16,7 +16,6 @@ public class SwingEditableTerminalAppTest {
         SwingEditableTerminalApp newApp = new SwingEditableTerminalApp();
         newApp.setVisible(true);
         newApp.updateBuffer("Pain", 0, 0);
-        while(true);
 
     }
 }

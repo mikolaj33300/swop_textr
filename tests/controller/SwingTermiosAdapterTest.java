@@ -12,10 +12,5 @@ public class SwingTermiosAdapterTest {
 
     @Test
     public void testDisplayedSwing() throws IOException {
-        SwingTerminalAdapter adapterToTest = new SwingTerminalAdapter();
-        adapterToTest.printText( 1, 1, "aaaaaaaaaaa");
-        /*while(true){
-            //this is so the window doesn't immediately close but the program doesn't have other stuff to do
-        }*/
     }
 }

@@ -16,6 +16,7 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
     public SwingTerminalAdapter() {
         this.editableSwingTerminal = new SwingEditableTerminalApp();
+        editableSwingTerminal.setVisible(true);
     }
 
   @Override
@@ -35,18 +36,11 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
   @Override
   public void moveCursor(int row, int column){
-        if(editableSwingTerminal.isVisible()==false){
-            editableSwingTerminal.setVisible(true);
-        }
-
       editableSwingTerminal.moveCursor(row-1, column-1);
   }
 
   @Override
   public void printText(int row, int column, String text){
-      if(editableSwingTerminal.isVisible()==false){
-          editableSwingTerminal.setVisible(true);
-      }
 	  editableSwingTerminal.updateBuffer(text, column-1, row-1);
   }
 
