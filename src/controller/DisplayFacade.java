@@ -63,22 +63,24 @@ class DisplayFacade {
         this.fileBufferWindows = new ArrayList<>();
         ArrayList<Layout> leaves = new ArrayList<>(paths.length);
 
-        for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            FileBufferWindow toAdd;
+        if (paths.length == 1) {
+          FileBufferWindow toAdd = new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+          this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+        } else {
+          int[] hashes = new int[paths.length];
+          for (int i = 0; i < paths.length; i++) {
+              String checkPath = paths[i];
+              FileBufferWindow toAdd;
 
-            toAdd = new FileBufferWindow(checkPath, lineSeparatorArg, termiosTerminalAdapter);
+              toAdd = new FileBufferWindow(checkPath, lineSeparatorArg, termiosTerminalAdapter);
 
-            this.fileBufferWindows.add(toAdd);
-            this.windows.add(toAdd);
-            leaves.add(new LayoutLeaf(windows.get(i).getView().hashCode()));
+              this.fileBufferWindows.add(toAdd);
+              this.windows.add(toAdd);
+              hashes[i] = windows.get(i).getView().hashCode();
+          }
+          this.rootLayout = new VerticalLayoutNode(hashes);
         }
-
-            if (leaves.size() == 1)
-                this.rootLayout = leaves.get(0);
-            else
-                this.rootLayout = new VerticalLayoutNode(leaves);
-        }
+    }
 
     /**
      * Used for testing

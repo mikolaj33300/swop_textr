@@ -37,6 +37,13 @@ public abstract class LayoutNode extends Layout {
             this.insertDirectChild(l.clone());
     }
 
+    public LayoutNode(int[] hashes) {
+      this.children = new ArrayList<>(hashes.length);
+      for (int i : hashes) {
+        this.children.add(new LayoutLeaf(i));
+      }
+    }
+
 
     /**
      * Returns the orientation of the LayoutNode
