@@ -103,7 +103,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
             // Control + J = parse
             case 10:
                 View.write("test2.txt", "called");
-                this.fb.getFileBuffer().parse();
+                this.fb.parse();
                 break;
             //Control + U
             case 25:

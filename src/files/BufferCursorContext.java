@@ -32,7 +32,7 @@ public class BufferCursorContext {
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
         subscribeToDeletionInsertionFb();
-        View.write("test2.txt", ">> cursor context created");
+        View.write("test2.txt", "\n>> cursor context created");
     }
 
     private void subscribeToDeletionInsertionFb() {
@@ -306,8 +306,19 @@ public class BufferCursorContext {
       return containedFileBuffer.getLineLength(line);
     }
 
+    /**
+     * Returns the path of the {@link FileHolder}
+     * @return the path in string format
+     */
     public String getPath() {
 	return containedFileBuffer.getPath();
+    }
+
+    /**
+     * Will attempt to parse the buffers contents (temp?)
+     */
+    public void parse() {
+        this.containedFileBuffer.parse();
     }
 
     /**

@@ -1,9 +1,9 @@
 package controller;
 
-import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
+import ioadapter.TermiosTerminalAdapter;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
 import layouttree.VerticalLayoutNode;
@@ -495,8 +495,17 @@ class DisplayFacade {
                     View.write("test2.txt", "in displayfacade");
                     windows.add(windows.size(), openedWindow);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), openedWindow.getView().hashCode());
+                    try {
+                        updateViewCoordinates();
+                    } catch(Exception e) {
+
+                    }
                 }
         );
+    }
+
+    private String getFormat(Rectangle rect) {
+        return "(" + rect.startX + ", " + rect.startY + ")";
     }
 
 }

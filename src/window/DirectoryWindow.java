@@ -13,18 +13,20 @@ import java.io.IOException;
 public class DirectoryWindow extends Window {
 
     private final FileSystemEntry entry;
-    private final TermiosTerminalAdapter adapter;
+    private TermiosTerminalAdapter adapter;
     private final Directory dir;
+    private final DirectoryView view;
 
     public DirectoryWindow(FileSystemEntry entry, TermiosTerminalAdapter adapter) {
         this.entry = entry;
         this.adapter = adapter;
         this.dir = new Directory(entry);
+        this.view = new DirectoryView(adapter, dir);
     }
 
     @Override
     public View getView() {
-        return new DirectoryView(adapter, dir);
+        return view;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class DirectoryWindow extends Window {
 
     @Override
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
-
+        this.adapter = newAdapter;
     }
 
 }
