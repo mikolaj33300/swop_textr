@@ -55,4 +55,9 @@ public class DirectoryWindow extends Window {
         //This normally won't request to open any windows (not directly)
     }
 
+    @Override
+    public String getPath() {
+        return null;
+    }
+
 }

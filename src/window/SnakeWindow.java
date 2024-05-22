@@ -86,4 +86,9 @@ public class SnakeWindow extends Window {
         /*Snake normally won't request to open windows but this can be changed in
         the future*/
     }
+
+    @Override
+    public String getPath() {
+        return null;
+    }
 }

@@ -1,10 +1,6 @@
 package files;
 
-import listeners.DeletedCharListener;
-import listeners.DeletedInsertionPointListener;
-import listeners.EnteredInsertionPointListener;
-import listeners.OpenWindowRequestListener;
-import ui.View;
+import listeners.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +18,7 @@ public class BufferCursorContext {
     private DeletedInsertionPointListener dil;
     private DeletedCharListener dcl;
     EditableFileBuffer containedFileBuffer;
-    private OpenWindowRequestListener openParsedDirectoryListener;
+    private OpenWindowForFileEntryRequestListener openParsedDirectoryListener;
 
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
@@ -32,7 +28,6 @@ public class BufferCursorContext {
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
         subscribeToDeletionInsertionFb();
-        View.write("test2.txt", "\n>> cursor context created");
     }
 
     private void subscribeToDeletionInsertionFb() {
@@ -318,15 +313,14 @@ public class BufferCursorContext {
      * Will attempt to parse the buffers contents (temp?)
      */
     public void parse() {
-        this.containedFileBuffer.parse();
+        this.containedFileBuffer.parseAsJSON();
     }
 
     /**
      * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
      * @param listener the listener that passes a window
      */
-    public void subscribe(OpenWindowRequestListener listener) {
-        View.write("test2.txt", "\n<CursorContext> Received request for subscribing in" + this.hashCode());
+    public void subscribe(OpenWindowForFileEntryRequestListener listener) {
         this.openParsedDirectoryListener = listener;
         this.subscribeEditableBuffer();
     }
@@ -335,11 +329,9 @@ public class BufferCursorContext {
      * This will subscribe the {@link EditableFileBuffer} to this class.
      */
     private void subscribeEditableBuffer() {
-        View.write("test2.txt", "\n<CursorContext> Subscribing to editable buffer" + this.containedFileBuffer.hashCode());
-        this.containedFileBuffer.subscribeEditableBuffer(
+       this.containedFileBuffer.subscribeEditableBuffer(
                 window -> {
-                    View.write("test2.txt", "in context");
-                    this.openParsedDirectoryListener.openWindow(window);
+                    this.openParsedDirectoryListener.notifyRequestToOpenWindow(window);
                 }
         );
     }

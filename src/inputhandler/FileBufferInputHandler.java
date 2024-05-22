@@ -1,8 +1,8 @@
 package inputhandler;
 
+import directory.directorytree.FileSystemEntry;
 import files.BufferCursorContext;
-import listeners.OpenWindowRequestListener;
-import ui.View;
+import listeners.OpenWindowForFileEntryRequestListener;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     BufferCursorContext fb;
     boolean surrogate;
-    private OpenWindowRequestListener listener;
+    private OpenWindowForFileEntryRequestListener listener;
 
     /**
      * constructor
@@ -21,7 +21,6 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
         this.fb = new BufferCursorContext(path, lineSeparator);
-        View.write("test2.txt", ">> handler created");
     }
 
     /**
@@ -80,7 +79,6 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param b the input byte
      */
     public void asciiInput(byte b) {
-        View.write("test2.txt", "byte = " + (int) b);
         switch (b) {
 
             case 8, 127, 62:
@@ -102,7 +100,6 @@ public class FileBufferInputHandler extends InputHandlingElement {
                 break;
             // Control + J = parse
             case 10:
-                View.write("test2.txt", "called");
                 this.fb.parse();
                 break;
             //Control + U
@@ -217,20 +214,19 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * and these methods will be handled here.
      */
     private void subscribeFileBufferContext() {
-        View.write("test2.txt", "\n<Handler> Subscribing to context in" + fb.hashCode());
-        this.fb.subscribe(
-                window -> {
-                    View.write("test2.txt", "in buffer cursor context");
-                    this.listener.openWindow(window);
-                }
+        this.fb.subscribe(new OpenWindowForFileEntryRequestListener() {
+                              @Override
+                              public void notifyRequestToOpenWindow(FileSystemEntry entry) {
+                                  listener.notifyRequestToOpenWindow(entry);
+                              }
+                          }
         );
     }
 
     /**
      * Allows the {@link window.FileBufferWindow} to receive requests made from here
      */
-    public void subscribeInputHandler(OpenWindowRequestListener listener) {
-        View.write("test2.txt", "\n<Handler> Received request for subscribing in inputhandler" + this.hashCode());
+    public void subscribeInputHandler(OpenWindowForFileEntryRequestListener listener) {
         this.listener = listener;
         this.subscribeFileBufferContext();
     }

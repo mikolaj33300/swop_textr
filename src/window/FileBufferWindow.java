@@ -125,7 +125,7 @@ public class FileBufferWindow extends Window {
         this.fileBufferInputHandler.subscribeInputHandler(
                 window -> {
                     View.write("test2.txt", "in file buffer window");
-                    this.listener.openWindow(window);
+                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(window, this.view.getTermiosTerminalAdapter()));
                 }
         );
     }
@@ -134,6 +134,11 @@ public class FileBufferWindow extends Window {
     public void subscribeWindow(OpenWindowRequestListener listener) {
         this.listener = listener;
         this.subscribeInputHandler();
+    }
+
+    @Override
+    public String getPath() {
+        return fileBufferInputHandler.getPath();
     }
 
 }

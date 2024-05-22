@@ -59,4 +59,11 @@ public abstract class Window {
     public boolean isSafeToClose(){
         return getHandler().isSafeToClose();
     }
+
+    /**
+     * Returns path for the open resource in this window or null if irrelevant. For windows with files it delegates
+     * the call to get path to the file on lowest level. A virtual file built on a JSON will return null. A real file
+     * the path that is currently open.
+     */
+    public abstract String getPath();
 }

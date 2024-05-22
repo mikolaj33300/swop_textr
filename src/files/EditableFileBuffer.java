@@ -1,10 +1,12 @@
 package files;
 
 import ioadapter.RealTermiosTerminalAdapter;
+import listeners.OpenWindowForFileEntryRequestListener;
 import listeners.OpenWindowRequestListener;
 import ui.View;
 import util.json.JsonUtil;
 import window.DirectoryWindow;
+import window.NormalWindowFactory;
 
 import java.io.IOException;
 
@@ -15,7 +17,7 @@ public class EditableFileBuffer extends FileBuffer {
 
     private int openedSubFiles = 0;
     private boolean parsed = false;
-    private OpenWindowRequestListener listener;
+    private OpenWindowForFileEntryRequestListener listener;
 
     /**
      * Creates FileBuffer object with given path;
@@ -39,11 +41,11 @@ public class EditableFileBuffer extends FileBuffer {
     /**
      * Notifies this object that it has been parsed
      */
-    public boolean parse() {
+    public boolean parseAsJSON() {
         if(JsonUtil.parseDirectory(this) != null) {
             this.parsed = true;
             View.write("test2.txt", "\nparse correct" + (this.hashCode()));
-            this.listener.openWindow(new DirectoryWindow(JsonUtil.parseDirectory(this), new RealTermiosTerminalAdapter()));
+            this.listener.notifyRequestToOpenWindow((JsonUtil.parseDirectory(this)));
         }
         View.write("test2.txt", "parsing failed at location" + JsonUtil.getErrorLocation(new String(this.getBytes())));
         return false;
@@ -95,7 +97,7 @@ public class EditableFileBuffer extends FileBuffer {
         return copy;
     }
 
-    public void subscribeEditableBuffer(OpenWindowRequestListener listener) {
+    public void subscribeEditableBuffer(OpenWindowForFileEntryRequestListener listener) {
         View.write("test2.txt", "\n<Buffer> Subscribed: " + this.hashCode());
         this.listener = listener;
     }
