@@ -19,6 +19,7 @@ public class UserPopupBox {
      */
     public UserPopupBox(String message, TermiosTerminalAdapter adapter){
         this.message = message;
+        this.adapter = adapter;
     }
 
     /**
@@ -32,7 +33,7 @@ public class UserPopupBox {
             throw new RuntimeException(e);
         }
         for (int i = 0; i < coords.height; i++){
-            adapter.printText(i, 1, " ".repeat(coords.width));
+            adapter.printText(i+1, 1, " ".repeat(coords.width));
         }
         Terminal.printText(1,1, message);
     }

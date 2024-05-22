@@ -123,7 +123,6 @@ public class InspectContentsController extends UseCaseController {
                             unsubscribeFromFacadeAscii();
                             coreControllerParent.setActiveUseCaseController(new DirtyClosePromptController(coreControllerParent, facade));
                         } else if (result == 2) {
-                            clearContent();
                             System.exit(0);
                         }
                 }
@@ -145,10 +144,6 @@ public class InspectContentsController extends UseCaseController {
     public void paintScreen() throws IOException {
         facade.paintScreen();
         //facade.renderCursor();
-    }
-
-    private void clearContent() {
-       facade.clearScreen();
     }
 
     @Override

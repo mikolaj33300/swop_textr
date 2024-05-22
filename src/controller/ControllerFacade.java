@@ -266,8 +266,9 @@ public class ControllerFacade {
      * Renders every element on the active display
      */
     public void paintScreen() throws IOException {
-        clearScreen();
-        this.displays.get(active).paintScreen();
+        for(DisplayFacade f : displays){
+            f.paintScreen();
+        }
     }
 
     /**
@@ -284,14 +285,6 @@ public class ControllerFacade {
      */
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
-    }
-
-    public void clearScreen() {
-        try {
-            displays.get(active).clearContent();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
 

@@ -35,12 +35,4 @@ public class FileErrorPopupController extends UseCaseController {
         userPopupBox.render();
     }
 
-    /**
-     * remove the popup
-     * @throws IOException
-     */
-    public void clearContent() throws IOException {
-        coreControllerParent.getAdapter().clearScreen();
-    }
-
 }

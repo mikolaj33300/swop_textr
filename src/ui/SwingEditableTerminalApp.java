@@ -138,6 +138,12 @@ public class SwingEditableTerminalApp extends JFrame {
         updateAndRenderVisual();
     }
 
+    /*
+    This needs to subscribe by itself to events of the panel instead of just passing provided listeners to the panel
+    directly, since this is the frontend of the swing ui part and the panel is a low level renderer
+    and parameters for listeners would also vary (we add some invisible characters to the buffer due
+    to a rendering glitch where the rightmost column disappears)
+     */
     public SwingEditableTerminalApp() {
         super("Swing Terminal App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);

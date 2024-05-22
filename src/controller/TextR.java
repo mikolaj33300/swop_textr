@@ -108,7 +108,7 @@ public class TextR {
      * Adds a timer listener to swing
      */
     private void addTimerListener() {
-        javax.swing.Timer timer = new javax.swing.Timer(1, new ActionListener() {
+        javax.swing.Timer timer = new javax.swing.Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleIdleEvent();
@@ -125,6 +125,11 @@ public class TextR {
                 if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
                     activeUseCaseController.paintScreen();
                 }
+
+/*              For testing if the timer fires visually without affecting terminal
+                JFrame dummyFrame = new JFrame();
+                dummyFrame.pack();
+                dummyFrame.setVisible(true);*/
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -181,7 +186,7 @@ public class TextR {
      * Returns the active adapter.
      */
     public TermiosTerminalAdapter getAdapter() {
-	    return adapter.get(activeAdapter);
+	    return adapterToStartWith;
     }
 
     /**

@@ -39,16 +39,8 @@ public class FailedSavePopupController extends UseCaseController {
      */
     @Override
     public void paintScreen() throws IOException {
-        clearContent();
         userPopupBox.render();
         needsRenderSinceLast = false;
     }
 
-    /**
-     * remove the popup
-     * @throws IOException
-     */
-    public void clearContent() throws IOException {
-        coreControllerParent.getAdapter().clearScreen();
-    }
 }
