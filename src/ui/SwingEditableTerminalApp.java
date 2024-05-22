@@ -100,7 +100,7 @@ class TerminalPanel extends JPanel {
 
 public class SwingEditableTerminalApp extends JFrame {
     private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
-    private char[][] contentBuffer = new char[25][160];
+    private char[][] contentBuffer;
 
     private int cursorRow = 0;
     private int cursorCol = 0;
@@ -149,6 +149,8 @@ public class SwingEditableTerminalApp extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
         getContentPane().add(terminalPanel);
+        contentBuffer =  new char[25][100];
+        terminalPanel.setNewBuffer(contentBuffer);
         terminalPanel.subscribeToResize(new ResizeListener() {
             @Override
             public void notifyNewCoords(Coords n) throws IOException {
