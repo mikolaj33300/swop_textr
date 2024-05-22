@@ -286,6 +286,10 @@ public class ControllerFacade {
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
     }
+
+    public DisplayFacade getActiveDisplay() {
+        return this.displays.get(active);
+    }
 }
 
 

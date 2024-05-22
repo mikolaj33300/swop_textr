@@ -20,6 +20,10 @@ public class SaveBufferTest {
     @TempDir
     Path path1, path2;
     private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+
+    private final VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+
     private TextR textr1, textr2, textr3;
 
     @BeforeEach
@@ -29,8 +33,8 @@ public class SaveBufferTest {
         Path b = path2.resolve("test2.txt");
         Files.write(b, "i love eating kaas\n ; kaas is my favourite\n; also using termios on a daily basis".getBytes());
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
-        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter);
-        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
+        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
     }
 
     /**
@@ -40,8 +44,7 @@ public class SaveBufferTest {
     @Test
     public void testGetsDirty() throws IOException {
         enterCharacter('b');
-        haltLoop();
-        textr1.startListenersAndHandlers();
+
         assertTrue(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
@@ -51,8 +54,7 @@ public class SaveBufferTest {
     public void testSaveContentsToFile() throws IOException {
         enterCharacter('b');
         adapter.putByte(19); // Ctrl + S
-        haltLoop();
-        textr1.startListenersAndHandlers();
+        triggerStdinEventFirstAdapter();
         assertFalse(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
@@ -62,14 +64,17 @@ public class SaveBufferTest {
 
     private void enterCharacter(char character) {
         adapter.putByte((int) character);
+        triggerStdinEventFirstAdapter();
     }
 
     private void focusNext() {
         adapter.putByte(14);
+        triggerStdinEventFirstAdapter();
     }
 
     public void focusPrevious() {
         adapter.putByte(16);
+        triggerStdinEventFirstAdapter();
     }
 
     /**
@@ -83,10 +88,11 @@ public class SaveBufferTest {
         adapter.putByte(27);
         adapter.putByte(10);
         adapter.putByte((int) dir);
+        triggerStdinEventFirstAdapter();
     }
 
-    private void haltLoop() {
-        adapter.putByte(-2);
+    private void triggerStdinEventFirstAdapter(){
+        adapter.runStdinListener();
     }
 
 }

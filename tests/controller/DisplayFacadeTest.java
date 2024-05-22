@@ -32,7 +32,6 @@ public class DisplayFacadeTest {
         SwingTerminalAdapter newSwing = new SwingTerminalAdapter();
         ControllerFacade newController = new ControllerFacade(new String[] {"--lf", path1.toString()}, adapter);
         newController.openNewSwingFromActiveWindow();
-        while(true);
         //assertEquals(newSwing.getContentBuffer()[0][0], 'm');
     }
 

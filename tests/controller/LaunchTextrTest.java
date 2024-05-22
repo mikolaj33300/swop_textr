@@ -18,7 +18,11 @@ public class LaunchTextrTest {
     @TempDir
     Path path1, path2;
 
-    private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+
+
     private TextR textr1, textr2, textr3;
 
     @BeforeEach
@@ -27,9 +31,12 @@ public class LaunchTextrTest {
         Files.write(path1, "mister".getBytes());
         path2 = path2.resolve("test2.txt");
         Files.write(path2, "mister2\nhello".getBytes());
+        adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+        adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+        adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
         textr1 = new TextR(new String[] {"--lf", path1.toString()}, adapter);
-        textr2 = new TextR(new String[] {"--lf", path1.toString()}, adapter);
-        textr3 = new TextR(new String[] {"--lf", path1.toString(), path2.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf", path1.toString()}, adapter2);
+        textr3 = new TextR(new String[] {"--lf", path1.toString(), path2.toString()}, adapter3);
 
     }
 
@@ -51,8 +58,8 @@ public class LaunchTextrTest {
 
     @Test
     public void testPathsAndLineSeparator() {
-        assertDoesNotThrow(() -> new TextR(new String[] {"--lf", path1.toString()}, adapter));
-        assertDoesNotThrow(() -> new TextR(new String[] {"--crlf", path1.toString()}, adapter));
+        assertDoesNotThrow(() -> new TextR(new String[] {"--lf", path1.toString()}, new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>())));
+        assertDoesNotThrow(() -> new TextR(new String[] {"--crlf", path1.toString()}, new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>())));
     }
 
     @Test

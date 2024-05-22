@@ -19,6 +19,11 @@ public class InspectBufferTest {
     @TempDir
     Path path1, path2;
     private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+
+    private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+
+
     private TextR textr1, textr2, textr3;
 
     @BeforeEach
@@ -28,8 +33,8 @@ public class InspectBufferTest {
         Path b = path2.resolve("test2.txt");
         Files.write(b, "mister2\nhello".getBytes());
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
-        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter);
-        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
+        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
     }
 
     /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
@@ -38,10 +43,7 @@ public class InspectBufferTest {
     public void testMoveCursorUp_OneLine() throws IOException {
         // Move cursor & let loop stop itself
         moveCursor('A');
-        haltLoop();
 
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
 
@@ -58,10 +60,7 @@ public class InspectBufferTest {
         // Move cursor & let loop stop itself
         moveCursor('B');
         moveCursor('A');
-        haltLoop();
 
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
@@ -76,10 +75,6 @@ public class InspectBufferTest {
     public void testMoveCursorDown_OneLine() throws IOException {
         // Move cursor & let loop stop itself
         moveCursor('B');
-        haltLoop();
-
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
@@ -92,11 +87,7 @@ public class InspectBufferTest {
     @Test
     public void testMoveCursorDown_TwoLine() throws IOException {
         // Move cursor & let loop stop itself
-        moveCursor('B');
-        haltLoop();
-
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr2.startListenersAndHandlers();
+        moveCursorSecond('B');
 
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr2.getActiveUseCaseController().getFacade().getWindows().get(textr2.getActiveUseCaseController().getFacade().getActive()).getHandler();
@@ -111,10 +102,6 @@ public class InspectBufferTest {
     public void testMoveCursorRight() throws IOException {
         // Move cursor & let loop stop itself
         moveCursor('C');
-        haltLoop();
-
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
 
         // Assert that the active view is a FileBufferView so we can retrieve the context
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
@@ -129,10 +116,7 @@ public class InspectBufferTest {
     public void testMoveCursorLeft_Start() throws IOException {
         // Move cursor & let loop stop itself
         moveCursor('B');
-        haltLoop();
 
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
         // Test if the move cursor worked logically
@@ -148,10 +132,6 @@ public class InspectBufferTest {
         moveCursor('C');
         moveCursor('C');
         moveCursor('D');
-        haltLoop();
-
-        // Loop the program: will read the move cursor command & stop the loop after
-        textr1.startListenersAndHandlers();
 
         FileBufferInputHandler view = (FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler();
 
@@ -165,47 +145,51 @@ public class InspectBufferTest {
     public void testPreviousNext_OneBuffer() throws IOException {
         assertEquals(textr1.getActiveUseCaseController().getFacade().getActive(), 0);
         focusNext();
-        haltLoop();
-        textr1.startListenersAndHandlers();
         assertEquals(textr1.getActiveUseCaseController().getFacade().getActive(), 0);
     }
 
 
     @Test
     public void testPreviousNext_TwoBuffer() throws IOException {
-        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
-        focusNext();
-        haltLoop();
-        textr3.startListenersAndHandlers();
-        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 1);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActiveDisplay().getActive(), 0);
+        focusNextThird();
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActiveDisplay().getActive(), 1);
     }
 
     @Test
     public void testPreviousNext_DoubleNext() throws IOException {
-        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
-        focusNext();
-        focusNext();
-        haltLoop();
-        textr3.startListenersAndHandlers();
-        assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 1);
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActiveDisplay().getActive(), 0);
+        focusNextThird();
+        focusNextThird();
+        assertEquals(textr3.getActiveUseCaseController().getFacade().getActiveDisplay().getActive(), 1);
     }
 
     @Test
     public void testPreviousNext_NextPevious() throws IOException {
         assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
-        focusNext();
-        focusPrevious();
-        haltLoop();
-        textr3.startListenersAndHandlers();
+        focusNextThird();
+        focusPreviousThird();
         assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
     }
 
     private void focusNext() {
         adapter.putByte(14);
+        triggerStdinEventFirstAdapter();
+    }
+
+    private void focusNextThird() {
+        adapter3.putByte(14);
+        triggerStdinEventThirdAdapter();
+    }
+
+    private void focusPreviousThird() {
+        adapter3.putByte(16);
+        triggerStdinEventThirdAdapter();
     }
 
     public void focusPrevious() {
         adapter.putByte(16);
+        triggerStdinEventFirstAdapter();
     }
 
     /**
@@ -219,10 +203,25 @@ public class InspectBufferTest {
         adapter.putByte(27);
         adapter.putByte(10);
         adapter.putByte((int) dir);
+        triggerStdinEventFirstAdapter();
     }
 
-    private void haltLoop() {
-        adapter.putByte(-2);
+    private void moveCursorSecond(char dir) {
+        adapter2.putByte(27);
+        adapter2.putByte(10);
+        adapter2.putByte((int) dir);
+        triggerStdinEventSecondAdapter();
+    }
+    private void triggerStdinEventFirstAdapter(){
+        adapter.runStdinListener();
+    }
+
+    private void triggerStdinEventSecondAdapter(){
+        adapter2.runStdinListener();
+    }
+
+    private void triggerStdinEventThirdAdapter(){
+        adapter3.runStdinListener();
     }
 
 }

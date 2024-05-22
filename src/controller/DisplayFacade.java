@@ -125,7 +125,6 @@ class DisplayFacade {
             displayCoords = this.termiosTerminalAdapter.getTextAreaSize();
         }
         updateViewCoordinates();
-        clearContent();
         renderContent();
         renderCursor();
     }
