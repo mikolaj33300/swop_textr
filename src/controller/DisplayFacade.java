@@ -391,8 +391,10 @@ class DisplayFacade {
      * @param newAdapter the adapter that should be used for the new display
      * @throws IOException
      */
-    public void requestOpeningNewDisplay(TermiosTerminalAdapter newAdapter) throws IOException {
-        windows.get(active).accept(new newDisplayFromWindowVisitor(newAdapter));
+    public DisplayFacade requestOpeningNewDisplay(TermiosTerminalAdapter newAdapter) throws IOException {
+        DisplayFromWindowVisitor newVisitor = new DisplayFromWindowVisitor(newAdapter);
+        windows.get(active).accept(newVisitor);
+        return newVisitor.resultDisplayFacade;
     }
 
     /**
@@ -442,16 +444,18 @@ class DisplayFacade {
      * Depending on which action, in this case opening a new display, we can let the window double-dispatch to here, where
      * {@link DisplayFacade.DuplicateWindowVisitor} can access {@link DisplayFacade#windows}.
      */
-    public class newDisplayFromWindowVisitor implements WindowVisitor {
+    public class DisplayFromWindowVisitor implements WindowVisitor {
         private TermiosTerminalAdapter newAdapter;
+        private DisplayFacade resultDisplayFacade;
 
         /**
          * Upon creation of this object, {@link DisplayFacade} gives a {@link TermiosTerminalAdapter} which will be used
          * for the new {@link DisplayFacade}.
          * @param newAdapter the termios adapter for the new display facade
          */
-        public newDisplayFromWindowVisitor(TermiosTerminalAdapter newAdapter) {
+        public DisplayFromWindowVisitor(TermiosTerminalAdapter newAdapter) {
             this.newAdapter = newAdapter;
+            this.resultDisplayFacade = null;
         }
 
         /**
@@ -466,9 +470,7 @@ class DisplayFacade {
             windowToAdd.setTermiosAdapter(newAdapter);
             if (windowToAdd != null) {
                 DisplayFacade displayToAdd = new DisplayFacade(windowToAdd, newAdapter, lineSeparatorArg);
-                for (DisplayOpeningRequestListener dl : displayRequestListeners) {
-                    dl.notifyRequestOpenDisplay(displayToAdd);
-                }
+                resultDisplayFacade = displayToAdd;
             }
         }
 

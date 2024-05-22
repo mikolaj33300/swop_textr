@@ -1,5 +1,6 @@
 package ui;
 
+import controller.ASCIIKeyEventListener;
 import controller.adapter.ResizeListener;
 import util.Coords;
 
@@ -98,6 +99,7 @@ class TerminalPanel extends JPanel {
 }
 
 public class SwingEditableTerminalApp extends JFrame {
+    private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
     private char[][] contentBuffer = new char[25][160];
 
     private int cursorRow = 0;
@@ -158,7 +160,33 @@ public class SwingEditableTerminalApp extends JFrame {
         terminalPanel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
+                    final char keyChar = e.getKeyChar();
 
+                    if (keyChar == KeyEvent.CHAR_UNDEFINED){
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_F4:
+                                notifyASCIISurrogate(27, 83);
+                                break;
+                            case KeyEvent.VK_KP_UP:
+                            case KeyEvent.VK_UP:
+                                notifyASCIISurrogate(27, 65);
+                                break;
+                            case KeyEvent.VK_KP_DOWN:
+                            case KeyEvent.VK_DOWN:
+                                notifyASCIISurrogate(27, 66);
+                                break;
+                            case KeyEvent.VK_KP_RIGHT:
+                            case KeyEvent.VK_RIGHT:
+                                notifyASCIISurrogate(27, 67);
+                                break;
+                            case KeyEvent.VK_KP_LEFT:
+                            case KeyEvent.VK_LEFT:
+                                notifyASCIISurrogate(27, 68);
+                                break;
+                        }
+                    } else {
+                        notifyASCIIBasic((int) keyChar);
+                    }
             }
         });
 
@@ -187,5 +215,20 @@ public class SwingEditableTerminalApp extends JFrame {
 
     public void subscribeToResize(ResizeListener r){
         this.resizeListeners.add(r);
+    }
+
+    public void subscribeToASCIIKeyEnters(ASCIIKeyEventListener asciiKeyEventListener) {
+        this.asciiListenerArrayList.add(asciiKeyEventListener);
+    }
+    private void notifyASCIIBasic(int b){
+        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+            l.notifyNormalKey(b);
+        }
+    }
+
+    private void notifyASCIISurrogate(int first, int second){
+        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+            l.notifySurrogateKeys(first, second);
+        }
     }
 }

@@ -18,7 +18,10 @@ class ControllerFacade {
     private int active = 0;
     private TermiosTerminalAdapter initialTermiosAdapter;
 
+    private ArrayList<ASCIIKeyEventListener> listenersToThisEvents;
+
     private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
+    private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
     private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
@@ -42,37 +45,6 @@ class ControllerFacade {
 
         DisplayFacade initialDisplay = new DisplayFacade(paths, initialTermiosAdapter, lineSeparatorArg);
         this.displays.add(initialDisplay);
-        subscribeToRequestsOpeningDisplay(initialDisplay);
-    }
-
-    /**
-     * Called from the constructor in {@link }
-     * @param display the display that can notify this object.
-     */
-    private void subscribeToRequestsOpeningDisplay(DisplayFacade display){
-        DisplayOpeningRequestListener newListener = new DisplayOpeningRequestListener() {
-            @Override
-            public void notifyRequestOpenDisplay(DisplayFacade displayToOpen) throws IOException {
-                openNewSwingDisplayFacade(displayToOpen);
-            }
-
-            @Override
-            public DisplayFacade getListenedToDisplay() {
-                return display;
-            }
-        };
-
-        display.subscribeToRequestsOpeningDisplay(newListener);
-        openingRequestListeners.add(newListener);
-    }
-
-    private void unsubscribeFromRequestsOpeningDisplay(DisplayFacade display){
-        for(int i = 0; i<openingRequestListeners.size(); i++){
-            if(openingRequestListeners.get(i).getListenedToDisplay() == display){
-                openingRequestListeners.remove(openingRequestListeners.get(i));
-                break;
-            }
-        }
     }
 
     /**
@@ -236,33 +208,38 @@ class ControllerFacade {
         return toReturn;
     }
 
-    /**
-     * Opens a new {@link DisplayFacade} and adds it to {@link ControllerFacade#displays}
-     * @param newFacade the facade to be added
-     * @return a render indicator
-     * @throws IOException
-     */
-    public RenderIndicator openNewSwingDisplayFacade(DisplayFacade newFacade) throws IOException {
-        /* Creation of the new facade depending on the window to be opened happens in facade itself.
-        This is because since we have two arraylists for windows etc, and maybe some other specific behavior
-        depending on exact window types, we want to shift that specific logic to the class that has that information.
-         */
-        //newFacade.paintScreen();
-
-        this.displays.add(displays.size(), newFacade);
-
-
-        DisplayFacadeResizeListener newListener = new DisplayFacadeResizeListener(newFacade);
-        newFacade.getTermiosTerminalAdapter().subscribeToResizeTextArea(newListener);
-        displayFacadeResizeListenerHashMap.put(newFacade, newListener);
-        newFacade.paintScreen();
-
-        return RenderIndicator.FULL;
-    }
-
     public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
         SwingTerminalAdapter newAdapter = new SwingTerminalAdapter();
-        this.displays.get(active).requestOpeningNewDisplay(newAdapter);
+        DisplayFacade newFacade = this.displays.get(active).requestOpeningNewDisplay(newAdapter);
+        if(newFacade != null){
+            this.displays.add(displays.size(), newFacade);
+
+
+            ASCIIKeyEventListener newAsciiListener = new ASCIIKeyEventListener() {
+                @Override
+                public void notifyNormalKey(int byteInt) {
+                    for(ASCIIKeyEventListener l : listenersToThisEvents){
+                        l.notifyNormalKey(byteInt);
+                    }
+                }
+
+                @Override
+                public void notifySurrogateKeys(int first, int second) {
+                    for(ASCIIKeyEventListener l : listenersToThisEvents){
+                        l.notifySurrogateKeys(first, second);
+                    }
+                }
+            };
+            DisplayFacadeResizeListener newResizeListener = new DisplayFacadeResizeListener(newFacade);
+
+            newAdapter.subscribeToResizeTextArea(newResizeListener);
+            newAdapter.subscribeToKeyPresses(newAsciiListener);
+            displayFacadeResizeListenerHashMap.put(newFacade, newResizeListener);
+            displayFacadeAsciiListenerHashMap.put(newFacade, newAsciiListener);
+            newFacade.paintScreen();
+        }
+
+
          return RenderIndicator.FULL;
     }
 

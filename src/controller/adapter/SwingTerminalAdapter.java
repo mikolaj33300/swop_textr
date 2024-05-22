@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
+import controller.ASCIIKeyEventListener;
 import ui.SwingEditableTerminalApp;
 import util.Coords;
 
 public class SwingTerminalAdapter implements TermiosTerminalAdapter {
     private ArrayList<ResizeListener> resizeListenerArrayList = new ArrayList<>(0);
+    private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
 
 
     private SwingEditableTerminalApp editableSwingTerminal;
@@ -25,42 +27,24 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
                 }
             }
         });
+
+        editableSwingTerminal.subscribeToASCIIKeyEnters(new ASCIIKeyEventListener() {
+
+            @Override
+            public void notifyNormalKey(int byteInt) {
+                for(ASCIIKeyEventListener l : asciiListenerArrayList){
+                    l.notifyNormalKey(byteInt);
+                }
+            }
+
+            @Override
+            public void notifySurrogateKeys(int first, int second) {
+                for(ASCIIKeyEventListener l : asciiListenerArrayList){
+                    l.notifySurrogateKeys(first, second);
+                }
+            }
+        });
     }
-
-/*  private void handleKey(KeyEvent e) {
-      final char keyChar = e.getKeyChar();
-
-      if (keyChar == KeyEvent.CHAR_UNDEFINED){
-		  switch (e.getKeyCode()) {
-			  case KeyEvent.VK_F4:
-				  keyQueue.add(27);
-				  keyQueue.add(83);// S in ascii
-				  break;
-	    case KeyEvent.VK_KP_UP:
-	    case KeyEvent.VK_UP:
-		  keyQueue.add(27);
-		  keyQueue.add(65);// A in ascii
-		  break;
-	    case KeyEvent.VK_KP_DOWN:
-	    case KeyEvent.VK_DOWN:
-		  keyQueue.add(27);
-		  keyQueue.add(66);// B in ascii
-		  break;
-	    case KeyEvent.VK_KP_RIGHT:
-	    case KeyEvent.VK_RIGHT:
-		  keyQueue.add(27);
-		  keyQueue.add(67);// C in ascii
-		  break;
-	    case KeyEvent.VK_KP_LEFT:
-	    case KeyEvent.VK_LEFT:
-		  keyQueue.add(27);
-		  keyQueue.add(68);// D in ascii
-		  break;
-	  	}
-      } else {
-	  	keyQueue.add((int) keyChar);
-      }
-  }*/
 
   @Override
   public void clearScreen() {
@@ -132,8 +116,26 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
         resizeListenerArrayList.add(l);
     }
 
+    @Override
+    public void setInputListener(Runnable runnable) {
+
+    }
+
+    @Override
+    public void clearInputListener() {
+
+    }
+
     public char[][] getContentBuffer(){
         return editableSwingTerminal.getContentBuffer();
+    }
+
+    public void subscribeToEnteredASCII(ASCIIKeyEventListener l){
+        asciiListenerArrayList.add(l);
+    }
+
+    public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener) {
+        editableSwingTerminal.subscribeToASCIIKeyEnters(newAsciiListener);
     }
 
 }

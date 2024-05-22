@@ -16,6 +16,7 @@ public class TextR {
     protected UseCaseController activeUseCaseController;
     public final ControllerFacade facade;
     public ArrayList<TermiosTerminalAdapter> adapter = new ArrayList<TermiosTerminalAdapter>(1);
+    private TermiosTerminalAdapter adapterToStartWith;
     private int activeAdapter = 0;
 
     /**
@@ -23,6 +24,7 @@ public class TextR {
      */
     public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
         this.adapter.add(termiosTerminalAdapter);
+        this.adapterToStartWith = termiosTerminalAdapter;
         ControllerFacade containedAppFacade;
         try {
             String[] paths = Arrays.copyOfRange(args, 1, args.length);
@@ -108,7 +110,7 @@ public class TextR {
 
 
     private void addTerminalInputListener() {
-        Terminal.setInputListener(new Runnable() {
+        adapterToStartWith.setInputListener(new Runnable() {
             public void run() {
                 java.awt.EventQueue.invokeLater(() -> {
                     try {
@@ -116,7 +118,7 @@ public class TextR {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    Terminal.setInputListener(this);
+                    adapterToStartWith.setInputListener(this);
                 });
             }
         });

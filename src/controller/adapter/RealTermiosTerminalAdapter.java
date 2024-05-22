@@ -54,4 +54,14 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     public void subscribeToResizeTextArea(ResizeListener l) {
         //In assignment it is assumed this will never happen
     }
+
+    @Override
+    public void setInputListener(Runnable runnable) {
+        Terminal.setInputListener(runnable);
+    }
+
+    @Override
+    public void clearInputListener() {
+        Terminal.clearInputListener();
+    }
 }

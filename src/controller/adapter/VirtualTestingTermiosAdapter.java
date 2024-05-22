@@ -167,6 +167,16 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
         //TODO: We can put resize events as something in the inputstream of the virtual? This is not a priority right now
     }
 
+    @Override
+    public void setInputListener(Runnable runnable) {
+
+    }
+
+    @Override
+    public void clearInputListener() {
+
+    }
+
     /**
      * Adds an integer to the inputstream
      * @param i the integer for the input stream
