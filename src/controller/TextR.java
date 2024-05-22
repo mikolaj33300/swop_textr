@@ -12,13 +12,29 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 public class TextR {
+
+    /**
+     * The active use case controller.
+     */
     protected UseCaseController activeUseCaseController;
+
+    /**
+     * The adapter allows interaction with the terminal. This is either on a real terminal or a simulated one.
+     */
     public ArrayList<TermiosTerminalAdapter> adapter = new ArrayList<TermiosTerminalAdapter>(1);
+
+    /**
+     * The initial adapter.
+     */
     private TermiosTerminalAdapter adapterToStartWith;
+
+    /**
+     * The adapter that is currently active.
+     */
     private int activeAdapter = 0;
 
     /**
-     * Creates a controller object.
+     * Creates a TextR controller object.
      */
     public TextR(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) {
         this.adapter.add(termiosTerminalAdapter);
@@ -30,12 +46,11 @@ public class TextR {
         } catch (IOException e) {
             this.activeUseCaseController = new FileErrorPopupController(this, termiosTerminalAdapter);
         }
-
-
     }
 
     /**
-     * A beautiful start for a beautiful project
+     * Main method for the awt part of the program
+     * Allows the program to be divided over multiple terminals running on different AWT dispatch threads
      * @throws IOException RuntimeException
      */
     public static void awtMain(String[] args) {
@@ -56,6 +71,10 @@ public class TextR {
         }
     }
 
+    /**
+     * Main method for the program, starting point
+     * @param args the files to be opened and optionallyy a line separator
+     */
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {awtMain(args);});
     }
@@ -70,13 +89,13 @@ public class TextR {
         // Reading terminal dimensions for correct rendering
         activeUseCaseController.paintScreen();
 
-
         addTimerListener();
-
         addTerminalInputListener();
     }
 
-
+    /**
+     * Adds a timer listener to swing
+     */
     private void addTimerListener() {
         javax.swing.Timer timer = new javax.swing.Timer(1, new ActionListener() {
             @Override
@@ -87,6 +106,9 @@ public class TextR {
         timer.start();
     }
 
+    /**
+     * Handles idle events. (like snake moving)
+     */
     private void handleIdleEvent() {
             try {
                 if(activeUseCaseController.handleIdle() != RenderIndicator.NONE){
@@ -97,8 +119,9 @@ public class TextR {
             }
     }
 
-
-
+    /**
+     * Adds an input listener to the terminal.
+     */
     private void addTerminalInputListener() {
         adapterToStartWith.setInputListener(new Runnable() {
             public void run() {
@@ -114,6 +137,11 @@ public class TextR {
         });
     }
 
+    /**
+     * Handles terminal input events.
+     * @return true if the program should stop, false otherwise
+     * @throws IOException
+     */
     private boolean handleTerminalInputEvent() throws IOException {
         int b;
 
@@ -138,10 +166,16 @@ public class TextR {
         return false;
     }
 
+    /**
+     * Returns the active adapter.
+     */
     public TermiosTerminalAdapter getAdapter() {
 	    return adapter.get(activeAdapter);
     }
 
+    /**
+     * Returns the active use case controller.
+     */
     UseCaseController getActiveUseCaseController(){
         return this.activeUseCaseController;
     }

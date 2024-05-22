@@ -13,14 +13,34 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 class ControllerFacade {
+
+    /**
+     * The line separator of the system
+     */
     private final byte[] lineSeparatorArg;
+
+    /**
+     * The list of displays on which TextR is running. Every display is opened in a separate terminal
+     */
     private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
+
+    /**
+     * The index of the active display in the displays list
+     */
     private int active = 0;
+
     private TermiosTerminalAdapter initialTermiosAdapter;
 
+    /**
+     * The listeners to the key events
+     */
     private ArrayList<ASCIIKeyEventListener> listenersToThisEvents;
 
+    /**
+     * The listeners to the resize events
+     */
     private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
+
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
     private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
@@ -241,15 +261,26 @@ class ControllerFacade {
          return RenderIndicator.FULL;
     }
 
+    /**
+     * Renders every element on the active display
+     */
     public void paintScreen() throws IOException {
         clearScreen();
         this.displays.get(active).paintScreen();
     }
 
+    /**
+     * Subscribes a listener to key presses
+     * @param l the listener to subscribe
+     */
     public void subscribeToKeyPresses(ASCIIKeyEventListener l) {
         this.listenersToThisEvents.add(l);
     }
 
+    /**
+     * Unsubscribes a listener from key presses
+     * @param asciiEventListener the listener to unsubscribe
+     */
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
     }
