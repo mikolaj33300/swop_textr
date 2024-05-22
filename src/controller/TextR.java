@@ -57,6 +57,11 @@ public class TextR {
         } catch (IOException e) {
             this.activeUseCaseController = new FileErrorPopupController(this, termiosTerminalAdapter);
         }
+        try {
+            this.startListenersAndHandlers();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -69,17 +74,11 @@ public class TextR {
             throw new AssertionError("Should run in AWT dispatch thread!");
         }
 
-        try {
-            TextR textR;
-            textR = new TextR(args, new RealTermiosTerminalAdapter());
-            //Fix recommended on sample Swing app
-            JFrame dummyFrame = new JFrame();
-            dummyFrame.pack();
-
-            textR.startListenersAndHandlers();
-        } catch (IOException e) {
-            throw new RuntimeException("Issue on startup. Are we initializing everything?");
-        }
+        TextR textR;
+        textR = new TextR(args, new RealTermiosTerminalAdapter());
+        //This is a fix recommended on sample Swing app
+        JFrame dummyFrame = new JFrame();
+        dummyFrame.pack();
     }
 
     /**
@@ -139,16 +138,14 @@ public class TextR {
      * Adds an input listener to the terminal.
      */
     private void addTerminalInputListener() {
-        adapterToStartWith.setInputListener(new Runnable() {
+        adapterToStartWith.setInputListenerOnAWTEventQueue(new Runnable() {
             public void run() {
-                java.awt.EventQueue.invokeLater(() -> {
                     try {
                         handleTerminalInputEvent();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    adapterToStartWith.setInputListener(this);
-                });
+                    adapterToStartWith.setInputListenerOnAWTEventQueue(this);
             }
         });
     }

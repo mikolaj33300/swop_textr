@@ -80,7 +80,7 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
     }
 
     @Override
-    public void setInputListener(Runnable runnable) {
+    public void setInputListenerOnAWTEventQueue(Runnable runnable) {
 
     }
 

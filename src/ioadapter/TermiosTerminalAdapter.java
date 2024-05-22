@@ -24,7 +24,7 @@ public interface TermiosTerminalAdapter {
 
     public void subscribeToResizeTextArea(ResizeListener l);
 
-    public void setInputListener(Runnable runnable);
+    public void setInputListenerOnAWTEventQueue(Runnable runnable);
 
     void clearInputListener();
 }
