@@ -84,4 +84,10 @@ public abstract class View {
     public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
         this.termiosTerminalAdapter = adapter;
     };
+
+    void fill(int x, int y, int w, int h, String s){
+      for (int i = 0; i < h; i++){
+        termiosTerminalAdapter.printText(y, x, s.repeat(w));
+      }
+    }
 }

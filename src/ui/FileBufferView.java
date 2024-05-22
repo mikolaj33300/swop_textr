@@ -52,6 +52,7 @@ public class FileBufferView extends View {
         int width = coords.width;
         int startY = coords.startY;
         int startX = coords.startX;
+        super.fill(1 + startX, 1 + startY, width, height, " ");
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = containedFileBuffer.getInsertionPointLine();
