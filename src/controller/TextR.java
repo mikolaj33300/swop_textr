@@ -187,7 +187,7 @@ public class TextR {
     /**
      * Returns the active use case controller.
      */
-    UseCaseController getActiveUseCaseController(){
+    public UseCaseController getActiveUseCaseController(){
         return this.activeUseCaseController;
     }
 

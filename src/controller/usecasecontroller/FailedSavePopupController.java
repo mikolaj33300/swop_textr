@@ -12,7 +12,7 @@ public class FailedSavePopupController extends UseCaseController {
 
     boolean needsRenderSinceLast;
 
-    UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.");
+    UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.", coreControllerParent.getAdapter());
 
     /**
      * @param coreControllerParent
