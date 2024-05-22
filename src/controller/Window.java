@@ -3,6 +3,7 @@ package controller;
 import controller.adapter.TermiosTerminalAdapter;
 import inputhandler.InputHandlingElement;
 import ui.View;
+import util.RenderIndicator;
 
 import java.io.IOException;
 
@@ -22,6 +23,16 @@ abstract class Window {
      * @return the handler of the window
      */
     public abstract InputHandlingElement getHandler();
+
+    /**
+     * Gives in input to the intputhandler of this window
+     * @param b the byte input
+     * @return the render indicator
+     * @throws IOException
+     */
+    public RenderIndicator input(byte b) throws IOException{
+        return getHandler().input(b);
+    }
 
     /**
      * Duplicates this window
