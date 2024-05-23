@@ -35,7 +35,7 @@ class DisplayFacade {
     /**
      * The integer representing an entry in {@link FileBufferWindow}
      */
-    private int active;
+    private int active = 0;
     /**
      * The adapter used for rendering
      */
@@ -76,7 +76,7 @@ class DisplayFacade {
 
               this.fileBufferWindows.add(toAdd);
               this.windows.add(toAdd);
-              hashes[i] = windows.get(i).getView().hashCode();
+              hashes[i] = toAdd.getView().hashCode();
           }
           this.rootLayout = new VerticalLayoutNode(hashes);
         }
@@ -215,7 +215,7 @@ class DisplayFacade {
                 break;
             }
         }
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**

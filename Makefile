@@ -24,7 +24,7 @@ build/%.class: src/%.java
 	
 textr.jar: $(SRC)
 	mkdir -p $(BUILD_DIR)
-	@javac -Xlint:unchecked -Xdiags:verbose -cp ./build:./termios/_build/main/io.github.btj.termios.jar -d ./build $^
+	@javac -Xlint:unchecked -Xdiags:verbose -cp ./build:./:./termios/_build/main/io.github.btj.termios.jar -d ./build $^
 	jar cvfm textr.jar ./Manifest -C $(BUILD_DIR) .
 
 test:
@@ -53,7 +53,7 @@ group07.zip:
 	 mv /tmp/group07.zip ./
 
 run:
-	java -cp termios/_build/main/io.github.btj.termios.jar -jar ./textr.jar ./long.txt ./config.mk || true
+	java -cp ./build:./:./termios/_build/main/io.github.btj.termios.jar -jar ./textr.jar ./long.txt ./config.mk || true
 	stty 500:5:bf:8a3b:3:1c:7f:15:4:0:1:0:11:13:1a:0:12:f:17:16:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0
 debug:
 	java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=4000,suspend=n -jar textr.jar test || true

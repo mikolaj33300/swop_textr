@@ -18,7 +18,7 @@ public class VerticalLayoutNode extends LayoutNode{
         super(newChildren);
     }
 
-    public VerticalLayoutNode(int[] hashes) {
+    public VerticalLayoutNode(int hashes[]) {
       super(hashes);
     }
 
