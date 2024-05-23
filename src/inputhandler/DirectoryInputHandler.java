@@ -1,6 +1,7 @@
 package inputhandler;
 
 import directory.Directory;
+import directory.directorytree.FileSystemEntry;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -11,6 +12,10 @@ public class DirectoryInputHandler extends InputHandlingElement {
 
     public DirectoryInputHandler(Directory dir) {
         this.directory = dir;
+    }
+
+    public DirectoryInputHandler(FileSystemEntry fe) {
+        this.directory = new Directory(fe);
     }
 
     @Override
@@ -58,9 +63,16 @@ public class DirectoryInputHandler extends InputHandlingElement {
     @Override
     public RenderIndicator handleSeparator() throws IOException {
         if(this.directory.selectEntry() == null){
-            //Request closing this window (
+            //TODO: Request closing this window through listener
         };
 	return RenderIndicator.WINDOW;
     }
 
+    public Directory getDirectory() {
+        return this.directory;
+    }
+
+    public void accept(InputHandlerVisitor v){
+        v.visitDirectoryInputHandler(this);
+    }
 }

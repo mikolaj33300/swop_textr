@@ -13,17 +13,15 @@ import ui.View;
 import java.io.IOException;
 
 public class DirectoryWindow extends Window {
+    private DirectoryInputHandler dih;
 
-    private final FileSystemEntry entry;
     private TermiosTerminalAdapter adapter;
-    private final Directory dir;
     private final View view;
 
-    public DirectoryWindow(FileSystemEntry entry, TermiosTerminalAdapter adapter) {
-        this.entry = entry;
+    public DirectoryWindow(DirectoryInputHandler dih, TermiosTerminalAdapter adapter) {
+        this.dih = dih;
         this.adapter = adapter;
-        this.dir = new Directory(entry);
-        this.view = new ScrollbarDecorator(new DirectoryView(adapter, dir));
+        this.view = new ScrollbarDecorator(new DirectoryView(adapter, dih.getDirectory()));
     }
 
     @Override
@@ -33,7 +31,7 @@ public class DirectoryWindow extends Window {
 
     @Override
     public InputHandlingElement getHandler() {
-        return new DirectoryInputHandler(dir);
+        return this.dih;
     }
 
     @Override

@@ -71,6 +71,15 @@ public class FileBuffer {
         this.deletedCharListeners = new ArrayList<DeletedCharListener>();
     }
 
+    public FileBuffer(FileHolder fh) throws IOException {
+        this.file = fh;
+        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(toPrimitive(file.getContent())));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(file.getContent(), file.getLineSeparator());
+        this.deletedInsertionPointListeners = new ArrayList<DeletedInsertionPointListener>();
+        this.enteredInsertionPointListeners = new ArrayList<EnteredInsertionPointListener>();
+        this.deletedCharListeners = new ArrayList<DeletedCharListener>();
+    }
+
     // Implementation
 
     public void enterInsertionCmd(int iLine, int iCol){

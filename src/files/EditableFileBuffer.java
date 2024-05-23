@@ -5,6 +5,7 @@ import listeners.DisplayRequestForFileEntryListener;
 import util.json.JsonUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class acts as a state object depending if the caller has parsed this object.
@@ -13,7 +14,9 @@ public class EditableFileBuffer extends FileBuffer {
 
     private int openedSubFiles = 0;
     private boolean parsed = false;
-    private DisplayRequestForFileEntryListener listener;
+    private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners;
+
+    private ArrayList<DisplayRequestForFileBufferListener> bufferRequestListeners;
 
     /**
      * Creates FileBuffer object with given path;
@@ -24,6 +27,12 @@ public class EditableFileBuffer extends FileBuffer {
      */
     public EditableFileBuffer(String path, byte[] lineSeparator) throws IOException {
         super(path, lineSeparator);
+        this.bufferRequestListeners = new ArrayList<>(0);
+    }
+
+    public EditableFileBuffer(FileHolder fh) throws IOException {
+        super(fh);
+        this.bufferRequestListeners = new ArrayList<>(0);
     }
 
     /**
@@ -37,18 +46,33 @@ public class EditableFileBuffer extends FileBuffer {
     /**
      * Notifies this object that it has been parsed
      */
-    public boolean parseAsJSON() {
+    public FileSystemEntry parseAsJSON() {
         FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, new OpenFileOnPathRequestListener() {
             @Override
             public void notifyRequestToOpenFile(String pathToOpen) {
-                //Create the holder here
+                JsonFileHolder newHolder = createFileHolderFromJSONPathOnThis(pathToOpen);
+                EditableFileBuffer newBuffer;
+                try {
+                    newBuffer = new EditableFileBuffer(newHolder);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                requestDisplayingNewFileBuffer(newBuffer);
             }
         });
         if(toOpenEntry != null) {
             this.parsed = true;
-            this.listener.notifyRequestToOpen(toOpenEntry);
+            /*this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.*/
         }
-        return false;
+        return toOpenEntry;
+    }
+
+    private void requestDisplayingNewFileBuffer(EditableFileBuffer newBuffer) {
+        this.bufferRequestListeners.get(0).notifyRequestOpening(newBuffer);
+    }
+
+    private JsonFileHolder createFileHolderFromJSONPathOnThis(String pathToOpen) {
+        return new JsonFileHolder(this, pathToOpen);
     }
 
     /**
@@ -97,8 +121,12 @@ public class EditableFileBuffer extends FileBuffer {
         return copy;
     }
 
-    public void subscribeEditableBuffer(DisplayRequestForFileEntryListener listener) {
-        this.listener = listener;
+    public void subscribeToDirectoryOpenRequests(DisplayRequestForFileEntryListener listener) {
+        this.directoryRequestListeners.add(listener);
+    }
+
+    public void subscribeToFileBufferOpenRequests(DisplayRequestForFileBufferListener listener) {
+        this.bufferRequestListeners.add(listener);
     }
 
 }

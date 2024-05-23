@@ -33,7 +33,7 @@ public class FileBufferWindow extends Window {
     /**
      * The listener that can open files
      */
-    private OpenWindowRequestListener listener;
+    private OpenWindowRequestListener openWindowRequestListener;
 
     /**
      * Constructor of this FileBufferWindow
@@ -116,20 +116,20 @@ public class FileBufferWindow extends Window {
     }
 
     /**
-     * The input handler {@link FileBufferInputHandler} is able to request to open a new window.
-     * We receive a new window here.
+     * The input handler {@link FileBufferInputHandler} is able to request to open a new window on a
+     * filesystem entry directory structure. We receive it here and request creation of a window for it
      */
     private void subscribeInputHandler() {
         this.fileBufferInputHandler.subscribeInputHandler(
-                entry -> {
-                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(entry, this.view.getTermiosTerminalAdapter()));
+                inputHandlingElement -> {
+                    this.openWindowRequestListener.openWindow(new NormalWindowFactory().createDirectoryWindowFromInputHandler(inputHandlingElement, this.view.getTermiosTerminalAdapter()));
                 }
         );
     }
 
     @Override
     public void subscribeWindow(OpenWindowRequestListener listener) {
-        this.listener = listener;
+        this.openWindowRequestListener = listener;
         this.subscribeInputHandler();
     }
 

@@ -55,4 +55,5 @@ abstract public class InputHandlingElement {
      */
     public abstract RenderIndicator handleSeparator() throws IOException;
 
+    public abstract void accept(InputHandlerVisitor ihv);
 }

@@ -126,4 +126,8 @@ public class SnakeInputHandler extends InputHandlingElement {
         this.currentWait = 0;
     }
 
+    public void accept(InputHandlerVisitor v){
+        v.visitSnakeInputHandler(this);
+    }
+
 }

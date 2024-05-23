@@ -1,5 +1,6 @@
 package files;
 
+import directory.directorytree.FileSystemEntry;
 import listeners.*;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class BufferCursorContext {
     private DeletedCharListener dcl;
     EditableFileBuffer containedFileBuffer;
     private DisplayRequestForFileEntryListener openParsedDirectoryListener;
+    private DisplayRequestForBufferContextListener bufferContextOpeningRequestListener;
+    private DisplayRequestForFileBufferListener underlyingFileBufferOpenRequestListener;
 
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
@@ -81,6 +84,19 @@ public class BufferCursorContext {
         this.insertionPointCol=insertionPointCol;
         this.insertionPointLine=insertionPointLine;
         this.insertionPointByteIndex=convertLineAndColToIndex(insertionPointLine, insertionPointCol);
+        subscribeToBufferOpenRequests();
+    }
+
+    private void subscribeToBufferOpenRequests() {
+        this.underlyingFileBufferOpenRequestListener = new DisplayRequestForFileBufferListener() {
+            @Override
+            public void notifyRequestOpening(EditableFileBuffer fb) {
+                bufferContextOpeningRequestListener.notifyRequest(
+                        new BufferCursorContext(fb, 0, 0)
+                );
+            }
+        };
+        containedFileBuffer.subscribeToFileBufferOpenRequests(underlyingFileBufferOpenRequestListener);
     }
 
     /**
@@ -96,6 +112,7 @@ public class BufferCursorContext {
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
         subscribeToDeletionInsertionFb();
+        subscribeToBufferOpenRequests();
     }
 
     /**
@@ -312,26 +329,35 @@ public class BufferCursorContext {
     /**
      * Will attempt to parse the buffers contents (temp?)
      */
-    public void parse() {
-        this.containedFileBuffer.parseAsJSON();
+    public FileSystemEntry parse() {
+        return this.containedFileBuffer.parseAsJSON();
     }
 
     /**
      * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
      * @param listener the listener that passes a window
      */
-    public void subscribe(DisplayRequestForFileEntryListener listener) {
+    public void subscribeFileEntryDisplayRequests(DisplayRequestForFileEntryListener listener) {
         this.openParsedDirectoryListener = listener;
         this.subscribeEditableBuffer();
+    }
+
+    /**
+     * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
+     * @param listener the listener that passes a window
+     */
+    public void subscribeBufferContextDisplayRequests(DisplayRequestForBufferContextListener listener) {
+        this.bufferContextOpeningRequestListener = listener;
+        this.subscribeToBufferOpenRequests();
     }
 
     /**
      * This will subscribe the {@link EditableFileBuffer} to this class.
      */
     private void subscribeEditableBuffer() {
-       this.containedFileBuffer.subscribeEditableBuffer(
-                window -> {
-                    this.openParsedDirectoryListener.notifyRequestToOpen(window);
+       this.containedFileBuffer.subscribeToDirectoryOpenRequests(
+                entry -> {
+                    this.openParsedDirectoryListener.notifyRequestToOpen(entry);
                 }
         );
     }

@@ -1,6 +1,7 @@
 package inputhandler;
 
 import directory.directorytree.FileSystemEntry;
+import files.DisplayRequestForBufferContextListener;
 import files.BufferCursorContext;
 import listeners.DisplayRequestForFileEntryListener;
 import util.RenderIndicator;
@@ -11,7 +12,11 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     BufferCursorContext bufferCursorContext;
     boolean surrogate;
-    private DisplayRequestForFileEntryListener listener;
+/*    private DisplayRequestForFileEntryListener requestForFileEntryListener;*/
+
+    private DisplayRequestForBufferContextListener requestForFileBufferListenerUnderlying;
+
+    private DisplayRequestForInputHandlersListener requestForInputHandlersListener;
 
     /**
      * constructor
@@ -21,6 +26,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
         this.bufferCursorContext = new BufferCursorContext(path, lineSeparator);
+        this.subscribeBufferContextOpenRequests();
     }
 
     /**
@@ -30,6 +36,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     public FileBufferInputHandler(BufferCursorContext dupedContext) {
         this.bufferCursorContext = dupedContext;
+        this.subscribeBufferContextOpenRequests();
     }
 
     /**
@@ -44,16 +51,17 @@ public class FileBufferInputHandler extends InputHandlingElement {
 
     /**
      * Handles the input for the {@link files.FileBuffer}
+     *
      * @param b the input
      */
     public RenderIndicator input(byte b) {
         switch (b) {
             case -3:
                 // Idle
-		return RenderIndicator.NONE;
+                return RenderIndicator.NONE;
             case 27:
                 this.surrogate = true;
-		return RenderIndicator.NONE;
+                return RenderIndicator.NONE;
             default:
                 if (this.surrogate) {
                     surrogateKeysInput(b);
@@ -61,7 +69,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
                 } else {
                     asciiInput(b);
                 }
-		return RenderIndicator.WINDOW;
+                return RenderIndicator.WINDOW;
         }
     }
 
@@ -100,7 +108,12 @@ public class FileBufferInputHandler extends InputHandlingElement {
                 break;
             // Control + J = parse
             case 10:
-                this.bufferCursorContext.parse();
+                FileSystemEntry entryToOpen = this.bufferCursorContext.parse();
+                if (entryToOpen != null) {
+                    this.requestForInputHandlersListener.notifyRequestOpening(
+                            new InputhandlersFromModelObjectsFactory().createDirectoryInputHandler(entryToOpen)
+                    );
+                }
                 break;
             //Control + U
             case 25:
@@ -147,7 +160,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     @Override
     public RenderIndicator handleArrowRight() {
         bufferCursorContext.moveCursorRight();
-	return RenderIndicator.CURSOR;
+        return RenderIndicator.CURSOR;
     }
 
     /**
@@ -156,7 +169,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     @Override
     public RenderIndicator handleArrowLeft() {
         bufferCursorContext.moveCursorLeft();
-	return RenderIndicator.CURSOR;
+        return RenderIndicator.CURSOR;
     }
 
     /**
@@ -165,7 +178,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     @Override
     public RenderIndicator handleArrowDown() {
         bufferCursorContext.moveCursorDown();
-	return RenderIndicator.CURSOR;
+        return RenderIndicator.CURSOR;
     }
 
     /**
@@ -174,7 +187,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     @Override
     public RenderIndicator handleArrowUp() {
         bufferCursorContext.moveCursorUp();
-	return RenderIndicator.CURSOR;
+        return RenderIndicator.CURSOR;
     }
 
     /**
@@ -184,7 +197,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
     public RenderIndicator handleSeparator() throws IOException {
         bufferCursorContext.enterSeparator();
         bufferCursorContext.moveCursorRight();
-	return RenderIndicator.WINDOW;
+        return RenderIndicator.WINDOW;
     }
 
     /**
@@ -206,29 +219,39 @@ public class FileBufferInputHandler extends InputHandlingElement {
     }
 
     public String getPath() {
-	return bufferCursorContext.getPath();
+        return bufferCursorContext.getPath();
     }
+
+/*    *//**
+     * This method will pass down a class that allows {@link BufferCursorContext} to call these methods
+     * and these methods will be handled here.
+     *//*
+    private void subscribeFileEntryOpenRequests() {
+        this.bufferCursorContext.subscribeFileEntryDisplayRequests(
+                entry -> requestForInputHandlersListener.notifyRequestOpening(new InputhandlersFromModelObjectsFactory().createDirectoryInputHandler(entry)));
+    }*/
 
     /**
      * This method will pass down a class that allows {@link BufferCursorContext} to call these methods
      * and these methods will be handled here.
      */
-    private void subscribeFileBufferContext() {
-        this.bufferCursorContext.subscribe(new DisplayRequestForFileEntryListener() {
-                              @Override
-                              public void notifyRequestToOpen(FileSystemEntry entry) {
-                                  listener.notifyRequestToOpen(entry);
-                              }
-                          }
-        );
+    private void subscribeBufferContextOpenRequests() {
+        requestForFileBufferListenerUnderlying =
+                ctx -> requestForInputHandlersListener.notifyRequestOpening(new FileBufferInputHandler(ctx));
+        this.bufferCursorContext.subscribeBufferContextDisplayRequests(requestForFileBufferListenerUnderlying);
     }
 
     /**
      * Allows the {@link window.FileBufferWindow} to receive requests made from here
      */
-    public void subscribeInputHandler(DisplayRequestForFileEntryListener listener) {
-        this.listener = listener;
-        this.subscribeFileBufferContext();
+    public void subscribeInputHandler(DisplayRequestForInputHandlersListener listener) {
+        //this.requestForFileEntryListener = listener;
+        //this.subscribeFileEntryOpenRequests();
+        this.requestForInputHandlersListener = listener;
+    }
+
+    public void accept(InputHandlerVisitor v){
+        v.visitFileInputHandler(this);
     }
 
 }
