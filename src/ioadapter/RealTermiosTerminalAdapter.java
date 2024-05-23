@@ -4,6 +4,8 @@ import io.github.btj.termios.Terminal;
 import util.ScreenUIUtil;
 import util.Coords;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -70,5 +72,28 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     @Override
     public void clearInputListener() {
         Terminal.clearInputListener();
+    }
+
+    @Override
+    public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener) {
+        //TODO: We can use this API to subscribe to keypresses on real termios instead of setInputListenerOnAWTEventQueue.
+        // Not sure if it's worth the risks associated with refactoring since this wouldn't provide much benefits other than
+        // that this wouldn't have to be done in main
+    }
+
+    @Override
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener listenerToRemove) {
+
+    }
+
+    @Override
+    public void unsubscribeFromResizeTextArea(ResizeListener l) {
+
+    }
+
+    @Override
+    public void addAndStartTimerListener(int delay, ActionListener actionListener) {
+        javax.swing.Timer timer = new javax.swing.Timer(delay, actionListener);
+        timer.start();
     }
 }

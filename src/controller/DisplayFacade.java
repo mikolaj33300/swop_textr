@@ -60,13 +60,13 @@ class DisplayFacade {
             //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
             this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
             this.windows.add(toAdd);
-            this.subscribeFileBufferWindow(toAdd);
+            this.subscribeWindowOpeningRequests(toAdd);
         } else {
             int[] hashes = new int[paths.length];
             for (int i = 0; i < paths.length; i++) {
                 String checkPath = paths[i];
                 Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-                this.subscribeFileBufferWindow(toAdd);
+                this.subscribeWindowOpeningRequests(toAdd);
                 this.windows.add(toAdd);
                 hashes[i] = toAdd.getView().hashCode();
             }
@@ -85,6 +85,7 @@ class DisplayFacade {
     DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
         this.windows = new ArrayList<>();
         windows.add(toOpenWindow);
+        this.subscribeWindowOpeningRequests(toOpenWindow);
         this.displayCoords = termiosTerminalAdapter.getTextAreaSize();
 
         this.lineSeparatorArg = lineSeparatorArg.clone();
@@ -147,12 +148,12 @@ class DisplayFacade {
      * 1 if it has a dirty buffer
      * 2 if it is not force closable
      */
-    public Pair<RenderIndicator, Integer> closeActive() {
+    public Pair<RenderIndicator, WindowCloseStatus> closeActive() {
         if (windows.get(active).getHandler().isSafeToClose()) {
             //safe to do a force close since clean buffer
             return forceCloseActive();
         } else {
-            return new Pair<>(RenderIndicator.FULL, 1);
+            return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.UNSAFE_CLOSE);
         }
     }
 
@@ -164,10 +165,10 @@ class DisplayFacade {
      * 1 if it has a dirty buffer
      * 2 if it is not force closable
      */
-    public Pair<RenderIndicator, Integer> forceCloseActive() {
+    public Pair<RenderIndicator, WindowCloseStatus> forceCloseActive() {
         //checks which hash will be the next one after this is closed
         Integer newHashCode = getNewHashCode();
-        if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, 2);
+        if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.LAST_WINDOW_CLOSED);
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).getHashCode());
@@ -186,7 +187,7 @@ class DisplayFacade {
             throw new RuntimeException("Layout and collection of views inconsistent!");
         }
         active = newActive;
-        return new Pair<>(RenderIndicator.FULL, 0);
+        return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.CLOSED_SUCCESFULLY);
     }
 
     public RenderIndicator passToActive(byte b) throws IOException {
@@ -417,9 +418,10 @@ class DisplayFacade {
      * We will subscribe {@link Window} to this class, making it able to send through {@link Window} elements
      * which he may request to open.
      */
-    private void subscribeFileBufferWindow(Window window) {
+    private void subscribeWindowOpeningRequests(Window window) {
         window.subscribeWindow(
                 openedWindow -> {
+                    assert(openedWindow != null);
                     windows.add(windows.size(), openedWindow);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), openedWindow.getHashCode());
                     try {

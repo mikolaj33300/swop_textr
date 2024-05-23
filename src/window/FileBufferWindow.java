@@ -63,6 +63,11 @@ public class FileBufferWindow extends Window {
         this.fileBufferInputHandler = fileBufferInputHandler;
     }
 
+    public FileBufferWindow(FileBufferInputHandler fh, TermiosTerminalAdapter adapter) {
+        this.view = new ScrollbarDecorator(new FileBufferView(fh.getFileBufferContextTransparent(), adapter));
+        this.fileBufferInputHandler = fh;
+    }
+
 
     /**
      * Returns the view of the FileBufferWindow, a FileBufferView
@@ -122,7 +127,7 @@ public class FileBufferWindow extends Window {
     private void subscribeInputHandler() {
         this.fileBufferInputHandler.subscribeInputHandler(
                 inputHandlingElement -> {
-                    this.openWindowRequestListener.openWindow(new NormalWindowFactory().createDirectoryWindowFromInputHandler(inputHandlingElement, this.view.getTermiosTerminalAdapter()));
+                    this.openWindowRequestListener.openWindow(new NormalWindowFactory().createWindowFromInputHandler(inputHandlingElement, this.view.getTermiosTerminalAdapter()));
                 }
         );
     }

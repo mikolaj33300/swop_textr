@@ -29,7 +29,7 @@ public class FileEntry extends FileSystemEntry {
 
     @Override
     public FileSystemEntry selectEntry() {
-        //TODO notify listener
+        openOnPathListener.notifyRequestToOpenFile(this.getPath());
         return null;
     }
 

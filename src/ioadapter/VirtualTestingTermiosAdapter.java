@@ -2,12 +2,19 @@ package ioadapter;
 
 import util.Coords;
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
     private ArrayList<Integer> inputStream;
+
+    //TODO we could use a proxy swing timer object that gets returned by the adapter (that TextR could work with)
+    // and have some better timer management,
+    // where we could make the virtual timer tick from a unit test and that could trigger the actionlisteners
+    // when appropriate. But this should do for the current implementation.
+    ActionListener timerActionListener;
 
     private ArrayList<ArrayList<Character>> virtualScreen;
     int screenHeight;
@@ -140,6 +147,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      * @throws TimeoutException
      */
     @Override
+    @Deprecated
     public int readByte(long deadline) throws TimeoutException {
 /*        if(inputStream.size() != 0){
             int toReturn = inputStream.get(0);
@@ -168,7 +176,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
 
     @Override
     public void subscribeToResizeTextArea(ResizeListener l) {
-        //TODO: We can put resize events as something in the inputstream of the virtual? This is not a priority right now
+        //TODO: We can put resize events as something triggerable in the virtual? But we can test most events already. This is not a priority right now
     }
 
     @Override
@@ -183,6 +191,34 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
     @Override
     public void clearInputListener() {
 
+    }
+
+    @Override
+    public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener) {
+        //TODO: We can put Keypress events as something triggerable in the virtual? But we can test most events. This is not a priority right now
+
+    }
+
+    @Override
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener listenerToRemove) {
+
+    }
+
+    @Override
+    public void unsubscribeFromResizeTextArea(ResizeListener l) {
+
+    }
+
+    @Override
+    public void addAndStartTimerListener(int delay, ActionListener actionListener) {
+        if(this.timerActionListener != null){
+            throw new RuntimeException("Timer action already registered, are we calling this correctly?");
+        }
+        this.timerActionListener = actionListener;
+    }
+
+    public void triggerTimerAction(){
+        this.timerActionListener.actionPerformed(null);
     }
 
     /**

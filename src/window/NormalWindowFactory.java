@@ -29,12 +29,12 @@ public class NormalWindowFactory {
     // -dont need to know about other types of Windows
     //And while passing objects around, an inputhandler can create a generic InputHandlingElement without knowing
     //its type, to create a window for it without the window above having to know.
-    public Window createDirectoryWindowFromInputHandler(InputHandlingElement ih, TermiosTerminalAdapter adapter){
+    public Window createWindowFromInputHandler(InputHandlingElement ih, TermiosTerminalAdapter adapter){
         final Window[] windowToReturn = new Window[1];
         ih.accept(new InputHandlerVisitor() {
             @Override
             public void visitFileInputHandler(FileBufferInputHandler fh) {
-                //DirectoryWindow can only be created from directoryInput
+                windowToReturn[0]=new FileBufferWindow(fh, adapter);
             }
 
             @Override

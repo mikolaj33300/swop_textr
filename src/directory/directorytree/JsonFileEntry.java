@@ -31,7 +31,7 @@ public class JsonFileEntry extends JsonEntry {
 
     @Override
     public FileSystemEntry selectEntry() {
-        //TODO Notify listener
+        openOnPathListener.notifyRequestToOpenFile(getName());
         return null;
     }
 
