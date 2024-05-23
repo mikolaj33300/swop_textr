@@ -117,12 +117,13 @@ public class EditableFileBuffer extends FileBuffer {
     public EditableFileBuffer clone() {
         EditableFileBuffer copy = null;
         try {
-            copy = new EditableFileBuffer(this.getFileHolder().getPath(), getFileHolder().getLineSeparator());
+            copy = new EditableFileBuffer(this.getFileHolder());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         copy.dirty = this.dirty;
         copy.byteContent = this.cloneByteArrList();
+        copy.setLinesArrayList(FileAnalyserUtil.getContentLines(this.getBytes(), this.getLineSeparator()));
         copy.parsed = this.parsed;
         copy.openedSubFiles = this.openedSubFiles;
         return copy;
