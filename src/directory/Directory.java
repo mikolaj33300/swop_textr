@@ -44,9 +44,11 @@ public class Directory {
     /**
      * Returns the selected {@link FileSystemEntry}.
      */
-    public FileSystemEntry selectEntry() {
-        if(!this.getEntries().get(focused).isDirectory())
-            return this.getEntries().get(focused);
+    public Directory selectEntry() {
+        FileSystemEntry entryAfterSelection = this.getEntries().get(focused).selectEntry();
+        if(entryAfterSelection != null){
+            this.focusedDirectory = entryAfterSelection;
+        }
         return null;
     }
 

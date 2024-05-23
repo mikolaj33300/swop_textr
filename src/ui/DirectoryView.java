@@ -67,6 +67,7 @@ public class DirectoryView extends View {
      */
     @Override
     public void render(int activeHash) throws IOException {
+        super.fill(1 + uiCoordsReal.startX, 1 + uiCoordsReal.startY, uiCoordsReal.width, uiCoordsReal.height, " ");
 
         Coords coords = super.getRealCoords();
         int height = coords.height;
@@ -78,7 +79,6 @@ public class DirectoryView extends View {
         int printLocationY = startY+2;
 
         // We loop over every entry and print it
-        View.write("test2.txt", "Startidx: " + dir.getEntries().size());
         this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
         printLocationY += 2;
 
@@ -149,7 +149,6 @@ public class DirectoryView extends View {
         entry3
         -
          */
-        View.write("test2.txt", "Int: " + Math.floor((totalHeightNeeded - height) / (spacing + 1)));
         return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1)) < 0
                 ?
                 0 : (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));

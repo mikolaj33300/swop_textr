@@ -87,7 +87,7 @@ public abstract class View {
         this.termiosTerminalAdapter = adapter;
     };
 
-    public static void write(String path, String text) {
+/*    public static void write(String path, String text) {
         try {
             // Overwrite file test.txt
             FileWriter writer = new FileWriter(new File(path), true);
@@ -96,7 +96,7 @@ public abstract class View {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
 
     void fill(int x, int y, int w, int h, String s){

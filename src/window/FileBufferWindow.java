@@ -61,7 +61,6 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
         this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
-        View.write("test2.txt", ">> window created");
     }
 
 
@@ -121,11 +120,9 @@ public class FileBufferWindow extends Window {
      * We receive a new window here.
      */
     private void subscribeInputHandler() {
-        View.write("test2.txt", "\n<Window> Subscribing to input handler with" + this.fileBufferInputHandler.hashCode());
         this.fileBufferInputHandler.subscribeInputHandler(
-                window -> {
-                    View.write("test2.txt", "in file buffer window");
-                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(window, this.view.getTermiosTerminalAdapter()));
+                entry -> {
+                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(entry, this.view.getTermiosTerminalAdapter()));
                 }
         );
     }
