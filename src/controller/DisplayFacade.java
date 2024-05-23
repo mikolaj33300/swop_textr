@@ -70,24 +70,6 @@ class DisplayFacade {
               hashes[i] = toAdd.getView().hashCode();
           }
           this.rootLayout = new VerticalLayoutNode(hashes);
-	  /*
-=======
-        for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            Window toAdd;
-
-            toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-
-            this.windows.add(toAdd);
-            leaves.add(new LayoutLeaf(windows.get(i).getHashCode()));
-        }
-
-            if (leaves.size() == 1)
-                this.rootLayout = leaves.get(0);
-            else
-                this.rootLayout = new VerticalLayoutNode(leaves);
->>>>>>> main2.0
-*/
         }
     }
 
