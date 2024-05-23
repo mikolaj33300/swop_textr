@@ -16,6 +16,9 @@ public class TerminalPanel extends JPanel {
     char[][] bufferToDisplay = new char[1][1];
     ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
 
+    int cursorRow = -1;// start at -1 for no cursor for snake
+    int cursorCol = -1;
+
     void clearBuffer() {
         for (int i = 0; i < bufferToDisplay.length; i++)
             Arrays.fill(bufferToDisplay[i], ' ');
@@ -59,7 +62,10 @@ public class TerminalPanel extends JPanel {
 
         FontMetrics fontMetrics = g.getFontMetrics();
         int fontHeight = fontMetrics.getHeight();
+	int fontWidth = fontMetrics.charWidth('m');
         int baseLineOffset = fontHeight - fontMetrics.getDescent();
+	if (cursorRow >= 0 && cursorCol >= 0)
+	    g.drawRect(fontMetrics.charsWidth(bufferToDisplay[cursorRow], 0, cursorCol), cursorRow*fontHeight,fontMetrics.charWidth(bufferToDisplay[cursorRow][cursorCol]), (cursorRow+1)*fontHeight);
 
         int y = baseLineOffset;
         for (int lineIndex = 0; lineIndex < bufferToDisplay.length; lineIndex++) {
