@@ -107,13 +107,14 @@ public class TextR {
      * Adds a timer listener to swing
      */
     private void addTimerListener() {
-        javax.swing.Timer timer = new javax.swing.Timer(500, new ActionListener() {
+
+        //need to mock this, or tests fail because listeners run too late
+        adapterToStartWith.addAndStartTimerListener(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleIdleEvent();
             }
         });
-        timer.start();
     }
 
     /**

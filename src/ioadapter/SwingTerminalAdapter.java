@@ -1,5 +1,6 @@
 package ioadapter;
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
@@ -8,8 +9,6 @@ import ui.SwingEditableTerminalApp;
 import util.Coords;
 
 public class SwingTerminalAdapter implements TermiosTerminalAdapter {
-    private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
-
 
     private SwingEditableTerminalApp editableSwingTerminal;
 
@@ -93,8 +92,24 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
         return editableSwingTerminal.getContentBuffer();
     }
 
+    @Override
     public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener) {
         editableSwingTerminal.subscribeToASCIIKeyEnters(newAsciiListener);
+    }
+
+    @Override
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener listenerToRemove) {
+        editableSwingTerminal.unsubscribeFromASCIIKeyEnters(listenerToRemove);
+    }
+
+    @Override
+    public void unsubscribeFromResizeTextArea(ResizeListener l) {
+        editableSwingTerminal.unsubscribeFromResize(l);
+    }
+
+    @Override
+    public void addAndStartTimerListener(int delay, ActionListener actionListener) {
+        //Not necessary right now
     }
 
     public SwingEditableTerminalApp getSwingEditableTerminal(){

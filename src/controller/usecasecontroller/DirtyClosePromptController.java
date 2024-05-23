@@ -2,6 +2,7 @@ package controller.usecasecontroller;
 
 import controller.ControllerFacade;
 import controller.TextR;
+import util.GlobalCloseStatus;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 
@@ -34,8 +35,8 @@ public class DirtyClosePromptController extends UseCaseController {
                 return;
             // Y
             case 121:
-                int result = facade.forceCloseActive().b;
-                if(result == 0){
+                GlobalCloseStatus result = facade.forceCloseActive().b;
+                if(result != GlobalCloseStatus.CLOSED_ALL_DISPLAYS){
                     unsubscribeFromFacadeAscii();
                     coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
                     return;

@@ -38,6 +38,7 @@ public class SwingEditableTerminalApp extends JFrame {
        updateAndRenderVisual();
    }
 
+
    private void updateAndRenderVisual(){
        terminalPanel.setNewBuffer(contentBuffer);
        terminalPanel.cursorRow = cursorRow;
@@ -69,8 +70,9 @@ public class SwingEditableTerminalApp extends JFrame {
     to a rendering glitch where the rightmost column disappears)
      */
     public SwingEditableTerminalApp() {
+        //TODO: FIX LISTENERS TO USE COPY LIST INSTEAD OF THE ACTIVE LIST WHEN ITERATING OVER THEM
         super("Swing Terminal App");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
         contentBuffer =  new char[25][100];
         terminalPanel.setNewBuffer(contentBuffer);
@@ -171,5 +173,13 @@ public class SwingEditableTerminalApp extends JFrame {
 
     public TerminalPanel getPanel(){
         return this.terminalPanel;
+    }
+
+    public void unsubscribeFromASCIIKeyEnters(ASCIIKeyEventListener listenerToRemove) {
+        this.asciiListenerArrayList.remove(listenerToRemove);
+    }
+
+    public void unsubscribeFromResize(ResizeListener listenerToRemove) {
+        this.resizeListeners.remove(listenerToRemove);
     }
 }

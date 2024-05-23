@@ -3,10 +3,7 @@ package controller.usecasecontroller;
 import controller.ControllerFacade;
 import controller.TextR;
 import ioadapter.TermiosTerminalAdapter;
-import util.Pair;
-import util.RenderIndicator;
-import util.MoveDirection;
-import util.RotationDirection;
+import util.*;
 
 import java.io.IOException;
 
@@ -119,13 +116,13 @@ public class InspectContentsController extends UseCaseController {
                         opRenderIndicator = facade.handleArrowDown();
                         break;
                     case 'S':// F4
-                        Pair results = facade.closeActive();
+                        Pair<RenderIndicator, GlobalCloseStatus> results = facade.closeActive();
                         opRenderIndicator = (RenderIndicator)results.a;
-                        int closingResult = (Integer)results.b;
-                        if (closingResult == 1) { //If was dirty
+                        GlobalCloseStatus closingResult = results.b;
+                        if (closingResult == GlobalCloseStatus.DIRTY_CLOSE_PROMPT) { //If was dirty
                             unsubscribeFromFacadeAscii();
                             coreControllerParent.setActiveUseCaseController(new DirtyClosePromptController(coreControllerParent, facade));
-                        } else if (closingResult == 2) { //If was last window
+                        } else if (closingResult == GlobalCloseStatus.CLOSED_ALL_DISPLAYS) { //If was last window
                             System.exit(0);
                         }
                 }

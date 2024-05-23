@@ -2,6 +2,7 @@ package ioadapter;
 
 import util.Coords;
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -27,5 +28,13 @@ public interface TermiosTerminalAdapter {
     public void setInputListenerOnAWTEventQueue(Runnable runnable);
 
     void clearInputListener();
+
+    public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener);
+
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener listenerToRemove);
+
+    public void unsubscribeFromResizeTextArea(ResizeListener l);
+
+    public void addAndStartTimerListener(int delay, ActionListener actionListener);
 }
 

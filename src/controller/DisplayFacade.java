@@ -147,12 +147,12 @@ class DisplayFacade {
      * 1 if it has a dirty buffer
      * 2 if it is not force closable
      */
-    public Pair<RenderIndicator, Integer> closeActive() {
+    public Pair<RenderIndicator, WindowCloseStatus> closeActive() {
         if (windows.get(active).getHandler().isSafeToClose()) {
             //safe to do a force close since clean buffer
             return forceCloseActive();
         } else {
-            return new Pair<>(RenderIndicator.FULL, 1);
+            return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.UNSAFE_CLOSE);
         }
     }
 
@@ -164,10 +164,10 @@ class DisplayFacade {
      * 1 if it has a dirty buffer
      * 2 if it is not force closable
      */
-    public Pair<RenderIndicator, Integer> forceCloseActive() {
+    public Pair<RenderIndicator, WindowCloseStatus> forceCloseActive() {
         //checks which hash will be the next one after this is closed
         Integer newHashCode = getNewHashCode();
-        if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, 2);
+        if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.LAST_WINDOW_CLOSED);
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).getHashCode());
@@ -186,7 +186,7 @@ class DisplayFacade {
             throw new RuntimeException("Layout and collection of views inconsistent!");
         }
         active = newActive;
-        return new Pair<>(RenderIndicator.FULL, 0);
+        return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.CLOSED_SUCCESFULLY);
     }
 
     public RenderIndicator passToActive(byte b) throws IOException {
