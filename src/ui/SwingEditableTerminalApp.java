@@ -40,7 +40,9 @@ public class SwingEditableTerminalApp extends JFrame {
 
    private void updateAndRenderVisual(){
        terminalPanel.setNewBuffer(contentBuffer);
-       terminalPanel.bufferToDisplay[cursorRow][cursorCol] = '*';
+       terminalPanel.cursorRow = cursorRow;
+       terminalPanel.cursorCol = cursorCol;
+       //terminalPanel.bufferToDisplay[cursorRow][cursorCol] = '*';
        terminalPanel.repaint();
    }
 
