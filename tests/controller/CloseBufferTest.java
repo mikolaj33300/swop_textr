@@ -35,7 +35,9 @@ public class CloseBufferTest {
     public void closeNonDirty_OneFile() {
         // Assert non dirty
         assertFalse(
-                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(
+                        textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()
+                ).getFileBufferContextTransparent().getDirty()
         );
         // Assert that closing gives no error, but since this is the last window, it will return 2
         assertEquals(2, textr1.getActiveUseCaseController().getFacade().closeActive().b);

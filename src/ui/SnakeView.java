@@ -6,7 +6,6 @@ import snake.SnakeGame;
 import snake.food.Food;
 import util.Coords;
 import util.Pos;
-import util.Rectangle;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -110,7 +109,8 @@ public class SnakeView extends View {
     }
 
     /**
-     * compare this object againts object o
+     * compare this object againts
+     * @param o the object to compare
      */
     @Override
     public boolean equals(Object o) {
@@ -119,7 +119,6 @@ public class SnakeView extends View {
 
     @Override
     protected int getLineLength(int focusedLine) {
-        //TODO: whatever makes sense, width of the board? NO! line length is not relevant here!
         return 0;
     }
 
@@ -212,33 +211,17 @@ public class SnakeView extends View {
 
     @Override
     public int getFocusedCol() {
-        //TODO: column snake is in?
         return 0;
     }
 
     @Override
     public int getFocusedLine() {
-        //TODO: line snake is in?
         return 0;
     }
 
     @Override
     public int getTotalContentHeight() {
-        /*TODO: the logical thing to make snake scrollable would be to return the
-           height of the game here?
-           In the long run we might have to think about if scrolling and resizing the snake game
-           do not exclude each other though and where to put that logic*/
         return 0;
-    }
-
-    /**
-     * This also scales the playing field in {@link SnakeGame} itself. Its bounds are given to this view upon creation.
-     * @throws IOException when the coords cannot be retrieved
-     */
-    void scaleGame() throws IOException {
-        Coords ui = super.uiCoordsReal;
-        Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
-        this.game.modifyPlayfield(rct);
     }
 
 }
