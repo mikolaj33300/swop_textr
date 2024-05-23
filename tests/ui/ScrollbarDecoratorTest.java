@@ -148,7 +148,7 @@ public class ScrollbarDecoratorTest {
 
     @Test
     public void testGetContentHeight() {
-        assertNotEquals(this.decorator.getTotalContentHeight(), 3);
+        assertEquals(this.decorator.getTotalContentHeight(), 3);
     }
 
 
