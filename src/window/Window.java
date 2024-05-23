@@ -36,6 +36,22 @@ public abstract class Window {
     }
 
     /**
+     * Closes the window
+     */
+    public void forcedClose() {
+        getHandler().forcedClose();
+    }
+
+    /**
+     * Returns the hashCode of the view linked to this window
+     * @return the hashCode of the view linked to this window
+     */
+    public int getHashCode(){
+        return getView().hashCode();
+    }
+
+
+    /**
      * Duplicates this window
      * @return a new window with the same contents
      * @throws IOException

@@ -29,7 +29,7 @@ class DisplayFacade {
     /**
      * The integer representing an entry in {@link Window}
      */
-    private int active;
+    private int active = 0;
     /**
      * The adapter used for rendering
      */
@@ -55,22 +55,23 @@ class DisplayFacade {
         this.windows = new ArrayList<>();
         ArrayList<Layout> leaves = new ArrayList<>(paths.length);
 
-        for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            Window toAdd;
+        if (paths.length == 1) {
+          Window toAdd = new NormalWindowFactory().createWindowOnPath(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+	  //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+          this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+        } else {
+          int[] hashes = new int[paths.length];
+          for (int i = 0; i < paths.length; i++) {
+              String checkPath = paths[i]; 
+	      Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
+	      this.subscribeFileBufferWindow(toAdd);
 
-            toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-
-            this.windows.add(toAdd);
-            this.subscribeFileBufferWindow(toAdd);
-            leaves.add(new LayoutLeaf(windows.get(i).getView().hashCode()));
+              this.windows.add(toAdd);
+              hashes[i] = toAdd.getView().hashCode();
+          }
+          this.rootLayout = new VerticalLayoutNode(hashes);
         }
-
-            if (leaves.size() == 1)
-                this.rootLayout = leaves.get(0);
-            else
-                this.rootLayout = new VerticalLayoutNode(leaves);
-        }
+    }
 
     /**
      * Used for testing
@@ -86,7 +87,7 @@ class DisplayFacade {
 
         this.lineSeparatorArg = lineSeparatorArg.clone();
         this.termiosTerminalAdapter = termiosTerminalAdapter;
-        rootLayout = (new LayoutLeaf(windows.get(0).getView().hashCode()));
+        rootLayout = (new LayoutLeaf(windows.get(0).getHashCode()));
 
         toOpenWindow.setTermiosAdapter(termiosTerminalAdapter);
 
@@ -97,7 +98,7 @@ class DisplayFacade {
      */
     private void renderContent() throws IOException {
         for (Window window : windows) {
-            window.getView().render(windows.get(active).getView().hashCode());
+            window.getView().render(windows.get(active).getHashCode());
         }
     }
 
@@ -164,14 +165,14 @@ class DisplayFacade {
         if (newHashCode == null) return new Pair<>(RenderIndicator.FULL, 2);
 
         //deletes and sets new one as active
-        rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
-        windows.get(active).getHandler().forcedClose();
+        rootLayout = this.rootLayout.delete(windows.get(active).getHashCode());
+        windows.get(active).forcedClose();
         windows.remove(active);
 
 
         int newActive = -1;
         for (int i = 0; i < windows.size(); i++) {
-            if (windows.get(i).getView().hashCode() == newHashCode) {
+            if (windows.get(i).getHashCode() == newHashCode) {
                 newActive = i;
             }
         }
@@ -192,14 +193,14 @@ class DisplayFacade {
      * @param dir the direction to move focus to
      */
     public RenderIndicator moveFocus(MoveDirection dir) {
-        int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).getView().hashCode());
+        int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).getHashCode());
         for (int i = 0; i < this.windows.size(); i++) {
-            if (this.windows.get(i).getView().hashCode() == newActive) {
+            if (this.windows.get(i).getHashCode() == newActive) {
                 this.active = i;
                 break;
             }
         }
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**
@@ -214,7 +215,7 @@ class DisplayFacade {
      * @param orientation clockwise or counterclockwise
      */
     public RenderIndicator rotateLayout(RotationDirection orientation) {
-        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getView().hashCode());
+        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).getHashCode());
         return RenderIndicator.FULL;
     }
 
@@ -267,7 +268,7 @@ class DisplayFacade {
         Coords coordsView = this.windows.get(active).getView().getRealCoords();
 
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
-        int hashActive = this.windows.get(active).getView().hashCode();
+        int hashActive = this.windows.get(active).getHashCode();
 
         // Remove the window & add the snake window.;
         this.windows.remove(this.windows.get(active));
@@ -277,7 +278,7 @@ class DisplayFacade {
         this.windows.add(toAdd);
 
         // Change hash code & update the view coordinates
-        rootLayout.changeHash(hashActive, toAdd.getView().hashCode());
+        rootLayout.changeHash(hashActive, toAdd.getHashCode());
         this.updateViewCoordinates();
 
         // Set the active view to the snake view
@@ -293,7 +294,7 @@ class DisplayFacade {
         Window windowToAdd = windows.get(active).duplicate();
         if (windowToAdd != null) {
             windows.add(windows.size(), windowToAdd);
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), windowToAdd.getView().hashCode());
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), windowToAdd.getHashCode());
         }
         return RenderIndicator.FULL;
     }
@@ -342,7 +343,7 @@ class DisplayFacade {
         }
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, displayCoords.width, displayCoords.height));
         for (Window w : windows) {
-            w.getView().setRealCoords(coordsMap.get(w.getView().hashCode()));
+            w.getView().setRealCoords(coordsMap.get(w.getHashCode()));
         }
 
         return RenderIndicator.FULL;
@@ -353,10 +354,10 @@ class DisplayFacade {
      * @return an Integer object representing a new hashcode
      */
     private Integer getNewHashCode() {
-        int oldHashCode = windows.get(active).getView().hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).getView().hashCode());
+        int oldHashCode = windows.get(active).getHashCode();
+        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).getHashCode());
         if (newHashCode == oldHashCode) {
-            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).getView().hashCode());
+            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).getHashCode());
             if (oldHashCode == newHashCode) {
                 //no left or right neighbor to focus
                 rootLayout = null;
@@ -400,7 +401,7 @@ class DisplayFacade {
         window.subscribeWindow(
                 openedWindow -> {
                     windows.add(windows.size(), openedWindow);
-                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getView().hashCode(), openedWindow.getView().hashCode());
+                    rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), openedWindow.getHashCode());
                     try {
                         updateViewCoordinates();
                     } catch(Exception e) {

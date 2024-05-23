@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class FileBufferInputHandler extends InputHandlingElement {
 
-    BufferCursorContext fb;
+    BufferCursorContext bufferCursorContext;
     boolean surrogate;
     private DisplayRequestForFileEntryListener listener;
 
@@ -20,7 +20,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param lineSeparator the separator to insert for newlines (dos/linux)
      */
     public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
-        this.fb = new BufferCursorContext(path, lineSeparator);
+        this.bufferCursorContext = new BufferCursorContext(path, lineSeparator);
     }
 
     /**
@@ -29,7 +29,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param dupedContext the cursorContext to use for this inputhandler
      */
     public FileBufferInputHandler(BufferCursorContext dupedContext) {
-        this.fb = dupedContext;
+        this.bufferCursorContext = dupedContext;
     }
 
     /**
@@ -39,7 +39,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @return the current buffercontext
      */
     public BufferCursorContext getFileBufferContextTransparent() {
-        return fb;
+        return bufferCursorContext;
     }
 
     /**
@@ -70,7 +70,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public boolean isSafeToClose() {
-        return !fb.getDirty();
+        return !bufferCursorContext.getDirty();
     }
 
     /**
@@ -82,35 +82,35 @@ public class FileBufferInputHandler extends InputHandlingElement {
         switch (b) {
 
             case 8, 127, 62:
-                this.fb.deleteCharacter();
+                this.bufferCursorContext.deleteCharacter();
                 break;
 
             //TODO: MAKE TERMINAL USE REAL CTRL Z CODE
             // Control + Z or Control + A
             case 26, 1, -1:
-                fb.undo();
+                bufferCursorContext.undo();
                 break;
             //Control + U
             case 21:
-                fb.redo();
+                bufferCursorContext.redo();
                 break;
             // Control + S
             case 19:
-                this.fb.save();
+                this.bufferCursorContext.save();
                 break;
             // Control + J = parse
             case 10:
-                this.fb.parse();
+                this.bufferCursorContext.parse();
                 break;
             //Control + U
             case 25:
-                fb.redo();
+                bufferCursorContext.redo();
                 break;
             // Line separator
             case 13:
                 // Character input
             default:
-                this.fb.write(b);
+                this.bufferCursorContext.write(b);
                 break;
         }
     }
@@ -124,19 +124,19 @@ public class FileBufferInputHandler extends InputHandlingElement {
         switch (b) {
             // Right
             case 'C':
-                fb.moveCursorRight();
+                bufferCursorContext.moveCursorRight();
                 break;
             // Left
             case 'D':
-                fb.moveCursorLeft();
+                bufferCursorContext.moveCursorLeft();
                 break;
             // Up
             case 'A':
-                fb.moveCursorUp();
+                bufferCursorContext.moveCursorUp();
                 break;
             // Down
             case 'B':
-                fb.moveCursorDown();
+                bufferCursorContext.moveCursorDown();
                 break;
         }
     }
@@ -146,7 +146,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public RenderIndicator handleArrowRight() {
-        fb.moveCursorRight();
+        bufferCursorContext.moveCursorRight();
 	return RenderIndicator.CURSOR;
     }
 
@@ -155,7 +155,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public RenderIndicator handleArrowLeft() {
-        fb.moveCursorLeft();
+        bufferCursorContext.moveCursorLeft();
 	return RenderIndicator.CURSOR;
     }
 
@@ -164,7 +164,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public RenderIndicator handleArrowDown() {
-        fb.moveCursorDown();
+        bufferCursorContext.moveCursorDown();
 	return RenderIndicator.CURSOR;
     }
 
@@ -173,7 +173,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public RenderIndicator handleArrowUp() {
-        fb.moveCursorUp();
+        bufferCursorContext.moveCursorUp();
 	return RenderIndicator.CURSOR;
     }
 
@@ -182,8 +182,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public RenderIndicator handleSeparator() throws IOException {
-        fb.enterSeparator();
-        fb.moveCursorRight();
+        bufferCursorContext.enterSeparator();
+        bufferCursorContext.moveCursorRight();
 	return RenderIndicator.WINDOW;
     }
 
@@ -194,7 +194,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public int forcedClose() {
-        return fb.forcedClose();
+        return bufferCursorContext.forcedClose();
     }
 
     /**
@@ -202,11 +202,11 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public void save() {
-        this.fb.save();
+        this.bufferCursorContext.save();
     }
 
     public String getPath() {
-	return fb.getPath();
+	return bufferCursorContext.getPath();
     }
 
     /**
@@ -214,7 +214,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * and these methods will be handled here.
      */
     private void subscribeFileBufferContext() {
-        this.fb.subscribe(new DisplayRequestForFileEntryListener() {
+        this.bufferCursorContext.subscribe(new DisplayRequestForFileEntryListener() {
                               @Override
                               public void notifyRequestToOpen(FileSystemEntry entry) {
                                   listener.notifyRequestToOpen(entry);
