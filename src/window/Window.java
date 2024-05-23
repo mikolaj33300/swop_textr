@@ -43,6 +43,15 @@ public abstract class Window {
     }
 
     /**
+     * Returns the hashCode of the view linked to this window
+     * @return the hashCode of the view linked to this window
+     */
+    public int getHashCode(){
+        return getView().hashCode();
+    }
+
+
+    /**
      * Duplicates this window
      * @return a new window with the same contents
      * @throws IOException
