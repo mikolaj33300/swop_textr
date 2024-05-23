@@ -36,6 +36,13 @@ public abstract class Window {
     }
 
     /**
+     * Closes the window
+     */
+    public void forcedClose() {
+        getHandler().forcedClose();
+    }
+
+    /**
      * Duplicates this window
      * @return a new window with the same contents
      * @throws IOException

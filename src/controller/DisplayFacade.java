@@ -165,7 +165,7 @@ class DisplayFacade {
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).getView().hashCode());
-        windows.get(active).getHandler().forcedClose();
+        windows.get(active).forcedClose();
         windows.remove(active);
 
 
