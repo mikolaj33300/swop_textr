@@ -60,13 +60,13 @@ class DisplayFacade {
             //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
             this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
             this.windows.add(toAdd);
-            this.subscribeFileBufferWindow(toAdd);
+            this.subscribeWindowOpeningRequests(toAdd);
         } else {
             int[] hashes = new int[paths.length];
             for (int i = 0; i < paths.length; i++) {
                 String checkPath = paths[i];
                 Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-                this.subscribeFileBufferWindow(toAdd);
+                this.subscribeWindowOpeningRequests(toAdd);
                 this.windows.add(toAdd);
                 hashes[i] = toAdd.getView().hashCode();
             }
@@ -85,6 +85,7 @@ class DisplayFacade {
     DisplayFacade(Window toOpenWindow, TermiosTerminalAdapter termiosTerminalAdapter, byte[] lineSeparatorArg) throws IOException {
         this.windows = new ArrayList<>();
         windows.add(toOpenWindow);
+        this.subscribeWindowOpeningRequests(toOpenWindow);
         this.displayCoords = termiosTerminalAdapter.getTextAreaSize();
 
         this.lineSeparatorArg = lineSeparatorArg.clone();
@@ -417,9 +418,10 @@ class DisplayFacade {
      * We will subscribe {@link Window} to this class, making it able to send through {@link Window} elements
      * which he may request to open.
      */
-    private void subscribeFileBufferWindow(Window window) {
+    private void subscribeWindowOpeningRequests(Window window) {
         window.subscribeWindow(
                 openedWindow -> {
+                    assert(openedWindow != null);
                     windows.add(windows.size(), openedWindow);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), openedWindow.getHashCode());
                     try {

@@ -5,6 +5,7 @@ import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 public class InspectBufferTest {
 
     @TempDir
-    Path path1, path2;
+    Path path1, path2, path3;
     private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
 
     private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
     private final VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter4 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
 
-
-    private TextR textr1, textr2, textr3;
+    private TextR textr1, textr2, textr3, textr4;
 
     @BeforeEach
     public void setVariables() throws IOException {
@@ -32,9 +33,23 @@ public class InspectBufferTest {
         Files.write(a, "mister".getBytes());
         Path b = path2.resolve("test2.txt");
         Files.write(b, "mister2\nhello".getBytes());
+
+        Path c = path3.resolve("test3.txt");
+        Files.write(c, """
+				{
+				  "Documents": {
+				    "SWOP": {
+				      "assignment_it2.txt": "This is the assignment for iteration 2.",
+				      "assignment_it3.txt": "This is the assignment for iteration 3."
+				    },
+				    "json_in_string.json": "{\\r\\n  \\"foo\\": \\"bar\\"\\r\\n}"
+				  }
+				}""".getBytes());
+
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
         textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
+        textr4 = new TextR(new String[] {"--lf", c.toString()}, adapter4);
     }
 
     /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
@@ -170,6 +185,12 @@ public class InspectBufferTest {
         focusNextThird();
         focusPreviousThird();
         assertEquals(textr3.getActiveUseCaseController().getFacade().getActive(), 0);
+    }
+
+    @Test
+    public void SECRET_TEST_FOR_DEBUGGING() throws IOException {
+        textr4.getActiveUseCaseController().getFacade().openNewSwingFromActiveWindow();
+        while(true);
     }
 
     private void focusNext() {

@@ -18,6 +18,8 @@ public class EditableFileBuffer extends FileBuffer {
 
     private ArrayList<DisplayRequestForFileBufferListener> bufferRequestListeners;
 
+    private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories;
+
     /**
      * Creates FileBuffer object with given path;
      * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
@@ -47,7 +49,8 @@ public class EditableFileBuffer extends FileBuffer {
      * Notifies this object that it has been parsed
      */
     public FileSystemEntry parseAsJSON() {
-        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, new OpenFileOnPathRequestListener() {
+
+        OpenFileOnPathRequestListener listenerToNewDirectory = new OpenFileOnPathRequestListener() {
             @Override
             public void notifyRequestToOpenFile(String pathToOpen) {
                 JsonFileHolder newHolder = createFileHolderFromJSONPathOnThis(pathToOpen);
@@ -59,10 +62,14 @@ public class EditableFileBuffer extends FileBuffer {
                 }
                 requestDisplayingNewFileBuffer(newBuffer);
             }
-        });
+        };
+
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory);
         if(toOpenEntry != null) {
             this.parsed = true;
-            /*this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.*/
+            //this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.
+        } else {
+            //TODO: Unsubscribe here, listener has no meaning
         }
         return toOpenEntry;
     }
