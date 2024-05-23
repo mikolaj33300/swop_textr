@@ -29,7 +29,7 @@ class DisplayFacade {
     /**
      * The integer representing an entry in {@link Window}
      */
-    private int active;
+    private int active = 0;
     /**
      * The adapter used for rendering
      */
@@ -55,22 +55,23 @@ class DisplayFacade {
         this.windows = new ArrayList<>();
         ArrayList<Layout> leaves = new ArrayList<>(paths.length);
 
-        for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            Window toAdd;
+        if (paths.length == 1) {
+          Window toAdd = new NormalWindowFactory().createWindowOnPath(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+	  //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+          this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+        } else {
+          int[] hashes = new int[paths.length];
+          for (int i = 0; i < paths.length; i++) {
+              String checkPath = paths[i]; 
+	      Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
+	      this.subscribeFileBufferWindow(toAdd);
 
-            toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-
-            this.windows.add(toAdd);
-            this.subscribeFileBufferWindow(toAdd);
-            leaves.add(new LayoutLeaf(windows.get(i).getHashCode()));
+              this.windows.add(toAdd);
+              hashes[i] = toAdd.getView().hashCode();
+          }
+          this.rootLayout = new VerticalLayoutNode(hashes);
         }
-
-            if (leaves.size() == 1)
-                this.rootLayout = leaves.get(0);
-            else
-                this.rootLayout = new VerticalLayoutNode(leaves);
-        }
+    }
 
     /**
      * Used for testing
@@ -199,7 +200,7 @@ class DisplayFacade {
                 break;
             }
         }
-        return RenderIndicator.FULL;
+        return RenderIndicator.CURSOR;
     }
 
     /**

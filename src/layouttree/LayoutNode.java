@@ -37,6 +37,15 @@ public abstract class LayoutNode extends Layout {
             this.insertDirectChild(l.clone());
     }
 
+    public LayoutNode(int hashes[]) {
+      //this.children = new ArrayList<>(hashes.length);
+      this.children = new ArrayList<>(0);
+      for (int i : hashes) {
+	LayoutLeaf tmp = new LayoutLeaf(i);
+	this.insertDirectChild(tmp);
+      }
+    }
+
 
     /**
      * Returns the orientation of the LayoutNode
@@ -170,9 +179,8 @@ public abstract class LayoutNode extends Layout {
      */
     public void insertDirectChild(Layout toInsert){
         if(toInsert.isAllowedToBeChildOf(this)){
-            Layout cloneOfInsert = toInsert.clone();
-            cloneOfInsert.setParent(this);
-            this.children.add(cloneOfInsert);
+            toInsert.setParent(this);
+            this.children.add(toInsert);
         }
     }
 
