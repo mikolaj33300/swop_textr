@@ -22,14 +22,16 @@ We try to achieve this visual:
 public class DirectoryView extends View {
 
     /**
-     * The {@link Directory} object we will render
+     * The {@link Directory} to render
      */
     private final Directory dir;
+
     /**
      * Determines the indent from left
      * "  "# name directory == 2
      */
     private final int indent = 2;
+
     /**
      * The amount of lines between every entry
      */
@@ -45,16 +47,29 @@ public class DirectoryView extends View {
         this.dir = dir;
     }
 
+    /**
+     * Returns the currently focused column
+     * @return indent
+     */
     @Override
     public int getFocusedCol() {
         return indent;
     }
 
+    /**
+     * Returns the currently focused line
+     * @return the focussed line
+     */
     @Override
     public int getFocusedLine() {
         return (spacing+1) + dir.getFocused()*(spacing+1);
     }
 
+
+    /**
+     * Returns the total height of the content
+     * @return the amount of space taken up by all the entries + spacing in between them
+     */
     @Override
     public int getTotalContentHeight() {
         return (spacing + 1) + dir.getEntries().size() * (spacing + 1);
@@ -95,11 +110,18 @@ public class DirectoryView extends View {
 
     }
 
+    /**
+     * Returns the measurements of the terminal
+     * @return uiCoordsReal
+     */
     @Override
     public Coords getRealCoords() {
         return super.getRealCoords();
     }
 
+    /**
+     * Renders the cursor on the current view
+     */
     @Override
     public void renderCursor() throws IOException {
         Coords coords = super.getRealCoords();
@@ -110,11 +132,13 @@ public class DirectoryView extends View {
         termiosTerminalAdapter.moveCursor(startY + getFocusedLine(), startX + getFocusedCol());
     }
 
+    //TODO: implement equals
     @Override
     public boolean equals(Object o) {
         return false;
     }
 
+    //TODO: implement getLineLength
     @Override
     protected int getLineLength(int focusedLine) {
         return 0;

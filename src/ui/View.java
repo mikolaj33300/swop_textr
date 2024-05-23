@@ -98,7 +98,9 @@ public abstract class View {
         }
     }
 
-
+    /**
+     * Fills an amount of space with a string
+     */
     void fill(int x, int y, int w, int h, String s){
       for (int i = 0; i < h; i++){
         termiosTerminalAdapter.printText(y+i, x, s.repeat(w));
