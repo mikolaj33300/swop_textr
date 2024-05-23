@@ -44,10 +44,16 @@ public class Directory {
     /**
      * Returns the selected {@link FileSystemEntry}.
      */
-    public Directory selectEntry() {
-        FileSystemEntry entryAfterSelection = this.getEntries().get(focused).selectEntry();
-        if(entryAfterSelection != null){
-            this.focusedDirectory = entryAfterSelection;
+    public FileSystemEntry selectEntry() {
+        if(focused == 0) this.focusedDirectory = this.focusedDirectory.getParent();
+        else if(focused <= this.entries.size()) {
+            // Directory: we change the parent & update children
+            if(entries.get(focused-1).isDirectory()) {
+                this.focusedDirectory = entries.get(focused-1);
+                this.entries = this.focusedDirectory.getChildren();
+            }
+            else
+                return entries.get(focused - 1);
         }
         return null;
     }

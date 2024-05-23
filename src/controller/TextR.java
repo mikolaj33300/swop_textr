@@ -67,7 +67,6 @@ public class TextR {
     /**
      * Main method for the awt part of the program
      * Allows the program to be divided over multiple terminals running on different AWT dispatch threads
-     * @throws IOException RuntimeException
      */
     public static void awtMain(String[] args) {
         if (!java.awt.EventQueue.isDispatchThread()){
