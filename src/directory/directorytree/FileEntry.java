@@ -1,14 +1,15 @@
 package directory.directorytree;
 
 import files.FileHolder;
+import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
 import java.util.List;
 
 public class FileEntry extends FileSystemEntry {
 
-    public FileEntry(String path, DirEntry parent) {
-        super(path, parent);
+    public FileEntry(String path, DirEntry parent, OpenFileOnPathRequestListener listener) {
+        super(path, parent, listener);
     }
 
     @Override
@@ -27,8 +28,9 @@ public class FileEntry extends FileSystemEntry {
     }
 
     @Override
-    public FileHolder createFile(FileCreator creator) {
-        return creator.createDefault(this);
+    public FileSystemEntry selectEntry() {
+        //TODO notify listener
+        return null;
     }
 
 }

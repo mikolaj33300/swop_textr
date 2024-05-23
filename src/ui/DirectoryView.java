@@ -67,6 +67,7 @@ public class DirectoryView extends View {
      */
     @Override
     public void render(int activeHash) throws IOException {
+        super.fill(1 + uiCoordsReal.startX, 1 + uiCoordsReal.startY, uiCoordsReal.width, uiCoordsReal.height, " ");
 
         Coords coords = super.getRealCoords();
         int height = coords.height;

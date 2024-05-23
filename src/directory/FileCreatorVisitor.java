@@ -5,6 +5,6 @@ import files.FileHolder;
 
 public interface FileCreatorVisitor {
 
-    FileHolder createFile(FileCreator creator);
+/*    FileHolder createFile(FileCreator creator);*/
 
 }
