@@ -35,7 +35,7 @@ public class DirectoryViewTest {
         d = root.resolve("test4.txt");
         Files.write(d, "hallo kaas i am your loyal student\n i use termios daily".getBytes());
 
-        dir = new Directory(new FileEntry(root.toAbsolutePath().toString(), null));
+        dir = new Directory(new FileEntry(root.toAbsolutePath().toString(), null, null));
 
         view = new DirectoryView(new VirtualTestingTermiosAdapter(100, 5, new ArrayList<>()), dir);
 

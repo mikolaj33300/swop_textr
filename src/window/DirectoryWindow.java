@@ -7,6 +7,7 @@ import inputhandler.InputHandlingElement;
 import ioadapter.TermiosTerminalAdapter;
 import listeners.OpenWindowRequestListener;
 import ui.DirectoryView;
+import ui.ScrollbarDecorator;
 import ui.View;
 
 import java.io.IOException;
@@ -16,13 +17,13 @@ public class DirectoryWindow extends Window {
     private final FileSystemEntry entry;
     private TermiosTerminalAdapter adapter;
     private final Directory dir;
-    private final DirectoryView view;
+    private final View view;
 
     public DirectoryWindow(FileSystemEntry entry, TermiosTerminalAdapter adapter) {
         this.entry = entry;
         this.adapter = adapter;
         this.dir = new Directory(entry);
-        this.view = new DirectoryView(adapter, dir);
+        this.view = new ScrollbarDecorator(new DirectoryView(adapter, dir));
     }
 
     @Override

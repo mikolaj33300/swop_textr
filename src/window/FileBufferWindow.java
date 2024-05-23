@@ -61,7 +61,6 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
         this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
-
     }
 
 
@@ -122,8 +121,8 @@ public class FileBufferWindow extends Window {
      */
     private void subscribeInputHandler() {
         this.fileBufferInputHandler.subscribeInputHandler(
-                window -> {
-                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(window, this.view.getTermiosTerminalAdapter()));
+                entry -> {
+                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(entry, this.view.getTermiosTerminalAdapter()));
                 }
         );
     }

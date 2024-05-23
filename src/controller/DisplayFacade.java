@@ -56,25 +56,27 @@ class DisplayFacade {
         ArrayList<Layout> leaves = new ArrayList<>(paths.length);
 
         if (paths.length == 1) {
-          Window toAdd = new NormalWindowFactory().createWindowOnPath(paths[0], lineSeparatorArg, termiosTerminalAdapter);
-	  //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
-          this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+            Window toAdd = new NormalWindowFactory().createWindowOnPath(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+            //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
+            this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+            this.windows.add(toAdd);
+            this.subscribeFileBufferWindow(toAdd);
         } else {
-          int[] hashes = new int[paths.length];
-          for (int i = 0; i < paths.length; i++) {
-              String checkPath = paths[i]; 
-	      Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
-	      this.subscribeFileBufferWindow(toAdd);
-
-              this.windows.add(toAdd);
-              hashes[i] = toAdd.getView().hashCode();
-          }
-          this.rootLayout = new VerticalLayoutNode(hashes);
+            int[] hashes = new int[paths.length];
+            for (int i = 0; i < paths.length; i++) {
+                String checkPath = paths[i];
+                Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
+                this.subscribeFileBufferWindow(toAdd);
+                this.windows.add(toAdd);
+                hashes[i] = toAdd.getView().hashCode();
+            }
+            this.rootLayout = new VerticalLayoutNode(hashes);
         }
     }
 
     /**
      * Used for testing
+     *
      * @param toOpenWindow
      * @param termiosTerminalAdapter
      * @param lineSeparatorArg
@@ -91,7 +93,7 @@ class DisplayFacade {
 
         toOpenWindow.setTermiosAdapter(termiosTerminalAdapter);
 
-        }
+    }
 
     /**
      * render all windows
@@ -104,6 +106,7 @@ class DisplayFacade {
 
     /**
      * Paints the screen for this display
+     *
      * @throws IOException when something goes wrong updating the coordinates
      */
     public void paintScreen() throws IOException {
@@ -138,10 +141,11 @@ class DisplayFacade {
     /**
      * Called from {@link ControllerFacade}, used to close a focused {@link Window} in {@link DisplayFacade#windows}.
      * Will ask the {@link Window#getHandler()} if {@link Window#isSafeToClose()} is true.
-     * @return  A {@link RenderIndicator} combined with an integer determining how the close action happened.
-     *          0 if the window is safe to close and closed
-     *          1 if it has a dirty buffer
-     *          2 if it is not force closable
+     *
+     * @return A {@link RenderIndicator} combined with an integer determining how the close action happened.
+     * 0 if the window is safe to close and closed
+     * 1 if it has a dirty buffer
+     * 2 if it is not force closable
      */
     public Pair<RenderIndicator, Integer> closeActive() {
         if (windows.get(active).getHandler().isSafeToClose()) {
@@ -154,10 +158,11 @@ class DisplayFacade {
 
     /**
      * Called from {@link ControllerFacade}, used to force close a focused {@link Window} in {@link DisplayFacade#windows}.
-     * @return  A {@link RenderIndicator} combined with an integer determining how the close action happened.
-     *          0 if the window is safe to close and closed
-     *          1 if it has a dirty buffer
-     *          2 if it is not force closable
+     *
+     * @return A {@link RenderIndicator} combined with an integer determining how the close action happened.
+     * 0 if the window is safe to close and closed
+     * 1 if it has a dirty buffer
+     * 2 if it is not force closable
      */
     public Pair<RenderIndicator, Integer> forceCloseActive() {
         //checks which hash will be the next one after this is closed
@@ -190,6 +195,7 @@ class DisplayFacade {
 
     /**
      * Changes the focused {@link LayoutLeaf} to another.
+     *
      * @param dir the direction to move focus to
      */
     public RenderIndicator moveFocus(MoveDirection dir) {
@@ -212,6 +218,7 @@ class DisplayFacade {
 
     /**
      * Rearranges the Layouts, depending on the argument given
+     *
      * @param orientation clockwise or counterclockwise
      */
     public RenderIndicator rotateLayout(RotationDirection orientation) {
@@ -221,6 +228,7 @@ class DisplayFacade {
 
     /**
      * let the active window know that the right arrow is pressed
+     *
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowRight() {
@@ -229,6 +237,7 @@ class DisplayFacade {
 
     /**
      * let the active window know that the Left arrow is pressed
+     *
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowLeft() {
@@ -237,6 +246,7 @@ class DisplayFacade {
 
     /**
      * let the active window know that the Down arrow is pressed
+     *
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowDown() {
@@ -245,6 +255,7 @@ class DisplayFacade {
 
     /**
      * let the active window know that the Up arrow is pressed
+     *
      * @return {@link RenderIndicator} indicating to re-render the cursor
      */
     public RenderIndicator handleArrowUp() {
@@ -253,6 +264,7 @@ class DisplayFacade {
 
     /**
      * let the active window insert a separator
+     *
      * @return {@link RenderIndicator} indicating to re-render the full display
      */
     public RenderIndicator handleSeparator() throws IOException {
@@ -261,7 +273,7 @@ class DisplayFacade {
 
     /**
      * Opens the snake game by doing overwriting the active {@link DisplayFacade#windows}'s
-     active window by a snake game window. We delete the active window and add a new window to the list.
+     * active window by a snake game window. We delete the active window and add a new window to the list.
      */
     public RenderIndicator openSnakeGame() throws IOException {
         // Get UI coords of current window to initialize snake view's playfield
@@ -301,6 +313,7 @@ class DisplayFacade {
 
     /**
      * Returns the line separator
+     *
      * @return byte[] containing the line separator
      */
     byte[] getLineSeparatorArg() {
@@ -309,6 +322,7 @@ class DisplayFacade {
 
     /**
      * Returns the array of windows
+     *
      * @return list of window objects
      */
     ArrayList<Window> getWindows() {
@@ -318,6 +332,7 @@ class DisplayFacade {
 
     /**
      * Returns the active window integer
+     *
      * @return integer determining the active window
      */
     int getActive() {
@@ -326,6 +341,7 @@ class DisplayFacade {
 
     /**
      * Returns the active window. For testing
+     *
      * @return the active window
      */
     Window getActiveWindow() {
@@ -334,6 +350,7 @@ class DisplayFacade {
 
     /**
      * Updates the view coordinates
+     *
      * @return a render indicator determining to rerender all
      * @throws IOException when retrieving the get text area size fails
      */
@@ -351,6 +368,7 @@ class DisplayFacade {
 
     /**
      * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
+     *
      * @return an Integer object representing a new hashcode
      */
     private Integer getNewHashCode() {
@@ -370,6 +388,7 @@ class DisplayFacade {
     /**
      * Called when a new display should be opened. This is passed down from {@link ControllerFacade} on the active
      * display. The display will then do correct operations by calling upon the active {@link Window}
+     *
      * @param newAdapter the adapter that should be used for the new display
      * @throws IOException
      */
@@ -381,6 +400,7 @@ class DisplayFacade {
 
     /**
      * Sets the window size to a new parameter one, and repaints the screen
+     *
      * @param newCoords the new size of the display
      * @throws IOException
      */
@@ -404,7 +424,7 @@ class DisplayFacade {
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), openedWindow.getHashCode());
                     try {
                         updateViewCoordinates();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
 
                     }
                 }

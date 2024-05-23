@@ -7,7 +7,7 @@ import util.Rectangle;
 import java.io.IOException;
 
 //This decorator does not extend an abstract ViewDecorator because we need to extend all the methods anyways
-public class ScrollbarDecorator extends View{
+public class ScrollbarDecorator extends View {
     View wrappedView;
 
     public ScrollbarDecorator(View v) {
@@ -46,6 +46,9 @@ public class ScrollbarDecorator extends View{
 
     @Override
     public boolean equals(Object o) {
+        if(o instanceof ScrollbarDecorator s) {
+            return s.wrappedView.equals(this.wrappedView);
+        }
         return false;
     }
 

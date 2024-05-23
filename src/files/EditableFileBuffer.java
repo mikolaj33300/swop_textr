@@ -1,5 +1,6 @@
 package files;
 
+import directory.directorytree.FileSystemEntry;
 import listeners.DisplayRequestForFileEntryListener;
 import util.json.JsonUtil;
 
@@ -37,9 +38,15 @@ public class EditableFileBuffer extends FileBuffer {
      * Notifies this object that it has been parsed
      */
     public boolean parseAsJSON() {
-        if(JsonUtil.parseDirectory(this) != null) {
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, new OpenFileOnPathRequestListener() {
+            @Override
+            public void notifyRequestToOpenFile(String pathToOpen) {
+                //Create the holder here
+            }
+        });
+        if(toOpenEntry != null) {
             this.parsed = true;
-            this.listener.notifyRequestToOpen((JsonUtil.parseDirectory(this)));
+            this.listener.notifyRequestToOpen(toOpenEntry);
         }
         return false;
     }
