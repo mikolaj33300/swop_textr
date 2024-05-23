@@ -1,8 +1,6 @@
 package files;
 
-import listeners.DeletedCharListener;
-import listeners.DeletedInsertionPointListener;
-import listeners.EnteredInsertionPointListener;
+import listeners.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,10 +17,11 @@ public class BufferCursorContext {
     private EnteredInsertionPointListener el;
     private DeletedInsertionPointListener dil;
     private DeletedCharListener dcl;
+    EditableFileBuffer containedFileBuffer;
+    private DisplayRequestForFileEntryListener openParsedDirectoryListener;
 
-    FileBuffer containedFileBuffer;
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
-        this.containedFileBuffer = new FileBuffer(path, lineSeparator);
+        this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
         this.insertionPointCol=0;
         this.insertionPointLine=0;
         this.insertionPointByteIndex=0;
@@ -77,7 +76,7 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToEnterInsertion(el);
     }
 
-    private BufferCursorContext(FileBuffer fb, int insertionPointCol, int insertionPointLine) {
+    private BufferCursorContext(EditableFileBuffer fb, int insertionPointCol, int insertionPointLine) {
         this.containedFileBuffer = fb.clone();
         this.insertionPointCol=insertionPointCol;
         this.insertionPointLine=insertionPointLine;
@@ -93,7 +92,6 @@ public class BufferCursorContext {
         this.insertionPointByteIndex = bfc.insertionPointByteIndex;
         this.insertionPointLine = bfc.insertionPointLine;
         this.insertionPointCol = bfc.insertionPointCol;
-
 
         subscribeToEnterInsertionFb();
         subscribeToDeletionCharFb();
@@ -270,7 +268,7 @@ public class BufferCursorContext {
     /**
      * @return the contained filebuffer
      */
-    public FileBuffer getFileBuffer() { 
+    public EditableFileBuffer getFileBuffer() {
 	return containedFileBuffer.clone();
     }
 
@@ -303,7 +301,39 @@ public class BufferCursorContext {
       return containedFileBuffer.getLineLength(line);
     }
 
+    /**
+     * Returns the path of the {@link FileHolder}
+     * @return the path in string format
+     */
     public String getPath() {
 	return containedFileBuffer.getPath();
     }
+
+    /**
+     * Will attempt to parse the buffers contents (temp?)
+     */
+    public void parse() {
+        this.containedFileBuffer.parseAsJSON();
+    }
+
+    /**
+     * Subscribes this method to a listener in {@link inputhandler.FileBufferInputHandler}
+     * @param listener the listener that passes a window
+     */
+    public void subscribe(DisplayRequestForFileEntryListener listener) {
+        this.openParsedDirectoryListener = listener;
+        this.subscribeEditableBuffer();
+    }
+
+    /**
+     * This will subscribe the {@link EditableFileBuffer} to this class.
+     */
+    private void subscribeEditableBuffer() {
+       this.containedFileBuffer.subscribeEditableBuffer(
+                window -> {
+                    this.openParsedDirectoryListener.notifyRequestToOpen(window);
+                }
+        );
+    }
+
 }

@@ -1,7 +1,7 @@
 package ui;
 
-import controller.adapter.RealTermiosTerminalAdapter;
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.RealTermiosTerminalAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import util.Coords;
 
@@ -15,6 +15,8 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
 
     int cursorX;
     int cursorY;
+
+    private Runnable runnableForTerminalInput = null;
 
     public ArrayList<char[]> getVirtualScreen(){
         ArrayList<char[]> clonedVirtualScreen = new ArrayList<>();
@@ -129,6 +131,7 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
     }
 
     /**
+     * @deprecated
      * Inherits doc from real termios, but does not actually wait until the deadline to trigger a delay.
      * It relies on the initial stream passed to let a user of this class signal when the deadline is reached in the
      * sequence of bytes/events. Also see constructor doc.
@@ -138,10 +141,10 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      */
     @Override
     public int readByte(long deadline) throws TimeoutException {
-        if(inputStream.size() != 0){
+/*        if(inputStream.size() != 0){
             int toReturn = inputStream.get(0);
-            /*-1 can be used here to signal to wait the delay, as waiting the actual time is not that interesting
-            * for a quick unit test, and is also discouraged as the assignment forbids use of other timing classes*/
+            *//*-1 can be used here to signal to wait the delay, as waiting the actual time is not that interesting
+            * for a quick unit test, and is also discouraged as the assignment forbids use of other timing classes*//*
             inputStream.remove(0);
             if(toReturn == -1){
                 throw new TimeoutException();
@@ -149,7 +152,8 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
             return toReturn;
         } else {
             return Integer.MIN_VALUE; //loop is over, this is a byte to signal to kill the loop
-        }
+        }*/
+        return 0;
     }
 
     /**
@@ -168,8 +172,12 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
     }
 
     @Override
-    public void setInputListener(Runnable runnable) {
-
+    public void setInputListenerOnAWTEventQueue(Runnable runnable) {
+        if(runnableForTerminalInput != null){
+            throw new RuntimeException("Already a stdin listener attached!");
+        } else {
+            this.runnableForTerminalInput = runnable;
+        }
     }
 
     @Override
@@ -179,7 +187,10 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
 
     /**
      * Adds an integer to the inputstream
-     * @param i the integer for the input stream
+     * @param i the integer for the input stream.
+     * -2 halts the loop, MAX INTEGER delimits events, other normal integers are integers readable from the input
+     *
+     * stream when the stdin event fires.
      */
     public void putByte(int i) {
         this.inputStream.add(i);
@@ -199,5 +210,11 @@ public class VirtualTestingTermiosAdapter implements TermiosTerminalAdapter{
      */
     public int getCursorY() {
         return cursorY;
+    }
+
+    public void runStdinListener(){
+        Runnable currentListener = this.runnableForTerminalInput;
+        this.runnableForTerminalInput = null;
+        currentListener.run();
     }
 }

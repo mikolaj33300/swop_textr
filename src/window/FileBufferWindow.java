@@ -1,10 +1,11 @@
-package controller;
+package window;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import files.BufferCursorContext;
 import inputhandler.FileBufferInputHandler;
 import inputhandler.InputHandlingElement;
+import listeners.OpenWindowRequestListener;
 import ui.FileBufferView;
 import ui.ScrollbarDecorator;
 import ui.View;
@@ -16,7 +17,7 @@ import java.io.IOException;
  *  - duplicate: accepts a {@link WindowVisitor}
  *  - returning the inputhandler, defined in the constructor
  *  - returning the view, defined in the constructor
- * (These things used to be handled by the {@link ControllerFacade}, now done by this object, hence we need the abstract methods)
+ * (These things used to be handled by the layer above, now done by this object, hence we need the abstract methods)
  */
 public class FileBufferWindow extends Window {
 
@@ -29,6 +30,10 @@ public class FileBufferWindow extends Window {
      * The view of this window, visual representation of the fileBufferWindow
      */
     private View view;
+    /**
+     * The listener that can open files
+     */
+    private OpenWindowRequestListener listener;
 
     /**
      * Constructor of this FileBufferWindow
@@ -40,14 +45,10 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(String path, byte[] lineSeparatorArg, TermiosTerminalAdapter adapter) throws PathNotFoundException, IOException {
         super();
         FileBufferInputHandler openedFileHandler;
-        try {
-            openedFileHandler = new FileBufferInputHandler(path, lineSeparatorArg);
-        } catch (PathNotFoundException | IOException e) {
-            throw e;
-        }
+        openedFileHandler = new FileBufferInputHandler(path, lineSeparatorArg);
+
         this.view = (new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), adapter)));
         this.fileBufferInputHandler = (openedFileHandler);
-
     }
 
     /**
@@ -60,6 +61,7 @@ public class FileBufferWindow extends Window {
     public FileBufferWindow(FileBufferView newView, FileBufferInputHandler fileBufferInputHandler) {
         this.view = newView;
         this.fileBufferInputHandler = fileBufferInputHandler;
+
     }
 
 
@@ -96,9 +98,7 @@ public class FileBufferWindow extends Window {
     }
 
     /**
-     * Allows {@link DisplayFacade} to call upon this object using a {@link WindowVisitor} implementation.
-     * The purpose of this is letting that implementation {@link DisplayFacade.DuplicateWindowVisitor} directly
-     * change items in {@link DisplayFacade}. Duplication is now handled in {@link DisplayFacade}, but not by {@link DisplayFacade}
+     * Allows a layer above to call upon this object using a {@link WindowVisitor} implementation.
      * @param v the visitor object
      * @throws IOException when reading files goes wrong.
      */
@@ -115,4 +115,28 @@ public class FileBufferWindow extends Window {
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
         this.view.setTermiosTerminalAdapter(newAdapter);
     }
+
+    /**
+     * The input handler {@link FileBufferInputHandler} is able to request to open a new window.
+     * We receive a new window here.
+     */
+    private void subscribeInputHandler() {
+        this.fileBufferInputHandler.subscribeInputHandler(
+                window -> {
+                    this.listener.openWindow(new NormalWindowFactory().createDirectoryOnFileStructure(window, this.view.getTermiosTerminalAdapter()));
+                }
+        );
+    }
+
+    @Override
+    public void subscribeWindow(OpenWindowRequestListener listener) {
+        this.listener = listener;
+        this.subscribeInputHandler();
+    }
+
+    @Override
+    public String getPath() {
+        return fileBufferInputHandler.getPath();
+    }
+
 }

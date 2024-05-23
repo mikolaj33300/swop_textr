@@ -1,6 +1,6 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ public class CloseBufferTest {
     @TempDir
     Path path1, path2;
     private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
     TextR textr1, textr2;
 
     @BeforeEach
@@ -27,7 +28,7 @@ public class CloseBufferTest {
         path2 = path2.resolve("test2.txt");
         Files.write(path2, "i love eating kaas\n ; kaas is my favourite\n; also using termios on a daily basis".getBytes());
         textr1 = new TextR(new String[] {"--lf",path1.toString()}, adapter);
-        textr2 = new TextR(new String[] {"--lf",path1.toString(), path2.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf",path1.toString(), path2.toString()}, adapter2);
     }
 
     @Test
@@ -56,8 +57,6 @@ public class CloseBufferTest {
     @Test
     public void closeDirty_OneFile() throws IOException {
         enterCharacter('a');
-        haltLoop();
-        textr1.startListenersAndHandlers();
         // Assert dirty
         assertTrue(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
@@ -71,12 +70,12 @@ public class CloseBufferTest {
     @Test
     public void closeDirty_OneFile_HandlePopup() throws IOException {
         enterCharacter('a');
+        triggerStdinEventFirstAdapter();
         adapter.putByte(27);
         adapter.putByte(10);
         adapter.putByte((int)'S');
         enterCharacter('n');
-        haltLoop();
-        textr1.startListenersAndHandlers();
+        triggerStdinEventFirstAdapter();
         // Assert dirty
         assertTrue(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
@@ -89,18 +88,21 @@ public class CloseBufferTest {
 
     private void enterCharacter(char character) {
         adapter.putByte((int) character);
+        triggerStdinEventFirstAdapter();
     }
 
     private void focusNext() {
         adapter.putByte(14);
+        triggerStdinEventFirstAdapter();
     }
 
     public void focusPrevious() {
         adapter.putByte(16);
+        triggerStdinEventFirstAdapter();
     }
 
-    private void haltLoop() {
-        adapter.putByte(-2);
+    private void triggerStdinEventFirstAdapter(){
+        adapter.runStdinListener();
     }
 
 }

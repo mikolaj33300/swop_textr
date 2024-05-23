@@ -1,15 +1,13 @@
-package controller.adapter;
+package ioadapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
-import controller.ASCIIKeyEventListener;
 import ui.SwingEditableTerminalApp;
 import util.Coords;
 
 public class SwingTerminalAdapter implements TermiosTerminalAdapter {
-    private ArrayList<ResizeListener> resizeListenerArrayList = new ArrayList<>(0);
     private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
 
 
@@ -18,32 +16,7 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
     public SwingTerminalAdapter() {
         this.editableSwingTerminal = new SwingEditableTerminalApp();
-		editableSwingTerminal.setVisible(true);
-        editableSwingTerminal.subscribeToResize(new ResizeListener() {
-            @Override
-            public void notifyNewCoords(Coords newCoords) throws IOException {
-                for(ResizeListener l : resizeListenerArrayList){
-                    l.notifyNewCoords(newCoords);
-                }
-            }
-        });
-
-        editableSwingTerminal.subscribeToASCIIKeyEnters(new ASCIIKeyEventListener() {
-
-            @Override
-            public void notifyNormalKey(int byteInt) {
-                for(ASCIIKeyEventListener l : asciiListenerArrayList){
-                    l.notifyNormalKey(byteInt);
-                }
-            }
-
-            @Override
-            public void notifySurrogateKeys(int first, int second) {
-                for(ASCIIKeyEventListener l : asciiListenerArrayList){
-                    l.notifySurrogateKeys(first, second);
-                }
-            }
-        });
+        editableSwingTerminal.setVisible(true);
     }
 
   @Override
@@ -103,12 +76,11 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
 
     @Override
     public void subscribeToResizeTextArea(ResizeListener l) {
-        //TODO Implement this, add a listener and use the contained jframe's built in functionality
-        resizeListenerArrayList.add(l);
+        editableSwingTerminal.subscribeToResize(l);
     }
 
     @Override
-    public void setInputListener(Runnable runnable) {
+    public void setInputListenerOnAWTEventQueue(Runnable runnable) {
 
     }
 
@@ -121,12 +93,11 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
         return editableSwingTerminal.getContentBuffer();
     }
 
-    public void subscribeToEnteredASCII(ASCIIKeyEventListener l){
-        asciiListenerArrayList.add(l);
-    }
-
     public void subscribeToKeyPresses(ASCIIKeyEventListener newAsciiListener) {
         editableSwingTerminal.subscribeToASCIIKeyEnters(newAsciiListener);
     }
 
+    public SwingEditableTerminalApp getSwingEditableTerminal(){
+      return this.editableSwingTerminal;
+    }
 }

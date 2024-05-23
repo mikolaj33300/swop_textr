@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import io.github.btj.termios.Terminal;
 import util.ScreenUIUtil;
@@ -56,8 +56,15 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
     }
 
     @Override
-    public void setInputListener(Runnable runnable) {
-        Terminal.setInputListener(runnable);
+    public void setInputListenerOnAWTEventQueue(Runnable runnable) {
+        Terminal.setInputListener(new Runnable() {
+            @Override
+            public void run() {
+                java.awt.EventQueue.invokeLater(() -> {
+                    runnable.run();
+                });
+            }
+        });
     }
 
     @Override

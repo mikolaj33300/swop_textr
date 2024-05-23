@@ -1,12 +1,13 @@
-package controller;
+package controller.usecasecontroller;
 
-import controller.adapter.TermiosTerminalAdapter;
+import controller.TextR;
+import ioadapter.TermiosTerminalAdapter;
 import ui.UserPopupBox;
 
 import java.io.IOException;
 
 public class FileErrorPopupController extends UseCaseController {
-    UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file");
+    UserPopupBox userPopupBox = new UserPopupBox("Error: invalid file", coreControllerParent.getAdapter());
 
     public FileErrorPopupController(TextR coreControllerParent, TermiosTerminalAdapter termiosTerminalAdapter) {
         super(coreControllerParent, null);
@@ -31,14 +32,6 @@ public class FileErrorPopupController extends UseCaseController {
     public void paintScreen() throws IOException {
         coreControllerParent.getAdapter().clearScreen();
         userPopupBox.render();
-    }
-
-    /**
-     * remove the popup
-     * @throws IOException
-     */
-    public void clearContent() throws IOException {
-        coreControllerParent.getAdapter().clearScreen();
     }
 
 }

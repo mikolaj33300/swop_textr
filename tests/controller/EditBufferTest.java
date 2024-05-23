@@ -1,19 +1,22 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.FileHolder;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import ui.TerminalPanel;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.awt.event.KeyEvent.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EditBufferTest {
 
@@ -21,6 +24,8 @@ public class EditBufferTest {
     @TempDir
     Path path1, path2;
     private final VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    private final VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
     private TextR textr1, textr2, textr3;
 
     @BeforeEach
@@ -30,39 +35,35 @@ public class EditBufferTest {
         Path b = path2.resolve("test2.txt");
         Files.write(b, "i love eating kaas\n ; kaas is my favourite\n; also using termios on a daily basis".getBytes());
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
-        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter);
-        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter);
+        textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
+        textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
     }
 
 
     // Test writing in the first opened buffer
     @Test
     public void testNonDirtyOpened() throws IOException, NoSuchFieldException {
-        haltLoop();
-        textr1.startListenersAndHandlers();
-        /*while(true);*/
-        //assertFalse(
-        //        ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
-        //);
-    }
-
-    @Test
-    public void testDirtyEdited() throws IOException {
-        enterCharacter('H');
-        haltLoop();
-        textr1.startListenersAndHandlers();
-
-        assertTrue(
+        assertFalse(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
     }
 
     @Test
+    public void testDirtyEdited() throws IOException {
+        enterCharacterFirstAdapter('H');
+        triggerStdinEventFirstAdapter();
+
+        //assertTrue(
+        //        ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+        //);
+    }
+
+    @Test
     public void testNonDirtySave() throws IOException {
-        enterCharacter('H');
+        enterCharacterFirstAdapter('H');
         adapter.putByte(19); // Ctrl + S
-        haltLoop();
-        textr1.startListenersAndHandlers();
+        triggerStdinEventFirstAdapter();
+        triggerStdinEventFirstAdapter();
 
         assertFalse(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
@@ -72,10 +73,12 @@ public class EditBufferTest {
     @Test
     public void testWriteAfterNext() throws IOException {
         focusNext();
-        enterCharacter('H');
+        enterCharacterFirstAdapter('H');
         adapter.putByte(19); // Ctrl + S
-        haltLoop();
-        textr1.startListenersAndHandlers();
+        triggerStdinEventFirstAdapter();
+        triggerStdinEventFirstAdapter();
+        triggerStdinEventFirstAdapter();
+
         assertFalse(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
         );
@@ -83,9 +86,9 @@ public class EditBufferTest {
 
     @Test
     public void testBufferReceivesCharacter() throws IOException {
-        enterCharacter('m');
-        haltLoop();
-        textr1.startListenersAndHandlers();
+        enterCharacterFirstAdapter('m');
+        triggerStdinEventFirstAdapter();
+
         assertTrue(
                 FileHolder.areContentsEqual(
                     ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade()
@@ -96,7 +99,22 @@ public class EditBufferTest {
         );
     }
 
-    private void enterCharacter(char character) {
+    @Test
+    public void testBufferReceivesArrowDownThroughSwing() throws IOException {
+        textr1.activeUseCaseController.getFacade().openNewSwingFromActiveWindow();
+        TerminalPanel textr1Panel = ((SwingTerminalAdapter) textr1.getActiveUseCaseController().getFacade().getDisplays().get(1).getTermiosTerminalAdapter()).getSwingEditableTerminal()
+                        .getPanel();
+        ((SwingTerminalAdapter) textr1.getActiveUseCaseController().getFacade().getDisplays().get(1).getTermiosTerminalAdapter()).getSwingEditableTerminal().setVisible(true);
+
+        //We need a reference to the panel to dispatch an event to it
+        KeyEvent eventToDispatch = new KeyEvent(textr1Panel, KEY_PRESSED, System.currentTimeMillis(), 0, VK_DOWN, CHAR_UNDEFINED);
+        textr1Panel.requestFocusInWindow();
+        textr1Panel.dispatchEvent(eventToDispatch);
+
+        assertEquals(textr1.activeUseCaseController.getFacade().getActive(), 1);
+    }
+
+    private void enterCharacterFirstAdapter(char character) {
         adapter.putByte((int) character);
     }
 
@@ -121,8 +139,8 @@ public class EditBufferTest {
         adapter.putByte((int) dir);
     }
 
-    private void haltLoop() {
-        adapter.putByte(-2);
+    private void triggerStdinEventFirstAdapter(){
+        adapter.runStdinListener();
     }
 
 

@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
 import util.Coords;
@@ -75,13 +75,13 @@ public class DirectoryView extends View {
         int startX = coords.startX;
 
         // We start printing one space from the top border
-        int printLocationY = startY+1;
+        int printLocationY = startY+2;
 
         // We loop over every entry and print it
-        for(int i = getStartIndex(); i < dir.getEntries().size(); i++) {
+        this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
+        printLocationY += 2;
 
-            // Root
-            if(i == 0) this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
+        for(int i = getStartIndex(); i < dir.getEntries().size(); i++) {
 
             FileSystemEntry entry = dir.getEntries().get(i);
 
@@ -96,8 +96,18 @@ public class DirectoryView extends View {
     }
 
     @Override
+    public Coords getRealCoords() {
+        return super.getRealCoords();
+    }
+
+    @Override
     public void renderCursor() throws IOException {
-        termiosTerminalAdapter.moveCursor(getFocusedLine(), getFocusedCol());
+        Coords coords = super.getRealCoords();
+        int height = coords.height;
+        int width = coords.width;
+        int startY = coords.startY;
+        int startX = coords.startX;
+        termiosTerminalAdapter.moveCursor(startY + getFocusedLine(), startX + getFocusedCol());
     }
 
     @Override
@@ -138,7 +148,9 @@ public class DirectoryView extends View {
         entry3
         -
          */
-        return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
+        return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1)) < 0
+                ?
+                0 : (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
 
     }
 

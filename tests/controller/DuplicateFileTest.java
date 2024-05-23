@@ -1,6 +1,6 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DuplicateFileTest {
@@ -31,19 +32,18 @@ public class DuplicateFileTest {
     @Test
     public void testDisplaysDuped() throws IOException {
         adapter = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
-        enterDuplicateCtrl();
-        haltLoop();
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
-        textr1.startListenersAndHandlers();
-        assertTrue(
-                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
-        );
+        enterDuplicateCtrl();
+        assertEquals( textr1.getActiveUseCaseController().getFacade().getWindows().size(), 2);
     }
 
     private void enterDuplicateCtrl() {
         adapter.putByte((int) 4);
+        triggerStdinEventFirstAdapter();
+
     }
-    private void haltLoop() {
-        adapter.putByte(-2);
+
+    private void triggerStdinEventFirstAdapter(){
+        adapter.runStdinListener();
     }
 }

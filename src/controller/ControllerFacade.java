@@ -1,18 +1,19 @@
 package controller;
 
-import controller.adapter.SwingTerminalAdapter;
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
-import layouttree.*;
 import util.*;
+import window.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-class ControllerFacade {
+public class ControllerFacade {
 
     /**
      * The line separator of the system
@@ -43,13 +44,11 @@ class ControllerFacade {
 
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
-    private ArrayList<DisplayOpeningRequestListener> openingRequestListeners = new ArrayList<>(0);
 
     /**
      * Creates a ControllerFacade object.
-     * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
-     * @throws IOException when the path is invalid
+     * Creates a {@link DisplayFacade} object which represents the first display opened by textr.
+     * @throws IOException when the path provided to it is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
 
@@ -229,6 +228,7 @@ class ControllerFacade {
             this.displays.add(displays.size(), newFacade);
 
 
+            //Will notify controller above it, the keypresses end up at the usecasecontroller to be converted to a system call
             ASCIIKeyEventListener newAsciiListener = new ASCIIKeyEventListener() {
                 @Override
                 public void notifyNormalKey(int byteInt) {
@@ -262,11 +262,12 @@ class ControllerFacade {
     }
 
     /**
-     * Renders every element on the active display
+     * Renders every element on all displays (a change on one can be reflected on others)
      */
     public void paintScreen() throws IOException {
-        clearScreen();
-        this.displays.get(active).paintScreen();
+        for(DisplayFacade f : displays){
+            f.paintScreen();
+        }
     }
 
     /**
@@ -285,12 +286,8 @@ class ControllerFacade {
         this.listenersToThisEvents.remove(asciiEventListener);
     }
 
-    public void clearScreen() {
-        try {
-            displays.get(active).clearContent();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public DisplayFacade getActiveDisplay() {
+        return this.displays.get(active);
     }
 }
 

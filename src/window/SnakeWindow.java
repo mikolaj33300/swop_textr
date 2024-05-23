@@ -1,15 +1,16 @@
-package controller;
+package window;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import exception.PathNotFoundException;
 import inputhandler.InputHandlingElement;
 import inputhandler.SnakeInputHandler;
+import listeners.OpenWindowRequestListener;
 import ui.SnakeView;
 import ui.View;
 
 import java.io.IOException;
 
-public class SnakeWindow extends Window{
+public class SnakeWindow extends Window {
 
     /**
      * The snake view of this window, visual representation of the snakeWindow
@@ -78,5 +79,16 @@ public class SnakeWindow extends Window{
     @Override
     public void setTermiosAdapter(TermiosTerminalAdapter newAdapter) {
         snakeView.setTermiosTerminalAdapter(newAdapter);
+    }
+
+    @Override
+    public void subscribeWindow(OpenWindowRequestListener openWindowRequestListener) {
+        /*Snake normally won't request to open windows but this can be changed in
+        the future*/
+    }
+
+    @Override
+    public String getPath() {
+        return null;
     }
 }

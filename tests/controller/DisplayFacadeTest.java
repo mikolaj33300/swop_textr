@@ -1,13 +1,10 @@
 package controller;
 
-import controller.adapter.SwingTerminalAdapter;
-import controller.adapter.VirtualTestingTermiosAdapter;
-import files.BufferCursorContext;
-import inputhandler.FileBufferInputHandler;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import ui.FileBufferView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,7 +32,6 @@ public class DisplayFacadeTest {
         SwingTerminalAdapter newSwing = new SwingTerminalAdapter();
         ControllerFacade newController = new ControllerFacade(new String[] {"--lf", path1.toString()}, adapter);
         newController.openNewSwingFromActiveWindow();
-        while(true);
         //assertEquals(newSwing.getContentBuffer()[0][0], 'm');
     }
 

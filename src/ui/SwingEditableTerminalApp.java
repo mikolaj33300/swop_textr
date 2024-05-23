@@ -1,7 +1,7 @@
 package ui;
 
-import controller.ASCIIKeyEventListener;
-import controller.adapter.ResizeListener;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.ResizeListener;
 import util.Coords;
 
 import java.awt.Dimension;
@@ -20,87 +20,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-class TerminalPanel extends JPanel {
-    char[][] bufferToDisplay = new char[1][1];
-    ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
-
-    void clearBuffer() {
-        for (int i = 0; i < bufferToDisplay.length; i++)
-            Arrays.fill(bufferToDisplay[i], ' ');
-    }
-
-    public void setNewBuffer(char[][] newBuffer){
-        bufferToDisplay = new char[newBuffer.length][newBuffer[0].length];
-        for(int i = 0; i<newBuffer.length; i++){
-            for(int j = 0; j< newBuffer[0].length; j++){
-                bufferToDisplay[i][j] = newBuffer[i][j];
-            }
-        }
-    }
-
-    TerminalPanel() {
-        setFont(new Font("Monospaced", Font.PLAIN, 12));
-        clearBuffer();
-
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                FontMetrics metrics = TerminalPanel.this.getFontMetrics(getFont());
-                int nbRows = TerminalPanel.this.getHeight() / metrics.getHeight();
-                int nbCols = TerminalPanel.this.getWidth() / metrics.charWidth('m');
-                bufferToDisplay = new char[nbRows][nbCols];
-                List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
-                for (ResizeListener listener : resizeListenersCopy) {
-                    try {
-                        listener.notifyNewCoords(new Coords(0, 0, nbCols-3, nbRows));
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        FontMetrics fontMetrics = g.getFontMetrics();
-        int fontHeight = fontMetrics.getHeight();
-        int baseLineOffset = fontHeight - fontMetrics.getDescent();
-
-        int y = baseLineOffset;
-        for (int lineIndex = 0; lineIndex < bufferToDisplay.length; lineIndex++) {
-            char[] toDisplay = new char[bufferToDisplay[lineIndex].length+1];
-            System.arraycopy(bufferToDisplay[lineIndex], 0, toDisplay, 0, bufferToDisplay[lineIndex].length);
-            for(int i = bufferToDisplay[lineIndex].length; i<toDisplay.length; i++){
-                toDisplay[i] = ' ';
-            }
-            g.drawChars(toDisplay, 0, toDisplay.length, 0, y);
-            y += fontHeight;
-        }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        FontMetrics fontMetrics = this.getFontMetrics(getFont());
-        int width = fontMetrics.charWidth('m');
-        return new Dimension(width * bufferToDisplay[0].length, fontMetrics.getHeight() * bufferToDisplay.length);
-    }
-
-    @Override
-    public boolean isFocusable() {
-        return true;
-    }
-
-    public void subscribeToResize(ResizeListener r){
-        this.resizeListeners.add(r);
-    }
-}
-
 public class SwingEditableTerminalApp extends JFrame {
     private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
-    private char[][] contentBuffer = new char[25][160];
+    private char[][] contentBuffer;
 
     private int cursorRow = 0;
     private int cursorCol = 0;
@@ -138,11 +60,20 @@ public class SwingEditableTerminalApp extends JFrame {
         updateAndRenderVisual();
     }
 
+    /*
+    This needs to subscribe by itself to events of the panel instead of just passing provided listeners to the panel
+    directly, since this is the frontend of the swing ui part and the panel is a low level renderer
+    and parameters for listeners would also vary (we add some invisible characters to the buffer due
+    to a rendering glitch where the rightmost column disappears)
+     */
     public SwingEditableTerminalApp() {
         super("Swing Terminal App");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
+        contentBuffer =  new char[25][100];
+        terminalPanel.setNewBuffer(contentBuffer);
         getContentPane().add(terminalPanel);
+
         terminalPanel.subscribeToResize(new ResizeListener() {
             @Override
             public void notifyNewCoords(Coords n) throws IOException {
@@ -161,7 +92,6 @@ public class SwingEditableTerminalApp extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                     final char keyChar = e.getKeyChar();
-
                     if (keyChar == KeyEvent.CHAR_UNDEFINED){
                         switch (e.getKeyCode()) {
                             case KeyEvent.VK_F4:
@@ -235,5 +165,9 @@ public class SwingEditableTerminalApp extends JFrame {
         for(ASCIIKeyEventListener l : asciiListenerArrayList){
             l.notifySurrogateKeys(first, second);
         }
+    }
+
+    public TerminalPanel getPanel(){
+        return this.terminalPanel;
     }
 }

@@ -1,6 +1,5 @@
-package controller.adapter;
+package ioadapter;
 
-import controller.ASCIIKeyEventListener;
 import util.Coords;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public interface TermiosTerminalAdapter {
 
     public void subscribeToResizeTextArea(ResizeListener l);
 
-    public void setInputListener(Runnable runnable);
+    public void setInputListenerOnAWTEventQueue(Runnable runnable);
 
     void clearInputListener();
 }

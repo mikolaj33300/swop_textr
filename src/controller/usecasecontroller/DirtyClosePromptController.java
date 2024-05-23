@@ -1,13 +1,14 @@
-package controller;
+package controller.usecasecontroller;
 
-import io.github.btj.termios.Terminal;
+import controller.ControllerFacade;
+import controller.TextR;
 import util.RenderIndicator;
 import ui.UserPopupBox;
 
 import java.io.IOException;
 
 public class DirtyClosePromptController extends UseCaseController {
-    UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)");
+    UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)", coreControllerParent.getAdapter());
 
     /**
      * @param coreControllerParent
@@ -29,16 +30,14 @@ public class DirtyClosePromptController extends UseCaseController {
             // N
             case 110:
                 unsubscribeFromFacadeAscii();
-                coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                coreControllerParent.activeUseCaseController.paintScreen();
+                coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
                 return;
             // Y
             case 121:
                 int result = facade.forceCloseActive().b;
                 if(result == 0){
                     unsubscribeFromFacadeAscii();
-                    coreControllerParent.activeUseCaseController = new InspectContentsController(coreControllerParent, facade);
-                    coreControllerParent.activeUseCaseController.paintScreen();
+                    coreControllerParent.setActiveUseCaseController(new InspectContentsController(coreControllerParent, facade));
                     return;
                 } else {
                     System.exit(0);

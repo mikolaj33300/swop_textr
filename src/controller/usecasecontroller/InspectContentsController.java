@@ -1,6 +1,8 @@
-package controller;
+package controller.usecasecontroller;
 
-import controller.adapter.TermiosTerminalAdapter;
+import controller.ControllerFacade;
+import controller.TextR;
+import ioadapter.TermiosTerminalAdapter;
 import util.RenderIndicator;
 import util.MoveDirection;
 import util.RotationDirection;
@@ -119,15 +121,8 @@ public class InspectContentsController extends UseCaseController {
                         int result = facade.closeActive().b;
                         if (result == 1) { //If was dirty
                             unsubscribeFromFacadeAscii();
-                            coreControllerParent.activeUseCaseController = new DirtyClosePromptController(coreControllerParent, facade);
-                            try {
-                                coreControllerParent.activeUseCaseController.paintScreen();
-                                return;
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
+                            coreControllerParent.setActiveUseCaseController(new DirtyClosePromptController(coreControllerParent, facade));
                         } else if (result == 2) {
-                            clearContent();
                             System.exit(0);
                         }
                 }
@@ -149,10 +144,6 @@ public class InspectContentsController extends UseCaseController {
     public void paintScreen() throws IOException {
         facade.paintScreen();
         //facade.renderCursor();
-    }
-
-    private void clearContent() {
-       facade.clearScreen();
     }
 
     @Override

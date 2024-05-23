@@ -40,13 +40,13 @@ public class FileBuffer {
     /**
      * Determines if buffer has been modified
      */
-    private boolean dirty = false;
+    protected boolean dirty = false;
 
     /**
      * Holds the 'in memory' byte data of the file.
      * The amount of bytes equals the amount of characters in ASCII
      */
-    private ArrayList<Byte> byteContent;
+    protected ArrayList<Byte> byteContent;
 
     /**
      * An array of 'lines' of bytes. Each array in the array is an array separated by a
