@@ -28,7 +28,8 @@ public class Directory {
      * @param entry if entry is null, we use the root of the current jar
      */
     public Directory(FileSystemEntry entry) {
-        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null);
+        //TODO: Attach listener that opens the requested real files and sends requests up
+        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null);
         else focusedDirectory = entry;
     }
 

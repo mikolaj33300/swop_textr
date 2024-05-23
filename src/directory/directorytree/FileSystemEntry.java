@@ -1,6 +1,7 @@
 package directory.directorytree;
 
 import directory.FileCreatorVisitor;
+import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * The parent of this entry. This is always a {@link DirEntry}
      */
     protected final FileSystemEntry parent;
+    protected OpenFileOnPathRequestListener openOnPathListener;
     /**
      * The list of children {@link FileSystemEntry}. This will be null for {@link FileEntry}
      */
@@ -26,9 +28,10 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * @param path the full path to the file
      * @param parent the
      */
-    public FileSystemEntry(String path, FileSystemEntry parent) {
+    public FileSystemEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener) {
         this.path = path;
         this.parent = parent;
+        this.openOnPathListener = listener;
     }
 
     /**
@@ -64,7 +67,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      */
     public FileSystemEntry getParent() {
         return this.parent == null ?
-                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this)
+                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this, this.openOnPathListener)
                 : this.parent;
     }
 
@@ -104,4 +107,5 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
         return entries;
     }
 
+    public abstract FileSystemEntry selectEntry();
 }

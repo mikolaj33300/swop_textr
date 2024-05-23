@@ -1,5 +1,6 @@
 package files;
 
+import directory.directorytree.FileSystemEntry;
 import listeners.DisplayRequestForFileEntryListener;
 import ui.View;
 import util.json.JsonUtil;
@@ -38,10 +39,16 @@ public class EditableFileBuffer extends FileBuffer {
      * Notifies this object that it has been parsed
      */
     public boolean parseAsJSON() {
-        if(JsonUtil.parseDirectory(this) != null) {
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, new OpenFileOnPathRequestListener() {
+            @Override
+            public void notifyRequestToOpenFile(String pathToOpen) {
+                //Create the holder here
+            }
+        });
+        if(toOpenEntry != null) {
             this.parsed = true;
             View.write("test2.txt", "\nparse correct" + (this.hashCode()));
-            this.listener.notifyRequestToOpen((JsonUtil.parseDirectory(this)));
+            this.listener.notifyRequestToOpen(toOpenEntry);
         }
         View.write("test2.txt", "parsing failed at location" + JsonUtil.getErrorLocation(new String(this.getBytes())));
         return false;

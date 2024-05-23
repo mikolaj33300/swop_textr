@@ -4,6 +4,7 @@ import directory.directorytree.FileSystemEntry;
 import directory.directorytree.JsonDirectoryEntry;
 import directory.directorytree.JsonEntry;
 import files.FileBuffer;
+import files.OpenFileOnPathRequestListener;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class JsonUtil {
      * @return a TextLocation object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
      */
     public static TextLocation getTextLocationFor(FileBuffer buffer, String jsonName) {
-        JsonEntry entry = (JsonEntry) parseDirectory(buffer);
+        JsonEntry entry = (JsonEntry) parseDirectory(buffer, null);
         return findLocationForKey(jsonName, entry.getEntries(), null);
     }
 
@@ -25,16 +26,15 @@ public class JsonUtil {
      * @param buffer the location of the file
      * @return a FileSystemEntry object if correct json format, else null
      */
-    public static FileSystemEntry parseDirectory(FileBuffer buffer) {
+    public static FileSystemEntry parseDirectory(FileBuffer buffer, OpenFileOnPathRequestListener listener) {
         TextLocation location = JsonUtil.getErrorLocation(new String(buffer.getBytes()));
         if(location == null) {
             SimpleJsonObject object = SimpleJsonParser.parseObject(new String(buffer.getBytes()));
             FileSystemEntry e = new JsonDirectoryEntry(
                     "root",
                     buffer.getPath(),
-                    buffer,
                     object.properties,
-                    null);
+                    null, listener);
             e.initChildren();
             return e;
         }
