@@ -1,19 +1,22 @@
 package controller;
 
+import ioadapter.SwingTerminalAdapter;
 import ioadapter.VirtualTestingTermiosAdapter;
 import files.FileHolder;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import ui.TerminalPanel;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.awt.event.KeyEvent.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EditBufferTest {
 
@@ -94,6 +97,21 @@ public class EditBufferTest {
                             "mi am a mister\n ; but you can call me mister TEE".getBytes()
                 )
         );
+    }
+
+    @Test
+    public void testBufferReceivesArrowDownThroughSwing() throws IOException {
+        textr1.activeUseCaseController.getFacade().openNewSwingFromActiveWindow();
+        TerminalPanel textr1Panel = ((SwingTerminalAdapter) textr1.getActiveUseCaseController().getFacade().getDisplays().get(1).getTermiosTerminalAdapter()).getSwingEditableTerminal()
+                        .getPanel();
+        ((SwingTerminalAdapter) textr1.getActiveUseCaseController().getFacade().getDisplays().get(1).getTermiosTerminalAdapter()).getSwingEditableTerminal().setVisible(true);
+
+        //We need a reference to the panel to dispatch an event to it
+        KeyEvent eventToDispatch = new KeyEvent(textr1Panel, KEY_PRESSED, System.currentTimeMillis(), 0, VK_DOWN, CHAR_UNDEFINED);
+        textr1Panel.requestFocusInWindow();
+        textr1Panel.dispatchEvent(eventToDispatch);
+
+        assertEquals(textr1.activeUseCaseController.getFacade().getActive(), 1);
     }
 
     private void enterCharacterFirstAdapter(char character) {

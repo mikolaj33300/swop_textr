@@ -97,4 +97,7 @@ public class SwingTerminalAdapter implements TermiosTerminalAdapter {
         editableSwingTerminal.subscribeToASCIIKeyEnters(newAsciiListener);
     }
 
+    public SwingEditableTerminalApp getSwingEditableTerminal(){
+      return this.editableSwingTerminal;
+    }
 }
