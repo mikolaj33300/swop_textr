@@ -2,6 +2,7 @@ package directory.directorytree;
 
 import files.FileBuffer;
 import files.FileHolder;
+import files.OpenFileOnPathRequestListener;
 import util.json.SimpleJsonProperty;
 
 import java.util.ArrayList;
@@ -19,12 +20,11 @@ public class JsonDirectoryEntry extends JsonEntry {
     /**
      * The constructor for a {@link JsonDirectoryEntry}
      * @param name the name of the entry itself.
-     * @param bufferReference the path of the Json file on disk
      * @param properties the properties of the {@link util.json.SimpleJsonObject} from {@link util.json.SimpleJsonObject#properties}
      * @param parent the parent of this object, representing the {@link JsonDirectoryEntry}
      */
-    public JsonDirectoryEntry(String name, String path, FileBuffer bufferReference, LinkedHashMap<String, SimpleJsonProperty> properties, JsonDirectoryEntry parent) {
-        super(name, path, bufferReference, null, parent);
+    public JsonDirectoryEntry(String name, String path, LinkedHashMap<String, SimpleJsonProperty> properties, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener) {
+        super(name, path, null, parent, listener);
         this.entries = properties;
     }
 
@@ -36,9 +36,9 @@ public class JsonDirectoryEntry extends JsonEntry {
 
             // If the selected file's SimpleJsonValue is not a SimpleJsonObject (children = null), we add a FileEntry
             if (entry.getValue().value.getChildren() == null)
-                json.add(new JsonFileEntry(entry.getKey(), getPath(), getBuffer(), entry.getValue().value.getLocation(), this));
+                json.add(new JsonFileEntry(entry.getKey(), getPath(), entry.getValue().value.getLocation(), this, openOnPathListener));
             else
-                json.add(new JsonDirectoryEntry(entry.getKey(), getPath(), getBuffer(), entry.getValue().value.getChildren(), this));
+                json.add(new JsonDirectoryEntry(entry.getKey(), getPath(), entry.getValue().value.getChildren(), this, openOnPathListener));
 
         }
 
@@ -54,8 +54,9 @@ public class JsonDirectoryEntry extends JsonEntry {
     }
 
     @Override
-    public FileHolder createFile(FileCreator creator) {
-        return null;
+    public FileSystemEntry selectEntry() {
+        return this;
     }
+
 
 }

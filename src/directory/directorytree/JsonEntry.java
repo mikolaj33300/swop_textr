@@ -1,6 +1,7 @@
 package directory.directorytree;
 
 import files.FileBuffer;
+import files.OpenFileOnPathRequestListener;
 import util.json.TextLocation;
 
 import java.util.List;
@@ -18,23 +19,17 @@ public abstract class JsonEntry extends FileSystemEntry {
      */
     private final TextLocation location;
 
-    /**
-     * The {@link files.FileBuffer} reference where the json text is located
-     */
-    private final FileBuffer buffer;
 
     /**
      * Constructor for a generic {@link JsonEntry}.
      * @param name the name of the entry in the json entry
      * @param path path of the json file on disk
-     * @param bufferReference the full path to the JSON file on disk.
      * @param parent the parent entry. This is always a {@link JsonDirectoryEntry}
      */
-    public JsonEntry(String name, String path, FileBuffer bufferReference, TextLocation location, JsonDirectoryEntry parent) {
-        super(path, parent);
+    public JsonEntry(String name, String path, TextLocation location, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener) {
+        super(path, parent, listener);
         this.name = name;
         this.location = location;
-        this.buffer = bufferReference;
     }
 
     /**
@@ -60,13 +55,6 @@ public abstract class JsonEntry extends FileSystemEntry {
         return (List<JsonEntry>) super.getEntries();
     }
 
-    /**
-     * Returns the {@link FileBuffer} which holds the text that was parsed to create this directory structure
-     * @return the referenced {@link FileBuffer} which holds the information that was used to create this tree
-     */
-    protected FileBuffer getBuffer() {
-        return this.buffer;
-    }
 
     /**
      * If a parent is null, then we are at the root of the Json file system

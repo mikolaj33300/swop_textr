@@ -28,7 +28,8 @@ public class Directory {
      * @param entry if entry is null, we use the root of the current jar
      */
     public Directory(FileSystemEntry entry) {
-        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null);
+        //TODO: Attach listener that opens the requested real files and sends requests up
+        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null);
         else focusedDirectory = entry;
     }
 
@@ -43,10 +44,11 @@ public class Directory {
     /**
      * Returns the selected {@link FileSystemEntry}.
      */
-    public FileSystemEntry handleEnter() {
-        if(focused == 0) this.moveToParent();
-        else if(!this.getEntries().get(focused-1).isDirectory())
-            return this.getEntries().get(focused);
+    public Directory selectEntry() {
+        FileSystemEntry entryAfterSelection = this.getEntries().get(focused).selectEntry();
+        if(entryAfterSelection != null){
+            this.focusedDirectory = entryAfterSelection;
+        }
         return null;
     }
 
