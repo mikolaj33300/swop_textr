@@ -1,17 +1,12 @@
 package controller;
 
-import controller.adapter.TermiosTerminalAdapter;
-import files.BufferCursorContext;
+import ioadapter.ASCIIKeyEventListener;
+import ioadapter.SwingTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
-import inputhandler.FileBufferInputHandler;
-import inputhandler.SnakeInputHandler;
-import layouttree.*;
-import ui.*;
-import util.Coords;
-import util.MoveDirection;
-import util.RotationDirection;
-import util.Rectangle;
+import util.*;
+import window.Window;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,77 +14,64 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class ControllerFacade {
-    private byte[] lineSeparatorArg;
-    private ArrayList<Window> windows;
-    private Layout rootLayout;
-    private int active;
 
-    private boolean contentsChangedSinceLastRender;
-    private TermiosTerminalAdapter termiosTerminalAdapter;
+    /**
+     * The line separator of the system
+     */
+    private final byte[] lineSeparatorArg;
+
+    /**
+     * The list of displays on which TextR is running. Every display is opened in a separate terminal
+     */
+    private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
+
+    /**
+     * The index of the active display in the displays list
+     */
+    private int active = 0;
+
+    private TermiosTerminalAdapter initialTermiosAdapter;
+
+    /**
+     * The listeners to the key events
+     */
+    private ArrayList<ASCIIKeyEventListener> listenersToThisEvents;
+
+    /**
+     * The listeners to the resize events
+     */
+    private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
+
+    private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
+
 
     /**
      * Creates a ControllerFacade object.
-     * Creates a {@link Layout} object which represents the root layout.
-     * its children {@link Layout} will be assigned according to arguments given by {@link TextR#main(String[])}
-     *
-     * @throws IOException when the path is invalid
+     * Creates a {@link DisplayFacade} object which represents the first display opened by textr.
+     * @throws IOException when the path provided to it is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
-        this.contentsChangedSinceLastRender = true;
-        this.termiosTerminalAdapter = termiosTerminalAdapter;
+
+        this.listenersToThisEvents = new ArrayList<>(0);
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
+        this.initialTermiosAdapter = termiosTerminalAdapter;
         String[] paths;
+
         if (FileAnalyserUtil.isValidLineSeparatorString(args[0])) {
             paths = Arrays.copyOfRange(args, 1, args.length);
         } else {
             paths = args;
         }
-        this.windows = new ArrayList<Window>();
-        ArrayList<Layout> leaves = new ArrayList<Layout>(paths.length);
-        for (int i = 0; i < paths.length; i++) {
-            String checkPath = paths[i];
-            FileBufferInputHandler openedFileHandler;
-            try {
-                openedFileHandler = new FileBufferInputHandler(checkPath, lineSeparatorArg);
-            } catch (PathNotFoundException e) {
-                throw e;
-            }
 
-            this.windows.add(new Window(new ScrollbarDecorator(new FileBufferView(openedFileHandler.getFileBufferContextTransparent(), termiosTerminalAdapter)), openedFileHandler));
-            leaves.add(new LayoutLeaf(windows.get(i).view.hashCode()));
-        }
-
-        if (leaves.size() == 1)
-            this.rootLayout = leaves.get(0);
-        else
-            this.rootLayout = new VerticalLayoutNode(leaves);
-        this.updateViewCoordinates();
-    }
-
-    /**
-     * render the active window
-     */
-    public void renderContent() throws IOException {
-        this.contentsChangedSinceLastRender = false;
-        for (Window window : windows) {
-            window.view.render(windows.get(active).view.hashCode());
-            window.handler.setContentsChangedSinceLastRenderFalse();
-        }
+        DisplayFacade initialDisplay = new DisplayFacade(paths, initialTermiosAdapter, lineSeparatorArg);
+        this.displays.add(initialDisplay);
     }
 
     /**
      * save the active filebuffer
      */
     public void saveActive() {
-        windows.get(active).handler.save();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
-    }
-
-    /**
-     * render the cursor in the active view
-     */
-    public void renderCursor() throws IOException {
-        windows.get(active).view.renderCursor();
+        displays.get(active).saveActive();
     }
 
     /**
@@ -97,175 +79,92 @@ public class ControllerFacade {
      *
      * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
      */
-    public int closeActive() {
-        contentsChangedSinceLastRender = true;
-        if (windows.get(active).handler.isSafeToClose()) {
-            //safe to do a force close since clean buffer
-            contentsChangedSinceLastRender = true;
-            return forceCloseActive();
-        } else {
-            return 1;
-        }
+    public Pair<RenderIndicator, Integer> closeActive() {
+        return displays.get(active).closeActive();
     }
 
     /**
-     *
+     * Delegates a force close to the active {@link DisplayFacade}
      * @return 0 if we closed the active window 2 if we can't close it
      */
-    public int forceCloseActive() {
-        this.contentsChangedSinceLastRender = true;
-        //checks which hash will be the next one after this is closed
-        Integer newHashCode = getNewHashCode();
-        if (newHashCode == null) return 2;
-
-        //deletes and sets new one as active
-        rootLayout = this.rootLayout.delete(windows.get(active).view.hashCode());
-        windows.get(active).handler.forcedClose();
-        windows.remove(active);
-
-        int newActive = -1;
-        for (int i = 0; i < windows.size(); i++) {
-            if (windows.get(i).view.hashCode() == newHashCode) {
-                newActive = i;
-            }
-        }
-
-        if (newActive == -1) {
-            throw new RuntimeException("Layout and collection of views inconsistent!");
-        }
-        active = newActive;
-        updateViewCoordinates();
-        updateViewCoordinates();
-        return 0;
+    public Pair<RenderIndicator, Integer> forceCloseActive() {
+        return displays.get(active).forceCloseActive();
     }
 
-    public void passToActive(byte b) throws IOException {
-        this.windows.get(active).handler.input(b);
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator passToActive(byte b) throws IOException {
+        return displays.get(active).passToActive(b);
     }
 
     /**
-     * Changes the focused {@link LayoutLeaf} to another.
+     * Changes the focused {@link DisplayFacade} to another.
      *
      * @param dir the direction to move focus to
      */
-    public void moveFocus(MoveDirection dir) {
-        contentsChangedSinceLastRender = true;
-        int newActive = this.rootLayout.getNeighborsContainedHash(dir, this.windows.get(active).view.hashCode());
-        for (int i = 0; i < this.windows.size(); i++) {
-            if (this.windows.get(i).view.hashCode() == newActive) {
-                this.active = i;
-                break;
-            }
-        }
-
-    }
-
-    /**
-     * Calls clearContent on the contained {@link ui.FileBufferView}(s).
-     */
-    public void clearContent() throws IOException {
-        return;
+    public RenderIndicator moveFocus(MoveDirection dir) {
+        displays.get(active).moveFocus(dir);
+        return RenderIndicator.FULL;
     }
 
     /**
      * Rearranges the Layouts, depending on the argument given
      *
      * @param orientation clockwise or counterclockwise
+     * @return
      */
-    public void rotateLayout(RotationDirection orientation) throws IOException {
-        contentsChangedSinceLastRender = true;
-        rootLayout = rootLayout.rotateRelationshipNeighbor(orientation, this.windows.get(active).view.hashCode());
-        updateViewCoordinates();
+    public RenderIndicator rotateLayout(RotationDirection orientation) throws IOException {
+        displays.get(active).rotateLayout(orientation);
+        return RenderIndicator.FULL;
     }
 
     /**
      * let the active window know that the right arrow is pressed
+     *
+     * @return
      */
-    public void handleArrowRight() {
-        this.windows.get(active).handler.handleArrowRight();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator handleArrowRight() {
+        return displays.get(active).handleArrowRight();
     }
 
     /**
      * let the active window know that the Left arrow is pressed
      */
-    public void handleArrowLeft() {
-        this.windows.get(active).handler.handleArrowLeft();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator handleArrowLeft() {
+        return displays.get(active).handleArrowLeft();
     }
 
     /**
      * let the active window know that the Down arrow is pressed
      */
-    public void handleArrowDown() {
-        this.windows.get(active).handler.handleArrowDown();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator handleArrowDown() {
+        return displays.get(active).handleArrowDown();
     }
 
     /**
      * let the active window know that the Up arrow is pressed
      */
-    public void handleArrowUp() {
-        this.windows.get(active).handler.handleArrowUp();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator handleArrowUp() {
+        return displays.get(active).handleArrowUp();
     }
 
     /**
      * let the active window insert a separator
      */
-    public void handleSeparator() throws IOException {
-        this.windows.get(active).handler.handleSeparator();
-        this.contentsChangedSinceLastRender = windows.get(active).handler.needsRerender();
+    public RenderIndicator handleSeparator() throws IOException {
+        return displays.get(active).handleSeparator();
     }
 
     /**
-     * Opens the snake game by doing overwriting the active {@link ControllerFacade#windows}'s
-     * {@link inputhandler.InputHandlingElement} to {@link SnakeInputHandler} and {@link View}
-     * to {@link SnakeView}. We delete the active window and add a new window to the list.
+     * Opens the snake game on the active display
      */
-    public void openSnakeGame() throws IOException {
-        this.contentsChangedSinceLastRender = true;
-        // Get UI coords of current window to initialize snake view's playfield
-        Coords coordsView = this.windows.get(active).view.getRealUICoordsFromScaled(termiosTerminalAdapter);
-        SnakeInputHandler handler = new SnakeInputHandler(coordsView.width, coordsView.height);
-
-        // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
-        int hashActive = this.windows.get(active).view.hashCode();
-        SnakeView view = new SnakeView(handler.getSnakeGame(), termiosTerminalAdapter);
-
-        // Remove the window & add the snake window.
-        this.windows.remove(this.windows.get(active));
-        this.windows.add(
-                new Window(
-                        view,
-                        handler
-                )
-        );
-
-        // Change hash code & update the view coordinates
-        rootLayout.changeHash(hashActive, view.hashCode());
-        this.updateViewCoordinates();
-
-        // Set the active view to the snake view
-        active = this.windows.size() - 1;
+    public RenderIndicator openSnakeGame() throws IOException {
+        return displays.get(active).openSnakeGame();
     }
 
     /**
      * Duplicates the active view by
      */
-    public void duplicateActive() throws IOException {
-        this.contentsChangedSinceLastRender = true;
-        if (windows.get(active).handler instanceof FileBufferInputHandler fbh) {
-            BufferCursorContext dupedContext = new BufferCursorContext(fbh.getFileBufferContextTransparent());
-            View newView = new FileBufferView(dupedContext, termiosTerminalAdapter);
-            newView = new ScrollbarDecorator(newView);
-            Window windowToAdd = new Window(newView, new FileBufferInputHandler(dupedContext));
-            windows.add(windows.size(), windowToAdd);
-
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).view.hashCode(), newView.hashCode());
-            updateViewCoordinates();
-        }
+    public RenderIndicator duplicateActive() throws IOException {
+        return displays.get(active).duplicateActive();
     }
 
     /**
@@ -282,8 +181,8 @@ public class ControllerFacade {
      *
      * @return list of window objects
      */
-    ArrayList<Window> getWindows() {
-        return this.windows;
+    ArrayList<DisplayFacade> getDisplays() {
+        return displays;
     }
 
     /**
@@ -295,34 +194,101 @@ public class ControllerFacade {
         return this.active;
     }
 
-    private void updateViewCoordinates() {
-        this.contentsChangedSinceLastRender = true;
-        HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, 1, 1));
-        for (Window w : windows) {
-            w.view.setScaledCoords(coordsMap.get(w.view.hashCode()));
+/*    public void addDisplay(TermiosTerminalAdapter adapter) {
+        String[] test = new String[1];
+        test[0] = "long.txt";
+        try {
+            this.displays.add(new DisplayFacade(test, adapter, this.lineSeparatorArg));
+            active = displays.size()-1;
+            paintScreen();
+        } catch (Exception e){
+            System.out.println("adding/rendering display failed");
+            System.out.println(e);
+            System.exit(1);
+        }
+    }*/
+
+    public void setActive(int a) {
+        this.active = a;
+    }
+
+    public ArrayList<Window> getWindows() {
+        //TODO: Should we clone here? Lets test it later and see if it breaks
+        ArrayList<Window> toReturn = new ArrayList<>(0);
+        for(DisplayFacade d : displays){
+            toReturn.addAll(d.getWindows());
+        }
+        return toReturn;
+    }
+
+    public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
+        SwingTerminalAdapter newAdapter = new SwingTerminalAdapter();
+        DisplayFacade newFacade = this.displays.get(active).requestOpeningNewDisplay(newAdapter);
+        if(newFacade != null){
+            this.displays.add(displays.size(), newFacade);
+
+
+            //Will notify controller above it, the keypresses end up at the usecasecontroller to be converted to a system call
+            ASCIIKeyEventListener newAsciiListener = new ASCIIKeyEventListener() {
+                @Override
+                public void notifyNormalKey(int byteInt) {
+                    active = displays.indexOf(newFacade);
+
+                    for(ASCIIKeyEventListener l : listenersToThisEvents){
+                        l.notifyNormalKey(byteInt);
+                    }
+                }
+
+                @Override
+                public void notifySurrogateKeys(int first, int second) {
+                    active = displays.indexOf(newFacade);
+
+                    for(ASCIIKeyEventListener l : listenersToThisEvents){
+                        l.notifySurrogateKeys(first, second);
+                    }
+                }
+            };
+            DisplayFacadeResizeListener newResizeListener = new DisplayFacadeResizeListener(newFacade);
+
+            newAdapter.subscribeToResizeTextArea(newResizeListener);
+            newAdapter.subscribeToKeyPresses(newAsciiListener);
+            displayFacadeResizeListenerHashMap.put(newFacade, newResizeListener);
+            displayFacadeAsciiListenerHashMap.put(newFacade, newAsciiListener);
+            newFacade.paintScreen();
+        }
+
+
+         return RenderIndicator.FULL;
+    }
+
+    /**
+     * Renders every element on all displays (a change on one can be reflected on others)
+     */
+    public void paintScreen() throws IOException {
+        for(DisplayFacade f : displays){
+            f.paintScreen();
         }
     }
 
     /**
-     * Gets the hashcode of the new active node after the current one is closed, returns null if no other node left
-     *
-     * @return
+     * Subscribes a listener to key presses
+     * @param l the listener to subscribe
      */
-    private Integer getNewHashCode() {
-        int oldHashCode = windows.get(active).view.hashCode();
-        int newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.RIGHT, windows.get(active).view.hashCode());
-        if (newHashCode == oldHashCode) {
-            newHashCode = rootLayout.getNeighborsContainedHash(MoveDirection.LEFT, windows.get(active).view.hashCode());
-            if (oldHashCode == newHashCode) {
-                //no left or right neighbor to focus
-                rootLayout = null;
-                return null;
-            }
-        }
-        return newHashCode;
+    public void subscribeToKeyPresses(ASCIIKeyEventListener l) {
+        this.listenersToThisEvents.add(l);
     }
 
-    public boolean getContentsChangedSinceLastRender() {
-        return this.contentsChangedSinceLastRender;
+    /**
+     * Unsubscribes a listener from key presses
+     * @param asciiEventListener the listener to unsubscribe
+     */
+    public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
+        this.listenersToThisEvents.remove(asciiEventListener);
+    }
+
+    public DisplayFacade getActiveDisplay() {
+        return this.displays.get(active);
     }
 }
+
+

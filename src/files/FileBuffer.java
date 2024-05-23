@@ -40,13 +40,13 @@ public class FileBuffer {
     /**
      * Determines if buffer has been modified
      */
-    private boolean dirty = false;
+    protected boolean dirty = false;
 
     /**
      * Holds the 'in memory' byte data of the file.
      * The amount of bytes equals the amount of characters in ASCII
      */
-    private ArrayList<Byte> byteContent;
+    protected ArrayList<Byte> byteContent;
 
     /**
      * An array of 'lines' of bytes. Each array in the array is an array separated by a
@@ -66,6 +66,15 @@ public class FileBuffer {
         this.file = new FileHolder(path, lineSeparator);
         this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(toPrimitive(this.file.getContent())));
         this.linesArrayList = FileAnalyserUtil.getContentLines(this.file.getContent(), this.getLineSeparator());
+        this.deletedInsertionPointListeners = new ArrayList<DeletedInsertionPointListener>();
+        this.enteredInsertionPointListeners = new ArrayList<EnteredInsertionPointListener>();
+        this.deletedCharListeners = new ArrayList<DeletedCharListener>();
+    }
+
+    public FileBuffer(FileHolder fh) throws IOException {
+        this.file = fh;
+        this.byteContent = new ArrayList<Byte>(Arrays.<Byte>asList(toPrimitive(file.getContent())));
+        this.linesArrayList = FileAnalyserUtil.getContentLines(file.getContent(), file.getLineSeparator());
         this.deletedInsertionPointListeners = new ArrayList<DeletedInsertionPointListener>();
         this.enteredInsertionPointListeners = new ArrayList<EnteredInsertionPointListener>();
         this.deletedCharListeners = new ArrayList<DeletedCharListener>();

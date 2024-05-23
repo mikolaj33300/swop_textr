@@ -1,13 +1,14 @@
 package controller;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import ui.FileBufferView;
-import ui.View;
 import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.Test;
+import window.FileBufferWindow;
+import window.Window;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,10 +33,10 @@ public class WindowTest {
         FileBufferInputHandler handler = new FileBufferInputHandler(bufferCursorContext);
         VirtualTestingTermiosAdapter adapter = new VirtualTestingTermiosAdapter(1200, 10, new ArrayList<>());
 
-        View view = new FileBufferView(bufferCursorContext, adapter);
-        Window window = new Window(view, handler);
-        assertSame(window.view, view);
-        assertSame(window.handler, handler);
+        FileBufferView view = new FileBufferView(bufferCursorContext, adapter);
+        Window window = new FileBufferWindow(view, handler);
+        assertSame(window.getView(), view);
+        assertSame(window.getHandler(), handler);
 
     }
 }

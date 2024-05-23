@@ -56,7 +56,7 @@ public class FileHolder {
     /**
      * Checks if the program should throw an exception when non ascii characters were found
      * @param fileContent the bytes that should be checked for invalid ascii characters
-     * @throws {@link RuntimeException} when the parameter represented non ascii characters
+     * @throws RuntimeException when the parameter represented non ascii characters
      */
     protected void checkInvalidCharacters(byte[] fileContent) throws RuntimeException {
         for (byte b : fileContent)

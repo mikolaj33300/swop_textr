@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import util.Coords;
 
@@ -22,5 +22,10 @@ public interface TermiosTerminalAdapter {
 
     public Coords getTextAreaSize() throws IOException;
 
+    public void subscribeToResizeTextArea(ResizeListener l);
+
+    public void setInputListenerOnAWTEventQueue(Runnable runnable);
+
+    void clearInputListener();
 }
 

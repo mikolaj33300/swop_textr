@@ -28,7 +28,8 @@ public class Directory {
      * @param entry if entry is null, we use the root of the current jar
      */
     public Directory(FileSystemEntry entry) {
-        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null);
+        //TODO: Attach listener that opens the requested real files and sends requests up
+        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null);
         else focusedDirectory = entry;
     }
 
@@ -44,8 +45,16 @@ public class Directory {
      * Returns the selected {@link FileSystemEntry}.
      */
     public FileSystemEntry selectEntry() {
-        if(!this.getEntries().get(focused).isDirectory())
-            return this.getEntries().get(focused);
+        if(focused == 0) this.focusedDirectory = this.focusedDirectory.getParent();
+        else if(focused <= this.entries.size()) {
+            // Directory: we change the parent & update children
+            if(entries.get(focused-1).isDirectory()) {
+                this.focusedDirectory = entries.get(focused-1);
+                this.entries = this.focusedDirectory.getChildren();
+            }
+            else
+                return entries.get(focused - 1);
+        }
         return null;
     }
 
@@ -60,14 +69,16 @@ public class Directory {
      * Increases the hover index {@link Directory#focused}
      */
     public void increaseFocused() {
-        this.focused = this.focused + 1 >= focusedDirectory.getChildren().size() ? this.focused : this.focused++;
+        if(this.focused + 1 <= this.focusedDirectory.getChildren().size())
+            this.focused++;
     }
 
     /**
      * Decreases the hover index {@link Directory#focused}
      */
     public void decreaseFocused() {
-        this.focused = this.focused - 1 <= 0 ? this.focused : this.focused--;
+        if(this.focused - 1 >= 0)
+            this.focused--;
     }
 
     /**

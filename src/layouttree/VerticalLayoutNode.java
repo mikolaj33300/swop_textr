@@ -18,6 +18,10 @@ public class VerticalLayoutNode extends LayoutNode{
         super(newChildren);
     }
 
+    public VerticalLayoutNode(int hashes[]) {
+      super(hashes);
+    }
+
     /**
      * Returns the VERTICAL orientation since this is a VerticalLayoutNode
      */

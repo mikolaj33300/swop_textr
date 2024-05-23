@@ -1,13 +1,12 @@
 package ui;
 
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import directory.Directory;
 import directory.directorytree.FileEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,7 +35,7 @@ public class DirectoryViewTest {
         d = root.resolve("test4.txt");
         Files.write(d, "hallo kaas i am your loyal student\n i use termios daily".getBytes());
 
-        dir = new Directory(new FileEntry(root.toAbsolutePath().toString(), null));
+        dir = new Directory(new FileEntry(root.toAbsolutePath().toString(), null, null));
 
         view = new DirectoryView(new VirtualTestingTermiosAdapter(100, 5, new ArrayList<>()), dir);
 

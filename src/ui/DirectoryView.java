@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
 import util.Coords;
@@ -22,14 +22,16 @@ We try to achieve this visual:
 public class DirectoryView extends View {
 
     /**
-     * The {@link Directory} object we will render
+     * The {@link Directory} to render
      */
     private final Directory dir;
+
     /**
      * Determines the indent from left
      * "  "# name directory == 2
      */
     private final int indent = 2;
+
     /**
      * The amount of lines between every entry
      */
@@ -45,16 +47,29 @@ public class DirectoryView extends View {
         this.dir = dir;
     }
 
+    /**
+     * Returns the currently focused column
+     * @return indent
+     */
     @Override
     public int getFocusedCol() {
         return indent;
     }
 
+    /**
+     * Returns the currently focused line
+     * @return the focussed line
+     */
     @Override
     public int getFocusedLine() {
         return (spacing+1) + dir.getFocused()*(spacing+1);
     }
 
+
+    /**
+     * Returns the total height of the content
+     * @return the amount of space taken up by all the entries + spacing in between them
+     */
     @Override
     public int getTotalContentHeight() {
         return (spacing + 1) + dir.getEntries().size() * (spacing + 1);
@@ -67,21 +82,22 @@ public class DirectoryView extends View {
      */
     @Override
     public void render(int activeHash) throws IOException {
+        super.fill(1 + uiCoordsReal.startX, 1 + uiCoordsReal.startY, uiCoordsReal.width, uiCoordsReal.height, " ");
 
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.getRealCoords();
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
         int startX = coords.startX;
 
         // We start printing one space from the top border
-        int printLocationY = startY+1;
+        int printLocationY = startY+2;
 
         // We loop over every entry and print it
-        for(int i = getStartIndex(); i < dir.getEntries().size(); i++) {
+        this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
+        printLocationY += 2;
 
-            // Root
-            if(i == 0) this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
+        for(int i = getStartIndex(); i < dir.getEntries().size(); i++) {
 
             FileSystemEntry entry = dir.getEntries().get(i);
 
@@ -95,16 +111,35 @@ public class DirectoryView extends View {
 
     }
 
+    /**
+     * Returns the measurements of the terminal
+     * @return uiCoordsReal
+     */
     @Override
-    public void renderCursor() throws IOException {
-        termiosTerminalAdapter.moveCursor(getFocusedLine(), getFocusedCol());
+    public Coords getRealCoords() {
+        return super.getRealCoords();
     }
 
+    /**
+     * Renders the cursor on the current view
+     */
+    @Override
+    public void renderCursor() throws IOException {
+        Coords coords = super.getRealCoords();
+        int height = coords.height;
+        int width = coords.width;
+        int startY = coords.startY;
+        int startX = coords.startX;
+        termiosTerminalAdapter.moveCursor(startY + getFocusedLine(), startX + getFocusedCol());
+    }
+
+    //TODO: implement equals
     @Override
     public boolean equals(Object o) {
         return false;
     }
 
+    //TODO: implement getLineLength
     @Override
     protected int getLineLength(int focusedLine) {
         return 0;
@@ -118,7 +153,7 @@ public class DirectoryView extends View {
      */
     int getStartIndex() throws IOException {
 
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.getRealCoords();
         int height = coords.height;
 
         // 1 + focused want 0 is parent dir ; spacing + 1 want we voorzien minimum 1 lijn per entry
@@ -138,7 +173,9 @@ public class DirectoryView extends View {
         entry3
         -
          */
-        return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
+        return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1)) < 0
+                ?
+                0 : (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
 
     }
 

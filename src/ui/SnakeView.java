@@ -1,13 +1,11 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
-import io.github.btj.termios.Terminal;
-import util.Pos;
+import ioadapter.TermiosTerminalAdapter;
 import snake.Snake;
 import snake.SnakeGame;
 import snake.food.Food;
 import util.Coords;
-import util.Rectangle;
+import util.Pos;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,7 +18,7 @@ public class SnakeView extends View {
     /**
      * The contained {@link SnakeGame}.
      */
-    private final SnakeGame game;
+    final SnakeGame game;
     /**
      * The relevant coordinates for displaying this view
      */
@@ -40,15 +38,15 @@ public class SnakeView extends View {
      * update the coordinates of this view out of 
      */
     private void setLocalCoordinates() {
-        try {
-            Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        /*try {*/
+            Coords coords = super.uiCoordsReal;
             this.startX = coords.startX;
             this.startY = coords.startY;
             this.width = coords.width;
             this.height = coords.height;
-        } catch(IOException e) {
+/*        } catch(IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
@@ -67,14 +65,14 @@ public class SnakeView extends View {
         // Print border + plus sign in the corner
         printLine(new Pos(width, 0), new Pos(width, height-1), "|", false);
         printLine(new Pos(0, height-1), new Pos(width-1, height-1), "-", false);
-        Terminal.printText(1 + startY + height, 1 + this.startX + width, "+");
+        this.termiosTerminalAdapter.printText(1 + startY + height, 1 + this.startX + width, "+");
 
         // Print score
-        Terminal.printText(startY + height,startX + width/2 -1, "Score: " + game.getScore());
+        this.termiosTerminalAdapter.printText(startY + height,startX + width/2 -1, "Score: " + game.getScore());
 
         // Determine the skin of the snake
         String a = game.getSnake().getHeadString() + "x";
-        a = game.getSnake().getHeadString() + "abcdefghijklmnopqrstuvwxyz";
+        a = game.getSnake().getHeadString() + "abcdef";
 
         int skip = 0;
         skip = printLine(head.getEnd(), head.getStart(), Arrays.stream(a.split("")).skip(skip).collect(Collectors.joining()), false);
@@ -89,7 +87,7 @@ public class SnakeView extends View {
 
         List<Food> fruits = game.getFruits();
         for(int i = 0; i < fruits.size(); i++)
-            Terminal.printText(
+            this.termiosTerminalAdapter.printText(
                     1+fruits.get(i).getPosition().y()+startY,
                     1+fruits.get(i).getPosition().x()+startX,
                     fruits.get(i).getCharacter());
@@ -111,7 +109,8 @@ public class SnakeView extends View {
     }
 
     /**
-     * compare this object againts object o
+     * compare this object againts
+     * @param o the object to compare
      */
     @Override
     public boolean equals(Object o) {
@@ -120,7 +119,6 @@ public class SnakeView extends View {
 
     @Override
     protected int getLineLength(int focusedLine) {
-        //TODO: whatever makes sense, width of the board?
         return 0;
     }
 
@@ -143,13 +141,13 @@ public class SnakeView extends View {
         for(int i = 0;
             i < Math.abs(dX) || (isEqual && i <= Math.abs(dX));
             i++) {
-            Terminal.printText(1 + startY + start.y(), 1 + startX + start.x() + (i*stepX), getCharacter(character, i*stepX));
+            termiosTerminalAdapter.printText(1 + startY + start.y(), 1 + startX + start.x() + (i*stepX), getCharacter(character, i*stepX));
         }
         for(int i = 0;
             i < Math.abs(dY) || (isEqual && i <= Math.abs(dY));
             i++) {
             if(1 + startY + start.y() + (i*stepY)>0 && 1 + this.startX + start.x()>0)
-                Terminal.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
+                termiosTerminalAdapter.printText(1 + startY + start.y() + (i*stepY), 1 + this.startX + start.x(), getCharacter(character, i*stepY));
         }
 
         return Math.max(Math.abs(dX), Math.abs(dY));
@@ -175,7 +173,7 @@ public class SnakeView extends View {
      * @param y the y coordinate where the box should start
      * @param text the array of text that should be printed in the box.
      */
-    private void printBox(int y, String... text) {
+    void printBox(int y, String... text) {
         setLocalCoordinates();
         // Determine the length of the longest string in text
         OptionalInt optInt = Arrays.stream(text).mapToInt((s) -> s.length()).max();
@@ -187,15 +185,15 @@ public class SnakeView extends View {
                 -2 + (this.width / 2) - ((maxLength - 1) / 2);
 
         // Print the 4 corners of the box
-        Terminal.printText(1 + this.startY + y, 1 + this.startX + this.width - width, "+");
-        Terminal.printText(1 + this.startY + y, 1 + this.startX + width, "+");
-        Terminal.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + this.width - width, "+");
-        Terminal.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + width, "+");
+        termiosTerminalAdapter.printText(1 + this.startY + y, 1 + this.startX + this.width - width, "+");
+        termiosTerminalAdapter.printText(1 + this.startY + y, 1 + this.startX + width, "+");
+        termiosTerminalAdapter.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + this.width - width, "+");
+        termiosTerminalAdapter.printText(1 + this.startY + y + text.length + 1, 1 + this.startX + width, "+");
 
         // For each line in 'text', we creat the vertical borders
         for (int i = 0; i < text.length; i++) {
-            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + this.width - width, "I");
-            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width, "I");
+            termiosTerminalAdapter.printText(1 + this.startY + y + 1 + i, 1 + this.startX + this.width - width, "I");
+            termiosTerminalAdapter.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width, "I");
         }
 
         // We also put the horizontal borders, but these are always static..
@@ -207,53 +205,23 @@ public class SnakeView extends View {
             width = (text[i].length()) % 2 == 0 ?
                     -2 + (this.width / 2) - (text[i].length() / 2) :
                     -2 + (this.width / 2) - ((text[i].length() - 1) / 2);
-            Terminal.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width + 2, text[i]);
+            termiosTerminalAdapter.printText(1 + this.startY + y + 1 + i, 1 + this.startX + width + 2, text[i]);
         }
     }
 
     @Override
     public int getFocusedCol() {
-        //TODO: column snake is in?
         return 0;
     }
 
     @Override
     public int getFocusedLine() {
-        //TODO: line snake is in?
         return 0;
     }
 
     @Override
     public int getTotalContentHeight() {
-        /*TODO: the logical thing to make snake scrollable would be to return the
-           height of the game here?
-           In the long run we might have to think about if scrolling and resizing the snake game
-           do not exclude each other though and where to put that logic*/
         return 0;
-    }
-
-    /**
-     * @param uiCoordsScaled the new coordinates
-     * sets the view and the game to have the new coordinates
-     */
-    @Override
-    public void setScaledCoords(Rectangle uiCoordsScaled) {
-        super.setScaledCoords(uiCoordsScaled);
-        try {
-            scaleGame();
-        } catch(Exception e) {
-            // Will never happen, and if it does, it will crash on snake game too
-        }
-    }
-
-    /**
-     * This also scales the playing field in {@link SnakeGame} itself. Its bounds are given to this view upon creation.
-     * @throws IOException when the coords cannot be retrieved
-     */
-    private void scaleGame() throws IOException {
-        Coords ui = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
-        Rectangle rct = new Rectangle(ui.startX, ui.startY, ui.width, ui.height);
-        this.game.modifyPlayfield(rct);
     }
 
 }

@@ -1,6 +1,7 @@
 package directory.directorytree;
 
 import files.FileHolder;
+import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public class DirEntry extends FileSystemEntry {
 
-    public DirEntry(String path, FileSystemEntry parent) {
-        super(path, parent);
+    public DirEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener) {
+        super(path, parent, listener);
     }
 
     @Override
@@ -19,9 +20,9 @@ public class DirEntry extends FileSystemEntry {
         for(File listedFile : new File(getPath()).listFiles()) {
 
             if(listedFile.isDirectory())
-                entry.add(new DirEntry(listedFile.getAbsolutePath(),this));
+                entry.add(new DirEntry(listedFile.getAbsolutePath(),this, this.openOnPathListener));
             else
-                entry.add(new FileEntry(listedFile.getAbsolutePath(), this));
+                entry.add(new FileEntry(listedFile.getAbsolutePath(), this, this.openOnPathListener));
 
         }
 
@@ -39,8 +40,8 @@ public class DirEntry extends FileSystemEntry {
     }
 
     @Override
-    public FileHolder createFile(FileCreator creator) {
-        return null;
+    public FileSystemEntry selectEntry() {
+        return this;
     }
 
 }

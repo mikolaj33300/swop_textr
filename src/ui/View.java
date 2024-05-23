@@ -1,10 +1,12 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import io.github.btj.termios.Terminal;
 import util.Coords;
 import util.Rectangle;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class View {
@@ -17,10 +19,7 @@ public abstract class View {
      * The adapter used for interacting with termios
      */
     protected TermiosTerminalAdapter termiosTerminalAdapter;
-    /**
-     * The rectangle which describes the bounds of this view
-     */
-    Rectangle uiCoordsScaled;
+
 
     Coords uiCoordsReal;
 
@@ -41,29 +40,6 @@ public abstract class View {
     public View(TermiosTerminalAdapter termiosTerminalAdapter) {
         this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
-
-
-    /**
-     * Initializes information for a view depending on {@link View#terminalHeight} and {@link View#terminalWidth}
-     * @param uiCoordsScaled the new coordinates
-     */
-    public void setScaledCoords(Rectangle uiCoordsScaled) {
-        this.uiCoordsScaled = uiCoordsScaled;
-    }
-
-    /**
-     * @param termiosTerminalAdapter the object that renders the terminal
-     * @return coordinates 
-     */
-    public Coords getRealUICoordsFromScaled(TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
-        Coords screenDimensions = termiosTerminalAdapter.getTextAreaSize();
-        return new Coords(
-                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.startX),
-                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.startY),
-                (int) Math.floor(((double) screenDimensions.width)* uiCoordsScaled.width),
-                (int) Math.floor(((double) screenDimensions.height)* uiCoordsScaled.height));
-    }
-
 
     /**
      * Clears the content on the terminal window
@@ -98,4 +74,36 @@ public abstract class View {
 
 
     protected abstract int getLineLength(int focusedLine);
+
+    public void setRealCoords(Rectangle rectangle) {
+        this.uiCoordsReal = new Coords((int) Math.floor(rectangle.startX), (int) Math.floor(rectangle.startY), (int) Math.floor(rectangle.width), (int) Math.floor(rectangle.height));
+    }
+
+    public Coords getRealCoords() {
+        return uiCoordsReal;
+    }
+
+    public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
+        this.termiosTerminalAdapter = adapter;
+    };
+
+/*    public static void write(String path, String text) {
+        try {
+            // Overwrite file test.txt
+            FileWriter writer = new FileWriter(new File("test2.txt"), true);
+            writer.write(text);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
+    /**
+     * Fills an amount of space with a string
+     */
+    void fill(int x, int y, int w, int h, String s){
+      for (int i = 0; i < h; i++){
+        termiosTerminalAdapter.printText(y+i, x, s.repeat(w));
+      }
+    }
 }

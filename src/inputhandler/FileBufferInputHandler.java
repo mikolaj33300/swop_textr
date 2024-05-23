@@ -1,13 +1,22 @@
 package inputhandler;
 
+import directory.directorytree.FileSystemEntry;
+import files.DisplayRequestForBufferContextListener;
 import files.BufferCursorContext;
+import listeners.DisplayRequestForFileEntryListener;
+import util.RenderIndicator;
 
 import java.io.IOException;
 
 public class FileBufferInputHandler extends InputHandlingElement {
 
-    BufferCursorContext fb;
+    BufferCursorContext bufferCursorContext;
     boolean surrogate;
+/*    private DisplayRequestForFileEntryListener requestForFileEntryListener;*/
+
+    private DisplayRequestForBufferContextListener requestForFileBufferListenerUnderlying;
+
+    private DisplayRequestForInputHandlersListener requestForInputHandlersListener;
 
     /**
      * constructor
@@ -16,7 +25,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param lineSeparator the separator to insert for newlines (dos/linux)
      */
     public FileBufferInputHandler(String path, byte[] lineSeparator) throws IOException {
-        this.fb = new BufferCursorContext(path, lineSeparator);
+        this.bufferCursorContext = new BufferCursorContext(path, lineSeparator);
+        this.subscribeBufferContextOpenRequests();
     }
 
     /**
@@ -25,7 +35,8 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @param dupedContext the cursorContext to use for this inputhandler
      */
     public FileBufferInputHandler(BufferCursorContext dupedContext) {
-        this.fb = dupedContext;
+        this.bufferCursorContext = dupedContext;
+        this.subscribeBufferContextOpenRequests();
     }
 
     /**
@@ -35,21 +46,22 @@ public class FileBufferInputHandler extends InputHandlingElement {
      * @return the current buffercontext
      */
     public BufferCursorContext getFileBufferContextTransparent() {
-        return fb;
+        return bufferCursorContext;
     }
 
     /**
      * Handles the input for the {@link files.FileBuffer}
+     *
      * @param b the input
      */
-    public void input(byte b) {
+    public RenderIndicator input(byte b) {
         switch (b) {
             case -3:
                 // Idle
-                break;
+                return RenderIndicator.NONE;
             case 27:
                 this.surrogate = true;
-                break;
+                return RenderIndicator.NONE;
             default:
                 if (this.surrogate) {
                     surrogateKeysInput(b);
@@ -57,7 +69,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
                 } else {
                     asciiInput(b);
                 }
-                break;
+                return RenderIndicator.WINDOW;
         }
     }
 
@@ -66,7 +78,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public boolean isSafeToClose() {
-        return !fb.getDirty();
+        return !bufferCursorContext.getDirty();
     }
 
     /**
@@ -76,38 +88,44 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     public void asciiInput(byte b) {
         switch (b) {
-            case 8, 127, 10, 62:
-                this.fb.deleteCharacter();
+
+            case 8, 127, 62:
+                this.bufferCursorContext.deleteCharacter();
                 break;
 
             //TODO: MAKE TERMINAL USE REAL CTRL Z CODE
             // Control + Z or Control + A
             case 26, 1, -1:
-                fb.undo();
+                bufferCursorContext.undo();
                 break;
             //Control + U
             case 21:
-                fb.redo();
+                bufferCursorContext.redo();
                 break;
             // Control + S
             case 19:
-                this.fb.save();
+                this.bufferCursorContext.save();
                 break;
-            // Control + T
-            case 20:
+            // Control + J = parse
+            case 10:
+                FileSystemEntry entryToOpen = this.bufferCursorContext.parse();
+                if (entryToOpen != null) {
+                    this.requestForInputHandlersListener.notifyRequestOpening(
+                            new InputhandlersFromModelObjectsFactory().createDirectoryInputHandler(entryToOpen)
+                    );
+                }
                 break;
             //Control + U
             case 25:
-                fb.redo();
+                bufferCursorContext.redo();
                 break;
             // Line separator
             case 13:
                 // Character input
             default:
-                this.fb.write(b);
+                this.bufferCursorContext.write(b);
                 break;
         }
-        contentsChangedSinceRender = true;
     }
 
     /**
@@ -119,68 +137,67 @@ public class FileBufferInputHandler extends InputHandlingElement {
         switch (b) {
             // Right
             case 'C':
-                fb.moveCursorRight();
+                bufferCursorContext.moveCursorRight();
                 break;
             // Left
             case 'D':
-                fb.moveCursorLeft();
+                bufferCursorContext.moveCursorLeft();
                 break;
             // Up
             case 'A':
-                fb.moveCursorUp();
+                bufferCursorContext.moveCursorUp();
                 break;
             // Down
             case 'B':
-                fb.moveCursorDown();
+                bufferCursorContext.moveCursorDown();
                 break;
         }
-        contentsChangedSinceRender = true;
     }
 
     /**
      * handle right arrow input
      */
     @Override
-    public void handleArrowRight() {
-        fb.moveCursorRight();
-        contentsChangedSinceRender = true;
+    public RenderIndicator handleArrowRight() {
+        bufferCursorContext.moveCursorRight();
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * handle left arrow input
      */
     @Override
-    public void handleArrowLeft() {
-        fb.moveCursorLeft();
-        contentsChangedSinceRender = true;
+    public RenderIndicator handleArrowLeft() {
+        bufferCursorContext.moveCursorLeft();
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * handle down arrow input
      */
     @Override
-    public void handleArrowDown() {
-        fb.moveCursorDown();
-        contentsChangedSinceRender = true;
+    public RenderIndicator handleArrowDown() {
+        bufferCursorContext.moveCursorDown();
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * handle up arrow input
      */
     @Override
-    public void handleArrowUp() {
-        fb.moveCursorUp();
-        contentsChangedSinceRender = true;
+    public RenderIndicator handleArrowUp() {
+        bufferCursorContext.moveCursorUp();
+        return RenderIndicator.CURSOR;
     }
 
     /**
      * enter a separator in the buffer
      */
     @Override
-    public void handleSeparator() throws IOException {
-        fb.enterSeparator();
-        fb.moveCursorRight();
-        contentsChangedSinceRender = true;
+    public RenderIndicator handleSeparator() throws IOException {
+        bufferCursorContext.enterSeparator();
+        bufferCursorContext.moveCursorRight();
+        return RenderIndicator.WINDOW;
     }
 
     /**
@@ -190,7 +207,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public int forcedClose() {
-        return fb.forcedClose();
+        return bufferCursorContext.forcedClose();
     }
 
     /**
@@ -198,7 +215,43 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     @Override
     public void save() {
-        this.fb.save();
-        contentsChangedSinceRender = true;
+        this.bufferCursorContext.save();
     }
+
+    public String getPath() {
+        return bufferCursorContext.getPath();
+    }
+
+/*    *//**
+     * This method will pass down a class that allows {@link BufferCursorContext} to call these methods
+     * and these methods will be handled here.
+     *//*
+    private void subscribeFileEntryOpenRequests() {
+        this.bufferCursorContext.subscribeFileEntryDisplayRequests(
+                entry -> requestForInputHandlersListener.notifyRequestOpening(new InputhandlersFromModelObjectsFactory().createDirectoryInputHandler(entry)));
+    }*/
+
+    /**
+     * This method will pass down a class that allows {@link BufferCursorContext} to call these methods
+     * and these methods will be handled here.
+     */
+    private void subscribeBufferContextOpenRequests() {
+        requestForFileBufferListenerUnderlying =
+                ctx -> requestForInputHandlersListener.notifyRequestOpening(new FileBufferInputHandler(ctx));
+        this.bufferCursorContext.subscribeBufferContextDisplayRequests(requestForFileBufferListenerUnderlying);
+    }
+
+    /**
+     * Allows the {@link window.FileBufferWindow} to receive requests made from here
+     */
+    public void subscribeInputHandler(DisplayRequestForInputHandlersListener listener) {
+        //this.requestForFileEntryListener = listener;
+        //this.subscribeFileEntryOpenRequests();
+        this.requestForInputHandlersListener = listener;
+    }
+
+    public void accept(InputHandlerVisitor v){
+        v.visitFileInputHandler(this);
+    }
+
 }

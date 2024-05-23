@@ -50,11 +50,11 @@ public class JsonFileHolderTest {
         path2 = path2.resolve("test2.txt");
         Files.write(path2, content2.getBytes());
 
-        buffer1 = new FileBuffer(path1.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
-        buffer2 = new FileBuffer(path2.toString(), FileAnalyserUtil.getLineSeparator(content2.getBytes()));
+        buffer1 = new FileBuffer(path1.toString(), "\n".getBytes());
+        buffer2 = new FileBuffer(path2.toString(), "\n".getBytes());
 
-        entry1 = (JsonEntry) JsonUtil.parseDirectory(buffer1);
-        entry2 = (JsonEntry) JsonUtil.parseDirectory(buffer2);
+        entry1 = (JsonEntry) JsonUtil.parseDirectory(buffer1, null);
+        entry2 = (JsonEntry) JsonUtil.parseDirectory(buffer2, null);
 
         entryDocuments = entry1.getEntries().get(0);
         entryJsonInSring = entryDocuments.getEntries().get(1);
@@ -66,7 +66,8 @@ public class JsonFileHolderTest {
     public void CreateJsonFileHolder_FromFileEntry_CorrectContents() throws IOException {
         assertTrue(
             FileHolder.areContentsEqual(
-                    entryJsonInSring.createFile(new FileCreator()).getContent(),
+                    new JsonFileHolder(buffer1, entryJsonInSring.getName()).getContent()
+                    ,
                     "{\\r\\n  \\\"foo\\\": \\\"bar\\\"\\r\\n}".getBytes()
             )
         );
@@ -74,8 +75,8 @@ public class JsonFileHolderTest {
 
     @Test
     public void CreateJsonFileHolder_FromDirectoryEntry_NullContents() {
-        assertNull(
-          entryDocuments.createFile(new FileCreator())
+        assertNotNull(
+          entryDocuments.selectEntry()
         );
     }
 
@@ -83,7 +84,7 @@ public class JsonFileHolderTest {
     public void LastBytesMiddleEntry_EqualsColumnsAndComma() {
         assertTrue(
                 FileHolder.areContentsEqual(
-                    ((JsonFileHolder) ass2.createFile(new FileCreator())).getLastBytes(),
+                    (new JsonFileHolder(buffer1, ass2.getName())).getLastBytes(),
                     "\",".getBytes()
                 )
         );
@@ -93,7 +94,7 @@ public class JsonFileHolderTest {
     public void LastBytesLastEntry_EqualsColumnsOnly() {
         assertTrue(
                 FileHolder.areContentsEqual(
-                    ((JsonFileHolder) ass3.createFile(new FileCreator())).getLastBytes(),
+                    (new JsonFileHolder(buffer1, ass3.getName())).getLastBytes(),
                     "\"".getBytes()
                 )
         );
@@ -101,7 +102,7 @@ public class JsonFileHolderTest {
 
     @Test
     public void SaveOnFileHolder_OverwritesCorrectPart() throws IOException {
-        JsonFileHolder ass2Holder = ((JsonFileHolder) ass2.createFile(new FileCreator()));
+        JsonFileHolder ass2Holder = ((new JsonFileHolder(buffer1, ass2.getName())));
         // save writes to buffer
         ass2Holder.save("i like optee, im optee beginner ; borys is optee expert ; tom is optee god "
                         .getBytes()

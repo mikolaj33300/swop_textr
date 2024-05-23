@@ -1,4 +1,4 @@
-package controller.adapter;
+package ioadapter;
 
 import io.github.btj.termios.Terminal;
 import util.ScreenUIUtil;
@@ -46,6 +46,29 @@ public class RealTermiosTerminalAdapter implements TermiosTerminalAdapter{
 
     @Override
     public Coords getTextAreaSize() throws IOException {
+        //return new Coords(0, 0, 50, 20);
         return ScreenUIUtil.retrieveDimensionsTerminal();
+    }
+
+    @Override
+    public void subscribeToResizeTextArea(ResizeListener l) {
+        //In assignment it is assumed this will never happen
+    }
+
+    @Override
+    public void setInputListenerOnAWTEventQueue(Runnable runnable) {
+        Terminal.setInputListener(new Runnable() {
+            @Override
+            public void run() {
+                java.awt.EventQueue.invokeLater(() -> {
+                    runnable.run();
+                });
+            }
+        });
+    }
+
+    @Override
+    public void clearInputListener() {
+        Terminal.clearInputListener();
     }
 }

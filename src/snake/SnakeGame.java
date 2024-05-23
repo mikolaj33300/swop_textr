@@ -36,8 +36,10 @@ public class SnakeGame {
      * Settings of the game.
      */
     final int MAX_FRUITS = 3, STARVE_COUNTER = 20, WIN_LENGTH = 20, MILLISECOND_THRESHOLD = 1000;
-    private int score = 0, gameState = 0, starver = 0, maxX, maxY, currentWait = 0;
+    private int score = 0, starver = 0, maxX, maxY, currentWait = 0;
+    int gameState = 0;
     private float delay = 0f;
+
 
     /**
      * Constructor of the SnakeGame

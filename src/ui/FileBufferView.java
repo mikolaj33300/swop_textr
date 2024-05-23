@@ -1,6 +1,6 @@
 package ui;
 
-import controller.adapter.TermiosTerminalAdapter;
+import ioadapter.TermiosTerminalAdapter;
 import files.BufferCursorContext;
 import files.FileAnalyserUtil;
 import files.FileBuffer;
@@ -9,6 +9,7 @@ import util.Coords;
 import java.io.IOException;
 
 public class FileBufferView extends View {
+    //TODO: Make it not crash when the allocated dimensions are smaller than can fit, this is for some render functions
 
     /**
      * Reference to the {@link FileBuffer} to retrieve display information
@@ -46,11 +47,12 @@ public class FileBufferView extends View {
     //TODO: remove any remnants of logic that still contains scrolling
     @Override
     public void render(int activeHash) throws IOException {
-        Coords coords = super.getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.uiCoordsReal;
         int height = coords.height;
         int width = coords.width;
         int startY = coords.startY;
         int startX = coords.startX;
+        super.fill(1 + startX, 1 + startY, width, height, " ");
 
         //height-1 to make space for status bar, rounds to select the area from the nearest multiple of height-1
         int renderStartingLineIndex = containedFileBuffer.getInsertionPointLine();
@@ -71,7 +73,7 @@ public class FileBufferView extends View {
         //Some checks to handle very fast input the program cannot handle, does not affect logic and would not be strictly necessary
         //assert height > 0 && startY > 0;
         if(startY + height > 0) //System.out.println("Given row is smaller than one: " + (startY + height) + " -> startY: " + startY + ", height: " + height);
-            termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash));
+            termiosTerminalAdapter.printText(startY + height, startX + 1, this.getStatusbarString(activeHash).substring(0, Math.min(width, this.getStatusbarString(activeHash).length())));
     }
 
     /**
@@ -123,7 +125,7 @@ public class FileBufferView extends View {
      */
     @Override
     public void renderCursor() throws IOException {
-        Coords coords = getRealUICoordsFromScaled(termiosTerminalAdapter);
+        Coords coords = super.uiCoordsReal;
         int width = coords.width;
         int height = coords.height;
         int startY = coords.startY;

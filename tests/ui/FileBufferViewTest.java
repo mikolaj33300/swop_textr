@@ -1,7 +1,7 @@
 package ui;
 
-import controller.adapter.RealTermiosTerminalAdapter;
-import controller.adapter.VirtualTestingTermiosAdapter;
+import ioadapter.RealTermiosTerminalAdapter;
+import ioadapter.VirtualTestingTermiosAdapter;
 import files.BufferCursorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class FileBufferViewTest {
     public void testRender() throws IOException {
         VirtualTestingTermiosAdapter virtualTestAdapter = new VirtualTestingTermiosAdapter(1000, 3, new ArrayList<Integer>(0));
         FileBufferView toTestFBView = new FileBufferView(bufferCursorContext, virtualTestAdapter);
-        toTestFBView.setScaledCoords(new Rectangle(0,0,1,1));
+        toTestFBView.setRealCoords(new Rectangle(0,0,1000,3));
         toTestFBView.render(toTestFBView.hashCode());
 
         assertArrayEquals(virtualTestAdapter.getVirtualScreen().get(0), (content1 + " ".repeat(1000-content1.length())).toCharArray());
