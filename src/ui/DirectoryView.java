@@ -78,7 +78,6 @@ public class DirectoryView extends View {
         int printLocationY = startY+2;
 
         // We loop over every entry and print it
-        View.write("test2.txt", "Startidx: " + dir.getEntries().size());
         this.termiosTerminalAdapter.printText(printLocationY, startX + 2, "#  .");
         printLocationY += 2;
 
@@ -149,7 +148,6 @@ public class DirectoryView extends View {
         entry3
         -
          */
-        View.write("test2.txt", "Int: " + Math.floor((totalHeightNeeded - height) / (spacing + 1)));
         return (int) Math.floor((totalHeightNeeded - height) / (spacing + 1)) < 0
                 ?
                 0 : (int) Math.floor((totalHeightNeeded - height) / (spacing + 1));
