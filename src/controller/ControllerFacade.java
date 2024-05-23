@@ -40,7 +40,7 @@ public class ControllerFacade {
     /**
      * The listeners to the resize events
      */
-    private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
+    private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap = new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
 
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
@@ -212,6 +212,11 @@ public class ControllerFacade {
         this.active = a;
     }
 
+    public void removeActive() {
+        displays.remove(active);
+	active = 0;
+    }
+
     public ArrayList<Window> getWindows() {
         //TODO: Should we clone here? Lets test it later and see if it breaks
         ArrayList<Window> toReturn = new ArrayList<>(0);
@@ -284,6 +289,10 @@ public class ControllerFacade {
      */
     public void unsubscribeFromKeyPresses(ASCIIKeyEventListener asciiEventListener) {
         this.listenersToThisEvents.remove(asciiEventListener);
+    }
+
+    public void unsubscribeFromResize() {
+        this.displayFacadeResizeListenerHashMap.remove(getActiveDisplay());
     }
 
     public DisplayFacade getActiveDisplay() {

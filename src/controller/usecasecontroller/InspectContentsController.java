@@ -123,7 +123,9 @@ public class InspectContentsController extends UseCaseController {
                             unsubscribeFromFacadeAscii();
                             coreControllerParent.setActiveUseCaseController(new DirtyClosePromptController(coreControllerParent, facade));
                         } else if (result == 2) {
-                            System.exit(0);
+                            facade.removeActive();
+			    facade.unsubscribeFromResize();
+			    unsubscribeFromFacadeAscii();
                         }
                 }
                 break;
