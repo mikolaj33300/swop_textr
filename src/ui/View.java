@@ -87,10 +87,10 @@ public abstract class View {
         this.termiosTerminalAdapter = adapter;
     };
 
-    public static void write(String path, String text) {
+    public static void log(String text) {
         try {
             // Overwrite file test.txt
-            FileWriter writer = new FileWriter(new File(path), true);
+            FileWriter writer = new FileWriter(new File("test2.txt"), true);
             writer.write(text);
             writer.close();
         } catch (IOException e) {

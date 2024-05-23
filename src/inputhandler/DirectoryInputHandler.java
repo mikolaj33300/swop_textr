@@ -57,7 +57,7 @@ public class DirectoryInputHandler extends InputHandlingElement {
 
     @Override
     public RenderIndicator handleSeparator() throws IOException {
-        this.directory.selectEntry();
+        this.directory.handleEnter();
 	return RenderIndicator.WINDOW;
     }
 

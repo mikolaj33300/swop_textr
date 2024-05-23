@@ -43,8 +43,9 @@ public class Directory {
     /**
      * Returns the selected {@link FileSystemEntry}.
      */
-    public FileSystemEntry selectEntry() {
-        if(!this.getEntries().get(focused).isDirectory())
+    public FileSystemEntry handleEnter() {
+        if(focused == 0) this.moveToParent();
+        else if(!this.getEntries().get(focused-1).isDirectory())
             return this.getEntries().get(focused);
         return null;
     }
@@ -60,14 +61,16 @@ public class Directory {
      * Increases the hover index {@link Directory#focused}
      */
     public void increaseFocused() {
-        this.focused = this.focused + 1 >= focusedDirectory.getChildren().size() ? this.focused : this.focused++;
+        if(this.focused + 1 <= this.focusedDirectory.getChildren().size())
+            this.focused++;
     }
 
     /**
      * Decreases the hover index {@link Directory#focused}
      */
     public void decreaseFocused() {
-        this.focused = this.focused - 1 <= 0 ? this.focused : this.focused--;
+        if(this.focused - 1 >= 0)
+            this.focused--;
     }
 
     /**

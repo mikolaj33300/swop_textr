@@ -1,7 +1,6 @@
 package files;
 
 import listeners.DisplayRequestForFileEntryListener;
-import ui.View;
 import util.json.JsonUtil;
 
 import java.io.IOException;
@@ -40,10 +39,8 @@ public class EditableFileBuffer extends FileBuffer {
     public boolean parseAsJSON() {
         if(JsonUtil.parseDirectory(this) != null) {
             this.parsed = true;
-            View.write("test2.txt", "\nparse correct" + (this.hashCode()));
             this.listener.notifyRequestToOpen((JsonUtil.parseDirectory(this)));
         }
-        View.write("test2.txt", "parsing failed at location" + JsonUtil.getErrorLocation(new String(this.getBytes())));
         return false;
     }
 
@@ -94,7 +91,6 @@ public class EditableFileBuffer extends FileBuffer {
     }
 
     public void subscribeEditableBuffer(DisplayRequestForFileEntryListener listener) {
-        View.write("test2.txt", "\n<Buffer> Subscribed: " + this.hashCode());
         this.listener = listener;
     }
 
