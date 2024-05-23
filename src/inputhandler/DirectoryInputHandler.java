@@ -40,39 +40,39 @@ public class DirectoryInputHandler extends InputHandlingElement {
 
     @Override
     public RenderIndicator handleArrowRight() {
-	return RenderIndicator.NONE;
+        return RenderIndicator.NONE;
     }
 
     @Override
     public RenderIndicator handleArrowLeft() {
-	return RenderIndicator.NONE;
+        return RenderIndicator.NONE;
     }
 
     @Override
     public RenderIndicator handleArrowDown() {
         this.directory.increaseFocused();
-	return RenderIndicator.WINDOW;
+        return RenderIndicator.WINDOW;
     }
 
     @Override
     public RenderIndicator handleArrowUp() {
         this.directory.decreaseFocused();
-	return RenderIndicator.WINDOW;
+        return RenderIndicator.WINDOW;
     }
 
     @Override
     public RenderIndicator handleSeparator() throws IOException {
-        if(this.directory.selectEntry() == null){
+        if (this.directory.selectEntry() == null) {
             //TODO: Request closing this window through listener
-        };
-	return RenderIndicator.WINDOW;
+        }
+        return RenderIndicator.WINDOW;
     }
 
     public Directory getDirectory() {
         return this.directory;
     }
 
-    public void accept(InputHandlerVisitor v){
+    public void accept(InputHandlerVisitor v) {
         v.visitDirectoryInputHandler(this);
     }
 }
