@@ -1,0 +1,20 @@
+User:User
+TextR:TextR
+activeUseCaseController:InspectContentsController
+facade:ControllerFacade
+displays:DisplayFacade
+window:Window
+handler:InputHandlingElement
+
+User:TextR.presses(ALT+F4)
+  TextR:activeUseCaseController.handle(23)
+    activeUseCaseController:facade.closeActive()
+      facade:closeStatusResult=displays.closeActive()
+      	displays:window.isSafeToClose()
+	  window:handler.isSafeToClose()
+
+      facade:displays.getTermiosTerminalAdapter().unsubscribeFromKeyPresses(displays.get(active))
+      facade:displays.getTermiosTerminalAdapter().unsubscribeFromResizeTextArea(displays.get(active))
+      facade:displays.destroy(active)
+      displays:window.destroy()
+      window:handler.destroy()

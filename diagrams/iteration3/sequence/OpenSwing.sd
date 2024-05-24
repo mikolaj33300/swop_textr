@@ -1,0 +1,30 @@
+TextR:TextR
+activeUseCaseController:InspectContentsController
+facade:ControllerFacade
+/newAdapter:SwingTerminalAdapter 
+/editableSwingTerminal:SwingTerminalAdapter
+/terminalPanel:TerminalPanel
+activeDisplay:DisplayFacade
+/newVisitor:DisplayFromWindowVisitor
+activeWindow:Window
+/newFacade:DisplayFacade
+/newAsciiListener:ASCIIKeyEventListener
+/newResizeListener:DisplayFacadeResizeListener
+
+[c:while user presses ctrl+w]
+  TextR:activeUseCaseController.handle(23)
+    activeUseCaseController:facade.openNewSwingFromActiveWindow()
+      facade:newAdapter=newAdapter.new()
+	newAdapter:editableSwingTerminal=editableSwingTerminal.new()
+	  editableSwingTerminal:terminalPanel=terminalPanel.new()
+      facade:newFacade=activeDisplay.requestOpeningNewDisplay(newAdapter)
+	activeDisplay:newVisitor=newVisitor.new(newAdapter, this.lineSeparatorArg)
+	activeDisplay:activeWindow.accept(newVisitor)
+	activeDisplay:resultDisplayFacade=newVisitor.getNewFacade()
+	  newVisitor:newFacade.new(windowToAdd, newAdapter, lineSeparatorArg)
+      facade:newAsciiListener=newAsciiListener.new()
+      facade:newResizeListener=newResizeListener.new()
+      facade:newAdapter.subscribeToKeyPresses(newAsciiListener)
+      facade:newAdapter.subscribeToResizeTextArea(newResizeListener)
+      facade:newFacade.paintScreen()
+[/c]
