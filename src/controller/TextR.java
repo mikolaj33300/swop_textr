@@ -108,7 +108,7 @@ public class TextR {
     private void addTimerListener() {
 
         //need to mock this, or tests fail because listeners run too late
-        adapterToStartWith.addAndStartTimerListener(500, new ActionListener() {
+        adapterToStartWith.addAndStartTimerListener(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleIdleEvent();
@@ -157,7 +157,8 @@ public class TextR {
      */
     private boolean handleTerminalInputEvent() throws IOException {
         int b;
-
+        //TODO: Maybe put this logic in usecasecontroller itself? That will ask facade to focus the 0th display directly?
+        this.activeUseCaseController.focusTerminal();
         b = adapter.get(activeAdapter).readByte();
 
         if (b == 27) {

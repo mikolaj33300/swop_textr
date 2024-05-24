@@ -17,7 +17,7 @@ public class JsonUtil {
      * @return a TextLocation object that specifies the location where the columns starts for the target path. Will return null if the path was not found or parsing failed
      */
     public static TextLocation getTextLocationFor(FileBuffer buffer, String jsonName) {
-        JsonEntry entry = (JsonEntry) parseDirectory(buffer, null);
+        JsonEntry entry = (JsonEntry) parseDirectory(buffer, null, null);
         return findLocationForKey(jsonName, entry.getEntries(), null);
     }
 
@@ -26,7 +26,7 @@ public class JsonUtil {
      * @param buffer the location of the file
      * @return a FileSystemEntry object if correct json format, else null
      */
-    public static FileSystemEntry parseDirectory(FileBuffer buffer, OpenFileOnPathRequestListener listener) {
+    public static FileSystemEntry parseDirectory(FileBuffer buffer, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
         TextLocation location = JsonUtil.getErrorLocation(new String(buffer.getBytes()));
         if(location == null) {
             SimpleJsonObject object = SimpleJsonParser.parseObject(new String(buffer.getBytes()));
@@ -34,7 +34,7 @@ public class JsonUtil {
                     "root",
                     buffer.getPath(),
                     object.properties,
-                    null, listener);
+                    null, listener, closeEventListener);
             e.initChildren();
             return e;
         }

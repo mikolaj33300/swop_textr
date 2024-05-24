@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
+    @Override
+    public void focusTerminal() {
+        this.facade.focusTerminal();
+    }
 
     protected InspectContentsController(TextR coreControllerParent, ControllerFacade facade){
         super(coreControllerParent, facade);
@@ -147,6 +151,12 @@ public class InspectContentsController extends UseCaseController {
         //facade.renderCursor();
     }
 
+    /**
+     * HandleIdle passes a tick from the "system clock" down as a special argument to the facade.
+     * The facade passes it to the active display, making sure only the active snake game ticks
+     * @return
+     * @throws IOException
+     */
     @Override
     public RenderIndicator handleIdle() throws IOException {
         return facade.passToActive((byte) -3);

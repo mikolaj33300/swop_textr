@@ -371,6 +371,10 @@ public class ControllerFacade {
     public DisplayFacade getActiveDisplay() {
         return this.displays.get(active);
     }
+
+    public void focusTerminal() {
+        this.setActive(0);
+    }
 }
 
 

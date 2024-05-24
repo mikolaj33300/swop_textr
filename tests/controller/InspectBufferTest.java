@@ -50,7 +50,7 @@ public class InspectBufferTest {
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
         textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
-        textr4 = new TextR(new String[] {"--lf", c.toString()}, new SwingTerminalAdapter());
+        //textr4 = new TextR(new String[] {"--lf", c.toString()}, new SwingTerminalAdapter());
     }
 
     /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
@@ -190,8 +190,6 @@ public class InspectBufferTest {
 
     @Test
     public void SECRET_TEST_FOR_DEBUGGING() throws IOException {
-        textr4.getActiveUseCaseController().getFacade().openNewSwingFromActiveWindow();
-        //while(true);
     }
 
     private void focusNext() {

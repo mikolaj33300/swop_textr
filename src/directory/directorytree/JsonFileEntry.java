@@ -15,8 +15,8 @@ public class JsonFileEntry extends JsonEntry {
      * @param path the path, name, of the file
      * @param parent the parent of this file
      */
-    public JsonFileEntry(String name, String path, TextLocation loc, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener) {
-        super(name, path, loc, parent, listener);
+    public JsonFileEntry(String name, String path, TextLocation loc, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+        super(name, path, loc, parent, listener, closeEventListener);
     }
 
     @Override

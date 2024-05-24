@@ -84,12 +84,12 @@ public class TestJsonUtil {
 
     @Test
     public void testParseInvalidFile_ResultsNull() {
-        assertNull(JsonUtil.parseDirectory(buffer3, null));
+        assertNull(JsonUtil.parseDirectory(buffer3, null, null));
     }
 
     @Test
     public void testParseValidFile_ResultsNonNull() {
-        assertNotNull(JsonUtil.parseDirectory(buffer1, null));
+        assertNotNull(JsonUtil.parseDirectory(buffer1, null, null));
     }
 
 }

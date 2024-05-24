@@ -50,14 +50,14 @@ public class JsonTreeTest {
         path1 = path1.resolve("test1.txt");
         Files.write(path1, content1.getBytes());
         buffer1 = new FileBuffer(path1.toString(), FileAnalyserUtil.getLineSeparator(content1.getBytes()));
-        root = (JsonEntry) JsonUtil.parseDirectory(buffer1, null);
+        root = (JsonEntry) JsonUtil.parseDirectory(buffer1, null, null);
     }
 
     @Test
     public void AmountChildrenParser_FileSystemEntryRoot_Same() {
         assertEquals(
                 SimpleJsonParser.parseObject(content1).getChildren().size(),
-                JsonUtil.parseDirectory(buffer1, null).getChildren().size()
+                JsonUtil.parseDirectory(buffer1, null, null).getChildren().size()
         );
     }
 

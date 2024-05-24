@@ -15,11 +15,13 @@ public class EditableFileBuffer extends FileBuffer {
 
     private int openedSubFiles = 0;
     private boolean parsed = false;
-    private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners;
+
+    private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners = new ArrayList<>();
 
     private ArrayList<DisplayRequestForFileBufferListener> bufferRequestListeners;
 
-    private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories;
+    private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories = new ArrayList<>();
+    private ArrayList<Runnable> closingListeners = new ArrayList<>();
 
     /**
      * Creates FileBuffer object with given path;
@@ -50,7 +52,6 @@ public class EditableFileBuffer extends FileBuffer {
      * Notifies this object that it has been parsed
      */
     public FileSystemEntry parseAsJSON() {
-
         OpenFileOnPathRequestListener listenerToNewDirectory = new OpenFileOnPathRequestListener() {
             @Override
             public void notifyRequestToOpenFile(String pathToOpen) {
@@ -64,13 +65,24 @@ public class EditableFileBuffer extends FileBuffer {
                 requestDisplayingNewFileBuffer(newBuffer);
             }
         };
+        listenersToDirectories.add(listenerToNewDirectory);
+        Runnable newCloseListener = new Runnable() {
+            @Override
+            public void run() {
+                listenersToDirectories.remove(listenerToNewDirectory);
+                closingListeners.remove(this);
+            }
+        };
+        closingListeners.add(newCloseListener);
 
-        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory);
+
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory, newCloseListener);
         if(toOpenEntry != null) {
             this.parsed = true;
             //this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.
         } else {
             //TODO: Unsubscribe here, listener has no meaning
+            //TODO: Handle returning error location, maybe in a Pair<Location, FileSystemEntry>?
         }
         return toOpenEntry;
     }
@@ -136,6 +148,10 @@ public class EditableFileBuffer extends FileBuffer {
 
     public void subscribeToFileBufferOpenRequests(DisplayRequestForFileBufferListener listener) {
         this.bufferRequestListeners.add(listener);
+    }
+
+    public void subscribeToCloseEvents(Runnable closingListener){
+        this.closingListeners.add(closingListener);
     }
 
 }

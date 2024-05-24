@@ -26,8 +26,8 @@ public abstract class JsonEntry extends FileSystemEntry {
      * @param path path of the json file on disk
      * @param parent the parent entry. This is always a {@link JsonDirectoryEntry}
      */
-    public JsonEntry(String name, String path, TextLocation location, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener) {
-        super(path, parent, listener);
+    public JsonEntry(String name, String path, TextLocation location, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+        super(path, parent, listener, closeEventListener);
         this.name = name;
         this.location = location;
     }

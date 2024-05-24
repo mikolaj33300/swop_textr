@@ -18,6 +18,11 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      */
     protected final FileSystemEntry parent;
     protected OpenFileOnPathRequestListener openOnPathListener;
+
+    /**
+     * only one editable buffer listens at a time, so one close event listener instead of arraylist for brevity
+     */
+    protected Runnable closeEventListener;
     /**
      * The list of children {@link FileSystemEntry}. This will be null for {@link FileEntry}
      */
@@ -28,7 +33,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * @param path the full path to the file
      * @param parent the
      */
-    public FileSystemEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener) {
+    public FileSystemEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
         this.path = path;
         this.parent = parent;
         this.openOnPathListener = listener;
@@ -67,7 +72,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      */
     public FileSystemEntry getParent() {
         return this.parent == null ?
-                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this, this.openOnPathListener)
+                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this, this.openOnPathListener, this.closeEventListener)
                 : this.parent;
     }
 
@@ -108,4 +113,8 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
     }
 
     public abstract FileSystemEntry selectEntry();
+
+    public void closeThisEntry(){
+        this.closeEventListener.run();
+    };
 }
