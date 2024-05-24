@@ -21,17 +21,40 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class SwingEditableTerminalApp extends JFrame {
+  /**
+   * the ASCIIKeyEventListener is a listener we send a request to every time a key is pressed
+   */
     private ArrayList<ASCIIKeyEventListener> asciiListenerArrayList = new ArrayList<>(0);
+  /**
+   * the contentBuffer holds the characters currently displayed
+   */
     private char[][] contentBuffer;
 
+    /**
+     * the row of the cursor
+     */
     private int cursorRow = 0;
+    /**
+     * the column of the cursor
+     */
     private int cursorCol = 0;
 
+    /**
+     * the listeners we send a request to every time we get resized
+     */
     ArrayList<ResizeListener> resizeListeners = new ArrayList<>(0);
 
+    /**
+     * the underlying swing object
+     */
     TerminalPanel terminalPanel;
     ResizeListener listenerOnPanel = null;
 
+    /**
+     * move the cursor to the 
+     * @param cursorRow 
+     * @param cursorCol
+     */
    public void moveCursor(int cursorRow, int cursorCol){
        this.cursorRow = cursorRow;
        this.cursorCol = cursorCol;
@@ -39,19 +62,29 @@ public class SwingEditableTerminalApp extends JFrame {
    }
 
 
+   /**
+    * rerender the display using the terminalPanel
+    */
    private void updateAndRenderVisual(){
        terminalPanel.setNewBuffer(contentBuffer);
        terminalPanel.cursorRow = cursorRow;
        terminalPanel.cursorCol = cursorCol;
-       //terminalPanel.bufferToDisplay[cursorRow][cursorCol] = '*';
        terminalPanel.repaint();
    }
 
+   /**
+    * @param toWriteMessage the message to be insereted
+    * @param dstBeginCol the column to insert the message
+    * @param dstBeginRow the row to insert the message
+    */
     public void updateBuffer(String toWriteMessage, int dstBeginCol, int dstBeginRow) {
         toWriteMessage.getChars(0, Math.min(toWriteMessage.length(), contentBuffer[0].length), contentBuffer[dstBeginRow], dstBeginCol);
         updateAndRenderVisual();
    }
 
+   /**
+    * clear our char buffer
+    */
     public void clearBuffer(){
         for(int i = 0; i<contentBuffer.length; i++){
             for(int j = 0; j< contentBuffer[0].length; j++){
@@ -68,6 +101,11 @@ public class SwingEditableTerminalApp extends JFrame {
     directly, since this is the frontend of the swing ui part and the panel is a low level renderer
     and parameters for listeners would also vary (we add some invisible characters to the buffer due
     to a rendering glitch where the rightmost column disappears)
+     */
+    /**
+     * Create new SwingEditableTerminalApp
+     * adds ResizeListener
+     * and KeyListener
      */
     public SwingEditableTerminalApp() {
         //Fixed listeners to use copies, i actually got the concurrent modification exception here
@@ -135,10 +173,16 @@ public class SwingEditableTerminalApp extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * @return the size of our buffer
+     */
     public Coords getSwingTerminalCharSize(){
        return new Coords(0, 0, contentBuffer[0].length, contentBuffer.length);
     }
 
+    /**
+     * @return the content of our buffer
+     */
     public char[][] getContentBuffer(){
        char[][] toReturn = new char[contentBuffer.length][contentBuffer[0].length];
         for(int i = 0; i<contentBuffer.length; i++){
@@ -149,6 +193,9 @@ public class SwingEditableTerminalApp extends JFrame {
         return toReturn;
     }
 
+    /**
+     * @return the row our cursor is in 
+     */
     int getCursorRow(){
        return cursorRow;
     }

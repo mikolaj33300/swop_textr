@@ -8,13 +8,23 @@ import java.io.IOException;
 
 //This decorator does not extend an abstract ViewDecorator because we need to extend all the methods anyways
 public class ScrollbarDecorator extends View {
+  /**
+   * the view rendering the underlying stuff
+   */
     View wrappedView;
 
+    /**
+     * create a new instance of this object with the View v
+     */
     public ScrollbarDecorator(View v) {
         super(v.getTermiosTerminalAdapter());
         this.wrappedView = v;
     }
 
+    /**
+     * render everything using the render logic of the view
+     * @param activeHash the hash of the active window used to see if we are the active window
+     */
     //TODO: these operations could be done better using some special library for vector/matrix operations? Lets only do this if enough time
     @Override
     public void render(int activeHash) throws IOException {
@@ -38,12 +48,19 @@ public class ScrollbarDecorator extends View {
                 wrappedView.getLineLength(focusedLine));
     }
 
+    /**
+     * render the cursor on the right position
+     */
     @Override
     public void renderCursor() throws IOException {
         updateWrappeeDimensions();
         wrappedView.renderCursor();
     }
 
+    /**
+     * check if this equals o
+     * @return true if o is equals this false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if(o instanceof ScrollbarDecorator s) {
@@ -52,21 +69,37 @@ public class ScrollbarDecorator extends View {
         return false;
     }
 
+    /**
+     * get the length of the focussed line
+     * @return int
+     */
     @Override
     protected int getLineLength(int focusedLine) {
         return wrappedView.getLineLength(focusedLine);
     }
 
+    /**
+     * get the current cursor column
+     * @return int: column
+     */
     @Override
     public int getFocusedCol() {
         return wrappedView.getFocusedCol();
     }
 
+    /**
+     * get the current cursor line
+     * @return int: line
+     */
     @Override
     public int getFocusedLine() {
         return wrappedView.getFocusedLine();
     }
 
+    /**
+     * get the height of the complete content
+     * @return the number of lines possibly printed
+     */
     @Override
     public int getTotalContentHeight() {
         return wrappedView.getTotalContentHeight();
@@ -147,6 +180,9 @@ public class ScrollbarDecorator extends View {
         }
     }
 
+    /**
+     * update the Dimensions of the wrapped view
+     */
     private void updateWrappeeDimensions() throws IOException {
         Coords thisRealDimensions = super.uiCoordsReal;
 
@@ -154,6 +190,10 @@ public class ScrollbarDecorator extends View {
         wrappedView.setRealCoords(wrappeeRealDimensions);
     }
 
+    /**
+     * set the termiosTerminalAdapter of the wrapped view
+     * @param adapter the adapter
+     */
     public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
         this.termiosTerminalAdapter = adapter;
         wrappedView.setTermiosTerminalAdapter(adapter);
