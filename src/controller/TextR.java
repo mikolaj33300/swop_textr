@@ -108,7 +108,7 @@ public class TextR {
     private void addTimerListener() {
 
         //need to mock this, or tests fail because listeners run too late
-        adapterToStartWith.addAndStartTimerListener(500, new ActionListener() {
+        adapterToStartWith.addAndStartTimerListener(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 handleIdleEvent();

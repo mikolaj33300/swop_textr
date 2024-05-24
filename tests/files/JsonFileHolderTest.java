@@ -54,8 +54,8 @@ public class JsonFileHolderTest {
         buffer1 = new FileBuffer(path1.toString(), "\n".getBytes());
         buffer2 = new FileBuffer(path2.toString(), "\n".getBytes());
 
-        entry1 = (JsonEntry) JsonUtil.parseDirectory(buffer1, null);
-        entry2 = (JsonEntry) JsonUtil.parseDirectory(buffer2, null);
+        entry1 = (JsonEntry) JsonUtil.parseDirectory(buffer1, null, null);
+        entry2 = (JsonEntry) JsonUtil.parseDirectory(buffer2, null, null);
 
         entryDocuments = entry1.getEntries().get(0);
         entryJsonInSring = entryDocuments.getEntries().get(1);

@@ -52,7 +52,6 @@ public class EditableFileBuffer extends FileBuffer {
      * Notifies this object that it has been parsed
      */
     public FileSystemEntry parseAsJSON() {
-
         OpenFileOnPathRequestListener listenerToNewDirectory = new OpenFileOnPathRequestListener() {
             @Override
             public void notifyRequestToOpenFile(String pathToOpen) {
@@ -67,12 +66,23 @@ public class EditableFileBuffer extends FileBuffer {
             }
         };
         listenersToDirectories.add(listenerToNewDirectory);
-        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory);
+        Runnable newCloseListener = new Runnable() {
+            @Override
+            public void run() {
+                listenersToDirectories.remove(listenerToNewDirectory);
+                closingListeners.remove(this);
+            }
+        };
+        closingListeners.add(newCloseListener);
+
+
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory, newCloseListener);
         if(toOpenEntry != null) {
             this.parsed = true;
             //this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.
         } else {
             //TODO: Unsubscribe here, listener has no meaning
+            //TODO: Handle returning error location, maybe in a Pair<Location, FileSystemEntry>?
         }
         return toOpenEntry;
     }
