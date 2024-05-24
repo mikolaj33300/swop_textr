@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
+    @Override
+    public void focusTerminal() {
+        this.facade.focusTerminal();
+    }
 
     protected InspectContentsController(TextR coreControllerParent, ControllerFacade facade){
         super(coreControllerParent, facade);

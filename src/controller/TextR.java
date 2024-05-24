@@ -157,7 +157,8 @@ public class TextR {
      */
     private boolean handleTerminalInputEvent() throws IOException {
         int b;
-
+        //TODO: Maybe put this logic in usecasecontroller itself? That will ask facade to focus the 0th display directly?
+        this.activeUseCaseController.focusTerminal();
         b = adapter.get(activeAdapter).readByte();
 
         if (b == 27) {

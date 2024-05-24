@@ -9,8 +9,8 @@ import java.util.List;
 
 public class DirEntry extends FileSystemEntry {
 
-    public DirEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener) {
-        super(path, parent, listener);
+    public DirEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+        super(path, parent, listener, closeEventListener);
     }
 
     @Override
@@ -20,9 +20,9 @@ public class DirEntry extends FileSystemEntry {
         for(File listedFile : new File(getPath()).listFiles()) {
 
             if(listedFile.isDirectory())
-                entry.add(new DirEntry(listedFile.getAbsolutePath(),this, this.openOnPathListener));
+                entry.add(new DirEntry(listedFile.getAbsolutePath(),this, this.openOnPathListener, closeEventListener));
             else
-                entry.add(new FileEntry(listedFile.getAbsolutePath(), this, this.openOnPathListener));
+                entry.add(new FileEntry(listedFile.getAbsolutePath(), this, this.openOnPathListener, closeEventListener));
 
         }
 

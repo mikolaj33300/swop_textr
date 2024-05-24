@@ -15,11 +15,13 @@ public class EditableFileBuffer extends FileBuffer {
 
     private int openedSubFiles = 0;
     private boolean parsed = false;
-    private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners;
+
+    private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners = new ArrayList<>();
 
     private ArrayList<DisplayRequestForFileBufferListener> bufferRequestListeners;
 
-    private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories;
+    private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories = new ArrayList<>();
+    private ArrayList<Runnable> closingListeners = new ArrayList<>();
 
     /**
      * Creates FileBuffer object with given path;
@@ -64,7 +66,7 @@ public class EditableFileBuffer extends FileBuffer {
                 requestDisplayingNewFileBuffer(newBuffer);
             }
         };
-
+        listenersToDirectories.add(listenerToNewDirectory);
         FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory);
         if(toOpenEntry != null) {
             this.parsed = true;
@@ -136,6 +138,10 @@ public class EditableFileBuffer extends FileBuffer {
 
     public void subscribeToFileBufferOpenRequests(DisplayRequestForFileBufferListener listener) {
         this.bufferRequestListeners.add(listener);
+    }
+
+    public void subscribeToCloseEvents(Runnable closingListener){
+        this.closingListeners.add(closingListener);
     }
 
 }
