@@ -57,6 +57,7 @@ public class SnakeView extends View {
     public void render(int activeHash) throws IOException {
         // Retrieve coordinates from superclass (set by ControllerFacade by going through tree)
         setLocalCoordinates();
+        super.fill(startX+1, startY+1, startX+width, startY+height, " ");
 
         // Retrieve information from the snake game.
         Snake[] segments = game.getSnake().getSegments();
