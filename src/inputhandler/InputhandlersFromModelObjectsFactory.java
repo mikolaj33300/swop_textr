@@ -4,10 +4,18 @@ import directory.directorytree.FileSystemEntry;
 import files.BufferCursorContext;
 
 public class InputhandlersFromModelObjectsFactory {
+  /**
+   * create FileBufferInputHandler out of a BufferCursorContext
+   * @param b
+   */
     public InputHandlingElement createFileInputHandler(BufferCursorContext b){
         return new FileBufferInputHandler(b);
     }
 
+    /**
+     * create DirectoryInputHandler out of a filesystementry
+     * @param fe
+     */
     public InputHandlingElement createDirectoryInputHandler(FileSystemEntry fe){
         //Or a Directory (that's what inputhandler takes as param)? Didn't implement directory
         //since the filesystementry entity is a less variable
