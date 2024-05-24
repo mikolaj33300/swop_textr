@@ -2,6 +2,7 @@ package inputhandler;
 
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -27,11 +28,18 @@ public class DirectoryInputHandler extends InputHandlingElement {
         this.directory = new Directory(fe);
     }
 
+
+    public DirectoryInputHandler(OpenFileOnPathRequestListener listener) {
+        this.directory = new Directory(listener);
+    }
+
+        
     /**
      * it can be closed at any time 
      */
     @Override
     public int forcedClose() {
+        directory.forcedClose();
         return 0;
     }
 
@@ -123,5 +131,9 @@ public class DirectoryInputHandler extends InputHandlingElement {
      */
     public void accept(InputHandlerVisitor v) {
         v.visitDirectoryInputHandler(this);
+    }
+
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        directory.subscribeCloseEvents(closeEventListener);
     }
 }

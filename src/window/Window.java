@@ -112,12 +112,17 @@ public abstract class Window {
     public abstract void setTermiosAdapter(TermiosTerminalAdapter newAdapter);
 
     /**
-     * Subscribes a listener to this window
+     * Subscribes a open window reuquest listener to this window
      * @param openWindowRequestListener the window to subscribe
      */
     public abstract void subscribeWindow(OpenWindowRequestListener openWindowRequestListener);
 
     /**
+    * Subscribes a close event listener to this window
+    */
+    public abstract void subscribeCloseEvents(Runnable closeEventListener);
+
+        /**
      * Checks if it is safe to close this window
      * @return true if it is safe to close, false otherwise
      */

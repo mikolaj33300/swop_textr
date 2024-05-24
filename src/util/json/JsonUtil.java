@@ -6,6 +6,7 @@ import directory.directorytree.JsonEntry;
 import files.FileBuffer;
 import files.OpenFileOnPathRequestListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JsonUtil {
@@ -26,7 +27,7 @@ public class JsonUtil {
      * @param buffer the location of the file
      * @return a FileSystemEntry object if correct json format, else null
      */
-    public static FileSystemEntry parseDirectory(FileBuffer buffer, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+    public static FileSystemEntry parseDirectory(FileBuffer buffer, OpenFileOnPathRequestListener listener, ArrayList<Runnable> closeEventListeners) {
         TextLocation location = JsonUtil.getErrorLocation(new String(buffer.getBytes()));
         if(location == null) {
             SimpleJsonObject object = SimpleJsonParser.parseObject(new String(buffer.getBytes()));
@@ -34,7 +35,7 @@ public class JsonUtil {
                     "root",
                     buffer.getPath(),
                     object.properties,
-                    null, listener, closeEventListener);
+                    null, listener, closeEventListeners);
             e.initChildren();
             return e;
         }

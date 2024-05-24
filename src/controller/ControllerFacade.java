@@ -410,6 +410,10 @@ public class ControllerFacade {
     public void focusTerminal() {
         this.setActive(0);
     }
+
+    public RenderIndicator openRealDirectory() {
+        return displays.get(active).openRealDirectory();
+    }
 }
 
 

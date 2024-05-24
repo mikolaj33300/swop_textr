@@ -1,7 +1,6 @@
 package window;
 
-import directory.Directory;
-import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 import inputhandler.DirectoryInputHandler;
 import inputhandler.InputHandlingElement;
 import ioadapter.TermiosTerminalAdapter;
@@ -36,6 +35,16 @@ public class DirectoryWindow extends Window {
      */
     public DirectoryWindow(DirectoryInputHandler dih, TermiosTerminalAdapter adapter) {
         this.dih = dih;
+        this.adapter = adapter;
+        this.view = new ScrollbarDecorator(new DirectoryView(adapter, dih.getDirectory()));
+    }
+
+    /**
+     * Returns the view of this DirectoryWindow
+     * @return view
+     */
+    public DirectoryWindow(OpenFileOnPathRequestListener listener, TermiosTerminalAdapter adapter) {
+        this.dih = new DirectoryInputHandler(listener);
         this.adapter = adapter;
         this.view = new ScrollbarDecorator(new DirectoryView(adapter, dih.getDirectory()));
     }
@@ -97,8 +106,17 @@ public class DirectoryWindow extends Window {
      * @return  null
      */
     @Override
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        this.dih.subscribeCloseEvents(closeEventListener);
+    }
+
+    @Override
     public String getPath() {
         return null;
     }
 
+    @Override
+    public void forcedClose() {
+        dih.forcedClose();
+    }
 }
