@@ -29,7 +29,7 @@ public class Directory {
      */
     public Directory(FileSystemEntry entry) {
         //TODO: Attach listener that opens the requested real files and sends requests up
-        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null);
+        if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null, null);
         else focusedDirectory = entry;
         entries = this.focusedDirectory.getChildren();
     }

@@ -67,4 +67,7 @@ public abstract class UseCaseController {
     void unsubscribeFromFacadeAscii(){
         this.facade.unsubscribeFromKeyPresses(asciiEventListener);
     }
+
+    public void focusTerminal() {
+    }
 }

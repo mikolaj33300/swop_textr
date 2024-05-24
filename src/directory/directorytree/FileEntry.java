@@ -8,8 +8,8 @@ import java.util.List;
 
 public class FileEntry extends FileSystemEntry {
 
-    public FileEntry(String path, DirEntry parent, OpenFileOnPathRequestListener listener) {
-        super(path, parent, listener);
+    public FileEntry(String path, DirEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+        super(path, parent, listener, closeEventListener);
     }
 
     @Override

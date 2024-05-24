@@ -190,7 +190,7 @@ public class InspectBufferTest {
 
     @Test
     public void SECRET_TEST_FOR_DEBUGGING() throws IOException {
-        textr4.getActiveUseCaseController().getFacade().openNewSwingFromActiveWindow();
+        //textr4.getActiveUseCaseController().getFacade().openNewSwingFromActiveWindow();
         //while(true);
     }
 

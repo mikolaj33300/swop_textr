@@ -34,7 +34,7 @@ public class JsonUtil {
                     "root",
                     buffer.getPath(),
                     object.properties,
-                    null, listener);
+                    null, listener, null);
             e.initChildren();
             return e;
         }
