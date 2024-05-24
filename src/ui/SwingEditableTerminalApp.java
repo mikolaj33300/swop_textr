@@ -200,13 +200,26 @@ public class SwingEditableTerminalApp extends JFrame {
        return cursorRow;
     }
 
+    /**
+     * add the resizeListeners to our listeners
+     * @param r the ResizeListener
+     */
     public void subscribeToResize(ResizeListener r){
         this.resizeListeners.add(r);
     }
 
+    /**
+     * add the ASCIIKeyEventListener to our listeners
+     * @param asciiKeyEventListener the ASCIIKeyEventListener
+     */
     public void subscribeToASCIIKeyEnters(ASCIIKeyEventListener asciiKeyEventListener) {
         this.asciiListenerArrayList.add(asciiKeyEventListener);
     }
+
+    /**
+     * send our keyinput to the listener
+     * @param b the key pressed
+     */
     private void notifyASCIIBasic(int b){
         List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
         for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
@@ -214,6 +227,11 @@ public class SwingEditableTerminalApp extends JFrame {
         }
     }
 
+    /**
+     * send our keyinput with special characters (surrogates) to the listener
+     * @param first the surrogate type (always 27 [ESC])
+     * @param second the key
+     */
     private void notifyASCIISurrogate(int first, int second){
         List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
         for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
@@ -221,14 +239,24 @@ public class SwingEditableTerminalApp extends JFrame {
         }
     }
 
+    /**
+     * @return the terminalPanel
+     */
     public TerminalPanel getPanel(){
         return this.terminalPanel;
     }
 
+    /**
+     * remove an asciiKeyEventListener from our listeners, for example when we close a window
+     */
     public void unsubscribeFromASCIIKeyEnters(ASCIIKeyEventListener listenerToRemove) {
         this.asciiListenerArrayList.remove(listenerToRemove);
     }
 
+    
+    /**
+     * remove an resizeListener from our listeners, for example when we close a window
+     */
     public void unsubscribeFromResize(ResizeListener listenerToRemove) {
         this.resizeListeners.remove(listenerToRemove);
     }

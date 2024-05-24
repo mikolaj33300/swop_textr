@@ -13,17 +13,36 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TerminalPanel extends JPanel {
+  /**
+   * our buffer of displayed content
+   */
     char[][] bufferToDisplay = new char[1][1];
+    /**
+     * our listeners in case we have resized
+     */
     ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
 
+    /**
+     * the cursorRow
+     */
     int cursorRow = -1;// start at -1 for no cursor for snake
+    /**
+     * the cursorColumn
+     */
     int cursorCol = -1;
 
+    /**
+     * fill our buffer with spaces to clear it
+     */
     void clearBuffer() {
         for (int i = 0; i < bufferToDisplay.length; i++)
             Arrays.fill(bufferToDisplay[i], ' ');
     }
 
+    /**
+     * update our buffer to newBuffer
+     * @param newBuffer
+     */
     public void setNewBuffer(char[][] newBuffer) {
         bufferToDisplay = new char[newBuffer.length][newBuffer[0].length];
         for (int i = 0; i < newBuffer.length; i++) {
@@ -33,6 +52,9 @@ public class TerminalPanel extends JPanel {
         }
     }
 
+    /**
+     * create a terminalPanel and its resizeListeners
+     */
     TerminalPanel() {
         setFont(new Font("Monospaced", Font.PLAIN, 12));
         clearBuffer();
@@ -56,6 +78,9 @@ public class TerminalPanel extends JPanel {
         });
     }
 
+    /**
+     * update our window
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -79,6 +104,9 @@ public class TerminalPanel extends JPanel {
         }
     }
 
+    /**
+     * @return the Dimensions of our window/display
+     */
     @Override
     public Dimension getPreferredSize() {
         FontMetrics fontMetrics = this.getFontMetrics(getFont());
@@ -86,11 +114,19 @@ public class TerminalPanel extends JPanel {
         return new Dimension(width * bufferToDisplay[0].length, fontMetrics.getHeight() * bufferToDisplay.length);
     }
 
+    /**
+     * our window is always focusable
+     * @return true
+     */
     @Override
     public boolean isFocusable() {
         return true;
     }
 
+    /**
+     * add r to our resizeListeners so it gets an update whenever the window is resized
+     * @param r the ResizeListener
+     */
     public void subscribeToResize(ResizeListener r) {
         this.resizeListeners.add(r);
     }

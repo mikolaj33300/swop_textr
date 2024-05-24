@@ -12,6 +12,9 @@ public class UserPopupBox {
      * The message to be displayed by the pop-up box
      */
     String message;
+    /**
+     * the adapter used to display the message
+     */
     TermiosTerminalAdapter adapter;
 
     /**
