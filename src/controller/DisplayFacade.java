@@ -191,7 +191,10 @@ class DisplayFacade {
     }
 
     public RenderIndicator passToActive(byte b) throws IOException {
-        return this.windows.get(active).input(b);
+        if(!windows.isEmpty()){
+            return this.windows.get(active).input(b);
+        }
+        return RenderIndicator.NONE;
     }
 
     /**

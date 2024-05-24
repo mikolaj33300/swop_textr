@@ -88,7 +88,7 @@ public class ControllerFacade {
             if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
                 if(displays.size()>1){
                     terminalDisplayStillContainsViews = false;
-                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_TERMINAL_SWING_REMAINS);
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
                 } else {
                     return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
                 }
@@ -103,7 +103,15 @@ public class ControllerFacade {
                 unsubscribeListenersDueToCloseActive();
                 displays.remove(active);
                 active = 0;
-                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_LAST_VIEW_ON_SWING);
+                if(terminalDisplayStillContainsViews == false){
+                    if(displays.size()>1){
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                    } else {
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                    }
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                }
             } else if(closeStatusResult == WindowCloseStatus.UNSAFE_CLOSE){
                 return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.DIRTY_CLOSE_PROMPT);
             } else {
@@ -122,7 +130,7 @@ public class ControllerFacade {
             if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
                 if(displays.size()>1){
                     terminalDisplayStillContainsViews = false;
-                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_TERMINAL_SWING_REMAINS);
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
                 } else {
                     return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
                 }
@@ -134,7 +142,17 @@ public class ControllerFacade {
                 unsubscribeListenersDueToCloseActive();
                 displays.remove(active);
                 active = 0;
-                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_LAST_VIEW_ON_SWING);
+                if(terminalDisplayStillContainsViews == false){
+                    if(displays.size()>1){
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                    } else {
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                    }
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                }
+
+
             } else {
                 return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_SUCCESFULLY);
             }
