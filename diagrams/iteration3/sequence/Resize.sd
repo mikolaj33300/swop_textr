@@ -5,4 +5,4 @@ swingEditableTerminalApp:swingEditableTerminalApp
 
 user:TerminalPanel.resize()
 TerminalPanel:resizeListener.notfiyNewCoords(newCoords)
-resizeListener:swingEditableTerminalApp.contentBuffer
+resizeListener:swingEditableTerminalApp.updateCoords(newCoords)
