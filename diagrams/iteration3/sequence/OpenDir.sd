@@ -1,0 +1,16 @@
+user:User
+TextR:TextR
+activeUseCaseController:InspectContentsController
+facade:ControllerFacade
+displays:DisplayFacade
+/directory:Directory
+/directoryView:DirectoryView
+/window:Window
+
+user:TextR.press(ctrl+o)
+  TextR:activeUseCaseController.handle(15)
+    activeUseCaseController:facade.openDirectory(System.getProperty("user.dir"))
+      facade:displays.openDirectory(path)
+        displays:directoryView.new()
+        displays:directory.new(path)
+        directory:
