@@ -82,7 +82,6 @@ public class Food {
      * The reference to the pos field will also be lost
      * @return Food, a clone of this object
      */
-
     public Food clone() {
         return new Food(this.character, this.growAmount, this.score, this.pos.clone());
     }

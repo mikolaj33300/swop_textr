@@ -1,6 +1,6 @@
 package directory.directorytree;
 
-import files.FileAnalyserUtil;
+import util.FileAnalyserUtil;
 import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

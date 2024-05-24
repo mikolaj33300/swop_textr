@@ -3,7 +3,7 @@ package controller;
 import ioadapter.ASCIIKeyEventListener;
 import ioadapter.SwingTerminalAdapter;
 import ioadapter.TermiosTerminalAdapter;
-import files.FileAnalyserUtil;
+import util.FileAnalyserUtil;
 import exception.PathNotFoundException;
 import ui.UserPopupBox;
 import util.*;

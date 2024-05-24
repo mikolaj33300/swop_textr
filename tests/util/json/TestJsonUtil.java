@@ -1,7 +1,6 @@
 package util.json;
 
-import directory.directorytree.JsonEntry;
-import files.FileAnalyserUtil;
+import util.FileAnalyserUtil;
 import files.FileBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;

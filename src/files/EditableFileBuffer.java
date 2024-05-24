@@ -2,6 +2,7 @@ package files;
 
 import directory.directorytree.FileSystemEntry;
 import listeners.DisplayRequestForFileEntryListener;
+import util.FileAnalyserUtil;
 import util.json.JsonUtil;
 
 import java.io.IOException;

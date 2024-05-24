@@ -2,7 +2,7 @@ package ui;
 
 import ioadapter.TermiosTerminalAdapter;
 import files.BufferCursorContext;
-import files.FileAnalyserUtil;
+import util.FileAnalyserUtil;
 import files.FileBuffer;
 import util.Coords;
 

@@ -1,12 +1,11 @@
 package util;
 
-import files.FileAnalyserUtil;
 import files.FileHolder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static files.FileAnalyserUtil.*;
+import static util.FileAnalyserUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileAnalyserUtilTest {
