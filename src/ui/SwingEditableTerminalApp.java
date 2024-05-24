@@ -38,6 +38,7 @@ public class SwingEditableTerminalApp extends JFrame {
        updateAndRenderVisual();
    }
 
+
    private void updateAndRenderVisual(){
        terminalPanel.setNewBuffer(contentBuffer);
        terminalPanel.cursorRow = cursorRow;
@@ -69,8 +70,9 @@ public class SwingEditableTerminalApp extends JFrame {
     to a rendering glitch where the rightmost column disappears)
      */
     public SwingEditableTerminalApp() {
+        //Fixed listeners to use copies, i actually got the concurrent modification exception here
         super("Swing Terminal App");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
         contentBuffer =  new char[25][100];
         terminalPanel.setNewBuffer(contentBuffer);
@@ -82,7 +84,8 @@ public class SwingEditableTerminalApp extends JFrame {
                 cursorCol = 0;
                 cursorRow = 0;
                 contentBuffer = new char[n.height][n.width];
-                for(ResizeListener l : resizeListeners){
+                List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
+                for(ResizeListener l : resizeListenersCopy){
                     l.notifyNewCoords(n);
                 }
 
@@ -158,18 +161,28 @@ public class SwingEditableTerminalApp extends JFrame {
         this.asciiListenerArrayList.add(asciiKeyEventListener);
     }
     private void notifyASCIIBasic(int b){
-        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+        List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
+        for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
             l.notifyNormalKey(b);
         }
     }
 
     private void notifyASCIISurrogate(int first, int second){
-        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+        List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
+        for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
             l.notifySurrogateKeys(first, second);
         }
     }
 
     public TerminalPanel getPanel(){
         return this.terminalPanel;
+    }
+
+    public void unsubscribeFromASCIIKeyEnters(ASCIIKeyEventListener listenerToRemove) {
+        this.asciiListenerArrayList.remove(listenerToRemove);
+    }
+
+    public void unsubscribeFromResize(ResizeListener listenerToRemove) {
+        this.resizeListeners.remove(listenerToRemove);
     }
 }

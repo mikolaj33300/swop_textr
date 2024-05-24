@@ -1,0 +1,5 @@
+package util;
+
+public enum GlobalCloseStatus {
+    CLOSED_SUCCESFULLY, DIRTY_CLOSE_PROMPT, CLOSED_ONE_DISPLAY, CLOSED_ALL_DISPLAYS
+}

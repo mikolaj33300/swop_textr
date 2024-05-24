@@ -31,6 +31,7 @@ public class Directory {
         //TODO: Attach listener that opens the requested real files and sends requests up
         if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null);
         else focusedDirectory = entry;
+        entries = this.focusedDirectory.getChildren();
     }
 
     /**
@@ -45,15 +46,17 @@ public class Directory {
      * Returns the selected {@link FileSystemEntry}.
      */
     public FileSystemEntry selectEntry() {
+        //TODO: Remove isdirectory if possible, make this use selectentry and it either returning an entry or null
+        // to determine the next course of action
         if(focused == 0) this.focusedDirectory = this.focusedDirectory.getParent();
         else if(focused <= this.entries.size()) {
             // Directory: we change the parent & update children
             if(entries.get(focused-1).isDirectory()) {
-                this.focusedDirectory = entries.get(focused-1);
+                this.focusedDirectory = entries.get(focused-1).selectEntry();
                 this.entries = this.focusedDirectory.getChildren();
             }
             else
-                return entries.get(focused - 1);
+                return entries.get(focused - 1).selectEntry();
         }
         return null;
     }

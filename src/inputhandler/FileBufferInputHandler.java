@@ -237,7 +237,7 @@ public class FileBufferInputHandler extends InputHandlingElement {
      */
     private void subscribeBufferContextOpenRequests() {
         requestForFileBufferListenerUnderlying =
-                ctx -> requestForInputHandlersListener.notifyRequestOpening(new FileBufferInputHandler(ctx));
+                ctx -> {assert(ctx != null);requestForInputHandlersListener.notifyRequestOpening(new FileBufferInputHandler(ctx));};
         this.bufferCursorContext.subscribeBufferContextDisplayRequests(requestForFileBufferListenerUnderlying);
     }
 

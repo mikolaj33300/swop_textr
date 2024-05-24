@@ -79,8 +79,8 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToEnterInsertion(el);
     }
 
-    private BufferCursorContext(EditableFileBuffer fb, int insertionPointCol, int insertionPointLine) {
-        this.containedFileBuffer = fb.clone();
+    BufferCursorContext(EditableFileBuffer fb, int insertionPointCol, int insertionPointLine) {
+        this.containedFileBuffer = fb;
         this.insertionPointCol=insertionPointCol;
         this.insertionPointLine=insertionPointLine;
         this.insertionPointByteIndex=convertLineAndColToIndex(insertionPointLine, insertionPointCol);

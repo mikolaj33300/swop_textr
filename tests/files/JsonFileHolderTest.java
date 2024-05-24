@@ -2,6 +2,7 @@ package files;
 
 import directory.directorytree.FileCreator;
 import directory.directorytree.JsonEntry;
+import inputhandler.FileBufferInputHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -70,6 +71,22 @@ public class JsonFileHolderTest {
                     ,
                     "{\\r\\n  \\\"foo\\\": \\\"bar\\\"\\r\\n}".getBytes()
             )
+        );
+    }
+
+    //TODO: IDK remove this test? i only did this quickly to check a bug with the constructor
+    @Test
+    public void CreateJsonFileHolder_FromFileEntry_CorrectContents2() throws IOException {
+        assertTrue(
+                FileHolder.areContentsEqual(
+                        new JsonFileHolder(buffer1, ass2.getName()).getContent()
+                        ,
+                        "This is the assignment for iteration 2.".getBytes()
+                )
+        );
+        FileBufferInputHandler bufToTest = new FileBufferInputHandler(new BufferCursorContext(new EditableFileBuffer(new JsonFileHolder(buffer1, ass2.getName())), 0, 0));
+        assertTrue(
+                new FileBuffer(new JsonFileHolder(buffer1, ass2.getName())).getLines().size() ==1
         );
     }
 

@@ -5,6 +5,7 @@ import ioadapter.SwingTerminalAdapter;
 import ioadapter.TermiosTerminalAdapter;
 import files.FileAnalyserUtil;
 import exception.PathNotFoundException;
+import ui.UserPopupBox;
 import util.*;
 import window.Window;
 
@@ -23,7 +24,9 @@ public class ControllerFacade {
     /**
      * The list of displays on which TextR is running. Every display is opened in a separate terminal
      */
-    private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(1);
+    private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(0);
+
+    private boolean terminalDisplayStillContainsViews;
 
     /**
      * The index of the active display in the displays list
@@ -51,7 +54,7 @@ public class ControllerFacade {
      * @throws IOException when the path provided to it is invalid
      */
     public ControllerFacade(String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws PathNotFoundException, IOException {
-
+        terminalDisplayStillContainsViews = true;
         this.listenersToThisEvents = new ArrayList<>(0);
         this.lineSeparatorArg = FileAnalyserUtil.setLineSeparatorFromArgs(args[0]);
         this.initialTermiosAdapter = termiosTerminalAdapter;
@@ -79,16 +82,86 @@ public class ControllerFacade {
      *
      * @return 0 if the window is safe to close and closed 1 if it has a dirty buffer 2 if it is not force closable
      */
-    public Pair<RenderIndicator, Integer> closeActive() {
-        return displays.get(active).closeActive();
+    public Pair<RenderIndicator, GlobalCloseStatus> closeActive() {
+        WindowCloseStatus closeStatusResult = displays.get(active).closeActive().b;
+        if(active == 0){
+            if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
+                if(displays.size()>1){
+                    terminalDisplayStillContainsViews = false;
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                }
+
+            } else if(closeStatusResult == WindowCloseStatus.UNSAFE_CLOSE){
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.DIRTY_CLOSE_PROMPT);
+            } else {
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_SUCCESFULLY);
+            }
+        } else {
+            if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
+                unsubscribeListenersDueToCloseActive();
+                displays.remove(active);
+                active = 0;
+                if(terminalDisplayStillContainsViews == false){
+                    if(displays.size()>1){
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                    } else {
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                    }
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                }
+            } else if(closeStatusResult == WindowCloseStatus.UNSAFE_CLOSE){
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.DIRTY_CLOSE_PROMPT);
+            } else {
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_SUCCESFULLY);
+            }
+        }
     }
 
     /**
      * Delegates a force close to the active {@link DisplayFacade}
      * @return 0 if we closed the active window 2 if we can't close it
      */
-    public Pair<RenderIndicator, Integer> forceCloseActive() {
-        return displays.get(active).forceCloseActive();
+    public Pair<RenderIndicator, GlobalCloseStatus> forceCloseActive() {
+        WindowCloseStatus closeStatusResult = displays.get(active).forceCloseActive().b;
+        if(active == 0){
+            if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
+                if(displays.size()>1){
+                    terminalDisplayStillContainsViews = false;
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                }
+            } else {
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_SUCCESFULLY);
+            }
+        } else {
+            if(closeStatusResult == WindowCloseStatus.LAST_WINDOW_CLOSED){
+                unsubscribeListenersDueToCloseActive();
+                displays.remove(active);
+                active = 0;
+                if(terminalDisplayStillContainsViews == false){
+                    if(displays.size()>1){
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                    } else {
+                        return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ALL_DISPLAYS);
+                    }
+                } else {
+                    return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_ONE_DISPLAY);
+                }
+
+
+            } else {
+                return new Pair<>(RenderIndicator.FULL, GlobalCloseStatus.CLOSED_SUCCESFULLY);
+            }
+        }
+    }
+
+    private void unsubscribeListenersDueToCloseActive() {
+        displays.get(active).getTermiosTerminalAdapter().unsubscribeFromKeyPresses(displayFacadeAsciiListenerHashMap.get(displays.get(active)));
+        displays.get(active).getTermiosTerminalAdapter().unsubscribeFromResizeTextArea(displayFacadeResizeListenerHashMap.get(displays.get(active)));
     }
 
     public RenderIndicator passToActive(byte b) throws IOException {
@@ -265,9 +338,18 @@ public class ControllerFacade {
      * Renders every element on all displays (a change on one can be reflected on others)
      */
     public void paintScreen() throws IOException {
-        for(DisplayFacade f : displays){
-            f.paintScreen();
+        if(terminalDisplayStillContainsViews==true){
+            for(DisplayFacade f : displays){
+                f.paintScreen();
+            }
+        } else {
+            
+            new UserPopupBox((displays.size()-1)+" windows open; please close them to quit Textr.", initialTermiosAdapter).render();
+            for(int i = 1; i<displays.size(); i++){
+                displays.get(i).paintScreen();
+            }
         }
+
     }
 
     /**
