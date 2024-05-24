@@ -82,7 +82,7 @@ public class EditableFileBuffer extends FileBuffer {
             //this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.
         } else {
             //TODO: Unsubscribe here, listener has no meaning
-            //TODO: Handle returning error location
+            //TODO: Handle returning error location, maybe in a Pair<Location, FileSystemEntry>?
         }
         return toOpenEntry;
     }
