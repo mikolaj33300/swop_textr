@@ -69,8 +69,7 @@ public class EditableFileBuffer extends FileBuffer {
         Runnable newCloseListener = new Runnable() {
             @Override
             public void run() {
-                listenersToDirectories.remove(listenerToNewDirectory);
-                closingListeners.remove(this);
+                handleClosedDirectoryOnThis(this);
             }
         };
         closingListeners.add(newCloseListener);
@@ -155,6 +154,11 @@ public class EditableFileBuffer extends FileBuffer {
 
     public void subscribeToCloseEvents(Runnable closingListener){
         this.closingListeners.add(closingListener);
+    }
+
+    private void handleClosedDirectoryOnThis(Runnable listenerToNewDirectory) {
+        listenersToDirectories.remove(listenerToNewDirectory);
+        closingListeners.remove(this);
     }
 
 }

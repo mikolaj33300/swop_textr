@@ -442,7 +442,12 @@ class DisplayFacade {
 
     private void subscribeToCloseEvents(Window openedWindow) {
         openedWindow.subscribeCloseEvents(() -> {
-            rootLayout = rootLayout.delete(openedWindow.getHashCode());
+            try{ //temporary fix listener accidentally subscribing twice
+                rootLayout = rootLayout.delete(openedWindow.getHashCode());
+            } catch (HashNotMatchingException e) {
+
+            }
+
             windows.remove(openedWindow);
         });
     }
