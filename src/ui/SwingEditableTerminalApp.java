@@ -70,7 +70,7 @@ public class SwingEditableTerminalApp extends JFrame {
     to a rendering glitch where the rightmost column disappears)
      */
     public SwingEditableTerminalApp() {
-        //TODO: FIX LISTENERS TO USE COPY LIST INSTEAD OF THE ACTIVE LIST WHEN ITERATING OVER THEM
+        //Fixed listeners to use copies, i actually got the concurrent modification exception here
         super("Swing Terminal App");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.terminalPanel = new TerminalPanel();
@@ -84,7 +84,8 @@ public class SwingEditableTerminalApp extends JFrame {
                 cursorCol = 0;
                 cursorRow = 0;
                 contentBuffer = new char[n.height][n.width];
-                for(ResizeListener l : resizeListeners){
+                List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
+                for(ResizeListener l : resizeListenersCopy){
                     l.notifyNewCoords(n);
                 }
 
@@ -160,13 +161,15 @@ public class SwingEditableTerminalApp extends JFrame {
         this.asciiListenerArrayList.add(asciiKeyEventListener);
     }
     private void notifyASCIIBasic(int b){
-        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+        List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
+        for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
             l.notifyNormalKey(b);
         }
     }
 
     private void notifyASCIISurrogate(int first, int second){
-        for(ASCIIKeyEventListener l : asciiListenerArrayList){
+        List<ASCIIKeyEventListener> asciiKeyEventListenersCopy = List.copyOf(asciiListenerArrayList);
+        for(ASCIIKeyEventListener l : asciiKeyEventListenersCopy){
             l.notifySurrogateKeys(first, second);
         }
     }
