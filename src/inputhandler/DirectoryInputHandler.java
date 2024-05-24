@@ -25,6 +25,7 @@ public class DirectoryInputHandler extends InputHandlingElement {
 
     @Override
     public int forcedClose() {
+        directory.forcedClose();
         return 0;
     }
 

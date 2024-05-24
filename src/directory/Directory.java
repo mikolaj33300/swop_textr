@@ -103,5 +103,9 @@ public class Directory {
     public void subscribeCloseEvents(Runnable closeEventListener) {
         focusedDirectory.subscribeCloseEvents(closeEventListener);
     }
+
+    public void forcedClose() {
+        focusedDirectory.closeThisEntry();
+    }
 }
 

@@ -69,4 +69,8 @@ public class DirectoryWindow extends Window {
         return null;
     }
 
+    @Override
+    public void forcedClose() {
+        dih.forcedClose();
+    }
 }
