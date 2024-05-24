@@ -63,6 +63,16 @@ public class SwingEditableTerminalApp extends JFrame {
         updateAndRenderVisual();
     }
 
+    private void updateCoords(Coords n) throws IOException {
+      cursorCol = 0;
+      cursorRow = 0;
+      contentBuffer = new char[n.height][n.width];
+      List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
+      for(ResizeListener l : resizeListenersCopy){
+          l.notifyNewCoords(n);
+      }
+    }
+
     /*
     This needs to subscribe by itself to events of the panel instead of just passing provided listeners to the panel
     directly, since this is the frontend of the swing ui part and the panel is a low level renderer
@@ -81,14 +91,7 @@ public class SwingEditableTerminalApp extends JFrame {
         terminalPanel.subscribeToResize(new ResizeListener() {
             @Override
             public void notifyNewCoords(Coords n) throws IOException {
-                cursorCol = 0;
-                cursorRow = 0;
-                contentBuffer = new char[n.height][n.width];
-                List<ResizeListener> resizeListenersCopy = List.copyOf(resizeListeners);
-                for(ResizeListener l : resizeListenersCopy){
-                    l.notifyNewCoords(n);
-                }
-
+              updateCoords(n);
             }
 
         });
