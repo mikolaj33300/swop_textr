@@ -13,4 +13,3 @@ user:TextR.press(ctrl+o)
       facade:displays.openDirectory(path)
         displays:directoryView.new()
         displays:directory.new(path)
-        directory:

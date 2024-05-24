@@ -1,0 +1,8 @@
+user:User
+TerminalPanel:TerminalPanel
+resizeListener:ResizeListener
+swingEditableTerminalApp:swingEditableTerminalApp
+
+user:TerminalPanel.resize()
+TerminalPanel:resizeListener.notfiyNewCoords(newCoords)
+resizeListener:swingEditableTerminalApp.contentBuffer
