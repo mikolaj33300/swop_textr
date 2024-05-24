@@ -96,7 +96,7 @@ public class TextR {
         // Terminal moet in rawInput staan voor dimensies te kunnen lezen!
         adapter.get(activeAdapter).enterRawInputMode();
         // Reading terminal dimensions for correct rendering
-        //activeUseCaseController.paintScreen();
+        activeUseCaseController.paintScreen();
 
         addTimerListener();
         addTerminalInputListener();

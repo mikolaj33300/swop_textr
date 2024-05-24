@@ -26,16 +26,8 @@ public class UserPopupBox {
      * render this popup
      */
     public void render(){
-        Coords coords = null;
-        try {
-            coords = adapter.getTextAreaSize();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for (int i = 0; i < coords.height; i++){
-            adapter.printText(i+1, 1, " ".repeat(coords.width));
-        }
-        Terminal.printText(1,1, message);
+        adapter.clearScreen();
+        adapter.printText(1,1, message);
     }
 
 }

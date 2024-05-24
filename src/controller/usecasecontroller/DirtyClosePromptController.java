@@ -2,6 +2,7 @@ package controller.usecasecontroller;
 
 import controller.ControllerFacade;
 import controller.TextR;
+import io.github.btj.termios.Terminal;
 import util.GlobalCloseStatus;
 import util.RenderIndicator;
 import ui.UserPopupBox;

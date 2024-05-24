@@ -325,7 +325,8 @@ public class ControllerFacade {
                 f.paintScreen();
             }
         } else {
-            new UserPopupBox((displays.size()-1)+" windows open; please close them to quit Textr.", initialTermiosAdapter);
+
+            new UserPopupBox((displays.size()-1)+" windows open; please close them to quit Textr.", initialTermiosAdapter).render();
             for(int i = 1; i<displays.size(); i++){
                 displays.get(i).paintScreen();
             }

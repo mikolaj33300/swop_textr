@@ -71,14 +71,28 @@ public class CloseBufferTest {
     }
 
     @Test
+    public void closeDirty_OneFile_SwitchesUsecase() throws IOException {
+        enterCharacter('a');
+        // Assert dirty
+        assertTrue(
+                ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()
+        );
+        // Assert that closing gives no error -> not dirty
+        assertEquals(GlobalCloseStatus.DIRTY_CLOSE_PROMPT, textr1.getActiveUseCaseController().getFacade().closeActive().b);
+        // Windows stay the same, only textR will handle this popup
+        assertEquals(1, textr1.getActiveUseCaseController().getFacade().getWindows().size());
+    }
+
+    @Test
     public void closeDirty_OneFile_HandlePopup() throws IOException {
         enterCharacter('a');
         triggerStdinEventFirstAdapter();
         adapter.putByte(27);
         adapter.putByte(10);
         adapter.putByte((int)'S');
-        enterCharacter('n');
         triggerStdinEventFirstAdapter();
+        enterCharacter('n');
+
         // Assert dirty
         assertTrue(
                 ((FileBufferInputHandler) textr1.getActiveUseCaseController().getFacade().getWindows().get(textr1.getActiveUseCaseController().getFacade().getActive()).getHandler()).getFileBufferContextTransparent().getDirty()

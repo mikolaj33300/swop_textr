@@ -122,6 +122,7 @@ public class InspectContentsController extends UseCaseController {
                         if (closingResult == GlobalCloseStatus.DIRTY_CLOSE_PROMPT) { //If was dirty
                             unsubscribeFromFacadeAscii();
                             coreControllerParent.setActiveUseCaseController(new DirtyClosePromptController(coreControllerParent, facade));
+                            return;
                         } else if (closingResult == GlobalCloseStatus.CLOSED_ALL_DISPLAYS) { //If was last window
                             System.exit(0);
                         }
