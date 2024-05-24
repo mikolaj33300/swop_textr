@@ -43,6 +43,11 @@ public class JsonFileHolder extends FileHolder {
         return fileContent;
     }
 
+    /**
+     * Saves the changes from its buffer to the buffer from where this JsonFileHolder was created
+     * @param fileContent the content to write away
+     * @return
+     */
     @Override
     int save(byte[] fileContent) {
 

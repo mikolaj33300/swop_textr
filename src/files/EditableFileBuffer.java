@@ -13,19 +13,38 @@ import java.util.ArrayList;
  */
 public class EditableFileBuffer extends FileBuffer {
 
+    /**
+     * The amount of subfiles that are opened
+     */
     private int openedSubFiles = 0;
+
+    /**
+     * Determines if this object has been parsed
+     */
     private boolean parsed = false;
 
+    /**
+     * List of listeners for directory requests
+     */
     private ArrayList<DisplayRequestForFileEntryListener> directoryRequestListeners = new ArrayList<>();
 
+    /**
+     * List of listeners for file buffers
+     */
     private ArrayList<DisplayRequestForFileBufferListener> bufferRequestListeners;
 
+    /**
+     * List of listeners for directories
+     */
     private ArrayList<OpenFileOnPathRequestListener> listenersToDirectories = new ArrayList<>();
+
+    /**
+     * List of listeners that are to be unsubscribed when this object is closed
+     */
     private ArrayList<Runnable> closingListeners = new ArrayList<>();
 
     /**
-     * Creates FileBuffer object with given path;
-     * Initializes {@link FileHolder} object and retrieves its {@link FileHolder#getContent()}
+     * Creates FileBuffer object from the given path and line separator
      *
      * @param path          the path of the file to be opened
      * @param lineSeparator the separator we use
@@ -35,6 +54,10 @@ public class EditableFileBuffer extends FileBuffer {
         this.bufferRequestListeners = new ArrayList<>(0);
     }
 
+    /**
+     * Creates FileBuffer object from a given FileHolder;*
+     * @param fh the file holder
+     */
     public EditableFileBuffer(FileHolder fh) throws IOException {
         super(fh);
         this.bufferRequestListeners = new ArrayList<>(0);
@@ -87,10 +110,19 @@ public class EditableFileBuffer extends FileBuffer {
         return toOpenEntry;
     }
 
+
+    /**
+     * Notifies this object that it has been parsed
+     */
     private void requestDisplayingNewFileBuffer(EditableFileBuffer newBuffer) {
         this.bufferRequestListeners.get(0).notifyRequestOpening(newBuffer);
     }
 
+    /**
+     * Creates a new JsonFileHolder object from a path on this object
+     * @param pathToOpen the path to open
+     * @return a new JsonFileHolder object
+     */
     private JsonFileHolder createFileHolderFromJSONPathOnThis(String pathToOpen) {
         return new JsonFileHolder(this, pathToOpen);
     }
@@ -142,14 +174,26 @@ public class EditableFileBuffer extends FileBuffer {
         return copy;
     }
 
+    /**
+     * Subscribes this EditableFileBuffer to a request for opening a directory
+     * @param listener the listener to be subscribed
+     */
     public void subscribeToDirectoryOpenRequests(DisplayRequestForFileEntryListener listener) {
         this.directoryRequestListeners.add(listener);
     }
 
+    /**
+     * Subscribes this EditableFileBuffer to a request for opening a file buffer
+     * @param listener the listener to be subscribed
+     */
     public void subscribeToFileBufferOpenRequests(DisplayRequestForFileBufferListener listener) {
         this.bufferRequestListeners.add(listener);
     }
 
+    /**
+     * Subscribes this EditableFileBuffer to a closing event
+     * @param closingListener the listener to be subscribed
+     */
     public void subscribeToCloseEvents(Runnable closingListener){
         this.closingListeners.add(closingListener);
     }
