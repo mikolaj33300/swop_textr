@@ -58,7 +58,7 @@ class DisplayFacade {
         if (paths.length == 1) {
             Window toAdd = new NormalWindowFactory().createWindowOnPath(paths[0], lineSeparatorArg, termiosTerminalAdapter);
             //new FileBufferWindow(paths[0], lineSeparatorArg, termiosTerminalAdapter);
-            this.rootLayout = new LayoutLeaf(toAdd.getView().hashCode());
+            this.rootLayout = new LayoutLeaf(toAdd.getHashCode());
             this.windows.add(toAdd);
             this.subscribeWindowOpeningRequests(toAdd);
         } else {
@@ -68,7 +68,7 @@ class DisplayFacade {
                 Window toAdd = new NormalWindowFactory().createWindowOnPath(checkPath, lineSeparatorArg, termiosTerminalAdapter);
                 this.subscribeWindowOpeningRequests(toAdd);
                 this.windows.add(toAdd);
-                hashes[i] = toAdd.getView().hashCode();
+                hashes[i] = toAdd.getHashCode();
             }
             this.rootLayout = new VerticalLayoutNode(hashes);
         }
@@ -101,7 +101,7 @@ class DisplayFacade {
      */
     private void renderContent() throws IOException {
         for (Window window : windows) {
-            window.getView().render(windows.get(active).getHashCode());
+            window.render(windows.get(active).getHashCode());
         }
     }
 
@@ -123,7 +123,7 @@ class DisplayFacade {
      * save the active filebuffer
      */
     public void saveActive() {
-        windows.get(active).getHandler().save();
+        windows.get(active).save();
         try {
             renderContent();
         } catch (Exception e) {
@@ -136,7 +136,7 @@ class DisplayFacade {
      * Render the cursor in the active view
      */
     private void renderCursor() throws IOException {
-        windows.get(active).getView().renderCursor();
+        windows.get(active).renderCursor();
     }
 
     /**
@@ -149,7 +149,7 @@ class DisplayFacade {
      * 2 if it is not force closable
      */
     public Pair<RenderIndicator, WindowCloseStatus> closeActive() {
-        if (windows.get(active).getHandler().isSafeToClose()) {
+        if (windows.get(active).isSafeToClose()) {
             //safe to do a force close since clean buffer
             return forceCloseActive();
         } else {
@@ -272,7 +272,7 @@ class DisplayFacade {
      * @return {@link RenderIndicator} indicating to re-render the full display
      */
     public RenderIndicator handleSeparator() throws IOException {
-        return this.windows.get(active).getHandler().handleSeparator();
+        return this.windows.get(active).handleSeparator();
     }
 
     /**
@@ -281,7 +281,7 @@ class DisplayFacade {
      */
     public RenderIndicator openSnakeGame() throws IOException {
         // Get UI coords of current window to initialize snake view's playfield
-        Coords coordsView = this.windows.get(active).getView().getRealCoords();
+        Coords coordsView = this.windows.get(active).getRealCoords();
 
         // Get the hash of the current active window, we need this to find&replace the layoutleaf's hashcode
         int hashActive = this.windows.get(active).getHashCode();
@@ -364,7 +364,7 @@ class DisplayFacade {
         }
         HashMap<Integer, Rectangle> coordsMap = rootLayout.getCoordsList(new Rectangle(0, 0, displayCoords.width, displayCoords.height));
         for (Window w : windows) {
-            w.getView().setRealCoords(coordsMap.get(w.getHashCode()));
+            w.setRealCoords(coordsMap);
         }
 
         return RenderIndicator.FULL;
