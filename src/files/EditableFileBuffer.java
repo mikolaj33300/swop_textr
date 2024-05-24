@@ -77,6 +77,8 @@ public class EditableFileBuffer extends FileBuffer {
         ArrayList<Runnable> closeListenerToPassAsArg = new ArrayList<>(0);
         closeListenerToPassAsArg.add(newCloseListener);
 
+        //TODO: We pass a close listener, we should check how many directories/properties are still open and change state
+        // to unlock this buffer.
         FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory, closeListenerToPassAsArg);
         if(toOpenEntry != null) {
             this.parsed = true;
