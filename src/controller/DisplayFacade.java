@@ -430,6 +430,7 @@ class DisplayFacade {
                     assert(openedWindow != null);
                     windows.add(windows.size(), openedWindow);
                     rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), openedWindow.getHashCode());
+                    subscribeToCloseEvents(openedWindow);
                     try {
                         updateViewCoordinates();
                     } catch (Exception e) {
@@ -437,6 +438,18 @@ class DisplayFacade {
                     }
                 }
         );
+    }
+
+    private void subscribeToCloseEvents(Window openedWindow) {
+        openedWindow.subscribeCloseEvents(() -> {
+            try{ //temporary fix listener accidentally subscribing twice, was fixed?
+                rootLayout = rootLayout.delete(openedWindow.getHashCode());
+            } catch (HashNotMatchingException e) {
+
+            }
+
+            windows.remove(openedWindow);
+        });
     }
 
     public RenderIndicator openRealDirectory() {
@@ -448,23 +461,9 @@ class DisplayFacade {
             }
         }, termiosTerminalAdapter);
         if (windowToAdd != null) {
-            Window finalWindowToAdd = windowToAdd;
-            windows.add(windows.size(), finalWindowToAdd);
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), finalWindowToAdd.getHashCode());
-            int finalWindowToAddHash = finalWindowToAdd.getHashCode();
-            Layout layoutBefore = rootLayout.clone();
-            windowToAdd.subscribeCloseEvents(new Runnable() {
-                @Override
-                public void run() {
-                    try{
-                        rootLayout = rootLayout.delete(finalWindowToAddHash);
-                    } catch (HashNotMatchingException hh){
-
-                    }
-
-                    windows.remove(finalWindowToAdd);
-                }
-            });
+            windows.add(windows.size(), windowToAdd);
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), windowToAdd.getHashCode());
+            subscribeToCloseEvents(windowToAdd);
         }
         return RenderIndicator.FULL;
     }

@@ -69,14 +69,15 @@ public class EditableFileBuffer extends FileBuffer {
         Runnable newCloseListener = new Runnable() {
             @Override
             public void run() {
-                listenersToDirectories.remove(listenerToNewDirectory);
-                closingListeners.remove(this);
+                handleClosedDirectoryOnThis(this);
             }
         };
         closingListeners.add(newCloseListener);
         ArrayList<Runnable> closeListenerToPassAsArg = new ArrayList<>(0);
         closeListenerToPassAsArg.add(newCloseListener);
 
+        //TODO: We pass a close listener, we should check how many directories/properties are still open and change state
+        // to unlock this buffer.
         FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory, closeListenerToPassAsArg);
         if(toOpenEntry != null) {
             this.parsed = true;
@@ -153,6 +154,11 @@ public class EditableFileBuffer extends FileBuffer {
 
     public void subscribeToCloseEvents(Runnable closingListener){
         this.closingListeners.add(closingListener);
+    }
+
+    private void handleClosedDirectoryOnThis(Runnable listenerToNewDirectory) {
+        listenersToDirectories.remove(listenerToNewDirectory);
+        closingListeners.remove(this);
     }
 
 }
