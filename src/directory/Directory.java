@@ -39,6 +39,7 @@ public class Directory {
     public Directory(OpenFileOnPathRequestListener listener) {
 
         this.focusedDirectory = new DirEntry(listener);
+        entries = this.focusedDirectory.getChildren();
     }
 
     /**

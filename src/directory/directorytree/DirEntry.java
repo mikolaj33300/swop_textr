@@ -15,6 +15,7 @@ public class DirEntry extends FileSystemEntry {
 
     public DirEntry(OpenFileOnPathRequestListener listener) {
         super(System.getProperty("user.dir"), null, listener, null);
+        initChildren();
     }
 
     @Override
@@ -29,6 +30,9 @@ public class DirEntry extends FileSystemEntry {
                 entry.add(new FileEntry(listedFile.getAbsolutePath(), this, this.openOnPathListener, closeEventListener));
 
         }
+
+        entry.forEach(FileSystemEntry::initChildren);
+        this.setChildren(entry);
 
         return entry;
     }
