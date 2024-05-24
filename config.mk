@@ -4,7 +4,7 @@ rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 #
 # diags:
 #
-OFORMAT = svg
+OFORMAT = png
 DOT := $(wildcard ./diagrams/*.dot) 
 DOT += $(wildcard ./diagrams/**/*.dot)
 SD := $(call rwildcard,diagrams/,*.sd)
