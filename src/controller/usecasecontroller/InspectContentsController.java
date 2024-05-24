@@ -61,6 +61,10 @@ public class InspectContentsController extends UseCaseController {
             case 14:
                 opRenderIndicator = facade.moveFocus(MoveDirection.RIGHT);
                 break;
+
+            case 15:
+                opRenderIndicator = facade.openRealDirectory();
+                break;
             // Control + R
             case 18:
                 opRenderIndicator = facade.rotateLayout(RotationDirection.COUNTERCLOCKWISE);

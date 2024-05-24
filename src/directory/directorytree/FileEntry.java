@@ -4,12 +4,13 @@ import files.FileHolder;
 import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileEntry extends FileSystemEntry {
 
-    public FileEntry(String path, DirEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
-        super(path, parent, listener, closeEventListener);
+    public FileEntry(String path, DirEntry parent, OpenFileOnPathRequestListener listener, ArrayList<Runnable> closeEventListeners) {
+        super(path, parent, listener, closeEventListeners);
     }
 
     @Override
@@ -30,6 +31,10 @@ public class FileEntry extends FileSystemEntry {
     @Override
     public FileSystemEntry selectEntry() {
         openOnPathListener.notifyRequestToOpenFile(this.getPath());
+        List<Runnable> closeEventListenersCopy = List.copyOf(closeEventListeners);
+        for(Runnable l : closeEventListenersCopy){
+            l.run();
+        }
         return null;
     }
 

@@ -24,7 +24,7 @@ public class InspectBufferTest {
 
     private final VirtualTestingTermiosAdapter adapter2 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
     private final VirtualTestingTermiosAdapter adapter3 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
-    private final VirtualTestingTermiosAdapter adapter4 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
+    //private final VirtualTestingTermiosAdapter adapter4 = new VirtualTestingTermiosAdapter(1000, 10, new ArrayList<>());
 
     private TextR textr1, textr2, textr3, textr4;
 
@@ -50,7 +50,7 @@ public class InspectBufferTest {
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
         textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
-        //textr4 = new TextR(new String[] {"--lf", c.toString()}, new SwingTerminalAdapter());
+        //textr4 = new TextR(new String[] {"--lf", c.toString()}, adapter4);
     }
 
     /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
@@ -190,6 +190,8 @@ public class InspectBufferTest {
 
     @Test
     public void SECRET_TEST_FOR_DEBUGGING() throws IOException {
+/*        textr4.activeUseCaseController.getFacade().openNewSwingFromActiveWindow();
+        while(true);*/
     }
 
     private void focusNext() {

@@ -96,6 +96,12 @@ public class SnakeWindow extends Window {
      * @return null
      */
     @Override
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        //No functionality to close needed, but this could be interesting in the case where a snake game would close
+        //itself on win. So it kindof makes sense to make this method available to all windows in general.
+    }
+
+    @Override
     public String getPath() {
         return null;
     }
