@@ -50,6 +50,44 @@ public abstract class Window {
         return getView().hashCode();
     }
 
+    /**
+     * let the active window know that the right arrow is pressed
+     *
+     * @return {@link RenderIndicator} indicating to re-render the cursor
+     */
+    public RenderIndicator handleArrowRight() {
+        return getHandler().handleArrowRight();
+    }
+
+
+    /**
+     * let the active window know that the left arrow is pressed
+     *
+     * @return {@link RenderIndicator} indicating to re-render the cursor
+     */
+    public RenderIndicator handleArrowLeft() {
+        return getHandler().handleArrowLeft();
+    }
+
+
+    /**
+     * let the active window know that the up arrow is pressed
+     *
+     * @return {@link RenderIndicator} indicating to re-render the cursor
+     */
+    public RenderIndicator handleArrowUp() {
+        return getHandler().handleArrowUp();
+    }
+
+    /**
+     * let the active window know that the down arrow is pressed
+     *
+     * @return {@link RenderIndicator} indicating to re-render the cursor
+     */
+    public RenderIndicator handleArrowDown() {
+        return getHandler().handleArrowDown();
+    }
+
 
     /**
      * Duplicates this window
