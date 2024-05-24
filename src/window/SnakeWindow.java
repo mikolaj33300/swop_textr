@@ -81,12 +81,20 @@ public class SnakeWindow extends Window {
         snakeView.setTermiosTerminalAdapter(newAdapter);
     }
 
+    /**
+     * Subscribes this SnakeWindow to a listener
+     * @param openWindowRequestListener listener to be subscribed to
+     */
     @Override
     public void subscribeWindow(OpenWindowRequestListener openWindowRequestListener) {
         /*Snake normally won't request to open windows but this can be changed in
         the future*/
     }
 
+    /**
+     * A SnakeWindow does not have a path, thus it returns null
+     * @return null
+     */
     @Override
     public String getPath() {
         return null;
