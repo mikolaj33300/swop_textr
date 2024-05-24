@@ -23,8 +23,8 @@ public class JsonDirectoryEntry extends JsonEntry {
      * @param properties the properties of the {@link util.json.SimpleJsonObject} from {@link util.json.SimpleJsonObject#properties}
      * @param parent the parent of this object, representing the {@link JsonDirectoryEntry}
      */
-    public JsonDirectoryEntry(String name, String path, LinkedHashMap<String, SimpleJsonProperty> properties, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
-        super(name, path, null, parent, listener, closeEventListener);
+    public JsonDirectoryEntry(String name, String path, LinkedHashMap<String, SimpleJsonProperty> properties, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, ArrayList<Runnable> closeEventListeners) {
+        super(name, path, null, parent, listener, closeEventListeners);
         this.entries = properties;
     }
 
@@ -36,9 +36,9 @@ public class JsonDirectoryEntry extends JsonEntry {
 
             // If the selected file's SimpleJsonValue is not a SimpleJsonObject (children = null), we add a FileEntry
             if (entry.getValue().value.getChildren() == null)
-                json.add(new JsonFileEntry(entry.getKey(), getPath(), entry.getValue().value.getLocation(), this, openOnPathListener, closeEventListener));
+                json.add(new JsonFileEntry(entry.getKey(), getPath(), entry.getValue().value.getLocation(), this, openOnPathListener, closeEventListeners));
             else
-                json.add(new JsonDirectoryEntry(entry.getKey(), getPath(), entry.getValue().value.getChildren(), this, openOnPathListener, closeEventListener));
+                json.add(new JsonDirectoryEntry(entry.getKey(), getPath(), entry.getValue().value.getChildren(), this, openOnPathListener, closeEventListeners));
 
         }
 

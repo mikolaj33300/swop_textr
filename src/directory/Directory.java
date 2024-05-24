@@ -1,7 +1,9 @@
 package directory;
 
+import directory.directorytree.DirEntry;
 import directory.directorytree.FileEntry;
 import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
 import java.util.List;
@@ -31,6 +33,12 @@ public class Directory {
         //TODO: Attach listener that opens the requested real files and sends requests up
         if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null, null);
         else focusedDirectory = entry;
+        entries = this.focusedDirectory.getChildren();
+    }
+
+    public Directory(OpenFileOnPathRequestListener listener) {
+
+        this.focusedDirectory = new DirEntry(listener);
         entries = this.focusedDirectory.getChildren();
     }
 
@@ -92,5 +100,12 @@ public class Directory {
         return this.focused;
     }
 
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        focusedDirectory.subscribeCloseEvents(closeEventListener);
+    }
+
+    public void forcedClose() {
+        focusedDirectory.closeThisEntry();
+    }
 }
 

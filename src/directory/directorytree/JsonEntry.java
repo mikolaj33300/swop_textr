@@ -4,6 +4,7 @@ import files.FileBuffer;
 import files.OpenFileOnPathRequestListener;
 import util.json.TextLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class JsonEntry extends FileSystemEntry {
@@ -26,8 +27,8 @@ public abstract class JsonEntry extends FileSystemEntry {
      * @param path path of the json file on disk
      * @param parent the parent entry. This is always a {@link JsonDirectoryEntry}
      */
-    public JsonEntry(String name, String path, TextLocation location, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
-        super(path, parent, listener, closeEventListener);
+    public JsonEntry(String name, String path, TextLocation location, JsonDirectoryEntry parent, OpenFileOnPathRequestListener listener, ArrayList<Runnable> closeEventListeners) {
+        super(path, parent, listener, closeEventListeners);
         this.name = name;
         this.location = location;
     }

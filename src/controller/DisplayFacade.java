@@ -1,6 +1,8 @@
 package controller;
 
+import exception.HashNotMatchingException;
 import exception.PathNotFoundException;
+import files.OpenFileOnPathRequestListener;
 import ioadapter.TermiosTerminalAdapter;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
@@ -172,8 +174,9 @@ class DisplayFacade {
 
         //deletes and sets new one as active
         rootLayout = this.rootLayout.delete(windows.get(active).getHashCode());
-        windows.get(active).forcedClose();
-        windows.remove(active);
+        Window activeWindow = windows.get(active);
+        activeWindow.forcedClose();
+        windows.remove(activeWindow); //delete if no close event was triggerd previously that would in turn delete this window
 
 
         int newActive = -1;
@@ -436,4 +439,47 @@ class DisplayFacade {
         );
     }
 
+    public RenderIndicator openRealDirectory() {
+        Window windowToAdd = null;
+        windowToAdd = new NormalWindowFactory().createRealDirectory(new OpenFileOnPathRequestListener() {
+            @Override
+            public void notifyRequestToOpenFile(String pathToOpen) {
+                openFileOnRealPath(pathToOpen);
+            }
+        }, termiosTerminalAdapter);
+        if (windowToAdd != null) {
+            Window finalWindowToAdd = windowToAdd;
+            windows.add(windows.size(), finalWindowToAdd);
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), finalWindowToAdd.getHashCode());
+            int finalWindowToAddHash = finalWindowToAdd.getHashCode();
+            Layout layoutBefore = rootLayout.clone();
+            windowToAdd.subscribeCloseEvents(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        rootLayout = rootLayout.delete(finalWindowToAddHash);
+                    } catch (HashNotMatchingException hh){
+
+                    }
+
+                    windows.remove(finalWindowToAdd);
+                }
+            });
+        }
+        return RenderIndicator.FULL;
+    }
+
+    private void openFileOnRealPath(String pathToOpen){
+        //TODO: CHECK IF WINDOW IS ALREADY OPEN AND WINDOW.DUPLICATE(). WE CAN USE A LINKED LIST OF DISPLAYS FOR
+        // THIS TO KEEP CONTROLLERFACADE OUT OF KNOWING ABOUT WINDOWS AND CHECKING PATHS
+        Window toAdd = null;
+        try {
+            toAdd = new NormalWindowFactory().createWindowOnPath(pathToOpen, lineSeparatorArg, termiosTerminalAdapter);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.subscribeWindowOpeningRequests(toAdd);
+        this.windows.add(toAdd);
+        rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), toAdd.getHashCode());
+    }
 }

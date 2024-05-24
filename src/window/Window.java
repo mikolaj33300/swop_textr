@@ -113,6 +113,8 @@ public abstract class Window {
 
     public abstract void subscribeWindow(OpenWindowRequestListener openWindowRequestListener);
 
+    public abstract void subscribeCloseEvents(Runnable closeEventListener);
+
     public boolean isSafeToClose(){
         return getHandler().isSafeToClose();
     }

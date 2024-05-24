@@ -74,6 +74,14 @@ public class LayoutNodeTest {
     }
 
     @Test
+    public void temporaryTestDelete(){
+        VerticalLayoutNode vln = new VerticalLayoutNode(new ArrayList<>(Arrays.asList(l1,l3)));
+        vln.insertRightOfSpecified(1, 2);
+        vln.delete(2);
+
+    }
+
+    @Test
     void TestGetDirectChildrenMixed() {
         LayoutNode mixed_layout = new VerticalLayoutNode(mixed_children);
         ArrayList<Layout> direct_children = mixed_layout.getDirectChildren();
