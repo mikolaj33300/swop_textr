@@ -470,6 +470,8 @@ class DisplayFacade {
     }
 
     private void openFileOnRealPath(String pathToOpen){
+        //TODO: CHECK IF WINDOW IS ALREADY OPEN AND WINDOW.DUPLICATE(). WE CAN USE A LINKED LIST OF DISPLAYS FOR
+        // THIS TO KEEP CONTROLLERFACADE OUT OF KNOWING ABOUT WINDOWS AND CHECKING PATHS
         Window toAdd = null;
         try {
             toAdd = new NormalWindowFactory().createWindowOnPath(pathToOpen, lineSeparatorArg, termiosTerminalAdapter);
