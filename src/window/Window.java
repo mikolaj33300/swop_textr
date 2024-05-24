@@ -4,9 +4,12 @@ import ioadapter.TermiosTerminalAdapter;
 import inputhandler.InputHandlingElement;
 import listeners.OpenWindowRequestListener;
 import ui.View;
+import util.Coords;
+import util.Rectangle;
 import util.RenderIndicator;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public abstract class Window {
     //TODO turn this into a decorator of view and handler: so this also gets handle/updateCoords methods and delegates it to the view/handler
@@ -112,6 +115,31 @@ public abstract class Window {
 
     public boolean isSafeToClose(){
         return getHandler().isSafeToClose();
+    }
+
+    public void render(int activeHash) throws IOException {
+        getView().render(getHashCode());
+    }
+
+    public void renderCursor() throws IOException {
+        getView().renderCursor();
+    }
+
+    public Coords getRealCoords() {
+        return getView().getRealCoords();
+    }
+
+    public RenderIndicator handleSeparator() throws IOException {
+        return getHandler().handleSeparator();
+    }
+
+
+    public void save() {
+        getHandler().save();
+    }
+
+    public void setRealCoords( HashMap<Integer, Rectangle> coordsMap) {
+        getView().setRealCoords(coordsMap.get(getHashCode()));
     }
 
     /**
