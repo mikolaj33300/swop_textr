@@ -11,9 +11,19 @@ import java.io.IOException;
 
 public abstract class View {
 
+    /**
+     * @return our cursor Column
+     */
     public abstract int getFocusedCol();
 
+    /**
+     * @return our cursor Line
+     */
     public abstract int getFocusedLine();
+
+    /**
+     * @return our the height of all lines
+     */
     public abstract int getTotalContentHeight();
     /**
      * The adapter used for interacting with termios
@@ -21,6 +31,9 @@ public abstract class View {
     protected TermiosTerminalAdapter termiosTerminalAdapter;
 
 
+    /**
+     * the coordintes to print on
+     */
     Coords uiCoordsReal;
 
     /**
@@ -33,10 +46,17 @@ public abstract class View {
      */
     static int terminalHeight;
 
+    /**
+     * @return our rendering object
+     */
     public TermiosTerminalAdapter getTermiosTerminalAdapter() {
         return termiosTerminalAdapter;
     }
 
+    /**
+     * create this with a termiosTerminalAdapter
+     * @param termiosTerminalAdapter a object we can render trough
+     */
     public View(TermiosTerminalAdapter termiosTerminalAdapter) {
         this.termiosTerminalAdapter = termiosTerminalAdapter;
     }
@@ -73,16 +93,31 @@ public abstract class View {
     public abstract boolean equals(Object o);
 
 
+    /**
+     * @return the length length of 
+     * @param focusedLine
+     */
     protected abstract int getLineLength(int focusedLine);
 
+    /**
+     * update our uiCoordsReal with rectangle
+     * @param rectangle the coordinates out of our tree
+     */
     public void setRealCoords(Rectangle rectangle) {
         this.uiCoordsReal = new Coords((int) Math.floor(rectangle.startX), (int) Math.floor(rectangle.startY), (int) Math.floor(rectangle.width), (int) Math.floor(rectangle.height));
     }
 
+    /**
+     * @return our coords
+     */
     public Coords getRealCoords() {
         return uiCoordsReal;
     }
 
+    /**
+     * update our termiosTerminalAdapter to 
+     * @param adapter
+     */
     public void setTermiosTerminalAdapter(TermiosTerminalAdapter adapter){
         this.termiosTerminalAdapter = adapter;
     };
