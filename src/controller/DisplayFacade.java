@@ -187,7 +187,7 @@ class DisplayFacade {
             throw new RuntimeException("Layout and collection of views inconsistent!");
         }
         active = newActive;
-        return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.CLOSED_SUCCESFULLY);
+        return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.CLOSED_SUCCESSFULLY);
     }
 
 

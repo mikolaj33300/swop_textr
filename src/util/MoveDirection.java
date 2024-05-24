@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * Enum for the direction of a move (eg. moving cursor in a FileBuffer ormoving a snake in a game of snake)
+ */
 public enum MoveDirection {
 
     UP, DOWN, RIGHT, LEFT;
@@ -9,6 +12,9 @@ public enum MoveDirection {
      */
     private MoveDirection opposite;
 
+    /**
+     * Defines the opposite direction for each direction
+     */
     static {
         UP.opposite = DOWN;
         DOWN.opposite = UP;
