@@ -13,13 +13,13 @@ public class FileHolder {
     private byte[] lineSeparator;
     private final String path;
 
-    private final File fd;
+    private final File containedFile;
 
     /**
      * Creates File object with given path
      */
     public FileHolder(String path, byte[] lineSeparator) {
-        this.fd = new File(path);
+        this.containedFile = new File(path);
         this.lineSeparator = lineSeparator.clone();
         this.path = path;
     }
@@ -89,7 +89,7 @@ public class FileHolder {
      * @return the content of the file
      */
     public byte[] getContent() throws IOException {
-        byte[] fileContent = Files.readAllBytes(this.fd.toPath());
+        byte[] fileContent = Files.readAllBytes(this.containedFile.toPath());
         checkInvalidCharacters(fileContent);
         checkLineSeparator(fileContent);
         return fileContent;
