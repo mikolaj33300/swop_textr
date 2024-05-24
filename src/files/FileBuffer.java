@@ -4,12 +4,13 @@ import listeners.DeletedCharListener;
 import listeners.DeletedInsertionPointListener;
 import listeners.EnteredInsertionPointListener;
 import ui.FileBufferView;
+import util.FileAnalyserUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static files.FileAnalyserUtil.toPrimitive;
+import static util.FileAnalyserUtil.toPrimitive;
 
 public class FileBuffer {
 

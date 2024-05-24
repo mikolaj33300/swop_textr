@@ -1,14 +1,11 @@
 package files;
 
+import util.FileAnalyserUtil;
 import util.json.JsonUtil;
 import util.json.TextLocation;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class JsonFileHolder extends FileHolder {
 
