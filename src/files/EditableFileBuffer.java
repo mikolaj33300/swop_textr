@@ -67,7 +67,13 @@ public class EditableFileBuffer extends FileBuffer {
             }
         };
         listenersToDirectories.add(listenerToNewDirectory);
-        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory);
+        Runnable newCloseListener = new Runnable() {
+            @Override
+            public void run() {
+                listenersToDirectories.remove(listenerToNewDirectory);
+            }
+        };
+        FileSystemEntry toOpenEntry = JsonUtil.parseDirectory(this, listenerToNewDirectory, newCloseListener);
         if(toOpenEntry != null) {
             this.parsed = true;
             //this.directoryRequestListeners.get(0).notifyRequestToOpen(toOpenEntry); //So that only one is opened.
