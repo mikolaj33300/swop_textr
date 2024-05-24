@@ -9,16 +9,29 @@ import java.io.IOException;
 
 public class InspectContentsController extends UseCaseController {
 
+    /**
+     * Changes the focused terminal to the temrinal linked to the facade of this usecasecontroller
+     */
     @Override
     public void focusTerminal() {
         this.facade.focusTerminal();
     }
 
+    /**
+     * Constructor for the InspectContentsController
+     * @param coreControllerParent the parent controller
+     * @param facade the ControllerFacade linked to this InspectContentsController
+     */
     protected InspectContentsController(TextR coreControllerParent, ControllerFacade facade){
         super(coreControllerParent, facade);
     }
 
-
+    /**
+     * Constructor for the InspectContentsController
+     * @param textR the parent controller
+     * @param args the arguments entered at the startup of this program
+     * @param termiosTerminalAdapter the terminal adapter
+     */
     public InspectContentsController(TextR textR, String[] args, TermiosTerminalAdapter termiosTerminalAdapter) throws IOException {
         super(textR, new ControllerFacade(args, termiosTerminalAdapter));
     }

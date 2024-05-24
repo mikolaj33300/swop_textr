@@ -8,12 +8,15 @@ import java.io.IOException;
 
 public class FailedSavePopupController extends UseCaseController {
 
-    boolean needsRenderSinceLast;
-
+    /**
+     * The popup displayed upon entering this controller
+     */
     UserPopupBox userPopupBox = new UserPopupBox("Error: save failed. Press any key to continue.", coreControllerParent.getAdapter());
 
     /**
-     * @param coreControllerParent
+     * Constructor for the FailedSavePopupController
+     * @param coreControllerParent the parent controller
+     * @param facade the ControllerFacade linked to this FailedSavePopupController
      */
     protected FailedSavePopupController(TextR coreControllerParent, ControllerFacade facade) {
         super(coreControllerParent, facade);
@@ -38,7 +41,6 @@ public class FailedSavePopupController extends UseCaseController {
     @Override
     public void paintScreen() throws IOException {
         userPopupBox.render();
-        needsRenderSinceLast = false;
     }
 
 }

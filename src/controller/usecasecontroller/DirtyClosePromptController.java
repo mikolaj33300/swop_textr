@@ -10,9 +10,13 @@ import ui.UserPopupBox;
 import java.io.IOException;
 
 public class DirtyClosePromptController extends UseCaseController {
+    /**
+     * The pop up displayed upon entering this controller
+     */
     UserPopupBox userPopupBox = new UserPopupBox("Unsaved changes will be lost. Continue? (Y/N)", coreControllerParent.getAdapter());
 
     /**
+     * Constructor for the DirtyClosePromptController
      * @param coreControllerParent
      */
     protected DirtyClosePromptController(TextR coreControllerParent, ControllerFacade facade) {

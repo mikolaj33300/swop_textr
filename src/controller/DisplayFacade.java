@@ -190,6 +190,14 @@ class DisplayFacade {
         return new Pair<>(RenderIndicator.FULL, WindowCloseStatus.CLOSED_SUCCESFULLY);
     }
 
+
+    /**
+     * Passes a byte to the active {@link Window} in {@link DisplayFacade#windows}.
+     *
+     * @param b the byte to pass
+     * @return a {@link RenderIndicator} indicating what to render
+     * @throws IOException when something goes wrong
+     */
     public RenderIndicator passToActive(byte b) throws IOException {
         if(!windows.isEmpty()){
             return this.windows.get(active).input(b);
