@@ -204,6 +204,13 @@ public class FileBuffer {
         }
     }
 
+    /**
+     * Create a command for and execute a write a byte to the buffer
+     *
+     * @param updatedContents the byte to insert
+     * @param insertionPointLine    the line of that byte
+     * @param insertionPointCol    the line of that byte
+     */
     public void writeCmd(byte updatedContents, int insertionPointLine, int insertionPointCol) {
         execute(new BufferWriteCommand(updatedContents, insertionPointCol, insertionPointLine, this));
 

@@ -26,11 +26,17 @@ public class FileBufferView extends View {
         this.containedFileBuffer=openedFile;
     }
 
+    /**
+     * @return the column our cursor is in
+     */
     @Override
     public int getFocusedCol() {
         return containedFileBuffer.getInsertionPointCol();
     }
 
+    /**
+     * @return the line our cursor is in
+     */
     @Override
     public int getFocusedLine() {
         return containedFileBuffer.getInsertionPointLine();
@@ -115,6 +121,9 @@ public class FileBufferView extends View {
         }
     }
 
+    /**
+     * @return the lenght of the line focussed
+     */
     @Override
     protected int getLineLength(int focusedLine) {
         return  containedFileBuffer.getLineLength(focusedLine);

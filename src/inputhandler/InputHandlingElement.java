@@ -8,10 +8,10 @@ import util.RenderIndicator;
  */
 abstract public class InputHandlingElement {
 
-    public int getHash() {
-        return this.hashCode();
-    }
-
+    /**
+     * close the underlying structure
+     * @return wheter that was successful or not
+     */
     public abstract int forcedClose();
 
     /**
@@ -55,5 +55,9 @@ abstract public class InputHandlingElement {
      */
     public abstract RenderIndicator handleSeparator() throws IOException;
 
+    /**
+     * add the Visitor
+     * @param ihv the listener
+     */
     public abstract void accept(InputHandlerVisitor ihv);
 }

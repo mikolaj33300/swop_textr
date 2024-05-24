@@ -12,9 +12,21 @@ import java.nio.file.Path;
  *  andere functie dan buffer
  */
 public class FileHolder {
+
+    /**
+     * The line separator used in the file
+     */
     private byte[] lineSeparator;
+
+    /**
+     * The path toward the file
+     */
     private final String path;
 
+
+    /**
+     * The file object that is contained in this object
+     */
     private final File containedFile;
 
     /**

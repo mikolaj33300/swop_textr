@@ -134,12 +134,18 @@ public class DirectoryView extends View {
     }
 
     //TODO: implement equals
+    /**
+     * @return if this equals @param o
+     */
     @Override
     public boolean equals(Object o) {
         return false;
     }
 
     //TODO: implement getLineLength
+    /**
+     * @return the length of the current line
+     */
     @Override
     protected int getLineLength(int focusedLine) {
         return 0;

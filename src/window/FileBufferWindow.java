@@ -132,12 +132,20 @@ public class FileBufferWindow extends Window {
         );
     }
 
+    /**
+     * Subscribes this FileBufferWindow to a request for opening a window
+     * @param listener the listener that can open windows
+     */
     @Override
     public void subscribeWindow(OpenWindowRequestListener listener) {
         this.openWindowRequestListener = listener;
         this.subscribeInputHandler();
     }
 
+    /**
+     * Returns the path of the file
+     * @return the path of the file
+     */
     @Override
     public void subscribeCloseEvents(Runnable closeEventListener) {
         //File can't close itself unless from above when user requests is. That would be unfriendly UI..

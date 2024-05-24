@@ -1,5 +1,4 @@
 package inputhandler;
-
 import directory.directorytree.FileSystemEntry;
 import files.DisplayRequestForBufferContextListener;
 import files.BufferCursorContext;
@@ -218,6 +217,9 @@ public class FileBufferInputHandler extends InputHandlingElement {
         this.bufferCursorContext.save();
     }
 
+    /**
+     * @return the path of the file opened
+     */
     public String getPath() {
         return bufferCursorContext.getPath();
     }
@@ -250,6 +252,10 @@ public class FileBufferInputHandler extends InputHandlingElement {
         this.requestForInputHandlersListener = listener;
     }
 
+    /**
+     * execute the visitors code on this object
+     * @param v the visitor
+     */
     public void accept(InputHandlerVisitor v){
         v.visitFileInputHandler(this);
     }

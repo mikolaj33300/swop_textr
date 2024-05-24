@@ -10,9 +10,20 @@ import java.io.IOException;
  * And the appropriate display can be created without the display actually having to know about the different window types.
  */
 public class DisplayFromWindowVisitor implements WindowVisitor {
+
+    /**
+     * The new {@link TermiosTerminalAdapter} to be used for the new {@link DisplayFacade}.
+     */
     private TermiosTerminalAdapter newAdapter;
+
+    /**
+     * The newlt created {@link DisplayFacade}
+     */
     private DisplayFacade resultDisplayFacade;
 
+    /**
+     * The line separator argument to be used for the new {@link DisplayFacade}.
+     */
     private byte[] lineSeparatorArg;
 
     /**
@@ -41,16 +52,26 @@ public class DisplayFromWindowVisitor implements WindowVisitor {
         }
     }
 
+    /**
+     * Snake always stays in the same window
+     */
     @Override
     public void visitSnakeWindow(SnakeWindow sw) {
         // No putting snake on other window
     }
 
+    /**
+     * Directory always stays in the same window
+     */
     @Override
     public void visitDirectoryWindow(DirectoryWindow dw) {
 
     }
 
+    /**
+     * The new {@link DisplayFacade} object to be used for the new window.
+     * @return the new {@link DisplayFacade} object
+     */
     public DisplayFacade getNewFacade(){
         return this.resultDisplayFacade;
     }

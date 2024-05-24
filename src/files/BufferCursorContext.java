@@ -15,14 +15,47 @@ public class BufferCursorContext {
      */
     private int insertionPointCol, insertionPointLine, insertionPointByteIndex;
 
+    /**
+     * Listener for entered insertion operations
+     */
     private EnteredInsertionPointListener el;
+
+    /**
+     * Listener for deleted insertion operations
+     */
     private DeletedInsertionPointListener dil;
+
+    /**
+     * Listener for deleted char operations
+     */
     private DeletedCharListener dcl;
+
+    /**
+     * The filebuffer that is being edited
+     */
     EditableFileBuffer containedFileBuffer;
+
+    /**
+     * Listener for opening a directory
+     */
     private DisplayRequestForFileEntryListener openParsedDirectoryListener;
+
+    /**
+     * Listener for opening a buffer context
+     */
     private DisplayRequestForBufferContextListener bufferContextOpeningRequestListener;
+
+    /**
+     * Listener for opening a filebuffer
+     */
     private DisplayRequestForFileBufferListener underlyingFileBufferOpenRequestListener;
 
+    /**
+     * Constructor for a new buffer context
+     * @param path the path of the file
+     * @param lineSeparator the line separator
+     * @throws IOException if the file is not found
+     */
     public BufferCursorContext(String path, byte[] lineSeparator) throws IOException {
         this.containedFileBuffer = new EditableFileBuffer(path, lineSeparator);
         this.insertionPointCol=0;
@@ -33,6 +66,9 @@ public class BufferCursorContext {
         subscribeToDeletionInsertionFb();
     }
 
+    /**
+     * Subscribes this BufferCursorContext to a DeletedInsertionPointListener
+     */
     private void subscribeToDeletionInsertionFb() {
         dil = new DeletedInsertionPointListener() {
             @Override
@@ -52,6 +88,9 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToDeletionInsertion(dil);
     }
 
+    /**
+     * Subscribes this BufferCursorContext to a DeletedCharListener
+     */
     private void subscribeToDeletionCharFb() {
         dcl = new DeletedCharListener() {
             @Override
@@ -64,6 +103,9 @@ public class BufferCursorContext {
         containedFileBuffer.subscribeToDeletionChar(dcl);
     }
 
+    /**
+     * Subscribes this BufferCursorContext to an EnteredInsertionPointListener
+     */
     private void subscribeToEnterInsertionFb() {
         el = new EnteredInsertionPointListener() {
             @Override
@@ -87,6 +129,9 @@ public class BufferCursorContext {
         subscribeToBufferOpenRequests();
     }
 
+    /**
+     * Subscribes this BufferCursorContext to a DisplayRequestForFileBufferListener
+     */
     private void subscribeToBufferOpenRequests() {
         this.underlyingFileBufferOpenRequestListener = new DisplayRequestForFileBufferListener() {
             @Override

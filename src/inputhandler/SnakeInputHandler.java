@@ -9,11 +9,28 @@ import java.io.IOException;
 
 public class SnakeInputHandler extends InputHandlingElement {
 
+  /**
+   * the contained SnakeGame
+   */
     private SnakeGame game;
+    /**
+     * the amount of milliseconds waited
+     */
     private int currentWait = 0;
+    /**
+     * the amount of millis to wait till updating the game
+     */
     private final int MILLISECOND_BASE;
+    /**
+     * the rectangle the snake must keep in
+     */
     private Rectangle playField;
 
+    /**
+     * create a new SnakeInputHandler with the maxX and maxY boundaries
+     * @param maxX the maximum the snake can go in horizontal direction
+     * @param maxY the maximum the snake can go in vertical direction
+     */
     public SnakeInputHandler(int maxX, int maxY) {
         this.playField = new Rectangle(0,0, maxX, maxY);
         this.game = new SnakeGame(5, maxX, maxY);
@@ -126,6 +143,10 @@ public class SnakeInputHandler extends InputHandlingElement {
         this.currentWait = 0;
     }
 
+    /**
+     * run the visitors code on this object
+     * @param v
+     */
     public void accept(InputHandlerVisitor v){
         v.visitSnakeInputHandler(this);
     }

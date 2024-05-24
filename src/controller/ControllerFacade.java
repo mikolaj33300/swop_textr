@@ -26,6 +26,10 @@ public class ControllerFacade {
      */
     private ArrayList<DisplayFacade> displays = new ArrayList<DisplayFacade>(0);
 
+
+    /**
+     * A boolean to check if the terminal display still contains views. The display will only be closed if there are no windows open anymore on any of the displays in this program
+     */
     private boolean terminalDisplayStillContainsViews;
 
     /**
@@ -45,6 +49,9 @@ public class ControllerFacade {
      */
     private HashMap<DisplayFacade, DisplayFacadeResizeListener> displayFacadeResizeListenerHashMap= new HashMap<DisplayFacade, DisplayFacadeResizeListener>();
 
+    /**
+     * The listeners to the ascii events
+     */
     private HashMap<DisplayFacade, ASCIIKeyEventListener> displayFacadeAsciiListenerHashMap= new HashMap<DisplayFacade, ASCIIKeyEventListener>();
 
 
@@ -159,11 +166,21 @@ public class ControllerFacade {
         }
     }
 
+    /**
+     * Unsubscribes the listeners from the active display when the active display is closed
+     */
     private void unsubscribeListenersDueToCloseActive() {
         displays.get(active).getTermiosTerminalAdapter().unsubscribeFromKeyPresses(displayFacadeAsciiListenerHashMap.get(displays.get(active)));
         displays.get(active).getTermiosTerminalAdapter().unsubscribeFromResizeTextArea(displayFacadeResizeListenerHashMap.get(displays.get(active)));
     }
 
+    /**
+     * Passes the byte to the active {@link DisplayFacade}
+     *
+     * @param b the byte to pass
+     * @return the RenderIndicator
+     * @throws IOException
+     */
     public RenderIndicator passToActive(byte b) throws IOException {
         return displays.get(active).passToActive(b);
     }
@@ -281,10 +298,18 @@ public class ControllerFacade {
         }
     }*/
 
+    /**
+     * Makes a display in this ControllerFacade active
+     */
     public void setActive(int a) {
         this.active = a;
     }
 
+    /**
+     * Returns the windows in the active display
+     *
+     * @return list of window objects
+     */
     public ArrayList<Window> getWindows() {
         //TODO: Should we clone here? Lets test it later and see if it breaks
         ArrayList<Window> toReturn = new ArrayList<>(0);
@@ -294,6 +319,9 @@ public class ControllerFacade {
         return toReturn;
     }
 
+    /**
+     * Opens a new swing adapter from the active window
+     */
     public RenderIndicator openNewSwingFromActiveWindow() throws IOException {
         SwingTerminalAdapter newAdapter = new SwingTerminalAdapter();
         DisplayFacade newFacade = this.displays.get(active).requestOpeningNewDisplay(newAdapter);
@@ -368,10 +396,17 @@ public class ControllerFacade {
         this.listenersToThisEvents.remove(asciiEventListener);
     }
 
+    /**
+     * Returns the active display
+     * @return the active display
+     */
     public DisplayFacade getActiveDisplay() {
         return this.displays.get(active);
     }
 
+    /**
+     * Shifts the focus to the first DisplayFacade under this ControllerFacade
+     */
     public void focusTerminal() {
         this.setActive(0);
     }

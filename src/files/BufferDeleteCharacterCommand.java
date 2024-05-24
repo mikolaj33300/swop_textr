@@ -3,10 +3,25 @@ package files;
 import java.util.Arrays;
 
 public class BufferDeleteCharacterCommand implements Command {
+
+        /**
+         * The column of the deleted character
+         */
         private final int iCol;
+
+        /**
+         * The line of the deleted character
+         */
         private final int iLine;
+
+        /**
+         * The deleted character
+         */
         private byte[] deleted;
 
+        /**
+         * The filebuffer this command operates on
+         */
         private final FileBuffer containedFb;
 
 	/**

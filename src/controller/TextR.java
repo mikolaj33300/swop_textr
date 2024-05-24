@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 public class TextR {
 
+    /**
+     * Sets the active use case controller.
+     */
     public void setActiveUseCaseController(UseCaseController newUseCaseController){
         this.activeUseCaseController = newUseCaseController;
         try {

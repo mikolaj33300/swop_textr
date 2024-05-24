@@ -111,35 +111,66 @@ public abstract class Window {
      */
     public abstract void setTermiosAdapter(TermiosTerminalAdapter newAdapter);
 
+    /**
+     * Subscribes a open window reuquest listener to this window
+     * @param openWindowRequestListener the window to subscribe
+     */
     public abstract void subscribeWindow(OpenWindowRequestListener openWindowRequestListener);
 
+    /**
+    * Subscribes a close event listener to this window
+    */
     public abstract void subscribeCloseEvents(Runnable closeEventListener);
 
+        /**
+     * Checks if it is safe to close this window
+     * @return true if it is safe to close, false otherwise
+     */
     public boolean isSafeToClose(){
         return getHandler().isSafeToClose();
     }
 
+    /**
+     * Renders the window
+     * @param activeHash the hashcode of the active window in the above DisplayFactory
+     */
     public void render(int activeHash) throws IOException {
         getView().render(getHashCode());
     }
 
+    /**
+     * Renders the cursor
+     */
     public void renderCursor() throws IOException {
         getView().renderCursor();
     }
 
+    /**
+     * Returns the real coordinates of the view
+     * @return the real coordinates of the view
+     */
     public Coords getRealCoords() {
         return getView().getRealCoords();
     }
 
+    /**
+     * Passes a handleSeparator request to the handler
+     * @return the render indicator
+     */
     public RenderIndicator handleSeparator() throws IOException {
         return getHandler().handleSeparator();
     }
 
-
+    /**
+     * Passes a save request to the handler
+-     */
     public void save() {
         getHandler().save();
     }
 
+    /**
+     * Changes the realCoords of the contained View
+     */
     public void setRealCoords( HashMap<Integer, Rectangle> coordsMap) {
         getView().setRealCoords(coordsMap.get(getHashCode()));
     }

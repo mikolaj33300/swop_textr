@@ -118,6 +118,10 @@ public class SnakeView extends View {
         return false;
     }
 
+    /**
+     * in snake we don't really need the linelength
+     * @return 0
+     */
     @Override
     protected int getLineLength(int focusedLine) {
         return 0;
@@ -210,16 +214,28 @@ public class SnakeView extends View {
         }
     }
 
+    /**
+     * there is no focussed Column in snake
+     * @return 0
+     */
     @Override
     public int getFocusedCol() {
         return 0;
     }
 
+    /**
+     * there is no focussed Line in snake
+     * @return 0
+     */
     @Override
     public int getFocusedLine() {
         return 0;
     }
 
+    /**
+     * the total content height is the height of our view and is better accessed that way
+     * @return 0
+     */
     @Override
     public int getTotalContentHeight() {
         return 0;
