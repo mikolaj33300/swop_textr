@@ -13,6 +13,10 @@ public class DirEntry extends FileSystemEntry {
         super(path, parent, listener, closeEventListener);
     }
 
+    public DirEntry(OpenFileOnPathRequestListener listener) {
+        super(System.getProperty("user.dir"), null, listener, null);
+    }
+
     @Override
     public List<FileSystemEntry> initChildren() {
         List<FileSystemEntry> entry = new ArrayList<>();

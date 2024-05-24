@@ -1,6 +1,7 @@
 package controller;
 
 import exception.PathNotFoundException;
+import files.OpenFileOnPathRequestListener;
 import ioadapter.TermiosTerminalAdapter;
 import layouttree.Layout;
 import layouttree.LayoutLeaf;
@@ -436,4 +437,30 @@ class DisplayFacade {
         );
     }
 
+    public RenderIndicator openRealDirectory() {
+        Window windowToAdd = null;
+        windowToAdd = new NormalWindowFactory().createRealDirectory(new OpenFileOnPathRequestListener() {
+            @Override
+            public void notifyRequestToOpenFile(String pathToOpen) {
+                openFileOnRealPath(pathToOpen);
+            }
+        }, termiosTerminalAdapter);
+        if (windowToAdd != null) {
+            windows.add(windows.size(), windowToAdd);
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), windowToAdd.getHashCode());
+        }
+        return RenderIndicator.FULL;
+    }
+
+    private void openFileOnRealPath(String pathToOpen){
+        Window toAdd = null;
+        try {
+            toAdd = new NormalWindowFactory().createWindowOnPath(pathToOpen, lineSeparatorArg, termiosTerminalAdapter);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        this.subscribeWindowOpeningRequests(toAdd);
+        this.windows.add(toAdd);
+        rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), toAdd.getHashCode());
+    }
 }

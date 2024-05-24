@@ -1,6 +1,7 @@
 package window;
 
 import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 import inputhandler.*;
 import ioadapter.TermiosTerminalAdapter;
 
@@ -49,5 +50,9 @@ public class NormalWindowFactory {
 
         });
         return windowToReturn[0];
+    }
+
+    public Window createRealDirectory(OpenFileOnPathRequestListener listener, TermiosTerminalAdapter adapter) {
+        return new DirectoryWindow(listener, adapter);
     }
 }

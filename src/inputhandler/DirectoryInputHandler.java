@@ -2,6 +2,7 @@ package inputhandler;
 
 import directory.Directory;
 import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 import util.RenderIndicator;
 
 import java.io.IOException;
@@ -16,6 +17,10 @@ public class DirectoryInputHandler extends InputHandlingElement {
 
     public DirectoryInputHandler(FileSystemEntry fe) {
         this.directory = new Directory(fe);
+    }
+
+    public DirectoryInputHandler(OpenFileOnPathRequestListener listener) {
+        this.directory = new Directory(listener);
     }
 
     @Override

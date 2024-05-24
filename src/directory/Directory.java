@@ -1,7 +1,9 @@
 package directory;
 
+import directory.directorytree.DirEntry;
 import directory.directorytree.FileEntry;
 import directory.directorytree.FileSystemEntry;
+import files.OpenFileOnPathRequestListener;
 
 import java.io.File;
 import java.util.List;
@@ -32,6 +34,11 @@ public class Directory {
         if(entry == null) this.focusedDirectory = new FileEntry(new File(".").getAbsolutePath(), null, null, null);
         else focusedDirectory = entry;
         entries = this.focusedDirectory.getChildren();
+    }
+
+    public Directory(OpenFileOnPathRequestListener listener) {
+
+        this.focusedDirectory = new DirEntry(listener);
     }
 
     /**
