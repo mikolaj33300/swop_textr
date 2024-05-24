@@ -139,6 +139,11 @@ public class FileBufferWindow extends Window {
     }
 
     @Override
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        //File can't close itself unless from above when user requests is. That would be unfriendly UI..
+    }
+
+    @Override
     public String getPath() {
         return fileBufferInputHandler.getPath();
     }

@@ -22,7 +22,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
     /**
      * only one editable buffer listens at a time, so one close event listener instead of arraylist for brevity
      */
-    protected Runnable closeEventListener;
+    protected ArrayList<Runnable> closeEventListeners = new ArrayList<>();
     /**
      * The list of children {@link FileSystemEntry}. This will be null for {@link FileEntry}
      */
@@ -33,10 +33,14 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      * @param path the full path to the file
      * @param parent the
      */
-    public FileSystemEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener, Runnable closeEventListener) {
+    public FileSystemEntry(String path, FileSystemEntry parent, OpenFileOnPathRequestListener listener, ArrayList<Runnable> closeEventListeners) {
         this.path = path;
         this.parent = parent;
         this.openOnPathListener = listener;
+        this.closeEventListeners = closeEventListeners;
+        if(closeEventListeners == null){
+            this.closeEventListeners = new ArrayList<>();
+        }
     }
 
     /**
@@ -72,7 +76,7 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
      */
     public FileSystemEntry getParent() {
         return this.parent == null ?
-                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this, this.openOnPathListener, this.closeEventListener)
+                new DirEntry(new File(this.getPath()).getParentFile().getAbsolutePath(), this, this.openOnPathListener, this.closeEventListeners)
                 : this.parent;
     }
 
@@ -115,6 +119,18 @@ public abstract class FileSystemEntry implements FileCreatorVisitor {
     public abstract FileSystemEntry selectEntry();
 
     public void closeThisEntry(){
-        this.closeEventListener.run();
+        List<Runnable> closeEventListenersCopy = List.copyOf(closeEventListeners);
+        for(Runnable l : closeEventListenersCopy){
+            l.run();
+        }
     };
+
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        this.closeEventListeners.add(closeEventListener);
+/*        for(FileSystemEntry fse : children){
+            fse.closeEventListeners.add(closeEventListener);
+            //When one of the children is entered and initchildren is called, that child will also initialize children
+            //woth the new listener list. Therefore we don't need to go all the way down in the tree.
+        }*/
+    }
 }

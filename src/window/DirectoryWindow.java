@@ -60,6 +60,11 @@ public class DirectoryWindow extends Window {
     }
 
     @Override
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        this.dih.subscribeCloseEvents(closeEventListener);
+    }
+
+    @Override
     public String getPath() {
         return null;
     }

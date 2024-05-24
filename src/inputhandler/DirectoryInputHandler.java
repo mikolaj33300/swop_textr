@@ -80,4 +80,8 @@ public class DirectoryInputHandler extends InputHandlingElement {
     public void accept(InputHandlerVisitor v) {
         v.visitDirectoryInputHandler(this);
     }
+
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        directory.subscribeCloseEvents(closeEventListener);
+    }
 }

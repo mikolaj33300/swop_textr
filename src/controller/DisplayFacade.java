@@ -1,5 +1,6 @@
 package controller;
 
+import exception.HashNotMatchingException;
 import exception.PathNotFoundException;
 import files.OpenFileOnPathRequestListener;
 import ioadapter.TermiosTerminalAdapter;
@@ -446,8 +447,23 @@ class DisplayFacade {
             }
         }, termiosTerminalAdapter);
         if (windowToAdd != null) {
-            windows.add(windows.size(), windowToAdd);
-            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), windowToAdd.getHashCode());
+            Window finalWindowToAdd = windowToAdd;
+            windows.add(windows.size(), finalWindowToAdd);
+            rootLayout = rootLayout.insertRightOfSpecified(windows.get(active).getHashCode(), finalWindowToAdd.getHashCode());
+            int finalWindowToAddHash = finalWindowToAdd.getHashCode();
+            Layout layoutBefore = rootLayout.clone();
+            windowToAdd.subscribeCloseEvents(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        rootLayout = rootLayout.delete(finalWindowToAddHash);
+                    } catch (HashNotMatchingException hh){
+
+                    }
+
+                    windows.remove(finalWindowToAdd);
+                }
+            });
         }
         return RenderIndicator.FULL;
     }

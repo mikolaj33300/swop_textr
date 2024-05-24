@@ -100,5 +100,8 @@ public class Directory {
         return this.focused;
     }
 
+    public void subscribeCloseEvents(Runnable closeEventListener) {
+        focusedDirectory.subscribeCloseEvents(closeEventListener);
+    }
 }
 

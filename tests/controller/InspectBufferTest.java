@@ -50,7 +50,7 @@ public class InspectBufferTest {
         textr1 = new TextR(new String[] {"--lf", a.toString()}, adapter);
         textr2 = new TextR(new String[] {"--lf", b.toString()}, adapter2);
         textr3 = new TextR(new String[] {"--lf", a.toString(), b.toString()}, adapter3);
-        textr4 = new TextR(new String[] {"--lf", c.toString()}, new SwingTerminalAdapter());
+        textr4 = new TextR(new String[] {"--lf", c.toString()}, adapter4);
     }
 
     /// Line separator \n gebruikt. Dus de test zijn enkel relevant op mac.
