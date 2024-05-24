@@ -65,7 +65,7 @@ public class TerminalPanel extends JPanel {
 	int fontWidth = fontMetrics.charWidth('m');
         int baseLineOffset = fontHeight - fontMetrics.getDescent();
 	if (cursorRow >= 0 && cursorCol >= 0)
-	    g.drawRect(fontMetrics.charsWidth(bufferToDisplay[cursorRow], 0, cursorCol), cursorRow*fontHeight,fontMetrics.charWidth(bufferToDisplay[cursorRow][cursorCol]), (cursorRow+1)*fontHeight);
+	    g.drawRect(fontMetrics.charsWidth(bufferToDisplay[cursorRow], 0, cursorCol), cursorRow*fontHeight,fontMetrics.charWidth(bufferToDisplay[cursorRow][cursorCol]), fontHeight);
 
         int y = baseLineOffset;
         for (int lineIndex = 0; lineIndex < bufferToDisplay.length; lineIndex++) {
