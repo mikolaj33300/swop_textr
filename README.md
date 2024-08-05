@@ -1,3 +1,5 @@
+MVC text editor in Java for group assignment.
+___________________
 In our project, Textr will work with version 0.9 of termios, so the command to open textR becomes: 
 
 java -cp io.github.btj.termios-0.9.jar -jar system.jar <lineseperator> <files>
